@@ -1,0 +1,78 @@
+import { storageName } from "./assets.mjs";
+import { emptyBank, emptyState, upgradeBundledBank } from "./core.mjs";
+let db;
+let queue = Promise.resolve();
+let savedBank;
+export async function openStorage() {
+  db = await new Promise((resolve, reject) => {
+    // Isolate this site from Local-NEUMathe and other Pages repositories on the same origin.
+    const request = indexedDB.open(storageName, 1);
+    request.onupgradeneeded = () => request.result.createObjectStore("kv");
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => reject(new Error("请关闭其他知行学习页面后重试"));
+  });
+  db.onversionchange = () => db.close();
+  const result = await new Promise((resolve, reject) => {
+    const tx = db.transaction("kv");
+    const store = tx.objectStore("kv");
+    const bank = store.get("bank"),
+      state = store.get("state");
+    tx.oncomplete = () =>
+      resolve({
+        bank: bank.result ?? emptyBank(),
+        state: state.result ?? emptyState(),
+      });
+    tx.onerror = () => reject(tx.error);
+  });
+  savedBank = result.bank;
+  const current = result.bank;
+  if (
+    !current.questions.length ||
+    (current.managedBundle !== false && current.revision?.startsWith("pdf-"))
+  ) {
+    try {
+      const manifestResponse = await fetch("./data/manifest.json", {
+        cache: "no-store",
+      });
+      if (!manifestResponse.ok) throw new Error("无法检查题库版本");
+      const manifest = await manifestResponse.json();
+      if (!current.questions.length || manifest.revision !== current.revision) {
+        const response = await fetch("./data/bank.json", { cache: "no-store" });
+        if (!response.ok)
+          throw new Error(
+            "题库加载失败，请检查网络后刷新页面",
+          );
+        const candidate = await response.json();
+        if (candidate.revision !== manifest.revision)
+          throw new Error("题库文件版本不一致，请重新构建并部署网站");
+        result.bank = upgradeBundledBank(current, candidate);
+      }
+    } catch (error) {
+      if (!current.questions.length) throw error;
+      result.notice = `题库暂未更新：${error.message}。已保留现有学习数据。`;
+    }
+  }
+  return result;
+}
+export function saveStorage(bank, state) {
+  const snapshot = {
+    bank: bank === savedBank ? null : structuredClone(bank),
+    state: structuredClone(state),
+  };
+  const write = () =>
+    new Promise((resolve, reject) => {
+      const tx = db.transaction("kv", "readwrite");
+      if (snapshot.bank) tx.objectStore("kv").put(snapshot.bank, "bank");
+      tx.objectStore("kv").put(snapshot.state, "state");
+      tx.oncomplete = () => {
+        savedBank = bank;
+        resolve();
+      };
+      tx.onabort = () => reject(tx.error ?? new Error("保存失败"));
+      tx.onerror = () => reject(tx.error);
+    });
+  const pending = queue.catch(() => {}).then(write);
+  queue = pending;
+  return pending;
+}

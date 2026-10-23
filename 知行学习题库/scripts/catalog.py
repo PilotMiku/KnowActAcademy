@@ -1,0 +1,77 @@
+"""Read the explicit subject catalog and verify all source PDF files before indexing."""
+import hashlib
+import json
+import pathlib
+import re
+
+import fitz
+
+
+def load_inventory(root):
+    root = pathlib.Path(root).resolve()
+    catalog = json.loads((root / 'data/catalog.json').read_text())
+    inventory, paths, subject_ids, chapter_ids, document_ids = [], set(), set(), set(), set()
+    for subject in catalog['subjects']:
+        if subject['id'] in subject_ids:
+            raise ValueError('Duplicate subject: ' + subject['id'])
+        subject_ids.add(subject['id'])
+        for chapter_number, chapter in enumerate(subject['chapters'], 1):
+            key = (subject['id'], chapter['id'])
+            if key in chapter_ids:
+                raise ValueError('Duplicate chapter: ' + str(key))
+            chapter_ids.add(key)
+            for section_number, item in enumerate(chapter['documents'], 1):
+                relative = pathlib.Path(item['path'])
+                path = (root / relative).resolve()
+                if relative.is_absolute() or root not in path.parents or path.suffix.lower() != '.pdf':
+                    raise ValueError('Invalid source PDF path: ' + str(relative))
+                if str(relative) in paths:
+                    raise ValueError('Duplicate source PDF: ' + str(relative))
+                paths.add(str(relative))
+                # The stored ID survives a PDF rename or move. Legacy catalogs without
+                # IDs retain the original path-derived ID on their first migration.
+                document_id = item.get('id') or 's-' + hashlib.sha256(str(relative).encode()).hexdigest()[:12]
+                if not isinstance(document_id, str) or not re.fullmatch(r's-[a-f0-9]{12}', document_id):
+                    raise ValueError('Invalid document ID: ' + str(document_id))
+                if document_id in document_ids:
+                    raise ValueError('Duplicate document ID: ' + document_id)
+                document_ids.add(document_id)
+                with fitz.open(path) as document:
+                    match = re.search(r'共\s*(\d+)\s*道题', document[0].get_text())
+                    if not match:
+                        raise ValueError('Missing exported question count: ' + str(relative))
+                    pages = len(document)
+                exported_number = re.match(r'^\d+(?:\.\d+)*', item['name'])
+                inventory.append({
+                    'id': document_id, 'path': str(relative), 'name': item['name'],
+                    'subjectId': subject['id'], 'subjectName': subject['name'],
+                    'parentId': chapter['id'], 'chapterNo': chapter_number,
+                    'number': exported_number[0] if exported_number else f'{chapter_number}.{section_number}',
+                    'bytes': path.stat().st_size, 'pages': pages,
+                    'expectedQuestions': int(match[1]),
+                    'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                })
+    candidates = {str(p.relative_to(root)) for p in root.rglob('*.pdf')
+                  if not any(part.startswith('.') or part in {'node_modules', 'artifacts', '_site'}
+                             for part in p.relative_to(root).parts)}
+    # Reading notes are registered separately and are not multiple-choice PDF exports.
+    knowledge_registry = root / 'data/knowledge-sources.json'
+    reference_paths = set()
+    if knowledge_registry.exists():
+        references = json.loads(knowledge_registry.read_text())['sources']
+        reference_paths = {s['path'] for s in references if s['type'] == 'pdf'}
+    unknown = candidates - paths - reference_paths
+    if unknown:
+        if any(path.startswith('question-bank/习概/') for path in unknown):
+            raise ValueError('New study PDFs were found. Run scripts/index_knowledge.py before indexing the math bank.')
+        raise ValueError('Add these PDFs to data/catalog.json before rebuilding: ' + ', '.join(sorted(unknown)))
+    return catalog, inventory
+
+
+def write_json(path, value, pretty=False):
+    path = pathlib.Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + '.tmp')
+    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2 if pretty else None,
+                                    separators=None if pretty else (',', ':')) + '\n')
+    temporary.replace(path)

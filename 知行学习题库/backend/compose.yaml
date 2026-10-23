@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      ZHIXING_DB: /data/zhixing.sqlite3
+      ZHIXING_ORIGINS: ${ZHIXING_ORIGINS:?请先设置前端域名}
+    volumes:
+      - progress:/data
+    ports:
+      - "127.0.0.1:8000:8000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+volumes:
+  progress:
