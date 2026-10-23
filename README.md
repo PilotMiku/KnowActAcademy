@@ -50,8 +50,6 @@ Windows 激活虚拟环境使用 `.venv\Scripts\activate`。后续构建会复�
 
 ## GitHub Pages 部署
 
-本次交付仅在本地完成，**没有上传 GitHub，也没有修改原仓库的部署配置**。
-
 1. 将本目录的**全部源码内容**复制到一个独立新仓库的根目录，包括 `.github/` 隐藏目录、`.gitignore`、`dist/`、`data/`、`question-bank/`、`scripts/`、`tests/`、`backend/` 和依赖清单。不要把整个项目文件夹再嵌套一层后上传，否则内置工作流不在仓库根目录。
 2. 使用 `main` 作为部署分支；如果使用其他分支，调整 `.github/workflows/pages.yml`。
 3. 在仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。
