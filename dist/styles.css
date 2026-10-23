@@ -1994,6 +1994,35 @@ dialog::backdrop {
   }
 }
 
+/* Short, compositor-friendly feedback; never delays navigation or saving. */
+@keyframes study-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes study-dialog {
+  from { opacity: 0; transform: translateY(8px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes study-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes study-select {
+  50% { transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .local-main[data-enter] > :not(.footer) { animation: study-enter .22s ease-out backwards; }
+  .local-main[data-enter] > .chapter-grid,
+  .local-main[data-enter] > .knowledge-grid { animation-delay: .035s; }
+  dialog[open] { animation: study-dialog .18s ease-out; }
+  dialog[open]::backdrop { animation: study-fade .18s ease-out; }
+  .result-box { animation: study-enter .2s ease-out; }
+  .option.selected .option-key { animation: study-select .18s ease-out; }
+  .progress-bar > span { transition: width .2s ease-out; }
+  .local-nav.open { animation: study-enter .16s ease-out; }
+  .btn:active:not(:disabled), .icon-btn:active:not(:disabled) { transform: scale(.97); }
+}
+
 /* Local NeuMathe appearance: HeroUI blue, translucent navigation, soft color glows. */
 :root {
   --bg: #f8f9fc; --surface: #fff; --side: #f5f7fc; --ink: #181c2a;

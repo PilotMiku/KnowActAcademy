@@ -10,6 +10,7 @@ import {
   hasResponse,
   shuffle,
   filterQuestions,
+  getBankIndex,
   createPractice,
   recordAttempt,
   createExam,
@@ -30,11 +31,13 @@ import {
 let knowledge = emptyKnowledge();
 const sync = createSyncClient();
 let configuredAPI = "";
-try {
-  const response = await fetch("./config.json", { cache: "no-store" });
-  if (response.ok) configuredAPI = String((await response.json()).apiBase || "");
-} catch { /* Optional backend configuration never blocks local study. */ }
-
+async function loadConfig() {
+  try {
+    const response = await fetch("./config.json", { cache: "no-store" });
+    if (response.ok) return String((await response.json()).apiBase || "");
+  } catch { /* Optional backend configuration never blocks local study. */ }
+  return "";
+}
 
 async function loadKnowledge() {
   try {
@@ -149,16 +152,16 @@ function go(path) {
   else location.hash = path;
 }
 function subject(id) {
-  return bank.subjects.find((s) => s.id === id);
+  return getBankIndex(bank).subjects.get(id);
 }
 function chapter(q) {
   return (
-    subject(q.subjectId)?.chapters.find((c) => c.id === q.chapterId)?.name ??
+    getBankIndex(bank).chapters.get(q.subjectId)?.get(q.chapterId)?.name ??
     q.chapterId
   );
 }
 function qById(id) {
-  return bank.questions.find((q) => q.id === id);
+  return getBankIndex(bank).questions.get(id);
 }
 function shortDate(at) {
   return new Date(at).toLocaleString("zh-CN", {
@@ -234,25 +237,23 @@ function dashboard() {
     )
     .join(
       "",
-    )}</section><div class="course-tabs" role="navigation" aria-label="选择学习科目">${bank.subjects.map((s) => `<a href="#/?subject=${encodeURIComponent(s.id)}" class="course-tab ${s.id === activeSubject?.id ? "active" : ""}" ${s.id === activeSubject?.id ? 'aria-current="true"' : ""}><span class="course-symbol">${s.id === "linear" ? "A" : "∫"}</span><span><b>${esc(s.name)}</b><small>${bank.questions.filter((q) => q.subjectId === s.id).length.toLocaleString()} 题 · ${s.chapters.filter((c) => !c.parentId).length} 章</small></span>${icon("arrow", 16)}</a>`).join("")}<a href="#/knowledge" class="course-tab knowledge-entry"><span class="course-symbol">${icon("book", 23)}</span><span><b>习概知识点</b><small>${knowledge.stats.notes ? `${knowledge.stats.notes} 篇笔记 · ${knowledge.stats.pdfCollections} 份汇编` : "查看复习资料"}</small></span>${icon("arrow", 16)}</a></div><div class="section-head"><h2>${esc(activeSubject?.name ?? "章节")} <small>选择章节，开始练习</small></h2><a href="#/practice?subject=${encodeURIComponent(activeSubject?.id ?? "")}" class="text-btn">全部章节 ${icon("arrow", 15)}</a></div>${chapterCards(false, activeSubject?.id)}<div class="grid-2 local-shortcuts"><a class="card" href="#/review"><span class="shortcut-icon pink">${icon("mistake", 23)}</span><div><h3>错题回顾</h3><p>查漏补缺，把薄弱知识点逐个巩固</p></div>${icon("arrow", 18)}</a><a class="card" href="#/favorites"><span class="shortcut-icon purple">${icon("star", 23)}</span><div><h3>我的收藏</h3><p>留下值得再练的题目，随时复习</p></div>${icon("arrow", 18)}</a></div>`;
+    )}</section><div class="course-tabs" role="navigation" aria-label="选择学习科目">${bank.subjects.map((s) => `<a href="#/?subject=${encodeURIComponent(s.id)}" class="course-tab ${s.id === activeSubject?.id ? "active" : ""}" ${s.id === activeSubject?.id ? 'aria-current="true"' : ""}><span class="course-symbol">${s.id === "linear" ? "A" : "∫"}</span><span><b>${esc(s.name)}</b><small>${getBankIndex(bank).subjectQuestions.get(s.id).length.toLocaleString()} 题 · ${s.chapters.filter((c) => !c.parentId).length} 章</small></span>${icon("arrow", 16)}</a>`).join("")}<a href="#/knowledge" class="course-tab knowledge-entry"><span class="course-symbol">${icon("book", 23)}</span><span><b>习概知识点</b><small>${knowledge.stats.notes ? `${knowledge.stats.notes} 篇笔记 · ${knowledge.stats.pdfCollections} 份汇编` : "查看复习资料"}</small></span>${icon("arrow", 16)}</a></div><div class="section-head"><h2>${esc(activeSubject?.name ?? "章节")} <small>选择章节，开始练习</small></h2><a href="#/practice?subject=${encodeURIComponent(activeSubject?.id ?? "")}" class="text-btn">全部章节 ${icon("arrow", 15)}</a></div>${chapterCards(false, activeSubject?.id)}<div class="grid-2 local-shortcuts"><a class="card" href="#/review"><span class="shortcut-icon pink">${icon("mistake", 23)}</span><div><h3>错题回顾</h3><p>查漏补缺，把薄弱知识点逐个巩固</p></div>${icon("arrow", 18)}</a><a class="card" href="#/favorites"><span class="shortcut-icon purple">${icon("star", 23)}</span><div><h3>我的收藏</h3><p>留下值得再练的题目，随时复习</p></div>${icon("arrow", 18)}</a></div>`;
 }
 function chapterCards(expanded = true, subjectId = "") {
   const filters = getFilters();
+  const index = getBankIndex(bank);
+  const practiced = new Set(state.attempts.map((a) => a.questionId));
   return `<div class="chapter-grid">${bank.subjects
     .filter((s) => !subjectId || s.id === subjectId)
     .flatMap((s) =>
       s.chapters
         .filter((c) => !c.parentId)
         .map((c, i) => {
-          const questions = filterQuestions(bank, {
-            subjectId: s.id,
-            chapterId: c.id,
-          });
-          const practiced = new Set(state.attempts.map((a) => a.questionId));
+          const questions = index.chapterQuestions.get(s.id).get(c.id);
           const done = questions.filter((q) => practiced.has(q.id)).length;
           const children = s.chapters.filter((ch) => ch.parentId === c.id);
           const href = `#/practice?subject=${encodeURIComponent(s.id)}&chapter=${encodeURIComponent(c.id)}`;
-          return `<section class="card chapter-card chapter-color-${i % 4}"><div class="chapter-card-head"><span class="chapter-glyph">${(s.id === "linear" ? ["|A|", "A", "r", "λ", "Q"] : ["ƒ", "∂", "f′", "∫", "∑", "→", "∇"])[i % (s.id === "linear" ? 5 : 7)]}</span><span class="pill">${questions.length} 题</span></div><a href="${href}" class="chapter-title"><span>CHAPTER ${String(i + 1).padStart(2, "0")}</span><h3>${esc(c.name.replace(/^第\d+章\s*/, ""))}</h3></a><p class="chapter-description">${children.length} 个小节 · 已练 ${done} 题</p><div class="progress-bar"><span style="width:${questions.length ? (done / questions.length) * 100 : 0}%"></span></div>${expanded ? `<details ${filters.chapterId === c.id || children.some((ch) => ch.id === filters.chapterId) ? "open" : ""}><summary>查看章节目录 ${icon("chevron", 13)}</summary><div class="section-list">${children.map((ch) => `<a href="#/practice?subject=${encodeURIComponent(s.id)}&chapter=${encodeURIComponent(ch.id)}" class="${filters.chapterId === ch.id ? "active" : ""}"><span>${esc(ch.name)}</span><small>${filterQuestions(bank, { chapterId: ch.id, subjectId: s.id }).length}题</small></a>`).join("")}</div></details>` : `<a class="chapter-link" href="${href}">进入章节 ${icon("arrow", 15)}</a>`}</section>`;
+          return `<section class="card chapter-card chapter-color-${i % 4}"><div class="chapter-card-head"><span class="chapter-glyph">${(s.id === "linear" ? ["|A|", "A", "r", "λ", "Q"] : ["ƒ", "∂", "f′", "∫", "∑", "→", "∇"])[i % (s.id === "linear" ? 5 : 7)]}</span><span class="pill">${questions.length} 题</span></div><a href="${href}" class="chapter-title"><span>CHAPTER ${String(i + 1).padStart(2, "0")}</span><h3>${esc(c.name.replace(/^第\d+章\s*/, ""))}</h3></a><p class="chapter-description">${children.length} 个小节 · 已练 ${done} 题</p><div class="progress-bar"><span style="width:${questions.length ? (done / questions.length) * 100 : 0}%"></span></div>${expanded ? `<details ${filters.chapterId === c.id || children.some((ch) => ch.id === filters.chapterId) ? "open" : ""}><summary>查看章节目录 ${icon("chevron", 13)}</summary><div class="section-list">${children.map((ch) => `<a href="#/practice?subject=${encodeURIComponent(s.id)}&chapter=${encodeURIComponent(ch.id)}" class="${filters.chapterId === ch.id ? "active" : ""}"><span>${esc(ch.name)}</span><small>${index.chapterQuestions.get(s.id).get(ch.id).length}题</small></a>`).join("")}</div></details>` : `<a class="chapter-link" href="${href}">进入章节 ${icon("arrow", 15)}</a>`}</section>`;
         }),
     )
     .join("")}</div>`;
@@ -319,6 +320,32 @@ function optionHTML(q, response, graded = false, correct = null) {
       return `<button class="option ${style}" data-action="answer-option" data-value="${attr(o.id)}" ${graded ? "disabled" : ""} aria-pressed="${selected.includes(o.id)}"><span class="option-key">${q.type === "boolean" ? (o.id === "true" ? "√" : "×") : esc(o.id)}</span><span class="rich" data-rich="${attr(o.text)}"></span></button>`;
     })
     .join("")}</div>`;
+}
+function updateSelectedOptions(answer) {
+  const selected = new Set(Array.isArray(answer) ? answer : [answer]);
+  for (const option of app.querySelectorAll('[data-action="answer-option"]')) {
+    const pressed = selected.has(option.dataset.value);
+    option.classList.toggle("selected", pressed);
+    option.setAttribute("aria-pressed", String(pressed));
+  }
+}
+function updateExamProgress(exam) {
+  const nav = app.querySelector(".question-nav");
+  if (!nav) return;
+  const completed = exam.questionIds.filter((id) => hasResponse(qById(id), exam.answers[id])).length;
+  const currentId = exam.questionIds[exam.index];
+  nav.querySelector(".card-head .muted").textContent = `${completed}/${exam.questionIds.length}`;
+  nav.querySelector(".progress-bar > span").style.width = `${completed / exam.questionIds.length * 100}%`;
+  nav.querySelector(".index-btn.current")?.classList.toggle("answered", hasResponse(qById(currentId), exam.answers[currentId]));
+}
+function updateMenu() {
+  app.querySelector(".local-nav")?.classList.toggle("open", mobileOpen);
+  app.querySelector('[data-action="toggle-menu"]')?.setAttribute("aria-expanded", String(mobileOpen));
+}
+function updateTheme() {
+  document.body.classList.toggle("dark", state.theme === "dark");
+  const control = app.querySelector('[data-action="toggle-theme"]');
+  if (control) control.innerHTML = icon(state.theme === "dark" ? "sun" : "moon", 19);
 }
 function answerInput(q, response, graded) {
   if (["single", "multiple", "boolean"].includes(q.type))
@@ -416,11 +443,16 @@ function examsPage() {
           .reverse()
           .map(
             (e, i) =>
-              `<article class="card exam-card"><div class="exam-score ${e.status === "active" ? "active" : ""}">${e.status === "active" ? icon("clock", 28) : e.score}<small>${e.status === "active" ? "进行中" : "得分 / 100"}</small></div><div class="grow"><h3 style="font-size:13px">${esc(subject(e.subjectId)?.name ?? "综合")}模拟考试</h3><p class="subtitle" style="font-size:10px">${shortDate(e.startedAt)} · ${e.questionIds.length} 题 · ${e.minutes} 分钟</p></div><a class="btn small" href="#/exam/${encodeURIComponent(e.id)}">${e.status === "active" ? "继续考试" : "查看报告"} ${icon("arrow", 12)}</a></article>`,
+              `<article class="card exam-card"><div class="exam-score ${e.status === "active" ? "active" : ""}">${e.status === "active" ? icon("clock", 28) : e.score}<small>${e.status === "active" ? "进行中" : "得分 / 100"}</small></div><div class="grow"><h3 style="font-size:13px">${examScope(e)}模拟考试</h3><p class="subtitle" style="font-size:10px">${shortDate(e.startedAt)} · ${e.questionIds.length} 题 · ${e.minutes} 分钟</p></div><a class="btn small" href="#/exam/${encodeURIComponent(e.id)}">${e.status === "active" ? "继续考试" : "查看报告"} ${icon("arrow", 12)}</a></article>`,
           )
           .join("")}</div>`
-      : `<section class="card">${empty("第一场模拟考试，从这里开始", "选择科目、题量和时长。系统会从已导入题库中抽题，交卷后生成报告。", button(`${icon("plus", 14)} 创建考试`, "create-exam", "", "btn primary"))}</section>`
+      : `<section class="card">${empty("第一场模拟考试，从这里开始", "选择科目、大章节、题量和时长。系统会从所选范围中抽题，交卷后生成报告。", button(`${icon("plus", 14)} 创建考试`, "create-exam", "", "btn primary"))}</section>`
   }`;
+}
+function examScope(e) {
+  const s = subject(e.subjectId);
+  const c = s?.chapters.find((c) => c.id === e.chapterId);
+  return esc([s?.name ?? "综合", c?.name].filter(Boolean).join(" · "));
 }
 function timeRemaining(e) {
   const total = Math.max(0, Math.ceil((e.endsAt - Date.now()) / 1000));
@@ -433,14 +465,14 @@ function examPage() {
   if (e.status === "submitted") return examReport(e);
   const q = currentQuestion();
   if (!q) return empty("题目不可用", "请恢复考试对应的题库。");
-  return `${head("模拟考试", `${esc(subject(e.subjectId)?.name ?? "综合练习")} · ${e.questionIds.length} 题 · ${e.minutes} 分钟`, `<a href="#/exams" class="btn">${icon("back", 13)} 考试记录</a>`)}<div class="question-layout"><section class="card question-main"><div class="question-top"><span class="pill blue">${names[q.type]}</span><span class="muted" style="font-size:11px">第 ${e.index + 1} / ${e.questionIds.length} 题</span></div>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}${answerInput(q, e.answers[q.id] ?? (q.type === "multiple" ? [] : ""), false)}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${e.index - 1}" ${e.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${e.index < e.questionIds.length - 1 ? button(`下一题 ${icon("arrow", 13)}`, "navigate-question", `data-index="${e.index + 1}"`, "btn primary") : button("提交试卷", "submit-exam", "", "btn coral")}</div></section>${questionNavigation(e, true)}</div>`;
+  return `${head("模拟考试", `${examScope(e)} · ${e.questionIds.length} 题 · ${e.minutes} 分钟`, `<a href="#/exams" class="btn">${icon("back", 13)} 考试记录</a>`)}<div class="question-layout"><section class="card question-main"><div class="question-top"><span class="pill blue">${names[q.type]}</span><span class="muted" style="font-size:11px">第 ${e.index + 1} / ${e.questionIds.length} 题</span></div>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}${answerInput(q, e.answers[q.id] ?? (q.type === "multiple" ? [] : ""), false)}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${e.index - 1}" ${e.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${e.index < e.questionIds.length - 1 ? button(`下一题 ${icon("arrow", 13)}`, "navigate-question", `data-index="${e.index + 1}"`, "btn primary") : button("提交试卷", "submit-exam", "", "btn coral")}</div></section>${questionNavigation(e, true)}</div>`;
 }
 function examReport(e) {
   const wrong = e.questionIds
     .filter((id) => e.results[id] === false)
     .map(qById)
     .filter(Boolean);
-  return `${head("每一次检验，都带来新的方向。", "把分数放在一边，也看看自己真正学会了什么。", `<a href="#/exams" class="btn">${icon("back", 13)} 考试记录</a>`)}<section class="card score-hero"><span class="pill green">${e.timedOut ? "时间到，已自动交卷" : "本次考试已完成"}</span><div class="score">${e.score}<span style="font-size:19px"> 分</span></div><p>${esc(subject(e.subjectId)?.name ?? "综合")}模拟考试</p><div class="score-meta"><span><b>${e.correct}/${e.questionIds.length}</b>答对题目</span><span><b>${Math.min(e.minutes, Math.max(1, Math.ceil((e.submittedAt - e.startedAt) / 60000)))}</b>用时 / 分钟</span><span><b>${wrong.length}</b>待巩固题目</span></div></section><div class="section-head"><h2>逐题回顾</h2><span class="muted" style="font-size:10px">本次错题已进入错题本</span></div><div class="stack">${e.questionIds
+  return `${head("每一次检验，都带来新的方向。", "把分数放在一边，也看看自己真正学会了什么。", `<a href="#/exams" class="btn">${icon("back", 13)} 考试记录</a>`)}<section class="card score-hero"><span class="pill green">${e.timedOut ? "时间到，已自动交卷" : "本次考试已完成"}</span><div class="score">${e.score}<span style="font-size:19px"> 分</span></div><p>${examScope(e)}模拟考试</p><div class="score-meta"><span><b>${e.correct}/${e.questionIds.length}</b>答对题目</span><span><b>${Math.min(e.minutes, Math.max(1, Math.ceil((e.submittedAt - e.startedAt) / 60000)))}</b>用时 / 分钟</span><span><b>${wrong.length}</b>待巩固题目</span></div></section><div class="section-head"><h2>逐题回顾</h2><span class="muted" style="font-size:10px">本次错题已进入错题本</span></div><div class="stack">${e.questionIds
     .map((id, i) => {
       const q = qById(id);
       if (!q) return "";
@@ -495,14 +527,14 @@ function requireBundledBank() {
     throw new Error("请先完成正在进行的考试，再同步学习进度");
 }
 function libraryPage() {
-  return `${head("让原题，回到你的学习节奏。", "保留原题内容、标准答案和解析，再用自己的方式练习。", bank.questions.length ? button(`${icon("download", 14)} 导出题库`, "export-bank", "", "btn") : "")}<section class="card library-hero"><div class="empty-symbol">${icon(bank.questions.length ? "check" : "folder", 29)}</div><div class="grow"><span class="pill ${bank.questions.length ? "green" : "coral"}">${bank.questions.length ? "题库已就绪" : "等待原题数据"}</span><h2 style="margin-top:10px">${bank.questions.length ? `${bank.questions.length.toLocaleString()} 道原题，已加入学习空间` : "网站已就绪，题库由你补充"}</h2><p class="subtitle">${bank.questions.length ? `${esc(bank.managedBundle !== false && bank.revision?.startsWith("pdf-") ? "知行学习题库" : bank.source.name || "已导入题库")} · ${bank.subjects.length} 个科目 · 导入于 ${shortDate(bank.importedAt)}` : "目前没有填入示例题。导入后，科目、章节、题干、答案与解析均以原始数据为准。"}</p></div></section>${cloudCard()}<div class="grid-2"><section class="card library-card"><div class="card-head"><h2>导入原题库</h2>${icon("upload", 18)}</div><div class="upload-zone" id="drop-zone" tabindex="0" role="button" aria-label="选择或拖入 JSON 题库">${icon("upload", 29)}<h3>把题库带到这里</h3><p>拖入 JSON 文件，或点击选择。导入前会检查题型、答案、选项和章节关联。</p>${button("选择题库文件", "choose-file", "", "btn primary")}<div class="muted" style="font-size:9px;margin-top:12px">JSON 格式 · 最大 50 MB · 最多 100,000 题</div></div><div class="flex" style="justify-content:space-between">${button(`${icon("download", 13)} 下载空白模板`, "download-template", "", "text-btn")}${button("查看格式说明", "import-help", "", "text-btn")}</div><p class="format-note" style="margin-top:18px">支持单选、多选、判断、填空和解答题。公式支持 LaTeX，题干与解析可保留常见 HTML 排版。解答题使用对照自评；填空题可配置多个可接受答案。</p></section><div class="stack"><section class="card library-card"><div class="card-head"><h2>学习数据，留在自己手里</h2>${icon("lock", 16)}</div><div class="data-actions"><button class="data-action" data-action="export-backup"><b>${icon("download", 15)} 导出完整备份</b><p>题库、作答记录、考试与知识点阅读进度。</p></button><button class="data-action" data-action="restore-backup"><b>${icon("refresh", 15)} 恢复学习数据</b><p>选择之前导出的知行学习备份，继续上次的进度。</p></button></div><p class="format-note" style="margin-top:14px">学习数据保存在当前浏览器。更换设备或清理浏览器前，请先导出备份。</p></section><section class="card library-card"><div class="card-head"><h2>当前题库</h2><span class="pill">${bank.questions.length} 题</span></div>${bank.subjects.map((s) => `<div class="chapter-row"><span class="grow">${esc(s.name)}</span><span class="muted">${bank.questions.filter((q) => q.subjectId === s.id).length} 题</span></div>`).join("")}<div style="margin-top:17px">${button(`${icon("trash", 12)} 清空学习记录`, "reset-data", "", "text-btn")}</div></section></div></div>`;
+  return `${head("让原题，回到你的学习节奏。", "保留原题内容、标准答案和解析，再用自己的方式练习。", bank.questions.length ? button(`${icon("download", 14)} 导出题库`, "export-bank", "", "btn") : "")}<section class="card library-hero"><div class="empty-symbol">${icon(bank.questions.length ? "check" : "folder", 29)}</div><div class="grow"><span class="pill ${bank.questions.length ? "green" : "coral"}">${bank.questions.length ? "题库已就绪" : "等待原题数据"}</span><h2 style="margin-top:10px">${bank.questions.length ? `${bank.questions.length.toLocaleString()} 道原题，已加入学习空间` : "网站已就绪，题库由你补充"}</h2><p class="subtitle">${bank.questions.length ? `${esc(bank.managedBundle !== false && bank.revision?.startsWith("pdf-") ? "知行学习题库" : bank.source.name || "已导入题库")} · ${bank.subjects.length} 个科目 · 导入于 ${shortDate(bank.importedAt)}` : "目前没有填入示例题。导入后，科目、章节、题干、答案与解析均以原始数据为准。"}</p></div></section>${cloudCard()}<div class="grid-2"><section class="card library-card"><div class="card-head"><h2>导入原题库</h2>${icon("upload", 18)}</div><div class="upload-zone" id="drop-zone" tabindex="0" role="button" aria-label="选择或拖入 JSON 题库">${icon("upload", 29)}<h3>把题库带到这里</h3><p>拖入 JSON 文件，或点击选择。导入前会检查题型、答案、选项和章节关联。</p>${button("选择题库文件", "choose-file", "", "btn primary")}<div class="muted" style="font-size:9px;margin-top:12px">JSON 格式 · 最大 50 MB · 最多 100,000 题</div></div><div class="flex" style="justify-content:space-between">${button(`${icon("download", 13)} 下载空白模板`, "download-template", "", "text-btn")}${button("查看格式说明", "import-help", "", "text-btn")}</div><p class="format-note" style="margin-top:18px">支持单选、多选、判断、填空和解答题。公式支持 LaTeX，题干与解析可保留常见 HTML 排版。解答题使用对照自评；填空题可配置多个可接受答案。</p></section><div class="stack"><section class="card library-card"><div class="card-head"><h2>学习数据，留在自己手里</h2>${icon("lock", 16)}</div><div class="data-actions"><button class="data-action" data-action="export-backup"><b>${icon("download", 15)} 导出完整备份</b><p>题库、作答记录、考试与知识点阅读进度。</p></button><button class="data-action" data-action="restore-backup"><b>${icon("refresh", 15)} 恢复学习数据</b><p>选择之前导出的知行学习备份，继续上次的进度。</p></button></div><p class="format-note" style="margin-top:14px">学习数据保存在当前浏览器。更换设备或清理浏览器前，请先导出备份。</p></section><section class="card library-card"><div class="card-head"><h2>当前题库</h2><span class="pill">${bank.questions.length} 题</span></div>${bank.subjects.map((s) => `<div class="chapter-row"><span class="grow">${esc(s.name)}</span><span class="muted">${getBankIndex(bank).subjectQuestions.get(s.id).length} 题</span></div>`).join("")}<div style="margin-top:17px">${button(`${icon("trash", 12)} 清空学习记录`, "reset-data", "", "text-btn")}</div></section></div></div>`;
 }
 
-function renderRich() {
-  for (const el of document.querySelectorAll("[data-rich]")) {
+function renderRich(root = app, lazyImages = false) {
+  for (const el of root.querySelectorAll("[data-rich]")) {
     const content = el.dataset.rich;
     el.removeAttribute("data-rich");
-    el.replaceChildren(safeContent(content));
+    el.replaceChildren(safeContent(content, lazyImages));
     if (window.renderMathInElement) {
       try {
         window.renderMathInElement(el, {
@@ -522,7 +554,7 @@ function renderRich() {
     }
   }
 }
-function safeContent(value) {
+function safeContent(value, lazyImages = false) {
   const fragment = document.createDocumentFragment();
   const raw = String(value ?? "");
   if (!/<\/?[a-z][\s\S]*>/i.test(raw)) {
@@ -606,7 +638,8 @@ function safeContent(value) {
         if (url.protocol !== "https:" && url.protocol !== "http:") return;
         target.src = url.href;
         target.alt = node.getAttribute("alt") ?? "题目图片";
-        target.loading = "eager";
+        target.loading = lazyImages ? "lazy" : "eager";
+        target.decoding = "async";
         if (
           url.origin === location.origin &&
           /^\/api\/question-image\//.test(rawSource)
@@ -632,6 +665,7 @@ function safeContent(value) {
   return fragment;
 }
 let renderPending = false;
+let lastView = "";
 function render() {
   if (renderPending) return;
   renderPending = true;
@@ -645,6 +679,10 @@ function draw() {
   document.body.classList.toggle("dark", state.theme === "dark");
   const r = route();
   const page = routes[r.page] ? r.page : "dashboard";
+  const exam = currentExam();
+  const view = `${location.hash}:${state.practice?.id}:${state.practice?.index}:${exam?.id}:${exam?.index}:${exam?.status}`;
+  const entering = view !== lastView;
+  lastView = view;
   const navItems = [
     ["dashboard", "home", "学习概览", "/"],
     ["practice", "book", "题库练习", "/practice"],
@@ -659,7 +697,8 @@ function draw() {
   ).length;
   app.innerHTML = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/" aria-label="知行学习 首页"><img src="./icon.svg" alt=""><strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(state.theme === "dark" ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}<span class="local-avatar">学</span></div></div></header><main id="main" class="local-main" tabindex="-1">${page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : libraryPage()}<footer class="footer"><span>知行学习 · 练习与知识复习</span><span>知行学习题库 · 学习记录自动保存在当前浏览器</span></footer></main></div>`;
   document.title = `${routes[page]} · 知行学习`;
-  renderRich();
+  document.querySelector("#main").toggleAttribute("data-enter", entering);
+  renderRich(app, page === "exam" && exam?.status === "submitted");
   attachDropZone();
   if (state.exams.some((e) => e.status === "active")) {
     tickExam();
@@ -669,7 +708,7 @@ function draw() {
 function openDialog(title, body, actions = "") {
   dialog.innerHTML = `<header class="dialog-head"><h2 id="dialog-title">${title}</h2>${button(icon("close", 18), "close-dialog", 'aria-label="关闭"', "icon-btn")}</header><div class="dialog-body">${body}</div>${actions ? `<div class="dialog-actions">${actions}</div>` : ""}`;
   dialog.showModal();
-  renderRich();
+  renderRich(dialog);
 }
 function confirmDialog(title, body, onConfirm, label = "确认") {
   openDialog(
@@ -702,6 +741,36 @@ function selectFile(mode = "bank") {
   el.value = "";
   el.click();
 }
+function examChapterOptions(subjectId = "") {
+  return `<option value="">全部章节</option>${bank.subjects
+    .filter((s) => !subjectId || s.id === subjectId)
+    .map((s) => `<optgroup label="${attr(s.name)}">${s.chapters
+      .filter((c) => !c.parentId)
+      .map((c) => `<option value="${attr(JSON.stringify([s.id, c.id]))}">${esc(c.name)}</option>`)
+      .join("")}</optgroup>`)
+    .join("")}`;
+}
+function examFilters() {
+  const selected = document.querySelector("#exam-chapter").value;
+  const [subjectId, chapterId] = selected
+    ? JSON.parse(selected)
+    : [document.querySelector("#exam-subject").value, ""];
+  return { subjectId, chapterId };
+}
+function examQuestions(filters) {
+  return filterQuestions(bank, filters).filter((q) => q.type !== "solution");
+}
+function updateExamAvailability() {
+  const available = examQuestions(examFilters()).length;
+  const count = document.querySelector("#exam-count");
+  count.max = Math.min(100, available);
+  if (Number(count.value) > Number(count.max)) count.value = available || 1;
+  document.querySelector("#exam-availability").textContent = available
+    ? `当前范围共 ${available} 道可考试题目，包含所选大章节下的全部小节。`
+    : "当前范围没有可考试的自动判分题，请选择其他章节或科目。";
+  document.querySelector('[data-action="begin-exam"]').disabled = !available;
+  document.querySelector("#exam-error").textContent = "";
+}
 function examOptions() {
   if (!bank.questions.length) {
     toast("请先导入原题库");
@@ -715,9 +784,10 @@ function examOptions() {
   }
   openDialog(
     "给自己一场小小的检验",
-    `<p style="margin-bottom:20px">从已导入题库中随机抽题。选择、判断与填空题自动判分，解答题保留在章节练习中自评。</p><div class="field"><label for="exam-subject">考试科目</label><select id="exam-subject"><option value="">综合练习</option>${bank.subjects.map((s) => `<option value="${attr(s.id)}">${esc(s.name)}</option>`).join("")}</select></div><div class="flex"><div class="field"><label for="exam-count">题量</label><input class="input" id="exam-count" type="number" min="1" max="100" value="${Math.min(DEFAULT_QUESTION_COUNT, bank.questions.filter((q) => q.type !== "solution").length) || 1}"></div><div class="field"><label for="exam-minutes">时长 / 分钟</label><input class="input" id="exam-minutes" type="number" min="1" max="240" value="30"></div></div><p id="exam-error" role="alert"></p>`,
+    `<p style="margin-bottom:20px">从已导入题库中随机抽题。选择、判断与填空题自动判分，解答题保留在章节练习中自评。</p><div class="field"><label for="exam-subject">考试科目</label><select id="exam-subject"><option value="">综合练习</option>${bank.subjects.map((s) => `<option value="${attr(s.id)}">${esc(s.name)}</option>`).join("")}</select></div><div class="field"><label for="exam-chapter">大章节</label><select id="exam-chapter" aria-describedby="exam-availability">${examChapterOptions()}</select></div><p id="exam-availability" aria-live="polite"></p><div class="flex"><div class="field"><label for="exam-count">题量</label><input class="input" id="exam-count" type="number" min="1" max="100" value="${Math.min(DEFAULT_QUESTION_COUNT, bank.questions.filter((q) => q.type !== "solution").length) || 1}"></div><div class="field"><label for="exam-minutes">时长 / 分钟</label><input class="input" id="exam-minutes" type="number" min="1" max="240" value="30"></div></div><p id="exam-error" role="alert"></p>`,
     `${button("先不考", "close-dialog")}${button(`开始考试 ${icon("arrow", 13)}`, "begin-exam", "", "btn primary")}`,
   );
+  updateExamAvailability();
 }
 async function startPractice(ids, mode) {
   if (!ids.length) {
@@ -872,6 +942,41 @@ async function readFile(file) {
     toast(`导入失败：${err.message}`);
   }
 }
+let searchTimer;
+function updateSearchResults(query) {
+  const results = query.trim()
+    ? filterQuestions(bank, { search: query }, state).slice(0, 25)
+    : [];
+  const notes = query.trim()
+    ? filterKnowledge(
+        knowledge,
+        new URLSearchParams({ q: query }),
+        state,
+      ).slice(0, 12)
+    : [];
+  document.querySelector("#search-results").innerHTML =
+    results.length || notes.length
+      ? results
+          .map(
+            (q) =>
+              `<button class="search-item" data-action="practice-one" data-id="${attr(q.id)}">${esc(q.sourceLabel || textOnly(q.stem).slice(0, 120))}<small>${esc(subject(q.subjectId)?.name)} · ${esc(chapter(q))}</small></button>`,
+          )
+          .join("") +
+        notes
+          .map(
+            (article) =>
+              `<button class="search-item" data-action="open-knowledge" data-id="${attr(article.id)}">${esc(article.title)}<small>习概知识点 · ${esc(article.category)}</small></button>`,
+          )
+          .join("")
+      : `<p style="padding:16px 8px">${query.trim() ? "没有找到相关题目或知识点，换个关键词试试。" : "输入关键词，搜索题目或知识点。"}</p>`;
+}
+function scheduleSearch(input, composing = false) {
+  clearTimeout(searchTimer);
+  if (composing) return;
+  searchTimer = setTimeout(() => {
+    if (dialog.open && input.isConnected) updateSearchResults(input.value);
+  }, 120);
+}
 function showSearch() {
   openDialog(
     "搜索题目与知识点",
@@ -953,20 +1058,20 @@ async function handleAction(action, el) {
       if (/^knowledge-heading-\d+$/.test(el.dataset.target))
         document
           .getElementById(el.dataset.target)
-          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          ?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
       break;
     case "toggle-menu":
       mobileOpen = !mobileOpen;
-      render();
+      updateMenu();
       break;
     case "close-menu":
       mobileOpen = false;
-      render();
+      updateMenu();
       break;
     case "toggle-theme":
       state.theme = state.theme === "dark" ? "light" : "dark";
+      updateTheme();
       await persist();
-      render();
       break;
     case "close-dialog":
       dialog.close();
@@ -1135,8 +1240,9 @@ async function handleAction(action, el) {
           : value;
       if (exam) target[q.id] = answer;
       else target.answer = answer;
+      updateSelectedOptions(answer);
+      if (exam) updateExamProgress(exam);
       await persist();
-      render();
       break;
     }
     case "submit-answer":
@@ -1201,12 +1307,10 @@ async function handleAction(action, el) {
       examOptions();
       break;
     case "begin-exam": {
-      const sid = document.querySelector("#exam-subject").value,
+      const filters = examFilters(),
         count = Number(document.querySelector("#exam-count").value),
         minutes = Number(document.querySelector("#exam-minutes").value);
-      const list = bank.questions.filter(
-        (q) => (!sid || q.subjectId === sid) && q.type !== "solution",
-      );
+      const list = examQuestions(filters);
       if (
         !Number.isInteger(count) ||
         count < 1 ||
@@ -1226,8 +1330,9 @@ async function handleAction(action, el) {
           .slice(0, count)
           .map((q) => q.id),
         minutes,
-        sid,
+        filters.subjectId,
       );
+      exam.chapterId = filters.chapterId;
       state.exams.push(exam);
       await persist();
       go("/exam/" + exam.id);
@@ -1246,11 +1351,28 @@ document.addEventListener("click", (event) => {
     handleAction(el.dataset.action, el).catch((err) =>
       toast(err.message ?? "操作失败，请重试"),
     );
-  } else if (event.target.closest(".nav a,.brand")) {
+  } else if (event.target.closest(".local-nav a,.local-brand")) {
     mobileOpen = false;
+    updateMenu();
   }
 });
 document.addEventListener("change", (event) => {
+  if (event.target.matches("#exam-subject")) {
+    document.querySelector("#exam-chapter").innerHTML = examChapterOptions(event.target.value);
+    updateExamAvailability();
+    return;
+  }
+  if (event.target.matches("#exam-chapter")) {
+    const selected = event.target.value;
+    if (selected) {
+      const { subjectId } = examFilters();
+      document.querySelector("#exam-subject").value = subjectId;
+      event.target.innerHTML = examChapterOptions(subjectId);
+      event.target.value = selected;
+    }
+    updateExamAvailability();
+    return;
+  }
   if (event.target.matches("[data-knowledge-query]")) {
     const query = route().query;
     const value = event.target.value.trim();
@@ -1278,6 +1400,7 @@ document.addEventListener("input", (event) => {
         return;
       }
       exam.answers[q.id] = event.target.value;
+      updateExamProgress(exam);
     } else {
       const p = state.practice;
       if (!p) return;
@@ -1288,37 +1411,15 @@ document.addEventListener("input", (event) => {
     }
     persist();
   }
-  if (event.target.id === "global-search") {
-    const query = event.target.value;
-    const results = query.trim()
-      ? filterQuestions(bank, { search: query }, state).slice(0, 25)
-      : [];
-    const notes = query.trim()
-      ? filterKnowledge(
-          knowledge,
-          new URLSearchParams({ q: query }),
-          state,
-        ).slice(0, 12)
-      : [];
-    document.querySelector("#search-results").innerHTML =
-      results.length || notes.length
-        ? results
-            .map(
-              (q) =>
-                `<button class="search-item" data-action="practice-one" data-id="${attr(q.id)}">${esc(q.sourceLabel || textOnly(q.stem).slice(0, 120))}<small>${esc(subject(q.subjectId)?.name)} · ${esc(chapter(q))}</small></button>`,
-            )
-            .join("") +
-          notes
-            .map(
-              (article) =>
-                `<button class="search-item" data-action="open-knowledge" data-id="${attr(article.id)}">${esc(article.title)}<small>习概知识点 · ${esc(article.category)}</small></button>`,
-            )
-            .join("")
-        : `<p style="padding:16px 8px">${query.trim() ? "没有找到相关题目或知识点，换个关键词试试。" : "输入关键词，搜索题目或知识点。"}</p>`;
-  }
+  if (event.target.id === "global-search") scheduleSearch(event.target, event.isComposing);
 });
 document.querySelector("#file-input").addEventListener("change", (e) => {
   if (e.target.files[0]) readFile(e.target.files[0]);
+});
+dialog.addEventListener("close", () => clearTimeout(searchTimer));
+dialog.addEventListener("compositionstart", () => clearTimeout(searchTimer));
+dialog.addEventListener("compositionend", (event) => {
+  if (event.target.id === "global-search") scheduleSearch(event.target);
 });
 dialog.addEventListener("click", (event) => {
   if (event.target === dialog) {
@@ -1351,7 +1452,8 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) tickExam();
 });
 try {
-  const [data, notes] = await Promise.all([openStorage(), loadKnowledge()]);
+  const [data, notes, api] = await Promise.all([openStorage(), loadKnowledge(), loadConfig()]);
+  configuredAPI = api;
   knowledge = notes;
   bank = data.bank;
   state = normalizeKnowledgeRecords({ ...emptyState(), ...data.state });

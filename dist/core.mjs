@@ -333,6 +333,43 @@ export function shuffle(items, random = Math.random) {
   }
   return result;
 }
+// Banks are replaced on import/upgrade. Keep derived data outside the bank so
+// backups and the original question records remain unchanged.
+const bankIndexes = new WeakMap();
+export function getBankIndex(bank) {
+  if (bankIndexes.has(bank)) return bankIndexes.get(bank);
+  const index = {
+    questions: new Map(),
+    subjects: new Map(),
+    chapters: new Map(),
+    subjectQuestions: new Map(),
+    chapterQuestions: new Map(),
+  };
+  for (const subject of bank.subjects) {
+    index.subjects.set(subject.id, subject);
+    index.chapters.set(subject.id, new Map(subject.chapters.map((c) => [c.id, c])));
+    index.subjectQuestions.set(subject.id, []);
+    index.chapterQuestions.set(subject.id, new Map(subject.chapters.map((c) => [c.id, []])));
+  }
+  for (const q of bank.questions) {
+    index.questions.set(q.id, q);
+    index.subjectQuestions.get(q.subjectId)?.push(q);
+    const chapters = index.chapters.get(q.subjectId);
+    const visited = new Set();
+    for (let id = q.chapterId; id && !visited.has(id); id = chapters?.get(id)?.parentId) {
+      visited.add(id);
+      index.chapterQuestions.get(q.subjectId)?.get(id)?.push(q);
+    }
+  }
+  bankIndexes.set(bank, index);
+  return index;
+}
+const questionSearchText = new WeakMap();
+function searchableText(q) {
+  if (!questionSearchText.has(q))
+    questionSearchText.set(q, `${q.searchText ?? ""} ${q.sourceLabel ?? ""} ${textOnly(q.stem)} ${q.tags.join(" ")}`.toLowerCase());
+  return questionSearchText.get(q);
+}
 export function filterQuestions(bank, filter = {}, state = emptyState()) {
   const needle = string(filter.search).toLowerCase();
   const chapterIds = new Set(filter.chapterIds ?? []);
@@ -354,10 +391,7 @@ export function filterQuestions(bank, filter = {}, state = emptyState()) {
       (!chapterIds.size || chapterIds.has(q.chapterId)) &&
       (!filter.type || q.type === filter.type) &&
       (!filter.difficulty || q.difficulty === filter.difficulty) &&
-      (!needle ||
-        `${q.searchText ?? ""} ${q.sourceLabel ?? ""} ${textOnly(q.stem)} ${q.tags.join(" ")}`
-          .toLowerCase()
-          .includes(needle)) &&
+      (!needle || searchableText(q).includes(needle)) &&
       (!filter.favorites || state.favorites.includes(q.id)) &&
       (!filter.mistakes ||
         (state.mistakes[q.id] && !state.mistakes[q.id].resolved)),

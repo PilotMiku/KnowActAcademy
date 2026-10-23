@@ -9,6 +9,7 @@ import {
   judge,
   recordAttempt,
   filterQuestions,
+  getBankIndex,
   createExam,
   finishExam,
   validateBackup,
@@ -136,6 +137,39 @@ test("shuffling leaves the bank order unchanged and preserves every selected que
   assert.deepEqual(a, [1, 2, 3, 4]);
   assert.deepEqual([...out].sort(), a);
   assert.notDeepEqual(out, a);
+});
+
+test("bank indexes include nested questions, separate shared chapter IDs and follow bank replacements", () => {
+  const raw = structuredClone(fixture);
+  raw.subjects[0].chapters = [{ id: "root", name: "大章", children: [
+    { id: "middle", name: "小节", children: [{ id: "limits", name: "子节" }] },
+  ] }];
+  raw.subjects.push({ id: "other", name: "另一科目", chapters: [{ id: "limits", name: "同名 ID" }] });
+  raw.questions.push({ ...raw.questions[0], id: "other-q", subjectId: "other" });
+  const bank = normalizeBank(raw), serialized = JSON.stringify(bank), index = getBankIndex(bank);
+  assert.equal(getBankIndex(bank), index);
+  assert.equal(index.questions.get("qa-single"), bank.questions[0]);
+  for (const chapterId of ["root", "middle", "limits"])
+    assert.deepEqual(index.chapterQuestions.get("math").get(chapterId),
+      filterQuestions(bank, { subjectId: "math", chapterId }));
+  assert.equal(index.subjectQuestions.get("math").length, fixture.questions.length);
+  assert.equal(index.chapterQuestions.get("other").get("limits").length, 1);
+  const replacement = normalizeBank(raw);
+  assert.notEqual(getBankIndex(replacement), index);
+  assert.equal(getBankIndex(replacement).questions.get("qa-single"), replacement.questions[0]);
+  // Derived Maps must not leak into a portable JSON backup.
+  assert.equal(JSON.stringify(bank), serialized);
+});
+
+test("cached question searches retain stems, tags and source labels across bank replacements", () => {
+  const bank = make();
+  bank.questions[0].tags = ["极限标签"];
+  bank.questions[0].sourceLabel = "原题出处";
+  for (const search of ["测试公式", "极限标签", "原题出处"])
+    for (let repeat = 0; repeat < 2; repeat++)
+      assert.equal(filterQuestions(bank, { search })[0]?.id, "qa-single");
+  const replacement = make();
+  assert.equal(filterQuestions(replacement, { search: "原题出处" }).length, 0);
 });
 
 test("corrupt resume data is cleared; malformed exams and reserved question IDs are rejected", () => {
