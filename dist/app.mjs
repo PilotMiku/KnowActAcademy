@@ -11,6 +11,7 @@ import {
   shuffle,
   filterQuestions,
   getBankIndex,
+  examQuestions,
   createPractice,
   recordAttempt,
   createExam,
@@ -451,8 +452,13 @@ function examsPage() {
 }
 function examScope(e) {
   const s = subject(e.subjectId);
-  const c = s?.chapters.find((c) => c.id === e.chapterId);
-  return esc([s?.name ?? "综合", c?.name].filter(Boolean).join(" · "));
+  const selected = Array.isArray(e.chapters) ? e.chapters
+    : e.chapterId ? [{ subjectId: e.subjectId, chapterId: e.chapterId }] : [];
+  const chapters = selected.map((selection) => {
+    const name = getBankIndex(bank).chapters.get(selection.subjectId)?.get(selection.chapterId)?.name;
+    return name ? `${s ? "" : `${subject(selection.subjectId)?.name ?? ""} `}${name}` : "";
+  }).filter(Boolean);
+  return esc([s?.name ?? "综合", chapters.join("、")].filter(Boolean).join(" · "));
 }
 function timeRemaining(e) {
   const total = Math.max(0, Math.ceil((e.endsAt - Date.now()) / 1000));
@@ -742,34 +748,39 @@ function selectFile(mode = "bank") {
   el.click();
 }
 function examChapterOptions(subjectId = "") {
-  return `<option value="">全部章节</option>${bank.subjects
+  return bank.subjects
     .filter((s) => !subjectId || s.id === subjectId)
-    .map((s) => `<optgroup label="${attr(s.name)}">${s.chapters
+    .map((s) => `<div class="exam-chapter-group"><p>${esc(s.name)}</p>${s.chapters
       .filter((c) => !c.parentId)
-      .map((c) => `<option value="${attr(JSON.stringify([s.id, c.id]))}">${esc(c.name)}</option>`)
-      .join("")}</optgroup>`)
-    .join("")}`;
+      .map((c) => `<label><input type="checkbox" data-exam-chapter value="${attr(JSON.stringify([s.id, c.id]))}"><span>${esc(c.name)}</span></label>`)
+      .join("")}</div>`)
+    .join("");
 }
 function examFilters() {
-  const selected = document.querySelector("#exam-chapter").value;
-  const [subjectId, chapterId] = selected
-    ? JSON.parse(selected)
-    : [document.querySelector("#exam-subject").value, ""];
-  return { subjectId, chapterId };
-}
-function examQuestions(filters) {
-  return filterQuestions(bank, filters).filter((q) => q.type !== "solution");
+  return {
+    subjectId: document.querySelector("#exam-subject").value,
+    chapters: document.querySelector("#exam-all-chapters").checked ? null
+      : [...dialog.querySelectorAll("[data-exam-chapter]:checked")].map((input) => {
+        const [subjectId, chapterId] = JSON.parse(input.value);
+        return { subjectId, chapterId };
+      }),
+  };
 }
 function updateExamAvailability() {
-  const available = examQuestions(examFilters()).length;
+  const filters = examFilters();
+  const available = examQuestions(bank, filters).length;
   const count = document.querySelector("#exam-count");
-  count.max = Math.min(100, available);
-  if (Number(count.value) > Number(count.max)) count.value = available || 1;
-  document.querySelector("#exam-availability").textContent = available
-    ? `当前范围共 ${available} 道可考试题目，包含所选大章节下的全部小节。`
+  count.max = Math.max(1, Math.min(100, available));
+  if (available && Number(count.value) > Number(count.max)) count.value = count.max;
+  document.querySelector("#exam-availability").textContent = filters.chapters?.length === 0
+    ? "请至少选择一个大章节，或勾选全部章节。"
+    : available
+    ? `当前范围共 ${available} 道可考试题目${filters.chapters ? `，已选 ${filters.chapters.length} 个大章节` : ""}，包含各章下的全部小节。`
     : "当前范围没有可考试的自动判分题，请选择其他章节或科目。";
   document.querySelector('[data-action="begin-exam"]').disabled = !available;
-  document.querySelector("#exam-error").textContent = "";
+  const error = document.querySelector("#exam-error");
+  error.textContent = "";
+  error.className = "";
 }
 function examOptions() {
   if (!bank.questions.length) {
@@ -784,7 +795,7 @@ function examOptions() {
   }
   openDialog(
     "给自己一场小小的检验",
-    `<p style="margin-bottom:20px">从已导入题库中随机抽题。选择、判断与填空题自动判分，解答题保留在章节练习中自评。</p><div class="field"><label for="exam-subject">考试科目</label><select id="exam-subject"><option value="">综合练习</option>${bank.subjects.map((s) => `<option value="${attr(s.id)}">${esc(s.name)}</option>`).join("")}</select></div><div class="field"><label for="exam-chapter">大章节</label><select id="exam-chapter" aria-describedby="exam-availability">${examChapterOptions()}</select></div><p id="exam-availability" aria-live="polite"></p><div class="flex"><div class="field"><label for="exam-count">题量</label><input class="input" id="exam-count" type="number" min="1" max="100" value="${Math.min(DEFAULT_QUESTION_COUNT, bank.questions.filter((q) => q.type !== "solution").length) || 1}"></div><div class="field"><label for="exam-minutes">时长 / 分钟</label><input class="input" id="exam-minutes" type="number" min="1" max="240" value="30"></div></div><p id="exam-error" role="alert"></p>`,
+    `<p style="margin-bottom:20px">从已导入题库中随机抽题。选择、判断与填空题自动判分，解答题保留在章节练习中自评。</p><div class="field"><label for="exam-subject">考试科目</label><select id="exam-subject"><option value="">综合练习</option>${bank.subjects.map((s) => `<option value="${attr(s.id)}">${esc(s.name)}</option>`).join("")}</select></div><fieldset class="exam-chapters" aria-describedby="exam-availability"><legend>大章节（可多选）</legend><label class="exam-all-chapters"><input id="exam-all-chapters" type="checkbox" checked><span>全部章节</span></label><div id="exam-chapter-options">${examChapterOptions()}</div></fieldset><p id="exam-availability" aria-live="polite"></p><div class="flex"><div class="field"><label for="exam-count">题量</label><input class="input" id="exam-count" type="number" min="1" max="100" value="${Math.min(DEFAULT_QUESTION_COUNT, bank.questions.filter((q) => q.type !== "solution").length) || 1}"></div><div class="field"><label for="exam-minutes">时长 / 分钟</label><input class="input" id="exam-minutes" type="number" min="1" max="240" value="30"></div></div><p id="exam-error" role="alert"></p>`,
     `${button("先不考", "close-dialog")}${button(`开始考试 ${icon("arrow", 13)}`, "begin-exam", "", "btn primary")}`,
   );
   updateExamAvailability();
@@ -1310,7 +1321,7 @@ async function handleAction(action, el) {
       const filters = examFilters(),
         count = Number(document.querySelector("#exam-count").value),
         minutes = Number(document.querySelector("#exam-minutes").value);
-      const list = examQuestions(filters);
+      const list = examQuestions(bank, filters);
       if (
         !Number.isInteger(count) ||
         count < 1 ||
@@ -1332,7 +1343,7 @@ async function handleAction(action, el) {
         minutes,
         filters.subjectId,
       );
-      exam.chapterId = filters.chapterId;
+      exam.chapters = filters.chapters;
       state.exams.push(exam);
       await persist();
       go("/exam/" + exam.id);
@@ -1358,18 +1369,18 @@ document.addEventListener("click", (event) => {
 });
 document.addEventListener("change", (event) => {
   if (event.target.matches("#exam-subject")) {
-    document.querySelector("#exam-chapter").innerHTML = examChapterOptions(event.target.value);
+    document.querySelector("#exam-chapter-options").innerHTML = examChapterOptions(event.target.value);
+    document.querySelector("#exam-all-chapters").checked = true;
     updateExamAvailability();
     return;
   }
-  if (event.target.matches("#exam-chapter")) {
-    const selected = event.target.value;
-    if (selected) {
-      const { subjectId } = examFilters();
-      document.querySelector("#exam-subject").value = subjectId;
-      event.target.innerHTML = examChapterOptions(subjectId);
-      event.target.value = selected;
-    }
+  if (event.target.matches("[data-exam-chapter]")) {
+    document.querySelector("#exam-all-chapters").checked = false;
+    updateExamAvailability();
+    return;
+  }
+  if (event.target.matches("#exam-all-chapters")) {
+    for (const input of dialog.querySelectorAll("[data-exam-chapter]")) input.checked = false;
     updateExamAvailability();
     return;
   }

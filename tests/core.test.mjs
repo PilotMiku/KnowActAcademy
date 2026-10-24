@@ -10,6 +10,7 @@ import {
   recordAttempt,
   filterQuestions,
   getBankIndex,
+  examQuestions,
   createExam,
   finishExam,
   validateBackup,
@@ -170,6 +171,38 @@ test("cached question searches retain stems, tags and source labels across bank 
       assert.equal(filterQuestions(bank, { search })[0]?.id, "qa-single");
   const replacement = make();
   assert.equal(filterQuestions(replacement, { search: "原题出处" }).length, 0);
+});
+
+test("exam chapter combinations include descendants, deduplicate and respect subject boundaries", () => {
+  const raw = structuredClone(fixture);
+  raw.subjects[0].chapters = [{ id: "root", name: "大章", children: [{ id: "limits", name: "小节" }] }, { id: "extra", name: "另一章" }];
+  raw.subjects.push({ id: "other", name: "另一科目", chapters: [{ id: "root", name: "同 ID 章节" }] });
+  raw.questions.push({ ...raw.questions[0], id: "extra-q", chapterId: "extra" });
+  raw.questions.push({ ...raw.questions[0], id: "other-q", subjectId: "other", chapterId: "root" });
+  const bank = normalizeBank(raw);
+  const root = { subjectId: "math", chapterId: "root" };
+  const extra = { subjectId: "math", chapterId: "extra" };
+  const other = { subjectId: "other", chapterId: "root" };
+  assert.equal(examQuestions(bank).length, 7);
+  assert.deepEqual(examQuestions(bank, { chapters: [] }), []);
+  assert.equal(examQuestions(bank, { chapters: [root, extra] }).length, 6);
+  assert.equal(examQuestions(bank, { chapters: [root, root, { subjectId: "math", chapterId: "limits" }] }).length, 5);
+  assert.deepEqual(examQuestions(bank, { chapters: [extra, other] }).map((q) => q.id), ["extra-q", "other-q"]);
+  assert.deepEqual(examQuestions(bank, { subjectId: "math", chapters: [extra, other] }).map((q) => q.id), ["extra-q"]);
+  assert.ok(examQuestions(bank).every((q) => q.type !== "solution"));
+  const state = emptyState();
+  state.exams = [createExam([bank.questions[0].id], 30, "math")];
+  for (const chapters of [null, [root, extra]]) {
+    state.exams[0].chapters = chapters;
+    assert.deepEqual(validateBackup({ format: BACKUP_FORMAT, bank, state }).state.exams[0].chapters, chapters);
+  }
+  for (const chapters of [{}, [], [null], [{ subjectId: "math" }]]) {
+    state.exams[0].chapters = chapters;
+    assert.throws(() => validateBackup({ format: BACKUP_FORMAT, bank, state }), /考试记录/);
+  }
+  delete state.exams[0].chapters;
+  state.exams[0].chapterId = "root";
+  assert.equal(validateBackup({ format: BACKUP_FORMAT, bank, state }).state.exams[0].chapterId, "root");
 });
 
 test("corrupt resume data is cleared; malformed exams and reserved question IDs are rejected", () => {

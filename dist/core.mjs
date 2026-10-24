@@ -365,6 +365,18 @@ export function getBankIndex(bank) {
   return index;
 }
 const questionSearchText = new WeakMap();
+export function examQuestions(bank, { subjectId = "", chapters = null } = {}) {
+  const index = getBankIndex(bank);
+  const pool = subjectId ? index.subjectQuestions.get(subjectId) ?? [] : bank.questions;
+  if (chapters === null) return pool.filter((q) => q.type !== "solution");
+  const ids = new Set();
+  for (const selected of chapters) {
+    if (subjectId && selected.subjectId !== subjectId) continue;
+    for (const q of index.chapterQuestions.get(selected.subjectId)?.get(selected.chapterId) ?? [])
+      ids.add(q.id);
+  }
+  return pool.filter((q) => ids.has(q.id) && q.type !== "solution");
+}
 function searchableText(q) {
   if (!questionSearchText.has(q))
     questionSearchText.set(q, `${q.searchText ?? ""} ${q.sourceLabel ?? ""} ${textOnly(q.stem)} ${q.tags.join(" ")}`.toLowerCase());
@@ -553,6 +565,9 @@ export function validateBackup(input) {
         !Number.isInteger(e.index) || e.index < 0 || e.index >= e.questionIds.length ||
         !Number.isFinite(e.startedAt) ||
         !Number.isFinite(e.minutes) || e.minutes < 1 || e.minutes > 240 ||
+        (e.chapters !== undefined && e.chapters !== null &&
+          (!Array.isArray(e.chapters) || !e.chapters.length || e.chapters.some((c) =>
+            !record(c) || typeof c.subjectId !== "string" || typeof c.chapterId !== "string"))) ||
         !record(e.answers) ||
         (e.status === "submitted" && (!record(e.results) || !Number.isFinite(e.score))),
     )
