@@ -74,6 +74,8 @@ export function emptyState() {
     mistakes: {},
     exams: [],
     practice: null,
+    preparation: null,
+    preparationHistory: [],
     theme: "light",
     dailyGoal: 20,
     knowledgeRead: [],
@@ -254,6 +256,7 @@ export function normalizeBank(input, { allowEmpty = false } = {}) {
         ? q.difficulty
         : "medium",
       tags: Array.isArray(q.tags) ? q.tags.map(String) : [],
+      concepts: Array.isArray(q.concepts) ? [...new Set(q.concepts.map(string).filter(Boolean))] : [],
       source: q.source,
       sourceLabel: string(q.sourceLabel),
       searchText: string(q.searchText),
@@ -425,6 +428,8 @@ export function recordAttempt(state, q, answer, correct, options = {}) {
     durationMs: Math.max(0, options.durationMs ?? 0),
     examId: options.examId ?? null,
     manual: !!options.manual,
+    ...(options.preparationId ? { preparationId: options.preparationId } : {}),
+    ...(options.practiceId ? { practiceId: options.practiceId, round: options.round ?? 0, sessionSize: options.sessionSize } : {}),
   });
   if (correct === false)
     state.mistakes[q.id] = {
@@ -545,6 +550,8 @@ export function validateBackup(input) {
         !a ||
         !ids.has(a.questionId) ||
         !Number.isFinite(a.at) ||
+        (a.practiceId !== undefined && (typeof a.practiceId !== "string" || !a.practiceId ||
+          !Number.isInteger(a.round) || a.round < 0 || !Number.isInteger(a.sessionSize) || a.sessionSize < 1 || a.sessionSize > 20)) ||
         ![true, false, null].includes(a.correct),
     ) ||
     data.favorites.some((id) => !ids.has(id)) ||
@@ -585,17 +592,48 @@ export function validateBackup(input) {
   }
   state.dailyGoal = Math.min(200, Math.max(1, Number(data.dailyGoal) || 20));
   state.theme = data.theme === "dark" ? "dark" : "light";
-  if (
-    state.practice &&
-    (!record(state.practice) ||
-      !Array.isArray(state.practice.questionIds) ||
-      !state.practice.questionIds.length ||
-      state.practice.questionIds.some((id) => !ids.has(id)) ||
-      !Number.isInteger(state.practice.index) || state.practice.index < 0 ||
-      state.practice.index >= state.practice.questionIds.length ||
-      !record(state.practice.responses) ||
-      Object.values(state.practice.responses).some((value) => !record(value)))
-  )
+  const validPractice = (p) => record(p) &&
+    Array.isArray(p.questionIds) && p.questionIds.length > 0 &&
+    new Set(p.questionIds).size === p.questionIds.length &&
+    p.questionIds.every((id) => ids.has(id)) &&
+    Number.isInteger(p.index) && p.index >= 0 && p.index < p.questionIds.length &&
+    record(p.responses) && Object.values(p.responses).every(record);
+  if (state.practice && !validPractice(state.practice)) state.practice = null;
+  const prep = state.preparation;
+  const index = getBankIndex(bank);
+  if (!Array.isArray(state.preparationHistory) || state.preparationHistory.some((p) =>
+    !record(p) || typeof p.id !== "string" || !p.id || !Number.isFinite(p.startedAt) ||
+    !index.subjects.has(p.subjectId) || !Array.isArray(p.chapterIds) || !p.chapterIds.length ||
+    p.chapterIds.some((id) => !index.chapters.get(p.subjectId).has(id)) ||
+    !Array.isArray(p.diagnosticIds) || !p.diagnosticIds.length || p.diagnosticIds.length > 20 ||
+    new Set(p.diagnosticIds).size !== p.diagnosticIds.length || p.diagnosticIds.some((id) => !ids.has(id) ||
+      !p.chapterIds.some((chapterId) => index.chapterQuestions.get(p.subjectId).get(chapterId).some((q) => q.id === id)))) ||
+    new Set(state.preparationHistory.map((p) => p.id)).size !== state.preparationHistory.length)
+    throw new Error("备份中的备考历史格式错误");
+  if (!prep) state.preparation = null;
+  if (prep && (!record(prep) || typeof prep.id !== "string" || !prep.id ||
+    typeof prep.diagnosticPracticeId !== "string" || !prep.diagnosticPracticeId ||
+    !index.subjects.has(prep.subjectId) ||
+    !Array.isArray(prep.chapterIds) || !prep.chapterIds.length ||
+    prep.chapterIds.some((id) => !index.chapters.get(prep.subjectId).has(id)) ||
+    !Array.isArray(prep.diagnosticIds) || !prep.diagnosticIds.length || prep.diagnosticIds.length > 20 ||
+    new Set(prep.diagnosticIds).size !== prep.diagnosticIds.length ||
+    prep.diagnosticIds.some((id) => !ids.has(id) ||
+      !prep.chapterIds.some((chapterId) => index.chapterQuestions.get(prep.subjectId).get(chapterId).some((q) => q.id === id))) ||
+    !Number.isFinite(prep.startedAt) || !Number.isInteger(prep.round) || prep.round < 0))
+    state.preparation = null;
+  const scopeIds = new Set(state.preparation?.chapterIds.flatMap((id) =>
+    index.chapterQuestions.get(state.preparation.subjectId).get(id).map((q) => q.id)) ?? []);
+  const validPreparationPractice = (p) => validPractice(p) && state.preparation &&
+    typeof p.id === "string" && p.preparationId === state.preparation.id && p.questionIds.length <= 20 &&
+    p.questionIds.every((id) => scopeIds.has(id)) &&
+    (p.mode === "prepare-diagnostic" ? p.id === state.preparation.diagnosticPracticeId &&
+      p.questionIds.length === state.preparation.diagnosticIds.length &&
+      p.questionIds.every((id, i) => id === state.preparation.diagnosticIds[i])
+      : p.mode === "prepare-training" && Number.isInteger(p.round) && p.round > 0);
+  if (state.preparation?.session && !validPreparationPractice(state.preparation.session))
+    state.preparation = { ...state.preparation, session: null };
+  if (typeof state.practice?.mode === "string" && state.practice.mode.startsWith("prepare-") && !validPreparationPractice(state.practice))
     state.practice = null;
   return { bank, state };
 }

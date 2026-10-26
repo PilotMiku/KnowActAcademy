@@ -47,6 +47,15 @@ try {
   await a.locator('[data-action="answer-option"][data-value="A"]').click();
   await a.getByRole('button', { name: '确认答案', exact: true }).click();
   await a.getByRole('button', { name: '收藏题目', exact: true }).click();
+  await a.goto(baseURL + '/#/prepare?subject=calculus&scope=custom&chapter=s-6b82188494c1');
+  await a.locator('[data-action="begin-preparation"]').click();
+  await a.locator('.question-main').waitFor();
+  await a.locator('[data-action="answer-option"][data-value="A"]').click();
+  await a.getByRole('button', { name: '确认答案', exact: true }).click();
+  await a.locator('.result-box').waitFor();
+  await a.goto(baseURL + '/#/prepare');
+  await a.locator('[data-action="begin-preparation"]').click();
+  await a.locator('.question-main').waitFor();
   await a.goto(baseURL + '/#/knowledge/' + note.id);
   await a.getByRole('button', { name: /标为已读/ }).click();
   await a.getByRole('button', { name: '收藏知识点', exact: true }).click();
@@ -72,6 +81,9 @@ try {
   assert.deepEqual(restored.mistakes, original.mistakes);
   assert.deepEqual(restored.knowledgeRead, original.knowledgeRead);
   assert.deepEqual(restored.knowledgeFavorites, original.knowledgeFavorites);
+  assert.deepEqual(restored.preparation, original.preparation);
+  assert.deepEqual(restored.preparationHistory, original.preparationHistory);
+  assert.deepEqual(restored.practice, original.practice);
   const beforeBackup = JSON.parse(await readFile('artifacts/pre-sync-backup.json', 'utf8'));
   assert.equal(beforeBackup.state.attempts.length, 0);
   await b.reload();

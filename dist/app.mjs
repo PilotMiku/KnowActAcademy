@@ -23,6 +23,14 @@ import {
 } from "./core.mjs";
 import { openStorage, saveStorage } from "./storage.mjs";
 import {
+  PREPARATION_COUNT, preparationQuestions, createPreparation, diagnosticProgress,
+  restoreDiagnostic, preparationProfile, createTraining, practiceProgress,
+  currentPreparationPractice,
+} from "./preparation.mjs";
+import { getConceptIndex } from "./concepts.mjs";
+import { spacedReview, archivePreparation } from "./study.mjs";
+import { reviewCard, conceptPanel, trendPanel } from "./study-view.mjs";
+import {
   emptyKnowledge,
   normalizeKnowledgeRecords,
   knowledgePage,
@@ -64,7 +72,8 @@ let toastTimer,
   timerInterval,
   fileMode = "bank",
   pendingImport = null,
-  autoSubmitting = false;
+  autoSubmitting = false,
+  startingSession = false;
 const app = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
 const names = {
@@ -79,6 +88,8 @@ const DEFAULT_QUESTION_COUNT = 25;
 const routes = {
   dashboard: "学习概览",
   practice: "题库练习",
+  prepare: "备考模式",
+  spaced: "间隔复习",
   exams: "模拟考试",
   exam: "模拟考试",
   review: "错题本",
@@ -182,6 +193,8 @@ function toast(message) {
 function persist() {
   if (!storageReady)
     return Promise.reject(new Error("当前浏览器无法保存学习数据"));
+  if (state.preparation && state.practice?.preparationId === state.preparation.id)
+    state.preparation.session = structuredClone(state.practice);
   saving = saveStorage(bank, state);
   saving.catch(() => toast("保存失败，请检查浏览器可用空间，并导出备份"));
   return saving;
@@ -238,7 +251,7 @@ function dashboard() {
     )
     .join(
       "",
-    )}</section><div class="course-tabs" role="navigation" aria-label="选择学习科目">${bank.subjects.map((s) => `<a href="#/?subject=${encodeURIComponent(s.id)}" class="course-tab ${s.id === activeSubject?.id ? "active" : ""}" ${s.id === activeSubject?.id ? 'aria-current="true"' : ""}><span class="course-symbol">${s.id === "linear" ? "A" : "∫"}</span><span><b>${esc(s.name)}</b><small>${getBankIndex(bank).subjectQuestions.get(s.id).length.toLocaleString()} 题 · ${s.chapters.filter((c) => !c.parentId).length} 章</small></span>${icon("arrow", 16)}</a>`).join("")}<a href="#/knowledge" class="course-tab knowledge-entry"><span class="course-symbol">${icon("book", 23)}</span><span><b>习概知识点</b><small>${knowledge.stats.notes ? `${knowledge.stats.notes} 篇笔记 · ${knowledge.stats.pdfCollections} 份汇编` : "查看复习资料"}</small></span>${icon("arrow", 16)}</a></div><div class="section-head"><h2>${esc(activeSubject?.name ?? "章节")} <small>选择章节，开始练习</small></h2><a href="#/practice?subject=${encodeURIComponent(activeSubject?.id ?? "")}" class="text-btn">全部章节 ${icon("arrow", 15)}</a></div>${chapterCards(false, activeSubject?.id)}<div class="grid-2 local-shortcuts"><a class="card" href="#/review"><span class="shortcut-icon pink">${icon("mistake", 23)}</span><div><h3>错题回顾</h3><p>查漏补缺，把薄弱知识点逐个巩固</p></div>${icon("arrow", 18)}</a><a class="card" href="#/favorites"><span class="shortcut-icon purple">${icon("star", 23)}</span><div><h3>我的收藏</h3><p>留下值得再练的题目，随时复习</p></div>${icon("arrow", 18)}</a></div>`;
+    )}</section>${reviewCard(spacedReview(bank, state), { button, icon })}<div class="course-tabs" role="navigation" aria-label="选择学习科目">${bank.subjects.map((s) => `<a href="#/?subject=${encodeURIComponent(s.id)}" class="course-tab ${s.id === activeSubject?.id ? "active" : ""}" ${s.id === activeSubject?.id ? 'aria-current="true"' : ""}><span class="course-symbol">${s.id === "linear" ? "A" : "∫"}</span><span><b>${esc(s.name)}</b><small>${getBankIndex(bank).subjectQuestions.get(s.id).length.toLocaleString()} 题 · ${s.chapters.filter((c) => !c.parentId).length} 章</small></span>${icon("arrow", 16)}</a>`).join("")}<a href="#/knowledge" class="course-tab knowledge-entry"><span class="course-symbol">${icon("book", 23)}</span><span><b>习概知识点</b><small>${knowledge.stats.notes ? `${knowledge.stats.notes} 篇笔记 · ${knowledge.stats.pdfCollections} 份汇编` : "查看复习资料"}</small></span>${icon("arrow", 16)}</a></div><div class="section-head"><h2>${esc(activeSubject?.name ?? "章节")} <small>选择章节，开始练习</small></h2><a href="#/practice?subject=${encodeURIComponent(activeSubject?.id ?? "")}" class="text-btn">全部章节 ${icon("arrow", 15)}</a></div>${chapterCards(false, activeSubject?.id)}<div class="grid-2 local-shortcuts"><a class="card" href="#/review"><span class="shortcut-icon pink">${icon("mistake", 23)}</span><div><h3>错题回顾</h3><p>查漏补缺，把薄弱知识点逐个巩固</p></div>${icon("arrow", 18)}</a><a class="card" href="#/favorites"><span class="shortcut-icon purple">${icon("star", 23)}</span><div><h3>我的收藏</h3><p>留下值得再练的题目，随时复习</p></div>${icon("arrow", 18)}</a></div>`;
 }
 function chapterCards(expanded = true, subjectId = "") {
   const filters = getFilters();
@@ -288,7 +301,8 @@ function practicePage() {
   if (route().query.has("session") && state.practice) return practiceSession();
   const filters = getFilters();
   const questions = filterQuestions(bank, filters, state);
-  return `${head("章节练习", "选择章节与知识点，按自己的节奏练习。", state.practice ? button(`继续上次练习 ${icon("arrow", 14)}`, "resume-practice", "", "btn soft") : "")}${filtersHTML(filters)}<section class="card practice-start"><div><span class="pill blue">${esc(subject(filters.subjectId)?.name ?? "全部科目")}</span><h2>${filters.chapterId ? esc(bank.subjects.flatMap((s) => s.chapters).find((c) => c.id === filters.chapterId)?.name ?? "当前章节") : "全部题目"}</h2><p>当前范围共 <strong>${questions.length}</strong> 道题 · 题目、答案来自你提供的 PDF</p></div><div class="flex">${button(`${icon("book", 17)} 顺序练习`, "start-practice", 'data-mode="sequential"', "btn primary")}${button(`${icon("refresh", 17)} 随机 ${DEFAULT_QUESTION_COUNT} 题`, "start-practice", 'data-mode="random"', "btn")}</div></section><div class="section-head"><h2>章节目录 <small>展开查看小节</small></h2><span class="muted">${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => !c.parentId)).length} 章 · ${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => c.parentId)).length} 个小节</span></div>${bank.subjects
+  const randomCount = route().query.get("count") === "all" ? "all" : "25";
+  return `${head("章节练习", "选择章节与知识点，按自己的节奏练习。", state.practice ? button(`继续上次练习 ${icon("arrow", 14)}`, "resume-practice", "", "btn soft") : "")}${filtersHTML(filters)}<section class="card practice-start"><div><span class="pill blue">${esc(subject(filters.subjectId)?.name ?? "全部科目")}</span><h2>${filters.chapterId ? esc(bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters).find((c) => c.id === filters.chapterId)?.name ?? "当前章节") : "全部题目"}</h2><p>当前范围共 <strong>${questions.length}</strong> 道题 · 题目、答案来自你提供的 PDF</p></div><div class="practice-controls">${button(`${icon("book", 17)} 顺序练习`, "start-practice", 'data-mode="sequential"', "btn primary")}<div class="random-controls"><div class="field"><label for="random-count">随机题量</label><select id="random-count" data-filter="count"><option value="25" ${randomCount === "25" ? "selected" : ""}>25 题</option><option value="all" ${randomCount === "all" ? "selected" : ""}>所有题目（${questions.length} 题）</option></select></div>${button(`${icon("refresh", 17)} ${randomCount === "all" ? "随机所有题目" : `随机 ${DEFAULT_QUESTION_COUNT} 题`}`, "start-practice", 'data-mode="random"', "btn")}</div><a href="#/prepare" class="text-btn">${icon("target", 15)} 备考模式：先测评，再专项训练</a></div></section><div class="section-head"><h2>章节目录 <small>展开查看小节</small></h2><span class="muted">${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => !c.parentId)).length} 章 · ${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => c.parentId)).length} 个小节</span></div>${bank.subjects
     .filter((s) => !filters.subjectId || s.id === filters.subjectId)
     .map(
       (s) =>
@@ -306,6 +320,80 @@ function practicePage() {
           `<a class="btn" href="#/practice">查看全部</a>`,
         )
   }`;
+}
+function preparationSelection() {
+  const query = route().query;
+  const subjectId = subject(query.get("subject"))?.id ?? state.preparation?.subjectId ?? bank.subjects[0]?.id ?? "";
+  return { subjectId, chapterIds: query.has("scope") ? query.getAll("chapter")
+    : state.preparation?.subjectId === subjectId ? state.preparation.chapterIds
+    : (subject(subjectId)?.chapters.filter((c) => !c.parentId).map((c) => c.id) ?? []) };
+}
+function preparationTopics() {
+  const profile = preparationProfile(bank, state);
+  const topics = profile.topics;
+  return `<section class="card preparation-topics"><h2>复习重点</h2><p class="subtitle">按本次备考的小节与题型调整出题频率。答错后增加，答对后逐步减少；每组结束后重新抽题。</p>${topics.length ? `<div class="preparation-topic-list">${topics.slice(0, 8).map((t) => `<div class="preparation-topic"><div><strong>${esc(getBankIndex(bank).chapters.get(t.subjectId)?.get(t.chapterId)?.name)}</strong><small>${names[t.type]} · 已答 ${t.answered} 次 · 答对 ${t.correct} 次</small></div><span class="pill ${t.priority > 1.15 ? "blue" : t.priority < 0.85 ? "green" : ""}">${t.priority > 1.15 ? "加强训练" : t.priority < 0.85 ? "减少频率" : "常规巩固"}</span></div>`).join("")}</div>` : `<p class="muted">完成测评后，这里会显示你的复习重点。</p>`}<p class="format-note">其他知识点仍有机会抽中，同组题目不重复；上一组题目适当降低频率，兼顾新题和复习。</p></section>${conceptPanel(profile.concepts, { esc, attr, button })}`;
+}
+function preparationPage() {
+  if (route().query.has("session") && state.practice?.preparationId === state.preparation?.id && state.preparation)
+    return practiceSession();
+  const selection = preparationSelection();
+  const available = preparationQuestions(bank, selection).length;
+  const prep = state.preparation;
+  const diagnostic = diagnosticProgress(state);
+  const active = currentPreparationPractice(state);
+  const unfinished = active && !practiceProgress(active).ready;
+  const scope = prep ? prep.chapterIds.map((id) => getBankIndex(bank).chapters.get(prep.subjectId)?.get(id)?.name).filter(Boolean).join("、") : "";
+  return `${head("备考模式", "先随机测评，再围绕薄弱知识点加权刷题。掌握得越好，相关题目出现得越少。")}${prep ? `<section class="card preparation-current"><div><span class="pill blue">当前备考 · ${esc(subject(prep.subjectId)?.name)}</span><h2>${diagnostic.ready ? "测评完成，开始专项巩固" : `测评进度 ${diagnostic.completed} / ${diagnostic.total}`}</h2><p>${esc(scope)}</p><p class="muted">${diagnostic.ready ? `已开启 ${prep.round} 组加权训练` : "请完成全部测评题，解答题对照答案自评后计入。"}</p></div><div class="flex">${unfinished || !diagnostic.ready ? button("继续备考", "resume-preparation", "", "btn primary") : button(`开始加权训练 · ${Math.min(PREPARATION_COUNT, preparationQuestions(bank, prep).length)} 题`, "next-training", "", "btn primary")}${active && !unfinished ? button("查看本组结果", "resume-preparation") : ""}</div></section>${preparationReviewCard()}${preparationTopics()}` : ""}${trendPanel(bank, state, route().query.get("plan"), { esc, attr })}<section class="card preparation-setup"><h2>${prep ? "重新选择备考范围" : "选择备考范围"}</h2><p class="subtitle">一次选择一个科目，可勾选多个大章或小节。大章包含下属全部小节。</p><div class="field"><label for="prepare-subject">备考科目</label><select id="prepare-subject">${bank.subjects.map((s) => `<option value="${attr(s.id)}" ${s.id === selection.subjectId ? "selected" : ""}>${esc(s.name)}</option>`).join("")}</select></div><fieldset class="exam-chapters preparation-chapters" aria-describedby="prepare-availability"><legend>章节范围（可多选）</legend><div class="flex">${button("全选大章", "prepare-select-all", "", "btn small")}${button("清空选择", "prepare-select-none", "", "btn small")}</div><div class="preparation-chapter-options">${(subject(selection.subjectId)?.chapters ?? []).map((c) => `<label class="${c.parentId ? "preparation-subchapter" : "preparation-root"}"><input type="checkbox" data-prepare-chapter value="${attr(c.id)}" ${selection.chapterIds.includes(c.id) ? "checked" : ""}><span>${esc(c.name)}</span><small>${getBankIndex(bank).chapterQuestions.get(selection.subjectId).get(c.id).length} 题</small></label>`).join("")}</div></fieldset><p id="prepare-availability" aria-live="polite">${preparationAvailability(available)}</p><p class="format-note">${prep ? "重新测评会建立新的备考计划，已有答题记录保留。" : "首组均匀随机抽题，不受历史成绩影响。"}选择、判断、填空题自动判分，解答题需自评。</p>${button(`开始 ${PREPARATION_COUNT} 题测评`, "begin-preparation", available ? "" : "disabled", "btn primary")}</section>`;
+}
+function preparationAvailability(count) {
+  return count ? `所选范围共 ${count} 道题，本次测评 ${Math.min(PREPARATION_COUNT, count)} 道${count < PREPARATION_COUNT ? "（不足 20 题，使用全部题目）" : ""}。`
+    : "当前范围没有题目，请至少选择一个有题目的章节。";
+}
+function preparationReviewCard() {
+  const review = spacedReview(bank, state);
+  const allowed = new Set(preparationQuestions(bank, state.preparation).map((q) => q.id));
+  return reviewCard({ schedule: new Map([...review.schedule].filter(([id]) => allowed.has(id))),
+    due: review.due.filter((item) => allowed.has(item.questionId)),
+    upcoming: review.upcoming.filter((item) => allowed.has(item.questionId)),
+  }, { button, icon }, { inPreparation: true });
+}
+function spacedReviewPage() {
+  const allowed = new Set(filterQuestions(bank, getFilters(), state).map((q) => q.id));
+  const all = spacedReview(bank, state);
+  const review = { schedule: new Map([...all.schedule].filter(([id]) => allowed.has(id))),
+    due: all.due.filter((item) => allowed.has(item.questionId)),
+    upcoming: all.upcoming.filter((item) => allowed.has(item.questionId)) };
+  const rows = (items, due) => items.map((item) => {
+    const q = qById(item.questionId);
+    return `<article class="collection-item spaced-item"><div class="grow"><div class="collection-stem">${esc(q.sourceLabel || textOnly(q.stem))}</div><div class="collection-meta"><span>${esc(subject(q.subjectId)?.name)} · ${esc(chapter(q))}</span><span>${due ? "已到期" : "下次复习"}：${shortDate(item.dueAt)}</span><span>当前间隔 ${item.intervalDays} 天</span></div></div>${button("复习这题", "spaced-one", `data-id="${attr(q.id)}"`, "btn small")}</article>`;
+  }).join("");
+  return `${head("间隔复习", "按时重温已学题，逐步延长记忆。提前重复答对不会跳过复习阶段。")}${filtersHTML(getFilters())}${reviewCard(review, { button, icon })}<section class="card"><div class="study-section-head"><h2>到期题目 · ${review.due.length}</h2><p class="subtitle">每次先复习最早到期的 20 题；下方列出前 30 题。</p></div>${review.due.length ? rows(review.due.slice(0, 30), true) : `<p class="study-empty">当前范围没有到期题目。</p>`}</section><section class="card spaced-upcoming"><div class="study-section-head"><h2>接下来的复习</h2><p class="subtitle">按复习时间显示前 20 题，只有已判分或已自评的题目进入计划。</p></div>${review.upcoming.length ? rows(review.upcoming.slice(0, 20), false) : `<p class="study-empty">完成练习后，会自动安排下一次复习。</p>`}</section>`;
+}
+function showConceptDetails(name) {
+  const concept = getConceptIndex(bank).concepts.get(name);
+  if (!concept) return;
+  const prep = state.preparation;
+  const chapters = [...concept.chapters.values()];
+  const chapterIds = [...new Set([...(prep?.chapterIds ?? []), ...chapters.filter((c) => c.subjectId === prep?.subjectId).map((c) => c.chapterId)])];
+  const query = prep ? new URLSearchParams({ subject: prep.subjectId, scope: "custom" }) : null;
+  for (const id of chapterIds) query?.append("chapter", id);
+  openDialog(esc(concept.name), `<p class="subtitle">关联来自章节标题或显式知识点标签，可查看各章题目。扩大备考范围后，开始新测评即可训练新增章节。</p><div class="concept-chapter-list">${chapters.map((c) => `<a href="#/practice?subject=${encodeURIComponent(c.subjectId)}&chapter=${encodeURIComponent(c.chapterId)}"><span>${esc(subject(c.subjectId)?.name)} · ${esc(c.name)}</span><small>${c.count} 题 ${icon("arrow", 12)}</small></a>`).join("")}</div>`, `${button("关闭", "close-dialog")}${prep ? `<a class="btn primary" href="#/prepare?${attr(query.toString())}">将同科目关联章节加入待选范围</a>` : ""}`);
+}
+function updatePreparationSelection() {
+  const query = new URLSearchParams({ subject: document.querySelector("#prepare-subject").value, scope: "custom" });
+  for (const input of document.querySelectorAll("[data-prepare-chapter]:checked")) query.append("chapter", input.value);
+  history.replaceState(null, "", "#/prepare?" + query);
+  const count = preparationQuestions(bank, preparationSelection()).length;
+  document.querySelector("#prepare-availability").textContent = preparationAvailability(count);
+  document.querySelector('[data-action="begin-preparation"]').disabled = !count;
+}
+function isPreparationPractice(p = state.practice) {
+  return p?.mode === "prepare-diagnostic" || p?.mode === "prepare-training";
+}
+function preparationRoundSummary() {
+  const p = state.practice;
+  const progress = practiceProgress(p);
+  return `<section class="card preparation-summary"><span class="pill blue">${p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : `加权训练 · 第 ${p.round} 组`}</span><h2>${progress.ready ? "本组已完成" : "还有题目待完成"}</h2><p>共 ${progress.total} 题，已完成 ${progress.completed} 题，答对 ${progress.correct} 题${progress.completed ? `，正确率 ${Math.round(progress.correct / progress.completed * 100)}%` : ""}。</p><p class="muted">${progress.ready ? "已根据本组表现更新复习重点，可开始下一组加权训练。" : "跳过的题目不会按错题计入。请先补完；解答题需选择自评结果。"}</p><div class="flex">${progress.ready ? button("下一组加权训练", "next-training", "", "btn primary") : button("继续完成本组", "complete-preparation", "", "btn primary")}<a href="#/prepare" class="btn">查看备考计划</a></div></section>${preparationTopics()}${trendPanel(bank, state, state.preparation?.id, { esc, attr })}`;
 }
 
 function optionHTML(q, response, graded = false, correct = null) {
@@ -382,7 +470,7 @@ function questionNavigation(p, exam = false) {
     ? Object.keys(p.answers).filter((id) =>
         hasResponse(qById(id), p.answers[id]),
       ).length
-    : Object.values(p.responses).filter((r) => r.graded).length;
+    : practiceProgress(p).completed;
   const navStart = Math.floor(p.index / 40) * 40;
   return `<aside class="card question-nav"><div class="card-head"><h3>题目导航</h3><span class="muted" style="font-size:10px">${completed}/${p.questionIds.length}</span></div><div class="progress-bar"><span style="width:${(completed / p.questionIds.length) * 100}%"></span></div><div class="question-index">${p.questionIds
     .slice(navStart, navStart + 40)
@@ -413,6 +501,7 @@ function questionNavigation(p, exam = false) {
 }
 function practiceSession() {
   const p = state.practice;
+  if (isPreparationPractice(p) && route().query.has("summary")) return preparationRoundSummary();
   const q = currentQuestion();
   if (!q)
     return `<section class="card">${empty("这组练习已不可用", "题库可能发生了变化，请重新选择练习。", button("选择练习", "exit-practice", "", "btn primary"))}</section>`;
@@ -420,7 +509,7 @@ function practiceSession() {
     answer: q.type === "multiple" ? [] : "",
     graded: false,
   };
-  return `${head(p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn"))}<div class="question-layout"><section class="card question-main"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "PDF 原题" : difficultyNames[q.difficulty]}</span></div>${button(icon("star", 18), "toggle-favorite", `data-id="${attr(q.id)}" aria-label="${state.favorites.includes(q.id) ? "取消收藏" : "收藏题目"}" style="color:${state.favorites.includes(q.id) ? "var(--accent)" : "var(--muted)"}"`, "icon-btn")}</div><p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}${answerInput(q, r.answer, r.graded)}${r.graded ? resultBox(q, r) : ""}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
+  return `${head(p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : p.mode === "prepare-training" ? `加权训练 · 第 ${p.round} 组` : p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn"))}<div class="question-layout"><section class="card question-main"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "PDF 原题" : difficultyNames[q.difficulty]}</span></div>${button(icon("star", 18), "toggle-favorite", `data-id="${attr(q.id)}" aria-label="${state.favorites.includes(q.id) ? "取消收藏" : "收藏题目"}" style="color:${state.favorites.includes(q.id) ? "var(--accent)" : "var(--muted)"}"`, "icon-btn")}</div><p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}${answerInput(q, r.answer, r.graded)}${r.graded ? resultBox(q, r) : ""}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
 }
 function collectionRow(q, i, mode) {
   const m = state.mistakes[q.id];
@@ -692,6 +781,7 @@ function draw() {
   const navItems = [
     ["dashboard", "home", "学习概览", "/"],
     ["practice", "book", "题库练习", "/practice"],
+    ["prepare", "target", "备考模式", "/prepare"],
     ["knowledge", "book", "习概知识点", "/knowledge"],
     ["exams", "exam", "模拟考试", "/exams"],
     ["review", "mistake", "错题本", "/review"],
@@ -701,7 +791,7 @@ function draw() {
   const countWrong = Object.values(state.mistakes).filter(
     (m) => !m.resolved,
   ).length;
-  app.innerHTML = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/" aria-label="知行学习 首页"><img src="./icon.svg" alt=""><strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(state.theme === "dark" ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}<span class="local-avatar">学</span></div></div></header><main id="main" class="local-main" tabindex="-1">${page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : libraryPage()}<footer class="footer"><span>知行学习 · 练习与知识复习</span><span>知行学习题库 · 学习记录自动保存在当前浏览器</span></footer></main></div>`;
+  app.innerHTML = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/" aria-label="知行学习 首页"><img src="./icon.svg" alt=""><strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(state.theme === "dark" ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}<span class="local-avatar">学</span></div></div></header><main id="main" class="local-main" tabindex="-1">${page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : libraryPage()}<footer class="footer"><span>知行学习 · 练习与知识复习</span><span>知行学习题库 · 学习记录自动保存在当前浏览器</span></footer></main></div>`;
   document.title = `${routes[page]} · 知行学习`;
   document.querySelector("#main").toggleAttribute("data-enter", entering);
   renderRich(app, page === "exam" && exam?.status === "submitted");
@@ -834,6 +924,8 @@ async function submitPractice(manual) {
     mode: p.mode,
     durationMs: Date.now() - p.questionStartedAt,
     manual: q.type === "solution",
+    preparationId: p.preparationId,
+    ...(isPreparationPractice(p) ? { practiceId: p.id, round: p.round ?? 0, sessionSize: p.questionIds.length } : {}),
   });
   await persist();
   render();
@@ -1156,7 +1248,7 @@ async function handleAction(action, el) {
     case "import-help":
       openDialog(
         "题库导入格式",
-        `<p>顶层使用 <code>subjects</code> 和 <code>questions</code>。科目包含 id、name、chapters；章节包含 id 和 name。题目需提供：</p><div class="import-details"><b>id</b>：唯一题目 ID<br><b>subjectId / chapterId</b>：对应的科目与章节 ID<br><b>type</b>：single、multiple、boolean、fill、solution<br><b>stem</b>：原题题干，支持 HTML 与 LaTeX<br><b>options</b>：[{"id":"A","text":"选项原文"}, …]<br><b>answer</b>：选项 ID、ID 数组或原题答案<br><b>analysis</b>：原题解析<br><b>acceptedAnswers</b>：填空题的其他可接受答案（可选）</div><p>也接受 subject_id、chapter_id、title、choices、explanation 等常见字段。数字题型编码需先明确映射，避免错误判题。内容会安全排版；导入前请核对数据来源。</p>`,
+        `<p>顶层使用 <code>subjects</code> 和 <code>questions</code>。科目包含 id、name、chapters；章节包含 id 和 name。题目需提供：</p><div class="import-details"><b>id</b>：唯一题目 ID<br><b>subjectId / chapterId</b>：对应的科目与章节 ID<br><b>type</b>：single、multiple、boolean、fill、solution<br><b>stem</b>：原题题干，支持 HTML 与 LaTeX<br><b>options</b>：[{"id":"A","text":"选项原文"}, …]<br><b>answer</b>：选项 ID、ID 数组或原题答案<br><b>analysis</b>：原题解析<br><b>acceptedAnswers</b>：填空题的其他可接受答案（可选）<br><b>concepts</b>：知识点名称数组（可选），相同名称用于跨章节关联</div><p>也接受 subject_id、chapter_id、title、choices、explanation 等常见字段。数字题型编码需先明确映射，避免错误判题。内容会安全排版；导入前请核对数据来源。</p>`,
         button("下载格式说明", "download-guide", "", "btn primary"),
       );
       break;
@@ -1194,10 +1286,77 @@ async function handleAction(action, el) {
       const list = filterQuestions(bank, getFilters(), state);
       const ids = (
         el.dataset.mode === "random"
-          ? shuffle(list).slice(0, DEFAULT_QUESTION_COUNT)
+          ? shuffle(list).slice(0, route().query.get("count") === "all" ? list.length : DEFAULT_QUESTION_COUNT)
           : list
       ).map((q) => q.id);
       await startPractice(ids, el.dataset.mode);
+      break;
+    }
+    case "prepare-select-all":
+    case "prepare-select-none": {
+      const roots = new Set(subject(document.querySelector("#prepare-subject").value).chapters.filter((c) => !c.parentId).map((c) => c.id));
+      for (const input of document.querySelectorAll("[data-prepare-chapter]"))
+        input.checked = action === "prepare-select-all" && roots.has(input.value);
+      updatePreparationSelection();
+      break;
+    }
+    case "begin-preparation": {
+      const created = createPreparation(bank, preparationSelection());
+      archivePreparation(state);
+      state.preparation = created.preparation;
+      state.practice = created.practice;
+      await persist();
+      go("/prepare?session=1");
+      break;
+    }
+    case "concept-details":
+      showConceptDetails(el.dataset.name);
+      break;
+    case "start-spaced": {
+      const allowed = new Set((el.dataset.scope === "preparation" && state.preparation
+        ? preparationQuestions(bank, state.preparation) : filterQuestions(bank, getFilters(), state)).map((q) => q.id));
+      const ids = spacedReview(bank, state).due.filter((item) => allowed.has(item.questionId)).slice(0, 20).map((item) => item.questionId);
+      if (!ids.length) { toast("当前范围没有到期题目"); return; }
+      await startPractice(ids, "spaced");
+      break;
+    }
+    case "spaced-one":
+      await startPractice([el.dataset.id], "spaced");
+      break;
+    case "resume-preparation": {
+      if (!state.preparation) return;
+      if (state.practice?.preparationId !== state.preparation.id) {
+        const saved = currentPreparationPractice(state);
+        if (!saved && diagnosticProgress(state).ready) {
+          go("/prepare");
+          return;
+        }
+        state.practice = saved ? structuredClone(saved) : restoreDiagnostic(state);
+        state.practice.questionStartedAt = Date.now();
+        await persist();
+      }
+      go("/prepare?session=1" + (practiceProgress(state.practice).ready ? "&summary=1" : ""));
+      break;
+    }
+    case "complete-preparation": {
+      const p = state.practice;
+      const i = p.questionIds.findIndex((id) => typeof p.responses[id]?.correct !== "boolean");
+      p.index = Math.max(0, i);
+      p.questionStartedAt = Date.now();
+      await persist();
+      go("/prepare?session=1");
+      break;
+    }
+    case "next-training": {
+      const active = currentPreparationPractice(state);
+      if (active && !practiceProgress(active).ready) {
+        toast("请先完成本组题目，解答题需完成自评");
+        return;
+      }
+      state.practice = createTraining(bank, state);
+      state.preparation.round = state.practice.round;
+      await persist();
+      go("/prepare?session=1");
       break;
     }
     case "start-collection": {
@@ -1221,10 +1380,10 @@ async function handleAction(action, el) {
       await startPractice([el.dataset.id], "sequential");
       break;
     case "resume-practice":
-      go("/practice?session=1");
+      go(isPreparationPractice() ? "/prepare?session=1" : "/practice?session=1");
       break;
     case "exit-practice":
-      go("/practice");
+      go(isPreparationPractice() ? "/prepare" : state.practice?.mode === "spaced" ? "/spaced" : "/practice");
       break;
     case "answer-option": {
       const q = currentQuestion(),
@@ -1275,12 +1434,17 @@ async function handleAction(action, el) {
     }
     case "next-question": {
       const p = state.practice;
+      if (!p) return;
       if (p.index < p.questionIds.length - 1) {
         p.index++;
         p.questionStartedAt = Date.now();
         await persist();
         render();
       } else {
+        if (isPreparationPractice(p)) {
+          go("/prepare?session=1&summary=1");
+          break;
+        }
         const done = Object.values(p.responses).filter(
           (r) => r.graded && r.correct !== null,
         ).length;
@@ -1354,20 +1518,38 @@ async function handleAction(action, el) {
       break;
   }
 }
-const IMPORT_GUIDE = `知行学习题库导入说明\n\n题目、答案与解析请使用实际原始数据。本说明不包含 NeuMathe 原题。\n\nJSON 结构：\n{\n "format":"local-neumathe.bank.v1",\n "source":{"name":"题库来源"},\n "subjects":[{"id":"math","name":"科目名称","chapters":[{"id":"chapter-1","name":"章节名称"}]}],\n "questions":[{\n  "id":"全局唯一ID", "subjectId":"math", "chapterId":"chapter-1",\n  "type":"single", "stem":"原题题干",\n  "options":[{"id":"A","text":"原选项A"},{"id":"B","text":"原选项B"}],\n  "answer":"A", "analysis":"原题解析", "difficulty":"medium", "tags":[]\n }]\n}\n\n题型：single 单选，multiple 多选，boolean 判断，fill 填空，solution 解答。\n多选 answer 使用选项 ID 数组，例如 ["A","C"]。\n判断题默认选项 ID 为 true / false（字符串），也可提供自定义选项。\n填空 answer 为字符串或可接受答案数组；acceptedAnswers 可补充其他写法。\n填空只比较规范化文本，不提供符号代数等价判定。\n解答题保留原答案并由学习者对照自评。\n题干与解析支持常见 HTML 排版和 $…$、$$…$$、\\(…\\)、\\[…\\] LaTeX 公式。\n不执行 HTML 中的脚本、事件或其他主动内容。\n导入会替换题库并重置现有学习数据；导入前请先导出完整备份。\n学习数据只保存在本浏览器，完整备份可用于换设备。\n`;
+const IMPORT_GUIDE = `知行学习题库导入说明\n\n题目、答案与解析请使用实际原始数据。本说明不包含 NeuMathe 原题。\n\nJSON 结构：\n{\n "format":"local-neumathe.bank.v1",\n "source":{"name":"题库来源"},\n "subjects":[{"id":"math","name":"科目名称","chapters":[{"id":"chapter-1","name":"章节名称"}]}],\n "questions":[{\n  "id":"全局唯一ID", "subjectId":"math", "chapterId":"chapter-1",\n  "type":"single", "stem":"原题题干",\n  "options":[{"id":"A","text":"原选项A"},{"id":"B","text":"原选项B"}],\n  "answer":"A", "analysis":"原题解析", "difficulty":"medium", "tags":[], "concepts":["知识点名称"]\n }]\n}\n\n题型：single 单选，multiple 多选，boolean 判断，fill 填空，solution 解答。\n多选 answer 使用选项 ID 数组，例如 ["A","C"]。\n判断题默认选项 ID 为 true / false（字符串），也可提供自定义选项。\n填空 answer 为字符串或可接受答案数组；acceptedAnswers 可补充其他写法。\n填空只比较规范化文本，不提供符号代数等价判定。\n解答题保留原答案并由学习者对照自评。\n题干与解析支持常见 HTML 排版和 $…$、$$…$$、\\(…\\)、\\[…\\] LaTeX 公式。\n不执行 HTML 中的脚本、事件或其他主动内容。\n导入会替换题库并重置现有学习数据；导入前请先导出完整备份。\n学习数据只保存在本浏览器，完整备份可用于换设备。\n`;
 document.addEventListener("click", (event) => {
   const el = event.target.closest("[data-action]");
   if (el) {
     event.preventDefault();
+    const startsSession = ["start-practice", "start-collection", "practice-one", "begin-preparation", "next-training", "resume-preparation", "start-spaced", "spaced-one"].includes(el.dataset.action);
+    if (startsSession && startingSession) return;
+    if (startsSession) startingSession = true;
     handleAction(el.dataset.action, el).catch((err) =>
       toast(err.message ?? "操作失败，请重试"),
-    );
+    ).finally(() => { if (startsSession) startingSession = false; });
   } else if (event.target.closest(".local-nav a,.local-brand")) {
     mobileOpen = false;
     updateMenu();
   }
 });
 document.addEventListener("change", (event) => {
+  if (event.target.matches("#trend-plan")) {
+    const query = route().query;
+    query.set("plan", event.target.value);
+    history.replaceState(null, "", "#/" + route().page + "?" + query);
+    document.querySelector("#preparation-trends").outerHTML = trendPanel(bank, state, event.target.value, { esc, attr });
+    return;
+  }
+  if (event.target.matches("#prepare-subject")) {
+    go("/prepare?subject=" + encodeURIComponent(event.target.value));
+    return;
+  }
+  if (event.target.matches("[data-prepare-chapter]")) {
+    updatePreparationSelection();
+    return;
+  }
   if (event.target.matches("#exam-subject")) {
     document.querySelector("#exam-chapter-options").innerHTML = examChapterOptions(event.target.value);
     document.querySelector("#exam-all-chapters").checked = true;
@@ -1456,6 +1638,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 window.addEventListener("hashchange", () => {
+  if (dialog.open) dialog.close();
   render();
   window.scrollTo(0, 0);
 });
