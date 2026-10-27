@@ -1,12 +1,15 @@
 import { chromium, browserOptions, baseURL } from './browser-helpers.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import { normalizeBank } from '../dist/core.mjs';
+import { preparationMetrics } from '../dist/preparation.mjs';
 
 const api = process.env.ZHIXING_TEST_API;
 const key = process.env.ZHIXING_TEST_KEY;
 assert.ok(api && key, 'Run with npm run test:browser');
 const knowledge = JSON.parse(await readFile('dist/data/knowledge.json', 'utf8'));
 const note = knowledge.articles.find(article => article.kind === 'note');
+const bank = normalizeBank(JSON.parse(await readFile('dist/data/bank.json', 'utf8')));
 const browser = await chromium.launch(browserOptions);
 const errors = [];
 async function stateOf(page) {
@@ -56,6 +59,9 @@ try {
   await a.goto(baseURL + '/#/prepare');
   await a.locator('[data-action="begin-preparation"]').click();
   await a.locator('.question-main').waitFor();
+  await a.locator('[data-action="answer-option"][data-value="A"]').click();
+  await a.getByRole('button', { name: '确认答案', exact: true }).click();
+  await a.locator('.result-box').waitFor();
   await a.goto(baseURL + '/#/knowledge/' + note.id);
   await a.getByRole('button', { name: /标为已读/ }).click();
   await a.getByRole('button', { name: '收藏知识点', exact: true }).click();
@@ -84,6 +90,7 @@ try {
   assert.deepEqual(restored.preparation, original.preparation);
   assert.deepEqual(restored.preparationHistory, original.preparationHistory);
   assert.deepEqual(restored.practice, original.practice);
+  assert.deepEqual(preparationMetrics(bank, restored), preparationMetrics(bank, original));
   const beforeBackup = JSON.parse(await readFile('artifacts/pre-sync-backup.json', 'utf8'));
   assert.equal(beforeBackup.state.attempts.length, 0);
   await b.reload();

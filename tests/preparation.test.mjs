@@ -5,6 +5,7 @@ import {
   preparationQuestions, createPreparation, diagnosticProgress, restoreDiagnostic,
   preparationProfile, weightedSample, createTraining, practiceProgress,
   currentPreparationPractice,
+  preparationMastery, preparationMetrics, syncPreparationMistakes,
 } from "../dist/preparation.mjs";
 import { fixture } from "./fixture.mjs";
 
@@ -170,4 +171,99 @@ test("saved preparation sessions survive switching to ordinary practice; damaged
   assert.equal(currentPreparationPractice(damaged), null);
   for (const preparation of [false, "bad", 1, {}])
     assert.equal(validateBackup({ format: BACKUP_FORMAT, bank, state: { ...emptyState(), preparation } }).state.preparation, null);
+});
+
+test("mastery needs two consecutive independent trials, resets on a new mistake and excludes other plans", () => {
+  const bank = makeBank(), state = makeState(bank), q = bank.questions[0];
+  const grade = (correct, session, at) => recordAttempt(state, q, correct ? "B" : "A", correct, {
+    id: `${session}:${at}`, at, mode: "prepare-training", preparationId: state.preparation.id,
+    practiceId: session, round: 1, sessionSize: 20,
+  });
+  grade(false, "first", 1000);
+  grade(true, "second", 2000);
+  assert.equal(preparationMastery(bank, state).questions.get(q.id).correctStreak, 1);
+  // A duplicate import or revisiting an already graded session is not a second success.
+  grade(true, "second", 2100);
+  assert.equal(preparationMastery(bank, state).mastered, 0);
+  recordAttempt(state, q, "B", true, { id: "other", at: 2200, mode: "prepare-training", preparationId: "old-plan" });
+  assert.equal(preparationMastery(bank, state).mastered, 0);
+  grade(true, "third", 3000);
+  assert.equal(syncPreparationMistakes(bank, state).mastered, 1);
+  assert.equal(state.mistakes[q.id].resolved, true);
+  grade(false, "fourth", 4000);
+  assert.equal(syncPreparationMistakes(bank, state).mastered, 0);
+  assert.equal(state.mistakes[q.id].resolved, false);
+  assert.equal(preparationMastery(bank, state).questions.get(q.id).correctStreak, 0);
+});
+
+test("unmastered mistakes stay strongly weighted after one correction and lose the boost only after two", () => {
+  const bank = makeBank(), state = makeState(bank), q = bank.questions[0], untouched = bank.questions[35];
+  state.practice = null;
+  const grade = (correct, id) => recordAttempt(state, q, correct ? "B" : "A", correct, {
+    id, mode: "prepare-training", preparationId: state.preparation.id,
+  });
+  grade(false, "wrong");
+  const wrong = preparationProfile(bank, state);
+  assert.ok(wrong.weights.get(q.id) > 6 * wrong.weights.get(untouched.id));
+  grade(true, "one-correction");
+  const once = preparationProfile(bank, state);
+  assert.ok(once.weights.get(q.id) > 4 * once.weights.get(untouched.id));
+  assert.equal(preparationMastery(bank, state).pendingMistakes, 1);
+  grade(true, "two-corrections");
+  const twice = preparationProfile(bank, state);
+  assert.ok(twice.weights.get(q.id) < once.weights.get(q.id));
+  assert.equal(preparationMastery(bank, state).pendingMistakes, 0);
+});
+
+test("live estimates and mastery progress use the selected plan; previous mistakes need two corrections", () => {
+  const raw = structuredClone(fixture);
+  raw.questions = [raw.questions[0]];
+  const bank = normalizeBank(raw), state = { ...emptyState(), ...createPreparation(bank, { subjectId: "math", chapterIds: ["limits"] }) };
+  const q = bank.questions[0];
+  assert.equal(preparationMetrics(bank, state).estimatedScore, null);
+  assert.equal(preparationMetrics(bank, state).progress, 0);
+  for (const [i, correct] of [false, true, true].entries()) {
+    recordAttempt(state, q, correct ? "B" : "A", correct, {
+      id: `practice:group-${i}:${q.id}`, mode: i ? "prepare-training" : "prepare-diagnostic", preparationId: state.preparation.id,
+    });
+    const result = preparationMetrics(bank, state);
+    assert.equal(result.estimatedScore, [0, 50, 100][i]);
+    assert.equal(result.progress, [0, 0, 100][i]);
+    assert.equal(result.covered, 1);
+    assert.equal(result.pendingMistakes, i < 2 ? 1 : 0);
+  }
+  const restored = validateBackup(JSON.parse(JSON.stringify({ format: BACKUP_FORMAT, bank, state })));
+  assert.equal(preparationMetrics(restored.bank, restored.state).estimatedScore, 100);
+  assert.equal(preparationMetrics(restored.bank, restored.state).progress, 100);
+});
+
+test("predictions weigh selected section/type sizes, keep unseen topics neutral and never exceed 100", () => {
+  const bank = makeBank(), state = makeState(bank), q = bank.questions[0];
+  recordAttempt(state, q, "B", true, { id: "answer", mode: "prepare-diagnostic", preparationId: state.preparation.id });
+  const first = preparationMetrics(bank, state);
+  assert.ok(first.estimatedScore > 50 && first.estimatedScore < 75);
+  assert.ok(first.progress < first.coverage);
+  assert.equal(first.total, 61);
+  assert.equal(first.covered, 1);
+  for (const q of bank.questions.filter((q) => q.subjectId === "math"))
+    for (let i = 0; i < 2; i++) recordAttempt(state, q, "B", true, {
+      id: `all:${q.id}:${i}`, mode: "prepare-training", preparationId: state.preparation.id,
+    });
+  assert.equal(preparationMetrics(bank, state).estimatedScore, 100);
+  assert.equal(preparationMetrics(bank, state).progress, 100);
+});
+
+test("pending self-assessment does not change live metrics; a later ordinary error stays in the notebook", () => {
+  const bank = normalizeBank(fixture), state = { ...emptyState(), ...createPreparation(normalizeBank(fixture), { subjectId: "math", chapterIds: ["limits"] }) };
+  const q = bank.questions.find((q) => q.type === "solution");
+  recordAttempt(state, q, "", null, { id: "reference", at: 1000, mode: "prepare-diagnostic", preparationId: state.preparation.id });
+  assert.equal(preparationMetrics(bank, state).covered, 0);
+  for (const [i, correct] of [false, true, true].entries()) recordAttempt(state, q, "", correct, {
+    id: `manual-${i}`, at: 2000 + i, mode: "prepare-training", preparationId: state.preparation.id, manual: true,
+  });
+  assert.equal(syncPreparationMistakes(bank, state).mastered, 1);
+  assert.equal(state.mistakes[q.id].resolved, true);
+  recordAttempt(state, q, "", false, { id: "ordinary-wrong", at: 5000, mode: "sequential", manual: true });
+  syncPreparationMistakes(bank, state);
+  assert.equal(state.mistakes[q.id].resolved, false);
 });

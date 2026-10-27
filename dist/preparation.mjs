@@ -1,4 +1,4 @@
-import { createPractice, getBankIndex, shuffle, uid } from "./core.mjs";
+import { createPractice, getBankIndex, hasResponse, shuffle, uid } from "./core.mjs";
 import { getConceptIndex } from "./concepts.mjs";
 import { spacedReview, reviewWeight } from "./study.mjs";
 
@@ -66,6 +66,74 @@ function update(map, key, correct) {
   map.set(key, entry);
 }
 
+export function preparationMastery(bank, state) {
+  const pool = state.preparation ? preparationQuestions(bank, state.preparation) : [];
+  const scope = new Map(pool.map((q) => [q.id, q]));
+  const questions = new Map(), trials = new Set();
+  const attempts = state.attempts.filter((a) => a.preparationId === state.preparation?.id &&
+    ["prepare-diagnostic", "prepare-training"].includes(a.mode) &&
+    typeof a.correct === "boolean" && Number.isFinite(a.at) && scope.has(a.questionId))
+    .sort((a, b) => a.at - b.at);
+  for (const a of attempts) {
+    const q = scope.get(a.questionId);
+    if (q.type !== "solution" && !hasResponse(q, a.answer)) continue;
+    // A replayed submission or revisiting the same graded session is one trial.
+    const sessionId = a.practiceId ?? (typeof a.id === "string" && a.id.startsWith("practice:")
+      ? a.id.slice(9).split(":")[0] : a.id ?? `${a.mode}:${a.at}`);
+    const key = JSON.stringify([q.id, sessionId]);
+    if (trials.has(key)) continue;
+    trials.add(key);
+    const result = questions.get(q.id) ?? { questionId: q.id, correctStreak: 0, wrongCount: 0, mastered: false };
+    result.correctStreak = a.correct ? Math.min(2, result.correctStreak + 1) : 0;
+    result.wrongCount += Number(!a.correct);
+    result.latestCorrect = a.correct;
+    result.lastAt = a.at;
+    result.mastered = result.correctStreak === 2;
+    questions.set(q.id, result);
+  }
+  const mastered = [...questions.values()].filter((q) => q.mastered).length;
+  const pendingMistakes = [...questions.values()].filter((q) => q.wrongCount > 0 && !q.mastered).length;
+  return { pool, questions, total: pool.length, covered: questions.size, mastered, pendingMistakes,
+    progress: pool.length ? Math.round(mastered / pool.length * 10000) / 100 : 0,
+    coverage: pool.length ? Math.round(questions.size / pool.length * 10000) / 100 : 0 };
+}
+
+export function syncPreparationMistakes(bank, state) {
+  const mastery = preparationMastery(bank, state);
+  for (const [id, q] of mastery.questions)
+    if (q.wrongCount && state.mistakes[id] && state.mistakes[id].lastAt <= q.lastAt)
+      state.mistakes[id].resolved = q.mastered;
+  return mastery;
+}
+
+export function preparationMetrics(bank, state) {
+  const mastery = preparationMastery(bank, state);
+  const groups = new Map();
+  // Each distinct question contributes once, so repeatedly drawing a weak topic
+  // cannot make that topic dominate the estimate for the entire selected bank.
+  for (const q of mastery.pool) {
+    const key = skillKey(q), group = groups.get(key) ?? { total: 0, seen: 0, points: 0 };
+    const result = mastery.questions.get(q.id);
+    group.total++;
+    if (result) {
+      group.seen++;
+      // One correction of a previous mistake is tentative until confirmed.
+      group.points += result.latestCorrect ? result.wrongCount && !result.mastered ? 0.5 : 1 : 0;
+    }
+    groups.set(key, group);
+  }
+  let expected = 0;
+  for (const g of groups.values()) {
+    // Unseen questions borrow a smoothed estimate from their section and type;
+    // untouched groups start at 50%, rather than inheriting another topic's score.
+    const unseenEstimate = (g.points + 1) / (g.seen + 2);
+    expected += g.points + (g.total - g.seen) * unseenEstimate;
+  }
+  const active = currentPreparationPractice(state);
+  return { ...mastery, estimatedScore: mastery.covered ? Math.round(expected / mastery.total * 1000) / 10 : null,
+    round: active ? practiceProgress(active) : { completed: 0, total: 0, correct: 0, ready: false } };
+}
+
 export function preparationProfile(bank, state, now = Date.now()) {
   const prep = state.preparation;
   const questions = prep ? preparationQuestions(bank, prep) : [];
@@ -83,6 +151,7 @@ export function preparationProfile(bank, state, now = Date.now()) {
     for (const name of conceptIndex.questions.get(q.id) ?? []) update(conceptNeeds, name, a.correct);
   }
   const recent = new Set(currentPreparationPractice(state)?.questionIds ?? []);
+  const mastery = preparationMastery(bank, state);
   const { schedule, due } = spacedReview(bank, state, now);
   const weights = new Map(questions.map((q) => {
     const base = 0.5 * (chapters.get(chapterKey(q))?.need ?? 1) +
@@ -90,7 +159,11 @@ export function preparationProfile(bank, state, now = Date.now()) {
       0.2 * (individuals.get(q.id)?.need ?? 1);
     const names = conceptIndex.questions.get(q.id) ?? [];
     const associated = names.length ? names.reduce((sum, name) => sum + (conceptNeeds.get(name)?.need ?? 1), 0) / names.length : base;
-    return [q.id, (0.75 * base + 0.25 * associated) * reviewWeight(schedule.get(q.id), now) * (recent.has(q.id) ? 0.7 : 1)];
+    const result = mastery.questions.get(q.id);
+    const pending = result?.wrongCount > 0 && !result.mastered;
+    const reinforcement = pending ? result.correctStreak === 0 ? 6 : 4 : result?.mastered ? 0.5 : 1;
+    return [q.id, (0.75 * base + 0.25 * associated) * reviewWeight(schedule.get(q.id), now) *
+      reinforcement * (recent.has(q.id) && !pending ? 0.7 : 1)];
   }));
   const topics = [...skills].map(([key, value]) => {
     const [subjectId, chapterId, type] = JSON.parse(key);
