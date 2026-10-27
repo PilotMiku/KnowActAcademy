@@ -87,6 +87,7 @@ try {
   await page.reload();
   await page.locator("#prepare-subject").waitFor();
   assert.equal(await page.locator("[data-prepare-chapter]:checked").count(), 2);
+  await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.getByRole("heading", { name: "备考测评", exact: true }).waitFor();
   const initial = await stateOf(page);
@@ -174,6 +175,7 @@ try {
   await page.goto(`${baseURL}/#/prepare`);
   await page.locator("#prepare-subject").waitFor();
   assert.match(await page.locator("#prepare-availability").innerText(), /不足 20 题/);
+  await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.locator(".question-main").waitFor();
   const small = await stateOf(page);

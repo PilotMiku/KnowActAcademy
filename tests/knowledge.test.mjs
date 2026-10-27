@@ -83,7 +83,7 @@ test("knowledge progress survives current backups and old backups default to emp
       knowledgeRead: ["a", "a", null],
       knowledgeFavorites: "invalid",
     }),
-    { knowledgeRead: ["a"], knowledgeFavorites: [] },
+    { knowledgeRead: ["a"], knowledgeFavorites: [], knowledgeRecalled: [], knowledgeRecallDrafts: {} },
   );
   state.knowledgeRead = "corrupt";
   assert.throws(

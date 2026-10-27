@@ -46,8 +46,8 @@ async function summary(page) {
 }
 async function expectLive(page, score, progress, pending, completed) {
   const card = page.locator(".preparation-live");
-  await card.locator("[data-preparation-score]").filter({ hasText: String(score) }).waitFor();
-  assert.equal(await card.locator("[data-preparation-score]").innerText(), String(score));
+  await card.locator('[data-live-field="training"]').filter({ hasText: String(score) }).waitFor();
+  assert.equal(await card.locator('[data-live-field="training"]').innerText(), String(score));
   assert.equal(await card.locator("[data-preparation-progress]").innerText(), `${progress}%`);
   assert.equal(await card.locator("[data-preparation-pending]").innerText(), String(pending));
   assert.match(await card.locator("[data-preparation-round]").innerText(), new RegExp(`已完成 ${completed} / 3 题`));
@@ -61,10 +61,12 @@ try {
   await page.getByRole("button", { name: "确认导入", exact: true }).click();
   await page.locator(".local-hero").waitFor();
   await page.goto(`${baseURL}/#/prepare`);
+  await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await expectLive(page, "—", 0, 0, 0);
   await grade(page, "qa-single", false);
   await expectLive(page, 33.3, 0, 1, 1);
+  assert.equal(await page.locator("[data-preparation-score]").innerText(), "—");
   assert.equal(await page.locator('.question-main [data-action="resolve-mistake"]').count(), 0);
   await page.goto(`${baseURL}/#/review`);
   await page.locator('[data-action="resolve-mistake"][data-id="qa-single"]').click();

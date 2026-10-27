@@ -29,8 +29,8 @@ export function spacedReview(bank, state, now = Date.now()) {
   for (const a of attempts) {
     const previous = schedule.get(a.questionId);
     // Repeating a correct answer before it is due does not skip memory stages.
-    const early = a.correct && previous && a.at < previous.dueAt;
-    const streak = a.correct ? early ? previous.streak : (previous?.streak ?? 0) + 1 : 0;
+    const early = a.correct && !a.uncertain && previous && a.at < previous.dueAt;
+    const streak = a.correct && !a.uncertain ? early ? previous.streak : (previous?.streak ?? 0) + 1 : 0;
     const intervalDays = intervals[Math.min(intervals.length - 1, Math.max(0, streak - 1))];
     schedule.set(a.questionId, { questionId: a.questionId, streak, intervalDays, lastAt: a.at,
       dueAt: early ? previous.dueAt : a.at + intervalDays * DAY_MS });

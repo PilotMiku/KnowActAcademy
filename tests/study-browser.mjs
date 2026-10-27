@@ -59,12 +59,14 @@ try {
   await page.getByRole("button", { name: "确认导入", exact: true }).click();
   await page.locator(".local-hero").waitFor();
   await page.goto(`${baseURL}/#/prepare`);
+  await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.locator(".question-main").waitFor();
   const planId = (await stateOf(page)).preparation.id;
   await finishGroup(page, false);
   assert.equal(await page.locator(".trend-point").count(), 1);
   assert.match(await page.locator(".trend-table tbody").innerText(), /83%/);
+  await page.locator(".concept-panel>summary").click();
   await page.locator('[data-action="concept-details"]').click();
   assert.equal(await page.locator(".concept-chapter-list>a").count(), 2);
   await page.locator(".concept-chapter-list>a").first().click();
@@ -82,12 +84,14 @@ try {
   assert.equal(completed.attempts.length, 12);
 
   await page.goto(`${baseURL}/#/prepare`);
+  await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.locator(".question-main").waitFor();
   const currentId = (await stateOf(page)).preparation.id;
   assert.notEqual(currentId, planId);
   assert.equal((await stateOf(page)).preparationHistory.length, 1);
   await page.goto(`${baseURL}/#/prepare`);
+  await page.locator("#preparation-trends>summary").click();
   await page.locator("#trend-plan").selectOption(planId);
   assert.equal(await page.locator(".trend-point").count(), 2);
   await page.reload();

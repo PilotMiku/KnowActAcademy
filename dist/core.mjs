@@ -1,3 +1,5 @@
+import { defaultStudySettings, normalizeStudySettings } from "./preferences.mjs";
+import { pauseExamQuestion } from "./exam-timing.mjs";
 export const VERSION = 1;
 export const BANK_FORMAT = "local-neumathe.bank.v1";
 export const BACKUP_FORMAT = "local-neumathe.backup.v1";
@@ -76,7 +78,10 @@ export function emptyState() {
     practice: null,
     preparation: null,
     preparationHistory: [],
-    theme: "light",
+    theme: "system",
+    studySettings: defaultStudySettings(),
+    knowledgeRecallDrafts: {},
+    knowledgeRecalled: [],
     dailyGoal: 20,
     knowledgeRead: [],
     knowledgeFavorites: [],
@@ -428,6 +433,7 @@ export function recordAttempt(state, q, answer, correct, options = {}) {
     durationMs: Math.max(0, options.durationMs ?? 0),
     examId: options.examId ?? null,
     manual: !!options.manual,
+    ...(options.uncertain ? { uncertain: true } : {}),
     ...(options.preparationId ? { preparationId: options.preparationId } : {}),
     ...(options.practiceId ? { practiceId: options.practiceId, round: options.round ?? 0, sessionSize: options.sessionSize } : {}),
   });
@@ -465,10 +471,14 @@ export function createExam(ids, minutes, subjectId = "", now = Date.now()) {
     answers: {},
     status: "active",
     index: 0,
+    questionTimes: {},
+    questionStartedAt: now,
+    uncertainIds: [],
   };
 }
 export function finishExam(state, bank, exam, now = Date.now()) {
   if (exam.status === "submitted") return exam;
+  pauseExamQuestion(exam, now);
   const questions = new Map(bank.questions.map((q) => [q.id, q]));
   if (exam.questionIds.some((id) => !questions.has(id)))
     throw new Error("考试题目已不在当前题库中，请恢复原题库");
@@ -485,7 +495,8 @@ export function finishExam(state, bank, exam, now = Date.now()) {
       examId: exam.id,
       mode: "exam",
       at: Math.min(now, exam.endsAt),
-      durationMs: 0,
+      durationMs: exam.questionTimes?.[id] ?? 0,
+      uncertain: exam.uncertainIds?.includes(id),
     });
   }
   Object.assign(exam, {
@@ -550,6 +561,7 @@ export function validateBackup(input) {
         !a ||
         !ids.has(a.questionId) ||
         !Number.isFinite(a.at) ||
+        (a.uncertain !== undefined && typeof a.uncertain !== "boolean") ||
         (a.practiceId !== undefined && (typeof a.practiceId !== "string" || !a.practiceId ||
           !Number.isInteger(a.round) || a.round < 0 || !Number.isInteger(a.sessionSize) || a.sessionSize < 1 || a.sessionSize > 20)) ||
         ![true, false, null].includes(a.correct),
@@ -572,6 +584,8 @@ export function validateBackup(input) {
         !Number.isInteger(e.index) || e.index < 0 || e.index >= e.questionIds.length ||
         !Number.isFinite(e.startedAt) ||
         !Number.isFinite(e.minutes) || e.minutes < 1 || e.minutes > 240 ||
+        (e.uncertainIds !== undefined && (!Array.isArray(e.uncertainIds) || e.uncertainIds.some((id) => !e.questionIds.includes(id)))) ||
+        (e.questionTimes !== undefined && (!record(e.questionTimes) || Object.entries(e.questionTimes).some(([id, ms]) => !e.questionIds.includes(id) || !Number.isFinite(ms) || ms < 0))) ||
         (e.chapters !== undefined && e.chapters !== null &&
           (!Array.isArray(e.chapters) || !e.chapters.length || e.chapters.some((c) =>
             !record(c) || typeof c.subjectId !== "string" || typeof c.chapterId !== "string"))) ||
@@ -581,7 +595,8 @@ export function validateBackup(input) {
   )
     throw new Error("备份中的考试记录不完整");
   const state = { ...emptyState(), ...data, version: VERSION };
-  for (const key of ["knowledgeRead", "knowledgeFavorites"]) {
+  state.exams = state.exams.map((exam) => ({ ...exam, questionStartedAt: null }));
+  for (const key of ["knowledgeRead", "knowledgeFavorites", "knowledgeRecalled"]) {
     if (
       data[key] !== undefined &&
       (!Array.isArray(data[key]) ||
@@ -591,7 +606,12 @@ export function validateBackup(input) {
     state[key] = [...new Set(data[key] || [])];
   }
   state.dailyGoal = Math.min(200, Math.max(1, Number(data.dailyGoal) || 20));
-  state.theme = data.theme === "dark" ? "dark" : "light";
+  state.theme = ["light", "dark", "system"].includes(data.theme) ? data.theme : "system";
+  state.studySettings = normalizeStudySettings(data.studySettings);
+  if (data.knowledgeRecallDrafts !== undefined && (!record(data.knowledgeRecallDrafts) ||
+    Object.values(data.knowledgeRecallDrafts).some((text) => typeof text !== "string" || text.length > 10000)))
+    throw new Error("备份中的回忆自测格式错误");
+  state.knowledgeRecallDrafts = data.knowledgeRecallDrafts ?? {};
   const validPractice = (p) => record(p) &&
     Array.isArray(p.questionIds) && p.questionIds.length > 0 &&
     new Set(p.questionIds).size === p.questionIds.length &&
@@ -612,6 +632,7 @@ export function validateBackup(input) {
     throw new Error("备份中的备考历史格式错误");
   if (!prep) state.preparation = null;
   if (prep && (!record(prep) || typeof prep.id !== "string" || !prep.id ||
+    (prep.roundPolicy !== undefined && !["adaptive", "fixed"].includes(prep.roundPolicy)) ||
     typeof prep.diagnosticPracticeId !== "string" || !prep.diagnosticPracticeId ||
     !index.subjects.has(prep.subjectId) ||
     !Array.isArray(prep.chapterIds) || !prep.chapterIds.length ||

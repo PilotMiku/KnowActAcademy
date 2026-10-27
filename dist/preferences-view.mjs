@@ -1,0 +1,5 @@
+export function displaySettingsHTML(state) {
+  const settings = state.studySettings;
+  const options = (items, selected) => items.map(([value, name]) => `<option value="${value}" ${value === selected ? "selected" : ""}>${name}</option>`).join("");
+  return `<div class="display-settings"><div class="field"><label for="display-theme">外观</label><select id="display-theme" data-study-setting="theme">${options([["system", "跟随系统"], ["light", "浅色"], ["dark", "深色"]], state.theme)}</select></div><div class="field"><label for="display-font">阅读字号</label><select id="display-font" data-study-setting="fontSize">${options([["normal", "标准"], ["large", "大"], ["larger", "更大"]], settings.fontSize)}</select></div><div class="field"><label for="display-spacing">阅读行距</label><select id="display-spacing" data-study-setting="lineSpacing">${options([["normal", "标准"], ["relaxed", "宽松"]], settings.lineSpacing)}</select></div><label class="display-focus"><input type="checkbox" data-study-setting="focus" ${settings.focus ? "checked" : ""}>答题时使用专注布局</label><p class="format-note">设置自动保存。题干与解析图片可点击放大，支持键盘回车打开；减少动态效果会跟随系统设置。</p></div>`;
+}

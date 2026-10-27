@@ -227,7 +227,8 @@ test("live estimates and mastery progress use the selected plan; previous mistak
       id: `practice:group-${i}:${q.id}`, mode: i ? "prepare-training" : "prepare-diagnostic", preparationId: state.preparation.id,
     });
     const result = preparationMetrics(bank, state);
-    assert.equal(result.estimatedScore, [0, 50, 100][i]);
+    assert.equal(result.trainingScore, [0, 50, 100][i]);
+    assert.equal(result.estimatedScore, [null, 50, 100][i]);
     assert.equal(result.progress, [0, 0, 100][i]);
     assert.equal(result.covered, 1);
     assert.equal(result.pendingMistakes, i < 2 ? 1 : 0);
@@ -241,7 +242,9 @@ test("predictions weigh selected section/type sizes, keep unseen topics neutral 
   const bank = makeBank(), state = makeState(bank), q = bank.questions[0];
   recordAttempt(state, q, "B", true, { id: "answer", mode: "prepare-diagnostic", preparationId: state.preparation.id });
   const first = preparationMetrics(bank, state);
-  assert.ok(first.estimatedScore > 50 && first.estimatedScore < 75);
+  assert.ok(first.trainingScore > 50 && first.trainingScore < 75);
+  assert.equal(first.estimatedScore, null);
+  assert.equal(first.evidence, "样本不足");
   assert.ok(first.progress < first.coverage);
   assert.equal(first.total, 61);
   assert.equal(first.covered, 1);

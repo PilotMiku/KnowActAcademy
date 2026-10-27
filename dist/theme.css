@@ -1,0 +1,18 @@
+:root {
+  --bg: #f8f9fc; --surface: #fff; --side: #f5f7fc; --ink: #181c2a;
+  --muted: #707789; --line: #e9ebf2; --accent: #006fee; --accent-light: #eaf3ff;
+  --green: #15966a; --green-light: #e8f9f1; --blue: #006fee; --blue-light: #edf5ff;
+  --shadow: 0 4px 24px #1c407207; --radius: 18px;
+  --serif: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+}
+body { background: radial-gradient(ellipse at 96% 0%,#e3e6ff88,transparent 36%),radial-gradient(ellipse at 0% 22%,#d9f4ff66,transparent 30%),var(--bg); font-size:14px; }
+body.dark { --bg:#10121b; --surface:#1a1d2a; --side:#212537; --ink:#f3f4fc; --muted:#a2a8bc; --line:#2c3145; --accent:#55a0ff; --accent-light:#203859; --green:#55d5a7; --green-light:#173e35; --blue:#55a0ff; --blue-light:#203859; --shadow:none; background:radial-gradient(ellipse at 95% 0%,#32205c55,transparent 40%),var(--bg); }
+
+:root { --focus-ring:#006fee66; --question-font-size:16px; --reading-font-size:15px; --study-line-height:1.9; color-scheme:light; }
+html[data-theme="dark"] { --bg:#10121b; --surface:#1a1d2a; --side:#212537; --ink:#f3f4fc; --muted:#a2a8bc; --line:#2c3145; --accent:#55a0ff; --accent-light:#203859; --green:#55d5a7; --green-light:#173e35; --blue:#55a0ff; --blue-light:#203859; --shadow:none; color-scheme:dark; background:#10121b; }
+html[data-theme="dark"] body { background:radial-gradient(ellipse at 95% 0%,#32205c55,transparent 40%),var(--bg); }
+body[data-font-size="large"] { --question-font-size:19px; --reading-font-size:18px; }
+body[data-font-size="larger"] { --question-font-size:22px; --reading-font-size:21px; }
+body[data-line-spacing="relaxed"] { --study-line-height:2.3; }
+.question-title,.options .rich,.blank-answer { font-size:var(--question-font-size); line-height:var(--study-line-height); }
+.reading-content { font-size:var(--reading-font-size); line-height:var(--study-line-height); }

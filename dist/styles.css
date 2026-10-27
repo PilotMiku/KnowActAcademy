@@ -1,20 +1,3 @@
-:root {
-  --bg: #f6f5f1;
-  --surface: #fff;
-  --side: #fbfaf7;
-  --ink: #25302e;
-  --muted: #858c85;
-  --line: #e6e7e0;
-  --accent: #c86a4c;
-  --accent-light: #faece5;
-  --green: #527863;
-  --green-light: #eaf3ec;
-  --blue: #586e93;
-  --blue-light: #edf1f8;
-  --shadow: 0 6px 22px #26312d05;
-  --radius: 18px;
-  --serif: Georgia, "Songti SC", serif;
-}
 * {
   box-sizing: border-box;
 }
@@ -32,21 +15,6 @@ body {
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-}
-body.dark {
-  --bg: #1a201f;
-  --surface: #242b29;
-  --side: #1f2523;
-  --ink: #e8ece5;
-  --muted: #9aa39c;
-  --line: #35403a;
-  --accent: #eda280;
-  --accent-light: #40302a;
-  --green: #9ac3a6;
-  --green-light: #2a3a30;
-  --blue: #9db5df;
-  --blue-light: #2b3545;
-  --shadow: none;
 }
 button,
 input,
@@ -84,7 +52,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid #c86a4c66;
+  outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
 }
 h1,
@@ -2038,15 +2006,6 @@ dialog:has(.exam-chapters) .dialog-actions { flex-shrink:0; }
 }
 
 /* Local NeuMathe appearance: HeroUI blue, translucent navigation, soft color glows. */
-:root {
-  --bg: #f8f9fc; --surface: #fff; --side: #f5f7fc; --ink: #181c2a;
-  --muted: #707789; --line: #e9ebf2; --accent: #006fee; --accent-light: #eaf3ff;
-  --green: #15966a; --green-light: #e8f9f1; --blue: #006fee; --blue-light: #edf5ff;
-  --shadow: 0 4px 24px #1c407207; --radius: 18px;
-  --serif: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
-}
-body { background: radial-gradient(ellipse at 96% 0%,#e3e6ff88,transparent 36%),radial-gradient(ellipse at 0% 22%,#d9f4ff66,transparent 30%),var(--bg); font-size:14px; }
-body.dark { --bg:#10121b; --surface:#1a1d2a; --side:#212537; --ink:#f3f4fc; --muted:#a2a8bc; --line:#2c3145; --accent:#55a0ff; --accent-light:#203859; --green:#55d5a7; --green-light:#173e35; --blue:#55a0ff; --blue-light:#203859; --shadow:none; background:radial-gradient(ellipse at 95% 0%,#32205c55,transparent 40%),var(--bg); }
 h1,h2,h3 { font-family:inherit; letter-spacing:-.02em; }
 h1 { font-size:28px; font-weight:700; }
 h2 { font-size:19px; }
@@ -2352,3 +2311,45 @@ select:focus,.input:focus { border-color:var(--blue); }
   .random-controls { width:100%; flex-wrap:wrap; }
   .random-controls .field { flex:1; }
 }
+
+/* Learning controls keep question content stable while progress changes. */
+.question-toolbar { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px; }
+.uncertain-control[aria-pressed="true"] { border-color:var(--accent); background:var(--accent-light); }
+.practice-extra-controls { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+.practice-extra-controls .field { flex:1; min-width:200px; }
+.collection-controls { max-width:320px; margin:16px 0; }
+.collection-pagination { padding:20px; justify-content:center; }
+.nav-state { position:absolute; bottom:0; right:3px; font-size:10px; line-height:1.2; }
+.index-btn { position:relative; }
+.review-budget { display:grid; gap:5px; font-size:12px; }
+.review-budget select { max-width:220px; }
+.concept-panel summary, .preparation-trends>summary { cursor:pointer; font-size:18px; font-weight:600; }
+.concept-panel[open]>summary, .preparation-trends[open]>summary { margin-bottom:20px; }
+.display-settings { display:grid; gap:18px; }
+.display-focus { display:flex; align-items:center; gap:10px; }
+.rich img[data-action="zoom-image"] { cursor:zoom-in; }
+.image-zoom-controls { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+.image-zoom-controls input { flex:1; }
+.image-zoom-viewport { overflow:auto; max-height:65vh; background:#fff; padding:12px; }
+.image-zoom-viewport img { display:block; width:100%; max-width:none; height:auto; }
+.recall-exercise textarea { min-height:180px; }
+.recall-reference { margin:20px 0; }
+.recall-reference>summary { cursor:pointer; font-weight:600; padding:12px 0; }
+.exam-breakdown { overflow:auto; padding:24px; margin-bottom:24px; }
+.exam-breakdown table { border-collapse:collapse; width:100%; white-space:nowrap; }
+.exam-breakdown td, .exam-breakdown th { text-align:left; padding:12px; border-bottom:1px solid var(--line); }
+body.focus-study[data-study-activity="question"] .local-nav,
+body.focus-study[data-study-activity="question"] .page-head,
+body.focus-study[data-study-activity="question"] .footer { display:none; }
+body.focus-study[data-study-activity="question"] .local-main { max-width:1200px; }
+body.focus-study[data-study-activity="question"] .preparation-live { padding:18px 24px; }
+@media(max-width:700px) {
+  .question-toolbar .btn { font-size:11px; padding:8px; }
+  .local-header-actions { gap:2px; }
+  .local-avatar { display:none; }
+  .exam-breakdown { padding:12px; }
+}
+
+.preparation-rules { margin-top:16px; color:var(--muted); font-size:12px; }
+.preparation-rules summary { cursor:pointer; }
+@media(max-width:700px) { .preparation-live-metrics>div:first-child p { display:block; } }

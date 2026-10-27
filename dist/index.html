@@ -11,7 +11,17 @@
     <title>知行学习 · 刷题与复习</title>
     <link rel="icon" type="image/svg+xml" href="./icon.svg" />
     <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <script>
+      try {
+        const key = "zhixing-ui:" + new URL("./", location.href).pathname;
+        const choice = JSON.parse(localStorage.getItem(key) || "{}").theme || "system";
+        const dark = choice === "dark" || choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        document.documentElement.style.colorScheme = dark ? "dark" : "light";
+      } catch {}
+    </script>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./theme.css" />
     <script defer src="./vendor/katex/katex.min.js"></script>
     <script defer src="./vendor/katex/auto-render.min.js"></script>
     <script type="module" src="./app.mjs"></script>

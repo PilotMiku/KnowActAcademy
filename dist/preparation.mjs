@@ -1,6 +1,7 @@
 import { createPractice, getBankIndex, hasResponse, shuffle, uid } from "./core.mjs";
 import { getConceptIndex } from "./concepts.mjs";
 import { spacedReview, reviewWeight } from "./study.mjs";
+import { readinessForecast } from "./forecast.mjs";
 
 export const PREPARATION_COUNT = 20;
 const skillKey = (q) => JSON.stringify([q.subjectId, q.chapterId, q.type]);
@@ -22,6 +23,7 @@ export function createPreparation(bank, scope, random = Math.random) {
     id: uid(), subjectId: scope.subjectId, chapterIds: [...new Set(scope.chapterIds)],
     diagnosticIds: [...practice.questionIds], diagnosticPracticeId: practice.id,
     startedAt: practice.startedAt, round: 0,
+    roundPolicy: scope.roundPolicy === "fixed" ? "fixed" : "adaptive",
   };
   practice.preparationId = preparation.id;
   return { preparation, practice };
@@ -50,7 +52,7 @@ export function restoreDiagnostic(state) {
   Object.assign(practice, { id: prep.diagnosticPracticeId, preparationId: prep.id, startedAt: prep.startedAt });
   for (const a of state.attempts) {
     if (a.preparationId === prep.id && a.mode === "prepare-diagnostic" && prep.diagnosticIds.includes(a.questionId))
-      practice.responses[a.questionId] = { answer: a.answer, correct: a.correct, graded: typeof a.correct === "boolean" };
+      practice.responses[a.questionId] = { answer: a.answer, correct: a.correct, uncertain: !!a.uncertain, graded: typeof a.correct === "boolean" };
   }
   practice.index = Math.max(0, prep.diagnosticIds.findIndex((id) => !practice.responses[id]?.graded));
   return practice;
@@ -83,17 +85,24 @@ export function preparationMastery(bank, state) {
     const key = JSON.stringify([q.id, sessionId]);
     if (trials.has(key)) continue;
     trials.add(key);
-    const result = questions.get(q.id) ?? { questionId: q.id, correctStreak: 0, wrongCount: 0, mastered: false };
-    result.correctStreak = a.correct ? Math.min(2, result.correctStreak + 1) : 0;
+    const result = questions.get(q.id) ?? { questionId: q.id, correctStreak: 0, wrongCount: 0, mastered: false, trialCount: 0 };
+    const confident = a.correct && !a.uncertain;
+    if (!confident) result.streakStartedAt = null;
+    else if (!result.correctStreak) result.streakStartedAt = a.at;
+    result.correctStreak = confident ? Math.min(2, result.correctStreak + 1) : 0;
+    result.trialCount++;
     result.wrongCount += Number(!a.correct);
     result.latestCorrect = a.correct;
+    result.uncertain = !!a.uncertain;
     result.lastAt = a.at;
     result.mastered = result.correctStreak === 2;
+    result.stableMastered = result.mastered && a.at - result.streakStartedAt >= 86400000;
     questions.set(q.id, result);
   }
   const mastered = [...questions.values()].filter((q) => q.mastered).length;
   const pendingMistakes = [...questions.values()].filter((q) => q.wrongCount > 0 && !q.mastered).length;
-  return { pool, questions, total: pool.length, covered: questions.size, mastered, pendingMistakes,
+  const stableMastered = [...questions.values()].filter((q) => q.stableMastered).length;
+  return { pool, questions, total: pool.length, covered: questions.size, mastered, stableMastered, pendingMistakes,
     progress: pool.length ? Math.round(mastered / pool.length * 10000) / 100 : 0,
     coverage: pool.length ? Math.round(questions.size / pool.length * 10000) / 100 : 0 };
 }
@@ -118,7 +127,7 @@ export function preparationMetrics(bank, state) {
     if (result) {
       group.seen++;
       // One correction of a previous mistake is tentative until confirmed.
-      group.points += result.latestCorrect ? result.wrongCount && !result.mastered ? 0.5 : 1 : 0;
+      group.points += result.latestCorrect ? result.uncertain || result.wrongCount && !result.mastered ? 0.5 : 1 : 0;
     }
     groups.set(key, group);
   }
@@ -130,7 +139,8 @@ export function preparationMetrics(bank, state) {
     expected += g.points + (g.total - g.seen) * unseenEstimate;
   }
   const active = currentPreparationPractice(state);
-  return { ...mastery, estimatedScore: mastery.covered ? Math.round(expected / mastery.total * 1000) / 10 : null,
+  const trainingScore = mastery.covered ? Math.round(expected / mastery.total * 1000) / 10 : null;
+  return { ...mastery, ...readinessForecast(mastery.pool, mastery.questions, state, state.preparation, trainingScore),
     round: active ? practiceProgress(active) : { completed: 0, total: 0, correct: 0, ready: false } };
 }
 
@@ -161,7 +171,7 @@ export function preparationProfile(bank, state, now = Date.now()) {
     const associated = names.length ? names.reduce((sum, name) => sum + (conceptNeeds.get(name)?.need ?? 1), 0) / names.length : base;
     const result = mastery.questions.get(q.id);
     const pending = result?.wrongCount > 0 && !result.mastered;
-    const reinforcement = pending ? result.correctStreak === 0 ? 6 : 4 : result?.mastered ? 0.5 : 1;
+    const reinforcement = pending ? result.correctStreak === 0 ? 6 : 4 : result?.uncertain ? 2 : result?.mastered ? 0.5 : 1;
     return [q.id, (0.75 * base + 0.25 * associated) * reviewWeight(schedule.get(q.id), now) *
       reinforcement * (recent.has(q.id) && !pending ? 0.7 : 1)];
   }));
@@ -184,10 +194,26 @@ export function weightedSample(questions, weights, count = PREPARATION_COUNT, ra
   })).sort((a, b) => a.score - b.score).slice(0, count).map(({ q }) => q);
 }
 
+export function trainingCount(bank, preparation) {
+  const total = preparationQuestions(bank, preparation).length;
+  return preparation?.roundPolicy !== "fixed" && total > 1 && total <= PREPARATION_COUNT
+    ? Math.min(total - 1, Math.ceil(total * 0.6)) : Math.min(PREPARATION_COUNT, total);
+}
+
 export function createTraining(bank, state, random = Math.random) {
   if (!diagnosticProgress(state).ready) throw new Error("请先完成本次测评的所有题目；解答题需完成自评");
   const { questions, weights } = preparationProfile(bank, state);
-  const practice = createPractice(weightedSample(questions, weights, PREPARATION_COUNT, random).map((q) => q.id), "prepare-training");
+  const mastery = preparationMastery(bank, state);
+  const count = trainingCount(bank, state.preparation);
+  const unseen = questions.filter((q) => !mastery.questions.has(q.id));
+  const pending = questions.filter((q) => { const item = mastery.questions.get(q.id); return item?.wrongCount && !item.mastered; });
+  const selected = weightedSample(unseen, weights, Math.min(unseen.length, Math.max(1, Math.floor(count / 4))), random);
+  const selectedIds = new Set(selected.map((q) => q.id));
+  for (const q of weightedSample(pending, weights, Math.min(Math.ceil(count / 2), count - selected.length), random)) {
+    selected.push(q); selectedIds.add(q.id);
+  }
+  selected.push(...weightedSample(questions.filter((q) => !selectedIds.has(q.id)), weights, count - selected.length, random));
+  const practice = createPractice(shuffle(selected, random).map((q) => q.id), "prepare-training");
   if (!practice.questionIds.length) throw new Error("备考范围内已没有可用题目，请重新选择章节");
   practice.preparationId = state.preparation.id;
   practice.round = state.preparation.round + 1;

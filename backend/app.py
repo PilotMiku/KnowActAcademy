@@ -61,7 +61,7 @@ def valid_payload(payload):
     if not all(isinstance(state.get(key), list) for key in
                ['attempts', 'favorites', 'exams', 'knowledgeRead', 'knowledgeFavorites']):
         return False
-    return isinstance(state.get('mistakes'), dict) and state.get('theme') in ['light', 'dark']
+    return isinstance(state.get('mistakes'), dict) and state.get('theme') in ['light', 'dark', 'system']
 
 
 class ProgressAPI:
