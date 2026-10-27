@@ -9,6 +9,15 @@ try {
     viewport: { width: 1440, height: 1060 },
     deviceScaleFactor: 1,
   });
+  // Make pending IndexedDB writes reproducible without delaying the page itself.
+  await context.route("**/storage.mjs", async (route) => {
+    const response = await route.fetch();
+    const body = (await response.text()).replace(
+      "const pending = queue.catch(() => {}).then(write);",
+      "const pending = queue.catch(() => {}).then(async () => { await new Promise(resolve => setTimeout(resolve, globalThis.__qaSaveDelayMs ?? 0)); return write(); });",
+    );
+    await route.fulfill({ response, body });
+  });
   const page = await context.newPage();
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(`${baseURL}/`);
@@ -64,11 +73,17 @@ try {
   await page.locator(".big-stat b").first().waitFor();
   assert.equal(await page.locator(".big-stat b").first().innerText(), "2");
   await page.locator('.local-nav a[href="#/exams"]').click();
+  await page.evaluate(() => {
+    window.__qaSaveDelayMs = 250;
+    window.__qaRandom = Math.random;
+    Math.random = () => 0; // Include multiple choice, fill and boolean in this order.
+  });
   await page.getByRole("button", { name: "新建模拟考试" }).click();
   await page.locator("#exam-count").fill("3");
   await page.locator("#exam-minutes").fill("1");
   await page.getByRole("button", { name: "开始考试", exact: false }).click();
   await page.locator("[data-timer]").waitFor();
+  await page.evaluate(() => { Math.random = window.__qaRandom; });
   await page.reload();
   await page.locator("[data-timer]").waitFor();
   const readExam = () =>
@@ -91,8 +106,13 @@ try {
           };
         }),
     );
+  await page.evaluate(() => { window.__qaSaveDelayMs = 250; });
   for (let i = 0; i < 3; i++) {
+    // Navigation renders after its save completes. Do not read the previous
+    // persisted index while that write is still pending on a slower runner.
+    await page.locator(`.index-btn.current[data-index="${i}"]`).waitFor();
     const e = await readExam();
+    assert.equal(e.index, i);
     const q = fixture.questions.find((q) => q.id === e.questionId);
     if (q.type === "fill")
       await page.locator("[data-answer-text]").fill(q.answer);
@@ -114,6 +134,7 @@ try {
   await page.locator('#dialog [data-action="confirm-dialog"]').click();
   await page.locator(".score").waitFor();
   assert.match(await page.locator(".score").innerText(), /100/);
+  await page.evaluate(() => { window.__qaSaveDelayMs = 0; });
   await page.reload();
   await page.locator(".score").waitFor();
   await page.locator('.local-nav a[href="#/exams"]').click();
