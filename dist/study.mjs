@@ -1,4 +1,21 @@
-import { getBankIndex } from "./core.mjs";
+import { getBankIndex, hasResponse } from "./core.mjs";
+
+export function learningProgress(questions, state) {
+  const scope = new Map(questions.map((q) => [q.id, q]));
+  const latest = new Map();
+  for (const attempt of state.attempts) {
+    const q = scope.get(attempt.questionId);
+    if (!q || typeof attempt.correct !== "boolean" || !Number.isFinite(attempt.at) ||
+      (q.type !== "solution" && !hasResponse(q, attempt.answer))) continue;
+    const previous = latest.get(q.id);
+    if (!previous || attempt.at >= previous.at) latest.set(q.id, attempt);
+  }
+  const total = scope.size, completed = latest.size;
+  const correct = [...latest.values()].filter((a) => a.correct).length;
+  const percent = (part, whole) => Number((part / whole * 100).toFixed(2));
+  return { total, completed, correct, completion: total ? percent(completed, total) : 0,
+    accuracy: completed ? percent(correct, completed) : null };
+}
 
 export const DAY_MS = 86400000;
 const intervals = [1, 3, 7, 14, 30, 60];

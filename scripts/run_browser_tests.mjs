@@ -37,7 +37,7 @@ try {
   const baseURL = prefixLine.match(/http:\/\/\S+/)[0].replace(/\/$/, '');
   const backend = JSON.parse(await start(python, ['tests/live_api.py', new URL(baseURL).origin]));
   const env = { LOCAL_NEUMATHE_URL: baseURL, ZHIXING_TEST_API: backend.url, ZHIXING_TEST_KEY: backend.key };
-  for (const file of ['local-bank-browser', 'browser', 'exam-chapters-browser', 'preparation-browser', 'study-browser', 'interaction-browser', 'knowledge-browser', 'sync-browser'])
+  for (const file of ['local-bank-browser', 'browser', 'exam-chapters-browser', 'preparation-browser', 'study-browser', 'learning-progress-browser', 'interaction-browser', 'knowledge-browser', 'sync-browser'])
     await run(`tests/${file}.mjs`, env);
   console.log('Browser regression passed at root and /test-repo/, including real backend sync.');
 } finally {

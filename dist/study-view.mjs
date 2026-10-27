@@ -1,6 +1,11 @@
 import { getBankIndex } from "./core.mjs";
 import { preparationPlans, preparationTrends } from "./study.mjs";
 
+export function learningProgressCard(progress) {
+  const { total, completed, correct, completion, accuracy } = progress;
+  return `<section class="card learning-progress" aria-label="当前范围学习进度"><h2>学习进度</h2><div class="learning-progress-metrics"><div><span>题目完成度</span><strong data-progress-completion>${completion}%</strong><div class="progress-bar" role="progressbar" aria-label="题目完成度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completion}" aria-valuetext="已完成 ${completed} / ${total} 题"><span style="width:${completion}%"></span></div><small data-progress-count>已完成 ${completed} / ${total} 题</small></div><div><span>最近作答正确率</span><strong data-progress-accuracy>${accuracy === null ? "—" : `${accuracy}%`}</strong><div class="progress-bar accuracy-bar" role="progressbar" aria-label="最近作答正确率" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${accuracy ?? 0}" aria-valuetext="${accuracy === null ? "暂无有效作答" : `答对 ${correct} / ${completed} 题`}"><span style="width:${accuracy ?? 0}%"></span></div><small data-progress-correct>${completed ? `答对 ${correct} / ${completed} 题` : "暂无有效作答"}</small></div></div><p class="format-note">${total ? "按当前所选范围统计，重复作答不增加完成量；正确率取每题最近一次有效作答，解答题自评后计入。" : "当前范围没有题目，请调整章节或筛选条件。"}</p></section>`;
+}
+
 export function reviewCard(review, { button, icon }, { inPreparation = false } = {}) {
   const next = review.upcoming[0];
   return `<section class="card spaced-overview"><div><span class="pill blue">${icon("clock", 14)} 间隔复习</span><h2>${review.due.length ? `${review.due.length} 道题到了复习时间` : review.schedule.size ? "今天的到期题已复习完" : "给学过的题安排一次重温"}</h2><p class="subtitle">${review.schedule.size ? `${next ? `下次复习：${new Date(next.dueAt).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}。` : ""}按 1、3、7、14、30、60 天逐步延长间隔，答错后回到 1 天。` : "完成答题后自动安排复习，到期题会在这里出现。"}${inPreparation ? "备考抽题也会提高范围内到期题的权重。" : ""}</p></div><div class="flex">${review.due.length ? button("开始到期复习", "start-spaced", inPreparation ? 'data-scope="preparation"' : "", "btn primary") : ""}<a class="btn" href="#/spaced">查看复习计划</a></div></section>`;

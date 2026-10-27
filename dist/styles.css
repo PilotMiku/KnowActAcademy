@@ -2230,6 +2230,24 @@ select:focus,.input:focus { border-color:var(--blue); }
 .cloud-card { margin-bottom:24px; }
 .cloud-card .subtitle { overflow-wrap:anywhere; }
 
+.learning-progress { padding:22px 25px; margin:20px 0; }
+.learning-progress h2 { font-size:18px; margin:0 0 19px; }
+.learning-progress-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:30px; }
+.learning-progress-metrics>div { min-width:0; }
+.learning-progress-metrics>div>span { display:block; color:var(--muted); font-size:12px; }
+.learning-progress-metrics strong { display:block; margin:7px 0 13px; color:var(--blue); font-size:29px; line-height:1.3; font-variant-numeric:tabular-nums; }
+.learning-progress-metrics small { display:block; margin-top:9px; color:var(--muted); font-size:12px; }
+.learning-progress .accuracy-bar>span { background:var(--green); }
+.learning-progress-metrics>div:last-child strong { color:var(--green); }
+.learning-progress .format-note { margin:16px 0 0; }
+.preparation-setup .learning-progress { background:var(--side); box-shadow:none; }
+@media(max-width:600px) {
+  .learning-progress { padding:19px; }
+  .learning-progress-metrics { gap:18px; }
+  .learning-progress-metrics strong { font-size:25px; }
+  .learning-progress-metrics small { font-size:11px; }
+}
+
 .spaced-overview { display:flex; align-items:center; justify-content:space-between; gap:22px; padding:25px; margin:22px 0; }
 .spaced-overview>div { min-width:0; }
 .spaced-overview h2 { margin-top:12px; }
