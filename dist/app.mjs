@@ -32,7 +32,7 @@ import { getConceptIndex } from "./concepts.mjs";
 import { practicePool, balancedSample, collectionQueue, collectionPageSlice, reviewBatchSize } from "./study-planning.mjs";
 import { applyPreferences } from "./preferences.mjs";
 import { displaySettingsHTML } from "./preferences-view.mjs";
-import { welcomePage } from "./welcome.mjs";
+import { welcomePage, enterStudy, cancelWelcomeExit } from "./welcome.mjs";
 import { createSaveScheduler } from "./save-scheduler.mjs";
 import { pauseExamQuestion, resumeExamQuestion } from "./exam-timing.mjs";
 import { feedbackHTML, patchPracticeAnswer } from "./question-view.mjs";
@@ -852,7 +852,7 @@ function draw() {
   document.body.dataset.studyActivity = (r.query.has("session") && state.practice || exam?.status === "active") ? "question" : "overview";
   if (page === "welcome") {
     if (!app.querySelector(".welcome-shell")) app.innerHTML = welcomePage();
-    document.title = "知行学习 · 行是知之始，知是行之成";
+    document.title = "知行学习 · 行是知之始 知是行之成";
     watchActiveExams();
     return;
   }
@@ -1672,6 +1672,16 @@ async function handleAction(action, el) {
 }
 const IMPORT_GUIDE = `知行学习题库导入说明\n\n题目、答案与解析请使用实际原始数据。本说明不包含 NeuMathe 原题。\n\nJSON 结构：\n{\n "format":"local-neumathe.bank.v1",\n "source":{"name":"题库来源"},\n "subjects":[{"id":"math","name":"科目名称","chapters":[{"id":"chapter-1","name":"章节名称"}]}],\n "questions":[{\n  "id":"全局唯一ID", "subjectId":"math", "chapterId":"chapter-1",\n  "type":"single", "stem":"原题题干",\n  "options":[{"id":"A","text":"原选项A"},{"id":"B","text":"原选项B"}],\n  "answer":"A", "analysis":"原题解析", "difficulty":"medium", "tags":[], "concepts":["知识点名称"]\n }]\n}\n\n题型：single 单选，multiple 多选，boolean 判断，fill 填空，solution 解答。\n多选 answer 使用选项 ID 数组，例如 ["A","C"]。\n判断题默认选项 ID 为 true / false（字符串），也可提供自定义选项。\n填空 answer 为字符串或可接受答案数组；acceptedAnswers 可补充其他写法。\n填空只比较规范化文本，不提供符号代数等价判定。\n解答题保留原答案并由学习者对照自评。\n题干与解析支持常见 HTML 排版和 $…$、$$…$$、\\(…\\)、\\[…\\] LaTeX 公式。\n不执行 HTML 中的脚本、事件或其他主动内容。\n导入会替换题库并重置现有学习数据；导入前请先导出完整备份。\n学习数据只保存在本浏览器，完整备份可用于换设备。\n`;
 document.addEventListener("click", (event) => {
+  const entry = event.target.closest(".welcome-enter");
+  if (entry && !event.defaultPrevented && event.button === 0 &&
+    !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+    event.preventDefault();
+    enterStudy(entry.closest(".welcome-shell"), () => go("/")).catch((error) => {
+      cancelWelcomeExit();
+      toast(error.message ?? "请重新进入学习");
+    });
+    return;
+  }
   if (event.target.closest(".skip")) {
     event.preventDefault();
     document.getElementById("main")?.focus();
@@ -1827,6 +1837,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 window.addEventListener("hashchange", () => {
+  cancelWelcomeExit();
   deferredSaves.flush().catch(() => {});
   if (dialog.open) dialog.close();
   render();

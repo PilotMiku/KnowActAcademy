@@ -13,7 +13,7 @@ try {
   await page.goto(baseURL + '/', { waitUntil: 'domcontentloaded' });
   await requestedBank;
   await page.locator('.welcome-quote').waitFor();
-  assert.equal(await page.locator('.welcome-quote h1').innerText(), '行是知之始，\n知是行之成。');
+  assert.equal(await page.locator('.welcome-quote h1').innerText(), '行是知之始\n知是行之成');
   assert.equal(await page.locator('.welcome-quote cite').innerText(), '陶行知');
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   await page.screenshot({ path: 'artifacts/welcome-desktop-light.png', fullPage: true, animations: 'disabled' });
@@ -22,7 +22,16 @@ try {
   assert.equal(await page.evaluate(() => document.activeElement.id), 'main');
   assert.equal(await page.evaluate(() => location.hash), '');
   await page.getByRole('link', { name: '进入学习', exact: true }).focus();
+  await page.evaluate(() => {
+    window.addEventListener('click', () => {
+      const shell = document.querySelector('.welcome-shell');
+      window.entryMotion = { hash: location.hash, durations: shell.getAnimations().map(a => a.effect.getTiming().duration) };
+    }, { once: true });
+  });
   await page.keyboard.press('Enter');
+  const entryMotion = await page.evaluate(() => window.entryMotion);
+  assert.equal(entryMotion.hash, '');
+  assert.ok(entryMotion.durations.some(duration => duration > 0 && duration <= 250));
   await page.getByRole('status').filter({ hasText: '正在准备学习空间' }).waitFor();
   releaseBank();
   await page.locator('.local-hero').waitFor();
@@ -36,7 +45,13 @@ try {
   await page.getByRole('button', { name: '取消收藏', exact: true }).waitFor();
   await page.getByRole('link', { name: '查看起始页', exact: true }).click();
   await page.locator('.welcome-shell').waitFor();
-  await page.getByRole('link', { name: '进入学习', exact: true }).click();
+  const repeatedEntry = await page.evaluate(() => {
+    const entry = document.querySelector('.welcome-enter'), shell = entry.closest('.welcome-shell');
+    entry.click(); entry.click();
+    return { hash: location.hash, animations: shell.getAnimations().length };
+  });
+  assert.equal(repeatedEntry.hash, '#/welcome');
+  assert.equal(repeatedEntry.animations, 1);
   await page.locator('.local-hero').waitFor();
   await page.goto(baseURL + '/#/favorites');
   await page.locator('.collection-stem').waitFor();
@@ -57,6 +72,15 @@ try {
   await page.getByRole('link', { name: '加权备考', exact: true }).click();
   await page.locator('#prepare-subject').waitFor();
   assert.equal(await page.locator('.welcome-shell').count(), 0);
+  await page.goto(baseURL + '/#/welcome');
+  await page.locator('.welcome-shell').waitFor();
+  const reducedEntry = await page.evaluate(() => {
+    const shell = document.querySelector('.welcome-shell');
+    document.querySelector('.welcome-enter').click();
+    return { hash: location.hash, animations: shell.getAnimations().length };
+  });
+  assert.deepEqual(reducedEntry, { hash: '#/', animations: 0 });
+  await page.locator('.local-hero').waitFor();
   assert.deepEqual(errors, []);
   console.log('Welcome page passed: slow loading, keyboard entry, deep links, saved favorites, light/dark, mobile and reduced motion.');
 } finally {

@@ -22,7 +22,7 @@
 .welcome-caption { color:var(--muted); font-size:12px; letter-spacing:.15em; }
 .welcome-main { width:100%; align-self:center; padding:64px 24px 80px; text-align:center; position:relative; }
 .welcome-rule { width:30px; height:3px; margin:0 auto 34px; border-radius:10px; background:var(--blue); }
-.welcome-quote { margin:0; }
+.welcome-quote { width:max-content; max-width:100%; margin:0 auto; }
 .welcome-quote h1 {
   margin:0;
   font-family:"STKaiti","KaiTi","Songti SC","Noto Serif CJK SC",serif;
@@ -30,11 +30,12 @@
   font-weight:400;
   line-height:1.65;
   letter-spacing:.1em;
+  text-indent:.1em;
 }
 .welcome-quote h1 span { display:block; }
 .welcome-quote h1 span:last-child { color:var(--blue); }
-.welcome-quote footer { margin-top:26px; color:var(--muted); font-size:15px; letter-spacing:.18em; }
-.welcome-quote footer>span { letter-spacing:0; margin-right:7px; opacity:.6; }
+.welcome-quote footer { display:flex; justify-content:flex-end; align-items:center; gap:7px; margin-top:26px; color:var(--muted); font-size:15px; letter-spacing:.18em; }
+.welcome-quote footer>span { letter-spacing:0; opacity:.6; }
 .welcome-quote cite { font-style:normal; }
 .welcome-enter {
   display:inline-flex;
@@ -70,7 +71,7 @@ html[data-theme="dark"] .welcome-orbit::before { border-color:#829ed510; }
   .welcome-caption { font-size:10px; letter-spacing:.03em; }
   .welcome-main { padding:52px 20px 64px; }
   .welcome-rule { margin-bottom:30px; }
-  .welcome-quote h1 { font-size:clamp(31px,9.5vw,48px); letter-spacing:.06em; line-height:1.8; }
+  .welcome-quote h1 { font-size:clamp(31px,9.5vw,48px); letter-spacing:.06em; text-indent:.06em; line-height:1.8; }
   .welcome-quote footer { font-size:13px; margin-top:20px; }
   .welcome-enter { margin-top:40px; font-size:14px; padding:14px 26px; min-height:50px; }
   .welcome-footer { gap:16px; font-size:11px; padding-bottom:30px; }
