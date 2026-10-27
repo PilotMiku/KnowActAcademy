@@ -32,6 +32,7 @@ import { getConceptIndex } from "./concepts.mjs";
 import { practicePool, balancedSample, collectionQueue, collectionPageSlice, reviewBatchSize } from "./study-planning.mjs";
 import { applyPreferences } from "./preferences.mjs";
 import { displaySettingsHTML } from "./preferences-view.mjs";
+import { welcomePage } from "./welcome.mjs";
 import { createSaveScheduler } from "./save-scheduler.mjs";
 import { pauseExamQuestion, resumeExamQuestion } from "./exam-timing.mjs";
 import { feedbackHTML, patchPracticeAnswer } from "./question-view.mjs";
@@ -95,6 +96,7 @@ const names = {
 const difficultyNames = { easy: "基础", medium: "进阶", hard: "挑战" };
 const DEFAULT_QUESTION_COUNT = 25;
 const routes = {
+  welcome: "起始页",
   dashboard: "学习概览",
   practice: "题库练习",
   prepare: "备考模式",
@@ -163,7 +165,7 @@ function route() {
   return {
     parts: path.split("/").filter(Boolean),
     query: new URLSearchParams(query),
-    page: path === "/" ? "dashboard" : path.split("/")[1],
+    page: !location.hash ? "welcome" : path === "/" ? "dashboard" : path.split("/")[1],
   };
 }
 function go(path) {
@@ -840,7 +842,7 @@ function render() {
 }
 function draw() {
   clearInterval(timerInterval);
-  applyPreferences(state);
+  if (storageReady) applyPreferences(state);
   const r = route();
   const page = routes[r.page] ? r.page : "dashboard";
   const exam = currentExam();
@@ -848,6 +850,16 @@ function draw() {
   displayedExam = exam?.status === "active" ? exam : null;
   if (displayedExam && !document.hidden) resumeExamQuestion(displayedExam);
   document.body.dataset.studyActivity = (r.query.has("session") && state.practice || exam?.status === "active") ? "question" : "overview";
+  if (page === "welcome") {
+    if (!app.querySelector(".welcome-shell")) app.innerHTML = welcomePage();
+    document.title = "知行学习 · 行是知之始，知是行之成";
+    watchActiveExams();
+    return;
+  }
+  if (!storageReady) {
+    app.innerHTML = '<main id="main" class="boot"><span class="boot-mark">∑</span><p role="status">正在准备学习空间…</p></main>';
+    return;
+  }
   const view = `${location.hash}:${state.practice?.id}:${state.practice?.index}:${exam?.id}:${exam?.index}:${exam?.status}`;
   const entering = view !== lastView;
   lastView = view;
@@ -864,12 +876,15 @@ function draw() {
   const countWrong = Object.values(state.mistakes).filter(
     (m) => !m.resolved,
   ).length;
-  app.innerHTML = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/" aria-label="知行学习 首页"><img src="./icon.svg" alt=""><strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}<span class="local-avatar">学</span></div></div></header><main id="main" class="local-main" tabindex="-1">${page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : libraryPage()}<footer class="footer"><span>知行学习 · 练习与知识复习</span><span>知行学习题库 · 学习记录自动保存在当前浏览器</span></footer></main></div>`;
+  app.innerHTML = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/" aria-label="知行学习 首页"><img src="./icon.svg" alt=""><strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}<span class="local-avatar">学</span></div></div></header><main id="main" class="local-main" tabindex="-1">${page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : libraryPage()}<footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><span>知行学习题库 · 学习记录自动保存在当前浏览器</span></footer></main></div>`;
   document.title = `${routes[page]} · 知行学习`;
   document.querySelector("#main").toggleAttribute("data-enter", entering);
   renderRich(app, page === "exam" && exam?.status === "submitted");
   attachDropZone();
-  if (state.exams.some((e) => e.status === "active")) {
+  watchActiveExams();
+}
+function watchActiveExams() {
+  if (storageReady && state.exams.some((e) => e.status === "active")) {
     tickExam();
     timerInterval = setInterval(tickExam, 1000);
   }
@@ -1657,6 +1672,11 @@ async function handleAction(action, el) {
 }
 const IMPORT_GUIDE = `知行学习题库导入说明\n\n题目、答案与解析请使用实际原始数据。本说明不包含 NeuMathe 原题。\n\nJSON 结构：\n{\n "format":"local-neumathe.bank.v1",\n "source":{"name":"题库来源"},\n "subjects":[{"id":"math","name":"科目名称","chapters":[{"id":"chapter-1","name":"章节名称"}]}],\n "questions":[{\n  "id":"全局唯一ID", "subjectId":"math", "chapterId":"chapter-1",\n  "type":"single", "stem":"原题题干",\n  "options":[{"id":"A","text":"原选项A"},{"id":"B","text":"原选项B"}],\n  "answer":"A", "analysis":"原题解析", "difficulty":"medium", "tags":[], "concepts":["知识点名称"]\n }]\n}\n\n题型：single 单选，multiple 多选，boolean 判断，fill 填空，solution 解答。\n多选 answer 使用选项 ID 数组，例如 ["A","C"]。\n判断题默认选项 ID 为 true / false（字符串），也可提供自定义选项。\n填空 answer 为字符串或可接受答案数组；acceptedAnswers 可补充其他写法。\n填空只比较规范化文本，不提供符号代数等价判定。\n解答题保留原答案并由学习者对照自评。\n题干与解析支持常见 HTML 排版和 $…$、$$…$$、\\(…\\)、\\[…\\] LaTeX 公式。\n不执行 HTML 中的脚本、事件或其他主动内容。\n导入会替换题库并重置现有学习数据；导入前请先导出完整备份。\n学习数据只保存在本浏览器，完整备份可用于换设备。\n`;
 document.addEventListener("click", (event) => {
+  if (event.target.closest(".skip")) {
+    event.preventDefault();
+    document.getElementById("main")?.focus();
+    return;
+  }
   const el = event.target.closest('.option[data-action="answer-option"]') ?? event.target.closest("[data-action]");
   if (el) {
     event.preventDefault();
@@ -1830,6 +1850,7 @@ window.addEventListener("pagehide", () => { pauseExamQuestion(displayedExam); de
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
   if (state.theme === "system") updateTheme();
 });
+if (route().page === "welcome") render();
 try {
   const [data, notes, api] = await Promise.all([openStorage(), loadKnowledge(), loadConfig()]);
   configuredAPI = api;

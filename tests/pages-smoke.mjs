@@ -6,6 +6,8 @@ try {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(baseURL + '/');
+  await page.getByRole('heading', { name: '行是知之始， 知是行之成。' }).waitFor();
+  await page.getByRole('link', { name: '进入学习', exact: true }).click();
   await page.locator('.local-hero').waitFor();
   assert.match(await page.title(), /知行学习/);
   await page.goto(baseURL + '/#/practice?subject=calculus&chapter=s-6b82188494c1');

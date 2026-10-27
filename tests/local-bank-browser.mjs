@@ -31,6 +31,7 @@ try {
     }
   };
   await page.goto(origin);
+  await page.getByRole("link", { name: "进入学习", exact: true }).click();
   await page.locator(".local-hero").waitFor();
   assert.equal(await page.locator(".chapter-card").count(), 7);
   assert.equal(
@@ -213,6 +214,7 @@ try {
   const upgradePage = await migration.newPage();
   upgradePage.on("pageerror", (e) => errors.push(e.message));
   await upgradePage.goto(origin);
+  await upgradePage.getByRole("link", { name: "进入学习", exact: true }).click();
   await upgradePage.locator(".local-hero").waitFor();
   const oldBank = structuredClone(bank);
   oldBank.questions = oldBank.questions.filter(

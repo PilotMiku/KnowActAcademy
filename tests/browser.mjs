@@ -21,6 +21,7 @@ try {
   const page = await context.newPage();
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(`${baseURL}/`);
+  await page.getByRole("link", { name: "进入学习", exact: true }).click();
   await page.locator(".local-hero").waitFor();
   await page.screenshot({
     path: "artifacts/qa-synthetic-dashboard-desktop.png",
@@ -196,6 +197,7 @@ try {
   const mp = await mobile.newPage();
   mp.on("pageerror", (e) => errors.push(e.message));
   await mp.goto(`${baseURL}/`);
+  await mp.getByRole("link", { name: "进入学习", exact: true }).click();
   await mp.locator(".local-hero").waitFor();
   assert.equal(
     await mp.evaluate(() => document.documentElement.scrollWidth <= innerWidth),

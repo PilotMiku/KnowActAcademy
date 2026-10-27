@@ -18,6 +18,7 @@ try {
     if (!r.url().startsWith(baseURL)) external.push(r.url());
   });
   await page.goto(baseURL);
+  await page.getByRole("link", { name: "进入学习", exact: true }).click();
   await page.locator(".knowledge-entry").waitFor();
   assert.match(await page.locator(".knowledge-entry").innerText(), /20 篇笔记/);
   await page.locator(".knowledge-entry").click();
