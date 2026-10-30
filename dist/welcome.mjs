@@ -1,8 +1,10 @@
+import { brandIcon } from "./ui.mjs";
+
 export function welcomePage() {
   return `<div class="welcome-shell">
     <div class="welcome-orbit" aria-hidden="true"><span></span></div>
     <header class="welcome-header">
-      <a class="welcome-brand" href="#/welcome" aria-label="知行学习起始页"><img src="./icon.svg" alt=""><span>知行学习</span></a>
+      <a class="welcome-brand" href="#/welcome" aria-label="知行学习起始页">${brandIcon(document.documentElement.dataset.theme)}<span>知行学习</span></a>
       <span class="welcome-caption">学习，从这里开始</span>
     </header>
     <main id="main" class="welcome-main" tabindex="-1">

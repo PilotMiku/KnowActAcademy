@@ -15,6 +15,11 @@ export function applyPreferences(state) {
   document.body.classList.toggle("focus-study", settings.focus);
   document.body.dataset.fontSize = settings.fontSize;
   document.body.dataset.lineSpacing = settings.lineSpacing;
+  for (const element of document.querySelectorAll("[data-theme-asset]")) {
+    const source = element.dataset[theme === "dark" ? "darkSrc" : "lightSrc"];
+    const attribute = element.tagName === "LINK" ? "href" : "src";
+    if (element.getAttribute(attribute) !== source) element.setAttribute(attribute, source);
+  }
   try { localStorage.setItem("zhixing-ui:" + new URL("./", location.href).pathname, JSON.stringify({ theme: state.theme })); } catch { /* Optional first-paint cache. */ }
   return theme;
 }

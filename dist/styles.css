@@ -2022,7 +2022,6 @@ h2 { font-size:19px; }
 .local-nav>a.active { color:var(--blue); background:var(--blue-light); font-weight:600; }
 .local-nav small { background:var(--blue); color:white; padding:0 5px; border-radius:6px; }
 .local-header-actions { display:flex; align-items:center; gap:9px; }
-.local-avatar { width:32px; height:32px; display:grid; place-items:center; color:#006fee; font-size:12px; border:2px solid var(--surface); border-radius:50%; background:linear-gradient(135deg,#dceeff,#ecdfff); }
 .local-menu { display:none; }
 .local-main { max-width:1240px; width:100%; padding:36px 32px 20px; margin:0 auto; }
 .local-hero { display:grid; grid-template-columns:1.1fr 1fr; min-height:360px; align-items:center; position:relative; padding:14px 20px 28px; }
@@ -2137,7 +2136,7 @@ select:focus,.input:focus { border-color:var(--blue); }
  .practice-start { align-items:flex-start; flex-direction:column; }.local-stat-strip { padding:20px 0; }.local-stat-strip>div { gap:12px; }.local-stat-strip b { font-size:23px; }.local-stat-strip svg { width:19px; }
 }
 @media(max-width:600px) {
- .local-navbar { height:64px; padding:0 18px; }.local-brand img { width:30px; height:30px; }.local-brand strong { font-size:19px; }.local-header-actions { gap:5px; }.local-avatar { display:none; }.local-header-actions .icon-btn { width:32px; height:32px; }
+ .local-navbar { height:64px; padding:0 18px; }.local-brand img { width:30px; height:30px; }.local-brand strong { font-size:19px; }.local-header-actions { gap:5px; }.local-header-actions .icon-btn { width:32px; height:32px; }
  .local-nav.open { grid-template-columns:repeat(2,1fr); top:63px; }.local-main { padding:22px 17px; }.local-hero { display:block; padding:5px 3px 25px; min-height:0; }.local-hero h1 { font-size:34px; letter-spacing:-1px; }.hero-copy>p { font-size:13px; }.math-visual { display:none; }.hero-source { font-size:10px; }
  .local-stat-strip { grid-template-columns:repeat(2,1fr); gap:18px 0; padding:22px 0; margin-bottom:27px; }.local-stat-strip>div { justify-content:flex-start; padding-left:24px; }.local-stat-strip>div:nth-child(2) { border-right:0; }.local-stat-strip b { font-size:22px; }.local-stat-strip svg { width:21px; }
  .section-head { gap:8px; }.section-head h2 { font-size:17px; }.section-head h2 small { display:block; font-size:10px; margin:4px 0 0; }.section-head>span { font-size:10px; }.section-head .text-btn { font-size:11px; }
@@ -2346,7 +2345,6 @@ body.focus-study[data-study-activity="question"] .preparation-live { padding:18p
 @media(max-width:700px) {
   .question-toolbar .btn { font-size:11px; padding:8px; }
   .local-header-actions { gap:2px; }
-  .local-avatar { display:none; }
   .exam-breakdown { padding:12px; }
 }
 

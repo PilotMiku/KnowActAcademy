@@ -20,7 +20,7 @@ const paths = {
   upload: "M12 16V3 M7 8l5-5 5 5 M4 14v6h16v-6",
   download: "M12 3v13 M7 11l5 5 5-5 M4 16v5h16v-5",
   settings:
-    "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 2v3 M12 19v3 M2 12h3 M19 12h3 M5 5l2 2 M17 17l2 2 M19 5l-2 2 M7 17l-2 2",
+    "M9.13 5.07L10.19 4.72L10.26 2.15L13.74 2.15L13.81 4.72L14.87 5.07L14.87 5.07L15.86 5.57L17.74 3.81L20.19 6.26L18.43 8.14L18.93 9.13L18.93 9.13L19.28 10.19L21.85 10.26L21.85 13.74L19.28 13.81L18.93 14.87L18.93 14.87L18.43 15.86L20.19 17.74L17.74 20.19L15.86 18.43L14.87 18.93L14.87 18.93L13.81 19.28L13.74 21.85L10.26 21.85L10.19 19.28L9.13 18.93L9.13 18.93L8.14 18.43L6.26 20.19L3.81 17.74L5.57 15.86L5.07 14.87L5.07 14.87L4.72 13.81L2.15 13.74L2.15 10.26L4.72 10.19L5.07 9.13L5.07 9.13L5.57 8.14L3.81 6.26L6.26 3.81L8.14 5.57L9.13 5.07Z M12 8.7a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6",
   leaf: "M20 3C9 3 3 8 5 16c8 5 15-2 15-13Z M4 21 15 9",
   target:
     "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8",
@@ -35,6 +35,10 @@ const paths = {
 };
 function icon(name, size = 18) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name] ?? paths.book}"/></svg>`;
+}
+function brandIcon(theme = "light") {
+  const light = "./assets/brand/icon-light.png", dark = "./assets/brand/icon-dark.png";
+  return `<img src="${theme === "dark" ? dark : light}" data-theme-asset data-light-src="${light}" data-dark-src="${dark}" width="48" height="48" alt="">`;
 }
 function esc(s) {
   return String(s ?? "").replace(
@@ -61,4 +65,4 @@ function empty(
   return `<div class="empty"><div class="empty-symbol">${icon("book", 27)}</div><h2>${title}</h2><p>${description}</p><div class="flex">${action}</div></div>`;
 }
 
-export { icon, esc, attr, button, head, empty };
+export { icon, brandIcon, esc, attr, button, head, empty };

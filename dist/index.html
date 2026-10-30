@@ -9,9 +9,9 @@
       content="知行学习 高等数学、线性代数题库与习概知识点，随机刷题、加权备考、章节练习、模拟考试和知识复习。"
     />
     <title>知行学习 · 刷题与复习</title>
-    <link rel="icon" href="./favicon.ico" sizes="16x16 32x32 48x48" />
-    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" sizes="16x16 32x32 48x48 64x64" data-theme-asset data-light-src="./favicon.ico" data-dark-src="./favicon-dark.ico" />
+    <link rel="icon" type="image/png" href="./assets/brand/icon-light.png" sizes="512x512" data-theme-asset data-light-src="./assets/brand/icon-light.png" data-dark-src="./assets/brand/icon-dark.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" data-theme-asset data-light-src="./apple-touch-icon.png" data-dark-src="./apple-touch-icon-dark.png" />
     <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
     <script>
       try {
@@ -20,6 +20,9 @@
         const dark = choice === "dark" || choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches;
         document.documentElement.dataset.theme = dark ? "dark" : "light";
         document.documentElement.style.colorScheme = dark ? "dark" : "light";
+        for (const link of document.querySelectorAll("link[data-theme-asset]")) {
+          link.setAttribute("href", link.dataset[dark ? "darkSrc" : "lightSrc"]);
+        }
       } catch {}
     </script>
     <link rel="stylesheet" href="./styles.css" />

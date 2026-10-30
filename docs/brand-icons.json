@@ -1,0 +1,22 @@
+{
+  "updated": "2026-10-31",
+  "light": {
+    "source": "用户提供：知行蓝色书本学习图标.png",
+    "file": "dist/assets/brand/icon-light.png",
+    "processing": "原图等比缩小至 512×512，保留原有图案与配色。"
+  },
+  "dark": {
+    "tool": "Built-in image_gen.imagegen (imagegen skill)",
+    "file": "dist/assets/brand/icon-dark.png",
+    "prompt": "Use case: precise-object-edit / logo-brand color variant.\nEdit target: the attached Chinese learning app icon. Create its DARK THEME COLOR VERSION ONLY.\nInvariants: preserve the exact two Chinese characters 知行, their original customized brush-like shapes and relative sizes, the pencil forming the lower part of 行, the leaf above it, the open book across the bottom, the winding path rising from the book, the existing composition, spacing and square framing. Do not redesign the lettering, add words, change book geometry, add objects, or change the rounded-square silhouette. Make it clearly the SAME logo as the input.\nChange only palette and lighting for a scholarly dark-mode website: replace the outer white margin with a flat deep blue-black #10121B, replace the pale sky-blue rounded tile with a rich midnight navy gradient (#172A48 to #103D70), use luminous but restrained pale ice-blue and cyan-blue lettering, bright readable ivory/ice-blue book pages with darker blue lower pages, a subtle cool blue highlight. Keep the blue color family, crisp clean gradients and high contrast; avoid neon glow and do not make the letters black or muddy.\nOutput one square high-resolution PNG, opaque background, same approximate 8% outer margin as the input, a clean matching night version ready for favicon/header use. No new borders, no watermark, no labels, no mockup, no additional text."
+  },
+  "faviconFiles": [
+    "dist/favicon.ico",
+    "dist/favicon-dark.ico"
+  ],
+  "appleTouchFiles": [
+    "dist/apple-touch-icon.png",
+    "dist/apple-touch-icon-dark.png"
+  ],
+  "behavior": "站内明暗主题决定页头、起始页、PNG/ICO favicon 和 Apple touch icon；跟随系统时同步响应系统主题。首屏使用本地主题缓存，刷新保留选择。"
+}
