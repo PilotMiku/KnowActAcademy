@@ -2039,8 +2039,11 @@ h2 { font-size:19px; }
 .math-equation { position:absolute; inset:68px 0 auto; text-align:center; font:italic 62px Georgia,serif; color:#3162dc; text-shadow:0 5px 28px #7598ff40; white-space:nowrap; }
 .math-equation>sub,.math-equation>sup { font-size:25px; }
 .math-equation>sub { position:relative; left:0; top:18px; }
+.learning-mark { display:flex; align-items:center; justify-content:center; gap:26px; font-family:"STKaiti","KaiTi","Songti SC",serif; font-style:normal; }
+.learning-mark>span { font-family:inherit; font-size:.6em; color:var(--muted); opacity:.65; }
 .math-caption { position:absolute; top:197px; width:100%; text-align:center; font-size:11px; letter-spacing:2px; color:#7b82a7; }
 .float-formula { position:absolute; padding:10px 17px; border:1px solid #ffffffd9; background:#ffffffa6; backdrop-filter:blur(12px); border-radius:12px; box-shadow:0 8px 28px #4764b90c; color:#626b98; font:italic 16px Georgia,serif; }
+.learning-note { font-family:inherit; font-style:normal; font-size:14px; letter-spacing:.12em; }
 .formula-a { right:0; top:30px; transform:rotate(6deg); }
 .formula-b { left:2px; bottom:18px; transform:rotate(-5deg); }
 .dark .float-formula { background:#22283cd9; border-color:var(--line); color:#acb9e5; }
