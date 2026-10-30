@@ -1,9 +1,9 @@
 {
-  "revision": "pdf-3ef51a36e565cb82",
-  "documents": 132,
-  "pages": 1526,
-  "questions": 3501,
-  "answerVerified": 3501,
+  "revision": "pdf-ba8cf68633101d8c",
+  "documents": 137,
+  "pages": 1623,
+  "questions": 3716,
+  "answerVerified": 3716,
   "manualReview": 0,
   "analysisMissing": 7,
   "reviewItems": [
@@ -47,9 +47,9 @@
     {
       "id": "linear",
       "name": "线性代数",
-      "chapters": 5,
-      "documents": 10,
-      "questions": 491
+      "chapters": 7,
+      "documents": 15,
+      "questions": 706
     }
   ],
   "originalFilesModified": false,

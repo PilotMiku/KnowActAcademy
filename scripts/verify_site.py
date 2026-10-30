@@ -39,7 +39,7 @@ def verify():
     assert report['questions'] == len(bank['questions'])
     assert not (site / 'backend').exists()
     assert not list(site.rglob('*.sqlite3'))
-    print(f"静态校验通过：{len(bank['questions'])} 道题，{len(actual)} 张有效题图，132 份数学 PDF，31 份知识资料。")
+    print(f"静态校验通过：{len(bank['questions'])} 道题，{len(actual)} 张有效题图，{len(index['documents'])} 份数学 PDF，{len(knowledge['sources'])} 份知识资料。")
 
 
 if __name__ == '__main__':

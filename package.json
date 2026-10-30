@@ -8,6 +8,7 @@
     "dev": "python3 server.py",
     "build": "python3 scripts/build_static.py",
     "verify": "python3 scripts/verify_site.py",
+    "check:bank": "python3 scripts/check_bank.py",
     "test": "node --test tests/*.test.mjs",
     "test:python": "python3 -m unittest discover -s tests -p \"test_*.py\"",
     "test:browser": "node scripts/run_browser_tests.mjs",

@@ -217,17 +217,17 @@ test("corrupt resume data is cleared; malformed exams and reserved question IDs 
   assert.throws(() => normalizeBank(data), /保留名称/);
 });
 
-test("bundled PDF bank keeps all 3501 original questions, provenance and nested chapters across backups", async () => {
+test("expanded PDF bank keeps all 3716 original questions, provenance and nested chapters across backups", async () => {
   const { readFile } = await import("node:fs/promises");
   const raw = JSON.parse(
     await readFile(new URL("../dist/data/bank.json", import.meta.url), "utf8"),
   );
   const bank = normalizeBank(raw);
-  assert.equal(bank.questions.length, 3501);
-  assert.equal(bank.sections.length, 132);
-  assert.equal(bank.questions.filter((q) => q.answerVerified).length, 3501);
+  assert.equal(bank.questions.length, 3716);
+  assert.equal(bank.sections.length, 137);
+  assert.equal(bank.questions.filter((q) => q.answerVerified).length, 3716);
   assert.equal(bank.questions.filter((q) => q.analysisMissing).length, 7);
-  assert.equal(filterQuestions(bank, { subjectId: "linear" }).length, 491);
+  assert.equal(filterQuestions(bank, { subjectId: "linear" }).length, 706);
   assert.equal(
     filterQuestions(bank, {
       subjectId: "linear",

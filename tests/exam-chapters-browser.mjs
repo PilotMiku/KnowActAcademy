@@ -28,9 +28,9 @@ try {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(`${baseURL}/#/exams`);
   await page.getByRole("button", { name: "新建模拟考试" }).click();
-  assert.equal(await page.locator("[data-exam-chapter]").count(), 12);
+  assert.equal(await page.locator("[data-exam-chapter]").count(), 14);
   assert.ok(await page.locator("#exam-all-chapters").isChecked());
-  assert.match(await page.locator("#exam-availability").innerText(), /3501/);
+  assert.match(await page.locator("#exam-availability").innerText(), /3716/);
 
   for (const subject of bank.subjects) {
     for (const chapter of subject.chapters.filter((c) => !c.parentId)) {
@@ -63,7 +63,7 @@ try {
   assert.match(await page.locator("#exam-availability").innerText(), new RegExp(`共 ${expectedQuestions.length} 道.*已选 3 个`));
   await page.locator("#exam-all-chapters").check();
   assert.equal(await page.locator("[data-exam-chapter]:checked").count(), 0);
-  assert.match(await page.locator("#exam-availability").innerText(), /3501/);
+  assert.match(await page.locator("#exam-availability").innerText(), /3716/);
   for (const scope of selected) await chapterInput(page, scope.subjectId, scope.chapterId).check();
   await page.screenshot({ path: "artifacts/exam-chapters-desktop.png", fullPage: true, animations: "disabled" });
   await page.locator("#exam-count").fill("5");
@@ -145,7 +145,7 @@ try {
   assert.equal(mobileExam.chapters.length, 2);
   await mobile.close();
   assert.deepEqual(errors, []);
-  console.log("Exam chapters passed: 12 major chapters, multiple/cross-subject scopes, empty/all selections, persistence, backups, reports and mobile layout.");
+  console.log("Exam chapters passed: 14 major chapters, multiple/cross-subject scopes, empty/all selections, persistence, backups, reports and mobile layout.");
 } finally {
   await browser.close();
 }

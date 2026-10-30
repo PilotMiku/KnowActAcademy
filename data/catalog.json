@@ -662,7 +662,7 @@
     {
       "id": "linear",
       "name": "线性代数",
-      "description": "行列式、矩阵、向量组、特征值与二次型",
+      "description": "行列式、矩阵、向量组、特征值、二次型、线性方程组与线性空间",
       "chapters": [
         {
           "id": "linear-chapter-1",
@@ -709,6 +709,11 @@
               "path": "question-bank/线性代数/极大无关组、向量和矩阵的秩.pdf",
               "name": "极大无关组、向量和矩阵的秩",
               "id": "s-fbe6ec6fb0eb"
+            },
+            {
+              "path": "question-bank/线性代数/向量概念及其性质、内积、正交.pdf",
+              "name": "向量概念及其性质、内积、正交",
+              "id": "s-4fd26f36060c"
             }
           ]
         },
@@ -741,6 +746,38 @@
               "path": "question-bank/线性代数/矩阵合同，化二次型为标准形.pdf",
               "name": "矩阵合同，化二次型为标准形",
               "id": "s-0364a819e85d"
+            }
+          ]
+        },
+        {
+          "id": "linear-chapter-6",
+          "name": "第6章 线性方程组",
+          "documents": [
+            {
+              "path": "question-bank/线性代数/线性方程组解判定及其求解.pdf",
+              "name": "线性方程组解判定及其求解",
+              "id": "s-7b6cbc76dc54"
+            },
+            {
+              "path": "question-bank/线性代数/基础解系和解的结构.pdf",
+              "name": "基础解系和解的结构",
+              "id": "s-87ec18daf39a"
+            }
+          ]
+        },
+        {
+          "id": "linear-chapter-7",
+          "name": "第7章 线性空间与线性变换",
+          "documents": [
+            {
+              "path": "question-bank/线性代数/线性空间.pdf",
+              "name": "线性空间",
+              "id": "s-b95f0205c67d"
+            },
+            {
+              "path": "question-bank/线性代数/线性变换、欧几里得空间.pdf",
+              "name": "线性变换、欧几里得空间",
+              "id": "s-3f9ab53c7f4d"
             }
           ]
         }

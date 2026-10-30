@@ -29,6 +29,11 @@
   </head>
   <body>
     <a class="skip" href="#main">跳到主要内容</a>
+    <aside id="storage-conflict" class="storage-conflict" role="alert" hidden>
+      <strong>其他页面已更新学习记录</strong>
+      <p>此页已暂停编辑，避免覆盖新记录。如有尚未保存的内容，可以先导出此页备份。</p>
+      <div class="flex"><button type="button" class="btn" id="export-stale-page">导出此页备份</button><button type="button" class="btn primary" id="reload-latest">加载最新记录</button></div>
+    </aside>
     <div id="app">
       <div class="boot">
         <span class="boot-mark">∑</span>

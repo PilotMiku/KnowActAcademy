@@ -9,6 +9,7 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from catalog import load_inventory
+from check_bank import scan_sources
 
 
 class PdfBankTests(unittest.TestCase):
@@ -21,14 +22,36 @@ class PdfBankTests(unittest.TestCase):
     def test_all_originals_match_saved_checksums_and_export_counts(self):
         _, inventory = load_inventory(ROOT)
         saved = json.loads((ROOT / 'data/pdf-inventory.json').read_text())
-        self.assertEqual(len(inventory), 132)
-        self.assertEqual(sum(r['expectedQuestions'] for r in inventory), 3501)
-        self.assertEqual(sum(r['pages'] for r in inventory), 1526)
+        self.assertEqual(len(inventory), 137)
+        self.assertEqual(sum(r['expectedQuestions'] for r in inventory), 3716)
+        self.assertEqual(sum(r['pages'] for r in inventory), 1623)
         self.assertEqual({r['path']: r['sha256'] for r in inventory},
                          {r['path']: r['sha256'] for r in saved})
         self.assertTrue(all(pathlib.Path(r['path']).parts[0] == 'question-bank' for r in inventory))
         self.assertFalse(list(ROOT.glob('*.pdf')))
         self.assertEqual(len({r['id'] for r in inventory}), len(inventory))
+        original = json.loads((ROOT / 'docs/original-checksums.json').read_text())
+        originals = {p: digest for p, digest in original.items()
+                     if p.startswith('question-bank/') and p.endswith('.pdf') and '/习概/' not in p}
+        self.assertEqual(len(originals), 132)
+        actual = {r['path']: r['sha256'] for r in inventory}
+        self.assertTrue(all(actual.get(p) == digest for p, digest in originals.items()))
+
+    def test_intake_reports_pending_registration_without_modifying_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            (root / 'data').mkdir()
+            directory = root / 'question-bank/线性代数'
+            directory.mkdir(parents=True)
+            source = ROOT / 'question-bank/线性代数/线性空间.pdf'
+            target = directory / source.name
+            shutil.copyfile(source, target)
+            (root / 'data/catalog.json').write_text('{"subjects": []}')
+            report = scan_sources(root)
+            self.assertEqual(report['new'], 1)
+            self.assertEqual(report['questions'], 39)
+            self.assertEqual(report['files'][0]['suggestedChapterId'], 'linear-chapter-7')
+            self.assertEqual(target.read_bytes(), source.read_bytes())
 
     def test_document_id_and_checksum_survive_a_file_move(self):
         catalog = json.loads((ROOT / 'data/catalog.json').read_text())

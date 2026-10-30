@@ -1,5 +1,6 @@
 import { defaultStudySettings, normalizeStudySettings } from "./preferences.mjs";
 import { pauseExamQuestion } from "./exam-timing.mjs";
+import { normalizeQuestionNotes } from "./question-notes.mjs";
 export const VERSION = 1;
 export const BANK_FORMAT = "local-neumathe.bank.v1";
 export const BACKUP_FORMAT = "local-neumathe.backup.v1";
@@ -81,6 +82,7 @@ export function emptyState() {
     theme: "system",
     studySettings: defaultStudySettings(),
     knowledgeRecallDrafts: {},
+    questionNotes: {},
     knowledgeRecalled: [],
     dailyGoal: 20,
     knowledgeRead: [],
@@ -333,6 +335,11 @@ export function hasResponse(q, response) {
         response !== null &&
         String(response).trim() !== "";
 }
+export function isEffectiveAttempt(attempt, question) {
+  if (!attempt || typeof attempt.correct !== "boolean" || !Number.isFinite(attempt.at)) return false;
+  if (question?.type === "solution" || attempt.manual === true) return true;
+  return hasResponse(question ?? { type: Array.isArray(attempt.answer) ? "multiple" : "single" }, attempt.answer);
+}
 export function shuffle(items, random = Math.random) {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i--) {
@@ -454,7 +461,8 @@ export function createPractice(ids, mode = "sequential") {
     mode,
     responses: {},
     startedAt: Date.now(),
-    questionStartedAt: Date.now(),
+    questionStartedAt: null,
+    questionTimes: {},
   };
 }
 export function createExam(ids, minutes, subjectId = "", now = Date.now()) {
@@ -514,7 +522,7 @@ export function dayKey(at = Date.now()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 export function stats(state, now = Date.now()) {
-  const answered = state.attempts.filter((a) => typeof a.correct === "boolean");
+  const answered = state.attempts.filter((a) => isEffectiveAttempt(a));
   const right = answered.filter((a) => a.correct).length;
   const today = answered.filter((a) => dayKey(a.at) === dayKey(now));
   const days = new Set(answered.map((a) => dayKey(a.at)));
@@ -533,7 +541,7 @@ export function stats(state, now = Date.now()) {
     todayCorrect: today.filter((a) => a.correct).length,
     streak,
     minutes: Math.floor(
-      answered.reduce((sum, a) => sum + a.durationMs, 0) / 60000,
+      answered.reduce((sum, a) => sum + (Number.isFinite(a.durationMs) ? Math.max(0, a.durationMs) : 0), 0) / 60000,
     ),
     activeDays: days.size,
   };
@@ -595,6 +603,7 @@ export function validateBackup(input) {
   )
     throw new Error("备份中的考试记录不完整");
   const state = { ...emptyState(), ...data, version: VERSION };
+  state.questionNotes = normalizeQuestionNotes(data.questionNotes, ids);
   state.exams = state.exams.map((exam) => ({ ...exam, questionStartedAt: null }));
   for (const key of ["knowledgeRead", "knowledgeFavorites", "knowledgeRecalled"]) {
     if (
@@ -617,8 +626,11 @@ export function validateBackup(input) {
     new Set(p.questionIds).size === p.questionIds.length &&
     p.questionIds.every((id) => ids.has(id)) &&
     Number.isInteger(p.index) && p.index >= 0 && p.index < p.questionIds.length &&
-    record(p.responses) && Object.values(p.responses).every(record);
+    record(p.responses) && Object.values(p.responses).every(record) &&
+    (p.questionTimes === undefined || record(p.questionTimes) && Object.entries(p.questionTimes).every(([id, ms]) =>
+      p.questionIds.includes(id) && Number.isFinite(ms) && ms >= 0));
   if (state.practice && !validPractice(state.practice)) state.practice = null;
+  if (state.practice) state.practice = { ...state.practice, questionStartedAt: null };
   const prep = state.preparation;
   const index = getBankIndex(bank);
   if (!Array.isArray(state.preparationHistory) || state.preparationHistory.some((p) =>
@@ -654,6 +666,8 @@ export function validateBackup(input) {
       : p.mode === "prepare-training" && Number.isInteger(p.round) && p.round > 0);
   if (state.preparation?.session && !validPreparationPractice(state.preparation.session))
     state.preparation = { ...state.preparation, session: null };
+  if (state.preparation?.session)
+    state.preparation = { ...state.preparation, session: { ...state.preparation.session, questionStartedAt: null } };
   if (typeof state.practice?.mode === "string" && state.practice.mode.startsWith("prepare-") && !validPreparationPractice(state.practice))
     state.practice = null;
   return { bank, state };

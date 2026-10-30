@@ -1,12 +1,11 @@
-import { getBankIndex, hasResponse } from "./core.mjs";
+import { getBankIndex, isEffectiveAttempt } from "./core.mjs";
 
 export function learningProgress(questions, state) {
   const scope = new Map(questions.map((q) => [q.id, q]));
   const latest = new Map();
   for (const attempt of state.attempts) {
     const q = scope.get(attempt.questionId);
-    if (!q || typeof attempt.correct !== "boolean" || !Number.isFinite(attempt.at) ||
-      (q.type !== "solution" && !hasResponse(q, attempt.answer))) continue;
+    if (!q || !isEffectiveAttempt(attempt, q)) continue;
     const previous = latest.get(q.id);
     if (!previous || attempt.at >= previous.at) latest.set(q.id, attempt);
   }
@@ -24,7 +23,7 @@ const intervals = [1, 3, 7, 14, 30, 60];
 // sync all share the same schedule without a second mutable source of truth.
 export function spacedReview(bank, state, now = Date.now()) {
   const questions = getBankIndex(bank).questions, schedule = new Map();
-  const attempts = state.attempts.filter((a) => questions.has(a.questionId) && typeof a.correct === "boolean" && Number.isFinite(a.at))
+  const attempts = state.attempts.filter((a) => questions.has(a.questionId) && isEffectiveAttempt(a, questions.get(a.questionId)))
     .sort((a, b) => a.at - b.at);
   for (const a of attempts) {
     const previous = schedule.get(a.questionId);

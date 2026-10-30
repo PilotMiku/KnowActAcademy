@@ -12,7 +12,7 @@
     "pages": 19,
     "expectedQuestions": 51,
     "sha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-0cda94732a27",
@@ -27,7 +27,7 @@
     "pages": 3,
     "expectedQuestions": 8,
     "sha256": "ef764f10ef186385306ff5a6b1b589a84b9c8166e970e84d5a53484104ecc3c2",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5f440bae2af9",
@@ -42,7 +42,7 @@
     "pages": 2,
     "expectedQuestions": 6,
     "sha256": "a679275acddf99684284b89d8df25f67732f2b767e7ca01fe2ba86da2463748e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-18e7b6afee96",
@@ -57,7 +57,7 @@
     "pages": 6,
     "expectedQuestions": 15,
     "sha256": "ed2722ed7d965d4ee5351afe75c96335576d227e7cfb080755d001db7876aca2",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-c5dfb069c99d",
@@ -72,7 +72,7 @@
     "pages": 13,
     "expectedQuestions": 34,
     "sha256": "8ede2f8001cade378f2b1e4d3a3b6168fb02aa89bcff43afd4a534b4279f2875",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5ab605e621bb",
@@ -87,7 +87,7 @@
     "pages": 8,
     "expectedQuestions": 23,
     "sha256": "cb02ed1779d29cdf65e8214c3c1f4f1233ca61d7d29dd217c6d30bb6ab329c9b",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-3b18eecdd531",
@@ -102,7 +102,7 @@
     "pages": 22,
     "expectedQuestions": 59,
     "sha256": "d59e83eb0be77687b44622acc5cf923366d5b8c7119141e4b209b6ab7303d6a1",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-eca93681b020",
@@ -117,7 +117,7 @@
     "pages": 9,
     "expectedQuestions": 21,
     "sha256": "808b1118fbd89aae1d33d1b3b4a1b1ec85de11394785aeb9306ad2973b84a877",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-c7705bea6524",
@@ -132,7 +132,7 @@
     "pages": 12,
     "expectedQuestions": 29,
     "sha256": "8831750bc29f570b3cc826f331cec1842e375cf85ee6307a373b29d9cb562461",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f3c2285366b2",
@@ -147,7 +147,7 @@
     "pages": 10,
     "expectedQuestions": 27,
     "sha256": "59300e98a368f6d1b6282ad13fa29f1dc8f6af1376964908943d678e60329d08",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-73cc3a94d49a",
@@ -162,7 +162,7 @@
     "pages": 11,
     "expectedQuestions": 28,
     "sha256": "30fe4651c8ea86dd5a1b81cc5146d392129c042a4ec4b3056dd485413cc2341c",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-cb71d4d9fbf8",
@@ -177,7 +177,7 @@
     "pages": 19,
     "expectedQuestions": 48,
     "sha256": "159f10316216d7c9fda16cff328c3a468234ceaac3261ede27fff479dfc09fae",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-d59696bc112d",
@@ -192,7 +192,7 @@
     "pages": 9,
     "expectedQuestions": 20,
     "sha256": "d8b689d2cdab5baeb31da548e2b1e4fdcbbce9159997f142a8be78068fc933eb",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-d2ffeeb943b1",
@@ -207,7 +207,7 @@
     "pages": 5,
     "expectedQuestions": 10,
     "sha256": "4f29aa342e7d8860cc144b3d200e19a3215b416df1b93c989a2142a176c371f3",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-00ec8d743d0b",
@@ -222,7 +222,7 @@
     "pages": 4,
     "expectedQuestions": 9,
     "sha256": "750b005a3752e2be8e80865b8b41a519efb04da04455a8929ddd61f3fc194755",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-09902fc40239",
@@ -237,7 +237,7 @@
     "pages": 28,
     "expectedQuestions": 74,
     "sha256": "1b1cc06a28439309fdb0b3bb06f5e7514d72aa662a2ef7be2fca1290c38ea70d",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f76bc88ff42f",
@@ -252,7 +252,7 @@
     "pages": 12,
     "expectedQuestions": 34,
     "sha256": "a66d8f9f986c0b0b161c781e8ff393ba25e01743b81527265c3bcd56f9eee499",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5510ec9ef5b5",
@@ -267,7 +267,7 @@
     "pages": 3,
     "expectedQuestions": 8,
     "sha256": "4de659a5cf22fbc4029392a9162352116452a4fa1737fe9fba83f6fe972502ea",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-b08a6d73f6a6",
@@ -282,7 +282,7 @@
     "pages": 11,
     "expectedQuestions": 31,
     "sha256": "abe7026c81e38c12ccdd2962c40ad4d40b0998d04b6d44e476132e4c172ea337",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-dd41bfe2cc51",
@@ -297,7 +297,7 @@
     "pages": 8,
     "expectedQuestions": 19,
     "sha256": "90973df2e783ccb9ee44874beaf1cde6e59ebc2c4c748d0c0b5c898b5fea9c98",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-97ffb125d370",
@@ -312,7 +312,7 @@
     "pages": 7,
     "expectedQuestions": 20,
     "sha256": "f0fd391ea30efa21b6aced2b32c4720bdef91160fb72a5270a56a62b100ca59c",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-0f286abb4d17",
@@ -327,7 +327,7 @@
     "pages": 5,
     "expectedQuestions": 9,
     "sha256": "911aaa830acc5b4ba94dbfb310401bb47efa7fa6cbacc1821e32887a34897e72",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-2210e871e50a",
@@ -342,7 +342,7 @@
     "pages": 5,
     "expectedQuestions": 13,
     "sha256": "48667c0d1973236747e93353cd5e9adb6bd9a6b23fc0a65a0859a7fe421f6361",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-748a0b9cef9b",
@@ -357,7 +357,7 @@
     "pages": 18,
     "expectedQuestions": 48,
     "sha256": "db24c29a33a97486530bdce8c0e45154a3516797e735ed6ab3e9b2f579f4e2f1",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-565d562db0f9",
@@ -372,7 +372,7 @@
     "pages": 8,
     "expectedQuestions": 22,
     "sha256": "2555a807ef33376ea28639dc0d9488eaa3bf0e73acbd332c63524163bcdd6b02",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-0f4090bf6ac6",
@@ -387,7 +387,7 @@
     "pages": 21,
     "expectedQuestions": 40,
     "sha256": "0b70f7648bebf6398a0b25a22439aa0d2bca92cb4ba31ede99aedc2d4c882bf6",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-19ca5965a0a2",
@@ -402,7 +402,7 @@
     "pages": 19,
     "expectedQuestions": 36,
     "sha256": "4a0c3b2123945c2a15e6f5b65ef470b8ce38a6d62c8c2fc423e75dd710bbd7d3",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-0915ea130df1",
@@ -417,7 +417,7 @@
     "pages": 7,
     "expectedQuestions": 17,
     "sha256": "b214ca34d4808e63be220741dcaa7bb338dd3b2a8fce2bd1ebc278d57909a0be",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-4dad1292a888",
@@ -432,7 +432,7 @@
     "pages": 6,
     "expectedQuestions": 14,
     "sha256": "0a40e61e054d9567a99da42ac8dfea6ef20ae1a7e7546aa55766a5d455a3a070",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-539ff05e2440",
@@ -447,7 +447,7 @@
     "pages": 2,
     "expectedQuestions": 4,
     "sha256": "85aaa2dcea8213d471dfd497db0b4ca78bf0a75ac7a7a89f86cac7dde1c17b2e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-fab784464155",
@@ -462,7 +462,7 @@
     "pages": 14,
     "expectedQuestions": 33,
     "sha256": "1ef83f494d9b11ac9bc16c29bb6095120c5181c224b7c8b1be989ae95799bab6",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5b8a3dfd2ef2",
@@ -477,7 +477,7 @@
     "pages": 11,
     "expectedQuestions": 28,
     "sha256": "d7cd867b331cb16d9c1fe4773041bc1a3414330b9b376eac87fff98c5dd75dce",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-837025d41315",
@@ -492,7 +492,7 @@
     "pages": 4,
     "expectedQuestions": 11,
     "sha256": "777f5924a1b416beddc052436558bfd9e78728756c21f3fef68f0628eb9fedcc",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-04739e185898",
@@ -507,7 +507,7 @@
     "pages": 16,
     "expectedQuestions": 33,
     "sha256": "017a724e5e982be2ad9db1264555db9c71f160885e748749536b0daeb1306318",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-55edcc2bf304",
@@ -522,7 +522,7 @@
     "pages": 5,
     "expectedQuestions": 12,
     "sha256": "2f432218031dd78d7cc40a229ffe866ba9720b247b1b088278f92ab9c1e8af0e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-dfa8d307f290",
@@ -537,7 +537,7 @@
     "pages": 9,
     "expectedQuestions": 23,
     "sha256": "8f784987e33525787088163e35aff33298bd14ad538e727298ac421da9aa45ae",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-6d7a175c5f89",
@@ -552,7 +552,7 @@
     "pages": 13,
     "expectedQuestions": 36,
     "sha256": "eda7f624db46ca7019511f775d97586ebf30eadb9daa2930ef306697a0c81610",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-963db52cf474",
@@ -567,7 +567,7 @@
     "pages": 5,
     "expectedQuestions": 11,
     "sha256": "999faa4c04ae0a602522da018e6f9b4846661b4f1f4026001fa27a4d4523bdb9",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-a56a508e8b19",
@@ -582,7 +582,7 @@
     "pages": 5,
     "expectedQuestions": 14,
     "sha256": "a86ca624e050c9dc6e658b17bcb7d2a004f1e480dfd2dc372d00aa59e014bfc5",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-8e703efee503",
@@ -597,7 +597,7 @@
     "pages": 8,
     "expectedQuestions": 19,
     "sha256": "00f115cc0a5ab5de4c5a95dab952ca9e00af8120ea6141a406a5559ccbe111da",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-ae44b8f3cbbb",
@@ -612,7 +612,7 @@
     "pages": 12,
     "expectedQuestions": 25,
     "sha256": "1b2118bcad959d73a1fabe34ba3f8f9bf1bf3dfd093793e6370d9fdc44295fce",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-529620d19b3b",
@@ -627,7 +627,7 @@
     "pages": 22,
     "expectedQuestions": 53,
     "sha256": "a51a2ac9661677d47557b46bb0abe37a81f74f2243db11977771efc19c5c7ce2",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-839e31ffc4ae",
@@ -642,7 +642,7 @@
     "pages": 7,
     "expectedQuestions": 17,
     "sha256": "af0ae52d0035bfdf3328d9f218488ca7cb522cfa3e16764b89ac8e0dc4381247",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-d78d50219c82",
@@ -657,7 +657,7 @@
     "pages": 6,
     "expectedQuestions": 12,
     "sha256": "433aeae5cee9fde67d325a4e8e18b5456b05fc6c0980bf3f23c07d1090671f92",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-d85d9256d2a1",
@@ -672,7 +672,7 @@
     "pages": 7,
     "expectedQuestions": 21,
     "sha256": "a960181532b946f5a48955d23b75af6f4aaf56b39a1c9636bfb8a98d30aea05a",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-be861bef4a15",
@@ -687,7 +687,7 @@
     "pages": 7,
     "expectedQuestions": 19,
     "sha256": "c0ec15686132f1a3c8fb2d00ee8b91610b1be7f05b2fa1af12f1d4a508072d1e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-842ce28a4f0d",
@@ -702,7 +702,7 @@
     "pages": 7,
     "expectedQuestions": 20,
     "sha256": "db105879eacc591f082fbb12f3f44dc1deab75cd9cab026afb50901667166603",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5213d062494c",
@@ -717,7 +717,7 @@
     "pages": 11,
     "expectedQuestions": 28,
     "sha256": "4ae5345c8a5b3783f15beb99b5f6564f139f7c70b74aa4542919f996ea436089",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-eb441e50ea1d",
@@ -732,7 +732,7 @@
     "pages": 12,
     "expectedQuestions": 36,
     "sha256": "e4704cfd8fac6ea8233b8b29351c1feee64bb9cbf0dbc0cf5c4e4109fea5be6f",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-21cdb8662606",
@@ -747,7 +747,7 @@
     "pages": 10,
     "expectedQuestions": 27,
     "sha256": "16efa71e76ede15770611c3ab9cab90d6903f52869582a7e4653a60fe59f7f10",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-c3ffd82adbab",
@@ -762,7 +762,7 @@
     "pages": 13,
     "expectedQuestions": 32,
     "sha256": "734141788e6681fde201f6fc2419e9065d3c8c70e05cb29e3d093f922a9f851e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-6a73b4c1da3f",
@@ -777,7 +777,7 @@
     "pages": 7,
     "expectedQuestions": 17,
     "sha256": "f7b39b382faec090d5f4812e667f58232c6e826ad58e90bf409a84d00af8ff1e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-85dbedd0155c",
@@ -792,7 +792,7 @@
     "pages": 3,
     "expectedQuestions": 7,
     "sha256": "a642edb47bb0550f80282c51be8e7f1cc1270a39ac5c6517d4ceed165a23580f",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-6dbdf44fd58a",
@@ -807,7 +807,7 @@
     "pages": 9,
     "expectedQuestions": 23,
     "sha256": "578f2ed7b9502b9fe1351f855c6e3e146b6f0ed9bcf2e944af0441fbed03dc49",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-d28f19b9bca8",
@@ -822,7 +822,7 @@
     "pages": 9,
     "expectedQuestions": 18,
     "sha256": "200e3911e6b34f56da9ed02e49631a20511902d06e5297f3975d55b664e73569",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-9ec99f1bbaaa",
@@ -837,7 +837,7 @@
     "pages": 7,
     "expectedQuestions": 15,
     "sha256": "2082ac870817f28fc3c2aff3fd26052f081b6e2d9e65b0c969567b7c59c4ebe9",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-4633fad6d3f4",
@@ -852,7 +852,7 @@
     "pages": 7,
     "expectedQuestions": 15,
     "sha256": "44abdb7fb2f1e66a52def314383b5f45f5b724eb816a053512a9447310fa9b5b",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-3ccdff3355c4",
@@ -867,7 +867,7 @@
     "pages": 9,
     "expectedQuestions": 25,
     "sha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-381a88a83f16",
@@ -882,7 +882,7 @@
     "pages": 4,
     "expectedQuestions": 11,
     "sha256": "32acebd4b0ba9fff02045440baa6842ba83129d53c91a8451ea0b83e63866615",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-28375703e59c",
@@ -897,7 +897,7 @@
     "pages": 17,
     "expectedQuestions": 46,
     "sha256": "630ebc0788917e59411a45d683812fe41c1b076e1b19611d5d053f9ed57f78c2",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5cc65edb6428",
@@ -912,7 +912,7 @@
     "pages": 18,
     "expectedQuestions": 47,
     "sha256": "ec55d97494dcdf83163cba9cd892ebb4b91aefceb7dd03fd4cf9e8d0be7f6a8f",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-92307195b6c8",
@@ -927,7 +927,7 @@
     "pages": 3,
     "expectedQuestions": 8,
     "sha256": "f69411aa9238b0f3af3d933d197d49d44ef4797dad41840a8a65bdf0afaca52a",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-35914e93a3d7",
@@ -942,7 +942,7 @@
     "pages": 18,
     "expectedQuestions": 41,
     "sha256": "cfcb0f6690a1161beb4987c7599ab31b44abae395e6f76a9d4fa3afb541cf0cb",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-7f5535efc30a",
@@ -957,7 +957,7 @@
     "pages": 12,
     "expectedQuestions": 22,
     "sha256": "c3aefdb5813c48f0eefdb4f80dc127bf7dc0451512b219e6ebedd2baa75fa35e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-a6e01a165c34",
@@ -972,7 +972,7 @@
     "pages": 12,
     "expectedQuestions": 26,
     "sha256": "58b17da6fc5497e72b6206948f9270eb1c6acea31e893da26442953f7567b80b",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-6cccc78ecc73",
@@ -987,7 +987,7 @@
     "pages": 9,
     "expectedQuestions": 20,
     "sha256": "e5751ed75d43d67b43e1d8aefd203c5f71d82dda0563e63dda45148de28e9af6",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-db036868f61c",
@@ -1002,7 +1002,7 @@
     "pages": 8,
     "expectedQuestions": 18,
     "sha256": "3d5d1fc5efaeb0b5c85aac98539d52e87eba992548a57edf9785189b1d680a18",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f566de7e7dcf",
@@ -1017,7 +1017,7 @@
     "pages": 14,
     "expectedQuestions": 28,
     "sha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-a8e49a9421ff",
@@ -1032,7 +1032,7 @@
     "pages": 14,
     "expectedQuestions": 31,
     "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-c13981379316",
@@ -1047,7 +1047,7 @@
     "pages": 3,
     "expectedQuestions": 5,
     "sha256": "b40b41530f2d24cec90b42c478e9da1249c6ccbc291de084ed30411762afc0a7",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-7f0c2b8999dd",
@@ -1062,7 +1062,7 @@
     "pages": 15,
     "expectedQuestions": 31,
     "sha256": "75e0cef241434ae07f902ad50938aa0fcd8574ea1116b9b05d66b8fe5629fba3",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-98c1b4bdba53",
@@ -1077,7 +1077,7 @@
     "pages": 5,
     "expectedQuestions": 11,
     "sha256": "912d97127192adf6fea2e63662d1dc63b5fc09f8a29ec2be820aca1f92671708",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-cbfff2add336",
@@ -1092,7 +1092,7 @@
     "pages": 4,
     "expectedQuestions": 6,
     "sha256": "f3fa1ffaafeaf6fc88a23b4529e6850dd3cbd8217cb849d4933bbddf511b4d4b",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-be1e86f6a61f",
@@ -1107,7 +1107,7 @@
     "pages": 3,
     "expectedQuestions": 6,
     "sha256": "10c392cf50305589bb146fbbb4a8441b817e8a60f7573c91b56f5f3ccef7f835",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-84aefb2c6fa0",
@@ -1122,7 +1122,7 @@
     "pages": 14,
     "expectedQuestions": 25,
     "sha256": "419d62e274b6957f4f1cca952311145a79bf5141d356f9baf818317d2ef900c8",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-1a9622e69962",
@@ -1137,7 +1137,7 @@
     "pages": 11,
     "expectedQuestions": 16,
     "sha256": "2130d196971f8acf10b1239dd0f6c61ff5615df84d6f05090ebef268e141359a",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f31bfb7ac1b6",
@@ -1152,7 +1152,7 @@
     "pages": 4,
     "expectedQuestions": 5,
     "sha256": "16e59813c451bb9be5f811aa4415cd5a9f9f3978cb3e03d9925d3b684ce25359",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-0cf298b76641",
@@ -1167,7 +1167,7 @@
     "pages": 5,
     "expectedQuestions": 13,
     "sha256": "e22461ef07849369555987ba55ca4db8d49768e9487cf5ac5934670fce246b92",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-447e052c5a79",
@@ -1182,7 +1182,7 @@
     "pages": 14,
     "expectedQuestions": 30,
     "sha256": "d13801e5bf5c0c87fa305fae92938b8cf373d2c4a6fbb9f13472266aaad3d4ad",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5c90c116e2c1",
@@ -1197,7 +1197,7 @@
     "pages": 14,
     "expectedQuestions": 30,
     "sha256": "de33ec000ecc57474030f8fa0a3bc6b2e63b535b0abef018627ae68c5fa544ea",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-75adf2f29de2",
@@ -1212,7 +1212,7 @@
     "pages": 22,
     "expectedQuestions": 50,
     "sha256": "941477f44cbb51f984d84e107c5d0ee3f3b758ad616ba4ef7a19533b1da67b2f",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f50301da5c36",
@@ -1227,7 +1227,7 @@
     "pages": 18,
     "expectedQuestions": 34,
     "sha256": "fefdbbdfdaf840c9a469b967779a6ffdfc2df005edc454291c0adc6cb5992477",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-0d086626c4b8",
@@ -1242,7 +1242,7 @@
     "pages": 24,
     "expectedQuestions": 50,
     "sha256": "9a800f1fe91afd10b0d65231492951cbeb26e67a8e7c64a98d26ff79b2da52a7",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-7161973d9f23",
@@ -1257,7 +1257,7 @@
     "pages": 5,
     "expectedQuestions": 10,
     "sha256": "669c560c928c94c42d219fac500d18b3ed8e5fa2139e38556cad6840653b88d4",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-67dfdf376ff7",
@@ -1272,7 +1272,7 @@
     "pages": 11,
     "expectedQuestions": 25,
     "sha256": "6963d94cdab72614364c76aa46c30f4fee3e5431384103585e696d2f8f76df70",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-ec108dd15714",
@@ -1287,7 +1287,7 @@
     "pages": 20,
     "expectedQuestions": 48,
     "sha256": "a075703981d4902b64cce615dd31e6352381bb5b1376b6646ce2962b1cc8c3d3",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-e4ae0a44a89e",
@@ -1302,7 +1302,7 @@
     "pages": 25,
     "expectedQuestions": 64,
     "sha256": "e2b9d314ec44a18086a68574c6a2e1b45d72fef02c2372f069898988af6fc401",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-09493b6798b0",
@@ -1317,7 +1317,7 @@
     "pages": 14,
     "expectedQuestions": 27,
     "sha256": "2e3b6067b5beb3d0b9bd3b26d6dce7b31cf8ff0c419e31877c7c9679cd38cdf0",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-6b7d90a83a1e",
@@ -1332,7 +1332,7 @@
     "pages": 25,
     "expectedQuestions": 59,
     "sha256": "4892d07ac61b8e5887b782c333232998bda7974c62c4a318cbde51e1391d1acd",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-8887e06ed7d9",
@@ -1347,7 +1347,7 @@
     "pages": 2,
     "expectedQuestions": 3,
     "sha256": "d01815fc6f9dcc45711035c7723bd7553ed1e52258fe38491e6cdd15fa634d55",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-879efc8fc465",
@@ -1362,7 +1362,7 @@
     "pages": 14,
     "expectedQuestions": 29,
     "sha256": "66d2214560c80c1b286efe8e946efdc8884c7ec6f09260e8a5c632c0d89ee5c3",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-6afb0757aade",
@@ -1377,7 +1377,7 @@
     "pages": 9,
     "expectedQuestions": 17,
     "sha256": "5463f57c626fff81c2556fd983d0811149f6cb5ed1d695e100c8ce3106f15a40",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-d3df111b5379",
@@ -1392,7 +1392,7 @@
     "pages": 2,
     "expectedQuestions": 4,
     "sha256": "5631085e6675d148481d90ae099113dac526702d34060e1b90525151abb4391c",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-96a0c9ad9285",
@@ -1407,7 +1407,7 @@
     "pages": 16,
     "expectedQuestions": 31,
     "sha256": "551c04c92aa91b345e57912b428d75c7def0d8576e4925f860a090f0444881eb",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-482d5f67bd77",
@@ -1422,7 +1422,7 @@
     "pages": 6,
     "expectedQuestions": 14,
     "sha256": "9b41309c983476de4ae622473e664c3a3d31f693b5b37d491d18b4ae7b48190d",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-ec2fb00b2cfd",
@@ -1437,7 +1437,7 @@
     "pages": 18,
     "expectedQuestions": 39,
     "sha256": "0f0ac74c7df16f3984d366991f2f0345ab6974e105a3a9b16cd15d0a0fb063ce",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-3a824da3caec",
@@ -1452,7 +1452,7 @@
     "pages": 13,
     "expectedQuestions": 29,
     "sha256": "60a9e8ed5a32bfc1e06d87b60e2fd983f43114efa5abbd3c4878a70d75f6c64b",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-8fe9f0e23c80",
@@ -1467,7 +1467,7 @@
     "pages": 6,
     "expectedQuestions": 13,
     "sha256": "0d5212e18b97ea1c444dfcd7d0d44f987e51ce951a2ac3de75e73959a04bea85",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-6dffec3c040e",
@@ -1482,7 +1482,7 @@
     "pages": 15,
     "expectedQuestions": 33,
     "sha256": "ca0e69ffe6e10355f1ea5b741be2be99b0b12aac354ef5be9183c46fe16ff2b4",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-3e81b14b6d76",
@@ -1497,7 +1497,7 @@
     "pages": 7,
     "expectedQuestions": 18,
     "sha256": "d852e385f7cb0d53ccf486288a6e39dae63dd61822bd0b751276461f9aefcd35",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-01027c19723a",
@@ -1512,7 +1512,7 @@
     "pages": 2,
     "expectedQuestions": 6,
     "sha256": "d222487cad76a9679c995192dc9cfc098ecd300022659b6af74527e1f74069f8",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-1692e934288d",
@@ -1527,7 +1527,7 @@
     "pages": 21,
     "expectedQuestions": 47,
     "sha256": "03aed4aa79494765654901d426d4019c96ebb11c039631b12eee1ae57370eab7",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-8a7621913861",
@@ -1542,7 +1542,7 @@
     "pages": 13,
     "expectedQuestions": 33,
     "sha256": "cfb3ee9e7e2f7260a0e523e5fdc445dcc4537b8302bbe02a9f818dc6ce7be756",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-2be49dc7f766",
@@ -1557,7 +1557,7 @@
     "pages": 6,
     "expectedQuestions": 14,
     "sha256": "a0a436172b3e524efef0d40732b94c3f45047fbcbc0f4d2c9b672b99ba75948b",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-866d4371e8c0",
@@ -1572,7 +1572,7 @@
     "pages": 7,
     "expectedQuestions": 14,
     "sha256": "e197a2559dcb2131dbabf6e8488c20eb4cd4b9d527a696874715861911e36930",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-5b6ae41ddae7",
@@ -1587,7 +1587,7 @@
     "pages": 6,
     "expectedQuestions": 18,
     "sha256": "f1b241a152e4e6f1d8bb4a6ef489a77dfe98c13b443539f240bac24ae5864907",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-63b48186d743",
@@ -1602,7 +1602,7 @@
     "pages": 13,
     "expectedQuestions": 30,
     "sha256": "5659166afcbe455d335d9a8fe17204a8b9444eecf4dbdd64616440c7fadb6e08",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f3cd1df4fea4",
@@ -1617,7 +1617,7 @@
     "pages": 20,
     "expectedQuestions": 55,
     "sha256": "600381ed0a4a61d86f74cf680657301b179d6b90f71277ebce3061d50249d74e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-220685c01868",
@@ -1632,7 +1632,7 @@
     "pages": 10,
     "expectedQuestions": 26,
     "sha256": "120e28971f7aa106c19d56014fd93db987897878c65fdae3a4f5a7c9ed68bf27",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-c253bb18b56a",
@@ -1647,7 +1647,7 @@
     "pages": 4,
     "expectedQuestions": 8,
     "sha256": "33b70fe4a0f92ecd64915d789893d47f7634a61d97624416c9fbea50ad0d055c",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-36252f2d7af8",
@@ -1662,7 +1662,7 @@
     "pages": 9,
     "expectedQuestions": 17,
     "sha256": "52435df0a4c360dc2daec71dd375e901b4fa020d7640c3c3317b7c75b08ee30f",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f313eb07db42",
@@ -1677,7 +1677,7 @@
     "pages": 2,
     "expectedQuestions": 3,
     "sha256": "434ee4daae6139f4adb9cfe2378dc5f21a1e5fa30bf7a230bd98bae91d7011db",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-92c9a8b0f627",
@@ -1692,7 +1692,7 @@
     "pages": 3,
     "expectedQuestions": 7,
     "sha256": "875bee00c0b73dcd7693bcda8a59456ce6983c29ddc34aa84205bc32100f3240",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-8ffd6b840240",
@@ -1707,7 +1707,7 @@
     "pages": 20,
     "expectedQuestions": 43,
     "sha256": "dc2f2632ad96311feec1c29931c8910e43691c1fce25faac643c2cc29c6e6f7b",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-d30c34422522",
@@ -1722,7 +1722,7 @@
     "pages": 4,
     "expectedQuestions": 6,
     "sha256": "beee5a139f8cf58b8090a7d2216d08d11e3499ba50c272d9cac3e2e27b5ce7bc",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-2980ad788ffb",
@@ -1737,7 +1737,7 @@
     "pages": 21,
     "expectedQuestions": 48,
     "sha256": "7379663a2b1ce485feb56cdcfa69f610965d91ccb63d9cac635c4cbb84aaa59e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-919b257c1991",
@@ -1752,7 +1752,7 @@
     "pages": 6,
     "expectedQuestions": 11,
     "sha256": "28c3f9f6a6eea2e1eac4789c8b8345a14cf944877f5a7facaaf0a03887defd05",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-688d701697a1",
@@ -1767,7 +1767,7 @@
     "pages": 14,
     "expectedQuestions": 34,
     "sha256": "41d7975c21cec1186dfb767bf88a8abe08c41efbf7fd3fb6078d2aa4e1dc4d5f",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-955b035a1c16",
@@ -1782,7 +1782,7 @@
     "pages": 17,
     "expectedQuestions": 36,
     "sha256": "b7b0d9be40b53b38423d22e2fe043f065787b56bb480db1032a825f3ac120575",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-77d11fee078c",
@@ -1797,7 +1797,7 @@
     "pages": 17,
     "expectedQuestions": 34,
     "sha256": "12b54a2ef71f4a4ce71c609693bf6cf2be0f8c5adc3e558698feebe1f64baef6",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-fd7c327d6d97",
@@ -1812,7 +1812,7 @@
     "pages": 11,
     "expectedQuestions": 23,
     "sha256": "31cee95ba6b8614193927c203aa77db5e5125dc8ddc739443127dd7ee35534cf",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-aced6d11824a",
@@ -1827,7 +1827,7 @@
     "pages": 8,
     "expectedQuestions": 17,
     "sha256": "603f2c57ce9daf112258d844fcfd2312820387b83bed9646a77b208888d91435",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-95526ab77b54",
@@ -1842,7 +1842,7 @@
     "pages": 41,
     "expectedQuestions": 77,
     "sha256": "b438ca09a0614932f0596b63be85791fe12cb05101f7348cc471b3feb4672ac5",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-f008257aa94a",
@@ -1857,7 +1857,7 @@
     "pages": 8,
     "expectedQuestions": 15,
     "sha256": "ce7b9da302f954173a56f57157c68bb4eb35785281dfd7c09687f5b29d9f1898",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-8df004948022",
@@ -1872,7 +1872,7 @@
     "pages": 41,
     "expectedQuestions": 91,
     "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-290e78b42279",
@@ -1887,7 +1887,7 @@
     "pages": 34,
     "expectedQuestions": 59,
     "sha256": "2ccf6c7be4494454a8dc7658bafa0178e9b0c0d5557e2a9cad8cbac34761f02d",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-c24640ce8c58",
@@ -1902,7 +1902,7 @@
     "pages": 27,
     "expectedQuestions": 59,
     "sha256": "f15eb899aabf6533a06bdf2b77012c6e9f8d94742dd2908e71d217c0b6e9483d",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-fbe6ec6fb0eb",
@@ -1917,7 +1917,22 @@
     "pages": 10,
     "expectedQuestions": 24,
     "sha256": "6920c9bcb62a92ebaad3e05cff3260c7d3b76ee81374e9d8dc417848c932c532",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
+  },
+  {
+    "id": "s-4fd26f36060c",
+    "path": "question-bank/线性代数/向量概念及其性质、内积、正交.pdf",
+    "name": "向量概念及其性质、内积、正交",
+    "subjectId": "linear",
+    "subjectName": "线性代数",
+    "parentId": "linear-chapter-3",
+    "chapterNo": 3,
+    "number": "3.2",
+    "bytes": 1124576,
+    "pages": 12,
+    "expectedQuestions": 32,
+    "sha256": "d8d1d2fdc9bf1db7f18832a269469dfb34537504d211e1ba1ee0616dc7b4fc5b",
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-ca771d9279f3",
@@ -1932,7 +1947,7 @@
     "pages": 12,
     "expectedQuestions": 33,
     "sha256": "e945036dfa1d534df3a983503834e370ebdaa6206240ee702cfb56bd3d67afee",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-75664c9f6b8d",
@@ -1947,7 +1962,7 @@
     "pages": 13,
     "expectedQuestions": 27,
     "sha256": "01f3dede26193ed69bb005da6b484917a58bbbfdb6ea2d1bedad0660309d587e",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-84552c1954bb",
@@ -1962,7 +1977,7 @@
     "pages": 23,
     "expectedQuestions": 53,
     "sha256": "df5b35edc4c1e29ede6915ae75c72173517a83509b82d0ca2812dc526f42d12a",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
   },
   {
     "id": "s-0364a819e85d",
@@ -1977,6 +1992,66 @@
     "pages": 23,
     "expectedQuestions": 53,
     "sha256": "2aee4ba0aa2ddb7ff8f4d979975be12da3bc6ddeb5ea4a9012f83bdc13cdc1be",
-    "revision": "pdf-3ef51a36e565cb82"
+    "revision": "pdf-ba8cf68633101d8c"
+  },
+  {
+    "id": "s-7b6cbc76dc54",
+    "path": "question-bank/线性代数/线性方程组解判定及其求解.pdf",
+    "name": "线性方程组解判定及其求解",
+    "subjectId": "linear",
+    "subjectName": "线性代数",
+    "parentId": "linear-chapter-6",
+    "chapterNo": 6,
+    "number": "6.1",
+    "bytes": 1326690,
+    "pages": 16,
+    "expectedQuestions": 32,
+    "sha256": "b683c32db3ce92b5fcad01b1328299de5f2843c4c76ef3e0105cf9dd58ab871e",
+    "revision": "pdf-ba8cf68633101d8c"
+  },
+  {
+    "id": "s-87ec18daf39a",
+    "path": "question-bank/线性代数/基础解系和解的结构.pdf",
+    "name": "基础解系和解的结构",
+    "subjectId": "linear",
+    "subjectName": "线性代数",
+    "parentId": "linear-chapter-6",
+    "chapterNo": 6,
+    "number": "6.2",
+    "bytes": 2571185,
+    "pages": 25,
+    "expectedQuestions": 52,
+    "sha256": "957be0cfc7688b6fc7352559ca390f482e69c498ee0c2aecded405a283852b80",
+    "revision": "pdf-ba8cf68633101d8c"
+  },
+  {
+    "id": "s-b95f0205c67d",
+    "path": "question-bank/线性代数/线性空间.pdf",
+    "name": "线性空间",
+    "subjectId": "linear",
+    "subjectName": "线性代数",
+    "parentId": "linear-chapter-7",
+    "chapterNo": 7,
+    "number": "7.1",
+    "bytes": 1554580,
+    "pages": 18,
+    "expectedQuestions": 39,
+    "sha256": "f06c8071de800a0194af436220555f9548ab73043f5860d179b5effe1bca7a0b",
+    "revision": "pdf-ba8cf68633101d8c"
+  },
+  {
+    "id": "s-3f9ab53c7f4d",
+    "path": "question-bank/线性代数/线性变换、欧几里得空间.pdf",
+    "name": "线性变换、欧几里得空间",
+    "subjectId": "linear",
+    "subjectName": "线性代数",
+    "parentId": "linear-chapter-7",
+    "chapterNo": 7,
+    "number": "7.2",
+    "bytes": 2656508,
+    "pages": 26,
+    "expectedQuestions": 60,
+    "sha256": "7155c62711fab9ffd02bd9298a43b3295c2919a8ecb27a53c0b7dd0c66778767",
+    "revision": "pdf-ba8cf68633101d8c"
   }
 ]

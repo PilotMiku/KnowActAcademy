@@ -49,6 +49,10 @@ try {
   await a.getByRole('button', { name: /顺序练习/ }).click();
   await a.locator('[data-action="answer-option"][data-value="A"]').click();
   await a.getByRole('button', { name: '确认答案', exact: true }).click();
+  await a.locator('.question-notes summary').click();
+  await a.locator('[data-question-note]').fill('先检查定义和符号，再代入计算。');
+  await a.locator('[data-note-reason][value="calculation"]').check();
+  await a.locator('[data-note-status]').filter({ hasText: '已保存' }).waitFor();
   await a.getByRole('button', { name: '收藏题目', exact: true }).click();
   await a.goto(baseURL + '/#/prepare?subject=calculus&scope=custom&chapter=s-6b82188494c1');
   await a.locator('[data-action="begin-preparation"]').click();
@@ -85,6 +89,8 @@ try {
   assert.deepEqual(restored.attempts, original.attempts);
   assert.deepEqual(restored.favorites, original.favorites);
   assert.deepEqual(restored.mistakes, original.mistakes);
+  assert.deepEqual(restored.questionNotes, original.questionNotes);
+  assert.equal(Object.keys(restored.questionNotes).length, 1);
   assert.deepEqual(restored.knowledgeRead, original.knowledgeRead);
   assert.deepEqual(restored.knowledgeFavorites, original.knowledgeFavorites);
   assert.deepEqual(restored.preparation, original.preparation);

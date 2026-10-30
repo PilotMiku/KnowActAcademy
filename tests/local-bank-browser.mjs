@@ -36,7 +36,7 @@ try {
   assert.equal(await page.locator(".chapter-card").count(), 7);
   assert.equal(
     await page.locator(".local-stat-strip b").first().innerText(),
-    "3,501",
+    bank.questions.length.toLocaleString("en-US"),
   );
   await page.screenshot({
     path: "artifacts/local-home-desktop.png",
@@ -53,11 +53,11 @@ try {
   );
   await page.locator(".course-tab[href*=linear]").click();
   await page.locator(".course-tab.active[href*=linear]").waitFor();
-  assert.equal(await page.locator(".chapter-card").count(), 5);
+  assert.equal(await page.locator(".chapter-card").count(), 7);
   await page.locator(".course-tab[href*=calculus]").click();
   await page.locator(".course-tab.active[href*=calculus]").waitFor();
   scenarios.push(
-    "3501 real PDF questions are bundled and loaded automatically",
+    "3716 real PDF questions are bundled and loaded automatically",
   );
   await page.goto(origin + "/#/practice?subject=calculus&chapter=chapter-1");
   await page.locator(".practice-start").waitFor();
@@ -168,7 +168,7 @@ try {
     404,
   );
   const health = await (await page.request.get(origin + "/build-manifest.json")).json();
-  assert.equal(health.questions, 3501);
+  assert.equal(health.questions, bank.questions.length);
   scenarios.push(
     "local health, original PDF partial download, unknown resource rejection",
   );
@@ -267,7 +267,7 @@ try {
   await upgradePage.locator(".local-hero").waitFor();
   assert.equal(
     await upgradePage.locator(".local-stat-strip b").first().innerText(),
-    "3,501",
+    bank.questions.length.toLocaleString("en-US"),
   );
   const stored = await upgradePage.evaluate(
     () =>

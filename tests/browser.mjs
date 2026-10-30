@@ -172,7 +172,7 @@ try {
       .locator(".local-stat-strip>div:nth-child(3) b")
       .first()
       .innerText(),
-    "6",
+    "5", // The unanswered timed-out exam does not count as completed work.
   );
   await page.locator('.local-nav a[href="#/practice"]').click();
   await page.locator("#question-search").fill("安全排版");

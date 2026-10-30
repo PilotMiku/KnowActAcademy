@@ -1,4 +1,4 @@
-import { filterQuestions, getBankIndex, hasResponse, shuffle } from "./core.mjs";
+import { filterQuestions, getBankIndex, isEffectiveAttempt, shuffle } from "./core.mjs";
 import { preparationMastery } from "./preparation.mjs";
 import { spacedReview } from "./study.mjs";
 
@@ -7,7 +7,7 @@ export function questionActivity(questions, state) {
   for (const a of state.attempts.filter((a) => scope.has(a.questionId) && typeof a.correct === "boolean")
     .sort((a, b) => a.at - b.at)) {
     const q = scope.get(a.questionId);
-    if (q.type !== "solution" && !hasResponse(q, a.answer)) continue;
+    if (!isEffectiveAttempt(a, q)) continue;
     const item = activity.get(q.id) ?? { streak: 0, lastAt: 0, count: 0 };
     item.streak = a.correct && !a.uncertain ? item.streak + 1 : 0;
     item.lastAt = a.at;
@@ -75,7 +75,7 @@ export function collectionPageSlice(questions, requestedPage, size = 30) {
 
 export function reviewBatchSize(state, minutes = 0) {
   if (![5, 10, 20].includes(Number(minutes))) return 20;
-  const times = state.attempts.filter((a) => a.durationMs > 0).slice(-100).map((a) => a.durationMs).sort((a, b) => a - b);
+  const times = state.attempts.filter((a) => isEffectiveAttempt(a) && Number.isFinite(a.durationMs) && a.durationMs > 0).slice(-100).map((a) => a.durationMs).sort((a, b) => a - b);
   const typical = Math.max(30000, Math.min(300000, times[Math.floor(times.length / 2)] ?? 60000));
   return Math.max(1, Math.min(20, Math.floor(Number(minutes) * 60000 / typical)));
 }

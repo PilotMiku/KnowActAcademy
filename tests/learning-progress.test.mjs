@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { emptyState, normalizeBank, filterQuestions, recordAttempt, createExam, finishExam } from "../dist/core.mjs";
-import { learningProgress } from "../dist/study.mjs";
+import { emptyState, normalizeBank, filterQuestions, recordAttempt, createExam, finishExam, stats } from "../dist/core.mjs";
+import { learningProgress, spacedReview } from "../dist/study.mjs";
 import { fixture } from "./fixture.mjs";
 
 const bank = normalizeBank(fixture);
@@ -49,4 +49,8 @@ test("reference viewing and unanswered exams do not count; manual self-assessmen
   assert.equal(learningProgress(bank.questions, state).completed, 2);
   assert.equal(learningProgress(bank.questions, state).accuracy, 50);
   assert.equal(learningProgress(bank.questions, emptyState()).accuracy, null);
+  assert.equal(stats(state, 4000).today, 2);
+  assert.equal(stats(state, 4000).total, 2);
+  assert.equal(spacedReview(bank, state, 4000).schedule.size, 2);
+  assert.equal(exam.results[multi.id], false, "漏答仍按考试规则扣分");
 });
