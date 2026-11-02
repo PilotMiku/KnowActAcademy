@@ -21,12 +21,12 @@ const data = JSON.parse(
 
 test("knowledge search covers original note text, categories and independent favorites", () => {
   const state = emptyState();
-  assert.equal(data.stats.notes, 20);
-  assert.equal(data.stats.pdfFiles, 16);
-  assert.equal(data.articles.length, 22);
-  assert.equal(
-    data.articles.filter((a) => a.category === "章节笔记").length,
-    19,
+  assert.equal(data.stats.notes, data.articles.filter(a => a.kind === "note").length);
+  assert.equal(data.stats.pdfFiles, Object.values(data.sources).filter(s => s.type === "pdf").length);
+  assert.equal(data.articles.length, data.stats.articles);
+  assert.deepEqual(
+    filterKnowledge(data, new URLSearchParams({ category: "章节笔记" }), state).map(a => a.id),
+    data.articles.filter((a) => a.category === "章节笔记").map(a => a.id),
   );
   const article = data.articles.find((a) => a.title.includes("以人民为中心"));
   const query = new URLSearchParams({ q: "民心" });
@@ -46,7 +46,7 @@ test("knowledge search covers original note text, categories and independent fav
   assert.equal(
     filterKnowledge(data, new URLSearchParams({ category: "汇编资料" }), state)
       .length,
-    2,
+    data.articles.filter(a => a.category === "汇编资料").length,
   );
   assert.equal(
     filterKnowledge(
@@ -83,7 +83,7 @@ test("knowledge progress survives current backups and old backups default to emp
       knowledgeRead: ["a", "a", null],
       knowledgeFavorites: "invalid",
     }),
-    { knowledgeRead: ["a"], knowledgeFavorites: [], knowledgeRecalled: [], knowledgeRecallDrafts: {} },
+    { knowledgeRead: ["a"], knowledgeFavorites: [], knowledgeRecalled: [], knowledgeRecallDrafts: {}, knowledgePositions: {} },
   );
   state.knowledgeRead = "corrupt";
   assert.throws(

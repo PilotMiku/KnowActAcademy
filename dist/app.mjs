@@ -1,5 +1,6 @@
 import { icon, brandIcon, esc, attr, button, head, empty } from "./ui.mjs";
 import { renderRich } from "./rich-content.mjs";
+import { createReadingController } from "./knowledge-reading.mjs";
 import { createOverviewPages } from "./overview-pages.mjs";
 import { createCollectionPages } from "./collection-pages.mjs";
 import { createExamPages } from "./exam-pages.mjs";
@@ -114,7 +115,7 @@ const routes = {
   favorites: "我的收藏",
   stats: "学习统计",
   library: "题库管理",
-  knowledge: "习概知识点",
+  knowledge: "学习资料",
 };
 function route() {
   const [path, query = ""] = (location.hash.slice(1) || "/").split("?");
@@ -158,6 +159,7 @@ function toast(message) {
   toastTimer = setTimeout(() => el.classList.remove("show"), 3500);
 }
 function persist() {
+  readingController.capture(false);
   deferredSaves.cancel();
   if (!storageReady)
     return Promise.reject(new Error("当前浏览器无法保存学习数据"));
@@ -183,6 +185,9 @@ function persist() {
   return saving;
 }
 const deferredSaves = createSaveScheduler(() => persist(), () => toast("保存失败，请导出备份"));
+const readingController = createReadingController({ getState: () => state,
+  canSave: () => storageReady && !storageConflicted(),
+  schedule: () => deferredSaves.schedule(), toast });
 installQuestionNotes({ getState: () => state, getQuestion: qById,
   save: () => persist(), schedule: () => deferredSaves.schedule() });
 onStorageConflict(() => {
@@ -533,6 +538,7 @@ function render() {
   });
 }
 function draw() {
+  readingController.detach();
   clearInterval(timerInterval);
   if (storageReady) applyPreferences(state);
   const r = route();
@@ -566,7 +572,7 @@ function draw() {
     ["dashboard", "home", "学习概览", "/"],
     ["practice", "book", "题库练习", "/practice"],
     ["prepare", "target", "备考模式", "/prepare"],
-    ["knowledge", "book", "习概知识点", "/knowledge"],
+    ["knowledge", "book", "学习资料", "/knowledge"],
     ["exams", "exam", "模拟考试", "/exams"],
     ["review", "mistake", "错题本", "/review"],
     ["favorites", "star", "我的收藏", "/favorites"],
@@ -579,6 +585,7 @@ function draw() {
   document.title = `${routes[page]} · 知行学习`;
   document.querySelector("#main").toggleAttribute("data-enter", entering);
   renderRich(app, page === "exam" && exam?.status === "submitted");
+  readingController.mount(app);
   attachDropZone();
   watchActiveExams();
 }
@@ -861,7 +868,7 @@ function updateSearchResults(query) {
         notes
           .map(
             (article) =>
-              `<button class="search-item" data-action="open-knowledge" data-id="${attr(article.id)}">${esc(article.title)}<small>习概知识点 · ${esc(article.category)}</small></button>`,
+              `<button class="search-item" data-action="open-knowledge" data-id="${attr(article.id)}">${esc(article.title)}<small>学习资料 · ${esc(article.category)}</small></button>`,
           )
           .join("")
       : `<p style="padding:16px 8px">${query.trim() ? "没有找到相关题目或知识点，换个关键词试试。" : "输入关键词，搜索题目或知识点。"}</p>`;
@@ -876,7 +883,7 @@ function scheduleSearch(input, composing = false) {
 function showSearch() {
   openDialog(
     "搜索题目与知识点",
-    `<label class="sr-only" for="global-search">搜索题目与知识点</label><input class="input" id="global-search" type="search" placeholder="搜索题目、习概知识点…" autocomplete="off"><div class="search-results" id="search-results"><p style="padding:16px 8px">输入关键词，查找数学题目或习概知识点。</p></div>`,
+    `<label class="sr-only" for="global-search">搜索题目与知识点</label><input class="input" id="global-search" type="search" placeholder="搜索题目、学习资料…" autocomplete="off"><div class="search-results" id="search-results"><p style="padding:16px 8px">输入关键词，查找数学题目或学习资料。</p></div>`,
   );
   setTimeout(() => document.querySelector("#global-search")?.focus(), 50);
 }
@@ -1239,6 +1246,10 @@ document.addEventListener("click", (event) => {
   }
 });
 document.addEventListener("change", (event) => {
+  if (event.target.matches("[data-reading-section]")) {
+    go(`/knowledge/${route().parts[1]}?chapter=${encodeURIComponent(event.target.value)}`);
+    return;
+  }
   if (event.target.matches("[data-study-setting]")) {
     const key = event.target.dataset.studySetting;
     if (key === "theme") state.theme = event.target.value;
@@ -1375,6 +1386,7 @@ document.addEventListener("keydown", (event) => {
 });
 window.addEventListener("hashchange", () => {
   cancelWelcomeExit();
+  readingController.detach();
   deferredSaves.flush().catch(() => {});
   if (dialog.open) dialog.close();
   render();
@@ -1383,6 +1395,7 @@ window.addEventListener("hashchange", () => {
 document.addEventListener("visibilitychange", () => {
   if (storageConflicted()) return;
   if (document.hidden) {
+    readingController.capture();
     pausePracticeQuestion(displayedPractice);
     pauseExamQuestion(displayedExam);
     deferredSaves.flush().catch(() => {});
@@ -1398,6 +1411,7 @@ document.addEventListener("focusout", (event) => {
   if (event.target.matches("[data-answer-text],[data-recall-text],[data-question-note]")) deferredSaves.flush().catch(() => {});
 });
 window.addEventListener("pagehide", () => {
+  readingController.capture();
   pausePracticeQuestion(displayedPractice);
   pauseExamQuestion(displayedExam);
   deferredSaves.flush().catch(() => {});

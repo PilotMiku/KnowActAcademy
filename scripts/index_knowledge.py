@@ -10,6 +10,8 @@ import fitz
 import markdown
 
 from catalog import write_json
+from read_study_document import read_docx, read_text
+from study_sources import load_materials
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 NUMBERS = {name: i for i, name in enumerate(
@@ -23,6 +25,10 @@ def plain_text(value):
 
 def render_note(body):
     rendered = markdown.markdown(body, extensions=['sane_lists', 'tables', 'fenced_code'])
+    return add_headings(rendered)
+
+
+def add_headings(rendered):
     headings = []
 
     def heading(match):
@@ -64,23 +70,38 @@ def build_knowledge(root=ROOT):
     files = sorted(p for p in source_root.rglob('*') if p.suffix.lower() in {'.md', '.pdf'})
     if not files:
         raise ValueError('No study notes were found in question-bank/习概')
+    materials_path = root / 'data/study-materials.json'
+    materials = load_materials(root)
+    material_paths = set()
+    for item in materials:
+        path = root / item['path']
+        if item['path'] in material_paths or path in files:
+            raise ValueError('Duplicate study material: ' + item['path'])
+        if not path.is_file():
+            raise ValueError('学习资料文件缺失：' + item['path'])
+        material_paths.add(item['path'])
+        files.append(path)
     existing_path = root / 'data/knowledge-sources.json'
     existing = json.loads(existing_path.read_text()) if existing_path.exists() else {'sources': []}
     existing_ids = {s['path']: s['id'] for s in existing['sources']}
+    material_ids = {m['path']: m['id'] for m in materials if 'id' in m}
+    for path, identity in material_ids.items():
+        if path in existing_ids and existing_ids[path] != identity:
+            raise ValueError('已有学习资料不得更改 id：' + path)
     sources = []
     source_ids = set()
     pdf_text = {}
     for path in files:
-        if source_root.resolve() not in path.resolve().parents:
-            raise ValueError('A study source points outside question-bank/习概: ' + str(path))
+        if (root / 'question-bank').resolve() not in path.resolve().parents:
+            raise ValueError('A study source points outside question-bank: ' + str(path))
         relative = path.relative_to(root).as_posix()
-        identity = existing_ids.get(relative) or 'ks-' + hashlib.sha256(relative.encode()).hexdigest()[:12]
+        identity = material_ids.get(relative) or existing_ids.get(relative) or 'ks-' + hashlib.sha256(relative.encode()).hexdigest()[:12]
         if not re.fullmatch(r'ks-[a-f0-9]{12}', identity) or identity in source_ids:
             raise ValueError('Invalid or duplicate study-source ID: ' + str(identity))
         source_ids.add(identity)
-        source = {'id': identity, 'path': relative, 'name': path.name, 'type': path.suffix[1:],
+        source = {'id': identity, 'path': relative, 'name': path.name, 'type': path.suffix[1:].lower(),
                   'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
-        if path.suffix == '.pdf':
+        if path.suffix.lower() == '.pdf':
             with fitz.open(path) as document:
                 source['pages'] = len(document)
                 pdf_text[relative] = [re.sub(r'\s+', '', page.get_text()) for page in document]
@@ -89,7 +110,7 @@ def build_knowledge(root=ROOT):
     articles, paired_pdfs = [], set()
     notice = ''
     for path in files:
-        if path.suffix != '.md':
+        if path.suffix != '.md' or path.relative_to(root).as_posix() in material_paths:
             continue
         text = path.read_text(encoding='utf-8-sig')
         if path.name == 'README.md':
@@ -114,11 +135,33 @@ def build_knowledge(root=ROOT):
                              'searchText': search_text, 'excerpt': search_text[:105],
                              'minutes': max(1, math.ceil(len(search_text) / 450)),
                              'sources': [{'id': md_source['id']}, {'id': pdf_source['id'], 'page': page}]})
+    for number, item in enumerate(materials):
+        source = source_by_path[item['path']]
+        path = root / item['path']
+        if source['type'] == 'pdf':
+            continue
+        if source['type'] == 'docx':
+            rendered, headings = add_headings(read_docx(path))
+            body = ''
+        elif source['type'] == 'txt':
+            rendered, headings = read_text(path), []
+            body = path.read_text(encoding='utf-8-sig')
+        else:
+            body = path.read_text(encoding='utf-8-sig')
+            rendered, headings = render_note(body)
+        search_text = plain_text(rendered)
+        articles.append({'id': 'kp-' + source['id'][3:], 'title': item.get('title') or path.stem,
+                         'category': item['category'], 'order': 50 + number,
+                         'kind': 'note', 'body': body, 'html': rendered, 'headings': headings,
+                         'searchText': search_text, 'excerpt': search_text[:105],
+                         'minutes': max(1, math.ceil(len(search_text) / 450)),
+                         'sources': [{'id': source['id']}]})
     for source in sources:
         if source['type'] == 'pdf' and source['path'] not in paired_pdfs:
             search_text = ' '.join(pdf_text[source['path']])
-            articles.append({'id': 'kp-' + source['id'][3:], 'title': pathlib.Path(source['name']).stem,
-                             'kind': 'pdf', 'category': '汇编资料', 'order': 40,
+            material = next((m for m in materials if m['path'] == source['path']), None)
+            articles.append({'id': 'kp-' + source['id'][3:], 'title': (material or {}).get('title') or pathlib.Path(source['name']).stem,
+                             'kind': 'pdf', 'category': material['category'] if material else '汇编资料', 'order': 40,
                              'body': '', 'html': '', 'headings': [], 'searchText': search_text,
                              'excerpt': '原始 PDF 汇编资料，可直接打开阅读。',
                              'minutes': 0, 'sources': [{'id': source['id'], 'page': 1}]})
@@ -126,14 +169,21 @@ def build_knowledge(root=ROOT):
     if len({a['id'] for a in articles}) != len(articles):
         raise ValueError('Duplicate study-note titles within the same source')
     revision = 'knowledge-' + hashlib.sha256(json.dumps(
-        [(s['id'], s['sha256']) for s in sources], ensure_ascii=False).encode()).hexdigest()[:16]
+        {'sources': [(s['id'], s['sha256']) for s in sources], 'materials': materials,
+         'renderer': 2}, ensure_ascii=False).encode()).hexdigest()[:16]
     stats = {'notes': sum(a['kind'] == 'note' for a in articles), 'pdfCollections': sum(a['kind'] == 'pdf' for a in articles),
              'markdownFiles': sum(s['type'] == 'md' and s['name'] != 'README.md' for s in sources),
              'pdfFiles': sum(s['type'] == 'pdf' for s in sources), 'articles': len(articles),
+             'docxFiles': sum(s['type'] == 'docx' for s in sources),
+             'textFiles': sum(s['type'] == 'txt' for s in sources),
+             'materials': len(materials),
              'sections': sum(len(a['headings']) for a in articles)}
-    bundle = {'revision': revision, 'name': '习概知识点', 'stats': stats, 'articles': articles,
+    bundle = {'revision': revision, 'name': '学习资料', 'stats': stats, 'articles': articles,
               'sourceNotice': notice, 'sources': {s['id']: s for s in sources}}
-    write_json(root / 'data/knowledge-sources.json', {'revision': revision, 'sources': sources}, pretty=True)
+    registry = {'revision': revision, 'sources': sources}
+    if materials_path.exists():
+        registry['materialsSha256'] = hashlib.sha256(materials_path.read_bytes()).hexdigest()
+    write_json(root / 'data/knowledge-sources.json', registry, pretty=True)
     write_json(root / 'dist/data/knowledge.json', bundle)
     return bundle
 

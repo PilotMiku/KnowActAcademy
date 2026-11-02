@@ -72,7 +72,7 @@ class BackendTests(unittest.TestCase):
         self.assertEqual(self.request()['data']['version'], 1)
 
     def test_system_theme_and_learning_preferences_roundtrip(self):
-        self.payload['state'].update(theme='system', studySettings={'fontSize': 'large', 'lineSpacing': 'relaxed', 'focus': True}, knowledgeRecallDrafts={'note': '核心概念'}, knowledgeRecalled=['note'])
+        self.payload['state'].update(theme='system', studySettings={'fontSize': 'large', 'lineSpacing': 'relaxed', 'focus': True}, knowledgeRecallDrafts={'note': '核心概念'}, knowledgeRecalled=['note'], knowledgePositions={'note': {'chapter': 'all', 'anchor': 'start', 'offset': 400, 'revision': 'a'*64}})
         self.assertEqual(self.request('PUT', version=0, payload=self.payload)['status'], 200)
         self.assertEqual(self.request()['data']['payload'], self.payload)
 

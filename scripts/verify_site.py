@@ -6,11 +6,13 @@ import re
 from urllib.parse import urlsplit
 
 from PIL import Image
+from study_sources import verify_sources
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def verify():
+    verify_sources(ROOT)
     site = ROOT / '_site'
     bank = json.loads((ROOT / 'dist/data/bank.json').read_text())
     index = json.loads((ROOT / 'data/render-index.json').read_text())

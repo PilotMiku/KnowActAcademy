@@ -10,6 +10,7 @@ import shutil
 
 import fitz
 from PIL import Image, ImageDraw
+from study_sources import verify_sources
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -48,6 +49,7 @@ def render_document(job):
 
 
 def build(workers=4):
+    verify_sources(ROOT)
     destination, previous = ROOT / '_site', ROOT / '.previous-site'
     # Recover the last working site if a previous run was interrupted during promotion.
     if previous.exists() and not destination.exists():

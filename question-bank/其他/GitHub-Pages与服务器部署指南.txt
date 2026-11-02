@@ -1,0 +1,248 @@
+知行学习：GitHub Pages 与服务器部署指南
+整理日期：2026-10-23
+
+一、部署结构与当前功能
+
+本地项目：/Users/david/知行学习
+GitHub 仓库：https://github.com/PilotMiku/KnowActAcademy
+部署分支：main
+预期网页地址：https://pilotmiku.github.io/KnowActAcademy/
+
+GitHub Pages 托管网页、题库、题图和原始学习资料。
+你的服务器运行 Python 后端，使用 SQLite 数据库保存学习进度。
+项目已包含后端代码、Dockerfile、Compose 配置和 Pages 部署工作流。
+
+当前学习记录默认保存在浏览器。连接服务器后，需要手动上传或恢复进度。
+当前版本没有公开注册和登录后自动同步功能，每位学习者由管理员创建独立同步密钥。
+个人密钥只保存在页面内存中，刷新后需要重新连接。
+
+下文中的 api.example.com 均为示例，请替换成实际 API 域名。
+
+二、上传到 GitHub
+
+以下命令在 Mac 本地终端执行：
+
+cd "/Users/david/知行学习"
+git add -A
+git diff --cached --stat
+git commit -m "整理项目目录并恢复 Pages 部署配置"
+git push -u origin main
+
+执行提交前查看文件清单，确认包含根目录的 .github/ 和 .gitignore。
+项目内容应位于仓库根目录，不要再嵌套一层“知行学习题库”。
+_site/、node_modules/、artifacts/、.env 和 SQLite 数据库文件已配置忽略规则。
+如果推送提示远程分支已有新提交，应先处理同步问题，不要直接强制推送。
+
+三、启用 GitHub Pages
+
+打开仓库设置：
+https://github.com/PilotMiku/KnowActAcademy/settings/pages
+
+依次选择：
+Settings → Pages → Build and deployment → Source → GitHub Actions
+
+项目已有 .github/workflows/pages.yml，不需要额外创建部署模板。
+
+上传代码后，打开仓库 Actions，查看：
+Deploy 知行学习 to GitHub Pages
+
+工作流会安装依赖、执行测试、构建静态网站、验证资源并发布 _site/。
+如果推送时尚未开启 Pages，可在开启后从 Actions 手动运行工作流。
+部署成功后访问工作流给出的地址，默认预期地址为：
+https://pilotmiku.github.io/KnowActAcademy/
+
+四、准备服务器
+
+服务器需要具备：
+1. Linux 系统。
+2. Git、Docker Engine 和 Docker Compose 插件。
+3. 一个用于后端的域名，例如 api.example.com。
+4. 已配置 HTTPS 的 Nginx、宝塔反向代理或 Caddy。
+
+尚未安装 Docker 时，按照实际系统选择官方安装说明：
+https://docs.docker.com/engine/install/
+
+可通过以下命令确认 Docker 可用：
+docker --version
+docker compose version
+
+后续 Docker 命令使用有 Docker 权限的账号执行；普通账号可能需要添加 sudo。
+如果 GitHub 仓库是私有仓库，服务器克隆时需要配置相应的访问权限。
+
+五、启动后端和 SQLite 数据库
+
+先确保第二步的项目改动已经成功推送。
+以下命令在服务器上执行，适用于首次克隆：
+
+git clone --branch main https://github.com/PilotMiku/KnowActAcademy.git
+cd KnowActAcademy/backend
+cp .env.example .env
+nano .env
+
+如果没有 nano，可使用其他编辑器。将 .env 内容设置为：
+
+ZHIXING_ORIGINS=https://pilotmiku.github.io
+
+注意：该配置填写前端网页的来源，不是 API 域名。
+不包含 /KnowActAcademy/，也不带结尾斜线。
+多个来源使用逗号分隔；前端改用自定义域名后，需要将新来源加入此项。
+
+启动服务：
+
+docker compose config --quiet
+docker compose up -d --build
+curl http://127.0.0.1:8000/v1/health
+
+健康检查应返回：
+{"ok": true, "service": "zhixing-progress"}
+
+为自己创建同步密钥：
+
+docker compose exec api python app.py --create-user david
+
+命令会显示一次个人随机密钥，请自行保存。
+每位学习者使用不同的名称创建密钥，不要重复执行相同名称的创建命令。
+密钥可以读取和替换对应学习者的进度，不要提交到 GitHub 或写入前端配置。
+
+数据库自动创建在容器内的 /data/zhixing.sqlite3。
+持久化数据保存在 Docker Compose 的 progress 命名卷中。
+后端端口仅绑定服务器的 127.0.0.1:8000，通过 HTTPS 反向代理对外提供服务。
+
+六、为 API 配置 HTTPS 域名
+
+在域名服务商处，将 api.example.com 的 DNS A 记录指向服务器公网 IP。
+根据所用反向代理配置 HTTPS。生产环境的前端要求使用 HTTPS API 地址。
+
+方案 A：服务器已有宝塔或 Nginx
+
+创建或配置 api.example.com 站点，申请并启用 HTTPS 证书。
+将该站点反向代理到：http://127.0.0.1:8000
+代理时保留 /v1/health 和 /v1/progress 等原始请求路径。
+将请求体上限设置为至少 10 MiB，例如 Nginx 的 client_max_body_size 10m。
+跨域响应由项目后端处理，代理无需重复添加 Access-Control-Allow-Origin。
+
+方案 B：宿主机使用 Caddy
+
+将以下站点块加入现有 Caddyfile，并替换域名：
+
+api.example.com {
+    request_body {
+        max_size 10485760
+    }
+    reverse_proxy 127.0.0.1:8000
+}
+
+确认 DNS 正确、外部可以访问 80/443 端口，且这些端口可由 Caddy 使用。
+满足条件时，Caddy 可以自动申请和续期 HTTPS 证书。
+已有 Nginx 或宝塔占用端口时，优先使用现有反向代理配置。
+
+如果 Caddy 通过标准系统服务安装，且配置位于 /etc/caddy/Caddyfile，可执行：
+
+sudo caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+sudo systemctl reload caddy
+
+上面的代理地址适用于宿主机反向代理。
+如果反向代理本身在容器内，应配置共享 Docker 网络并按服务名代理。
+不要将代理容器内的 127.0.0.1 当作宿主机地址。
+
+无论使用哪个方案，完成后检查：
+
+curl https://api.example.com/v1/health
+
+应返回：
+{"ok": true, "service": "zhixing-progress"}
+
+七、在网页连接后端
+
+打开知行学习网页，进入：
+题库管理 → 连接同步服务器
+
+填写：
+服务器地址：https://api.example.com
+个人密钥：第五步创建用户时得到的密钥
+
+服务器地址填写 API 根地址，不要附加 /v1/progress。
+连接本身不会自动替换任何一端的进度。
+首次保存当前浏览器的学习记录时，选择上传到服务器。
+另一台设备连接同一密钥后，选择从服务器恢复。
+恢复会替换本机进度，网页会在恢复前下载本机完整备份。
+正在进行的考试需要先完成，再执行同步。
+两端内置题库版本必须一致。
+
+八、设置网页默认 API 地址（可选）
+
+修改 Mac 本地项目中的文件：
+/Users/david/知行学习/dist/config.json
+
+设置为：
+
+{
+  "apiBase": "https://api.example.com"
+}
+
+该文件只能填写公开 API 地址，不要填写个人密钥。
+修改后在 Mac 终端执行：
+
+cd "/Users/david/知行学习"
+git add dist/config.json
+git commit -m "配置默认同步服务器地址"
+git push origin main
+
+GitHub Actions 会重新构建和发布网页，无需手动上传 _site/。
+
+九、更新后端与备份数据库
+
+后续更新服务器代码时，在服务器项目的 backend/ 目录执行：
+
+git pull --ff-only origin main
+docker compose up -d --build
+
+重建容器会继续使用原有数据卷。
+需要保留数据库时，不要执行 docker compose down -v，该命令会删除数据卷。
+
+在线备份时，在服务器 backend/ 目录执行：
+
+docker compose exec api python -c 'import sqlite3; src=sqlite3.connect("/data/zhixing.sqlite3"); dst=sqlite3.connect("/data/backup.sqlite3"); src.backup(dst); dst.close(); src.close()'
+docker compose cp api:/data/backup.sqlite3 ./zhixing-backup.sqlite3
+
+将备份文件保存到私人备份位置，并定期备份。
+SQLite 使用 WAL 模式，不要只复制正在运行中的主数据库文件作为备份。
+详细恢复说明见项目 backend/README.md。
+
+十、常见问题
+
+1. 网页无法打开或返回 404
+检查 Pages 的 Source 是否选择 GitHub Actions，并确认 Actions 部署成功。
+以部署结果给出的网页地址为准。
+
+2. API 健康检查正常，但网页提示无法连接
+检查 API 是否使用有效的 HTTPS 证书。
+检查 ZHIXING_ORIGINS 是否与浏览器实际访问的前端来源完全一致。
+修改 .env 后执行 docker compose up -d，让配置应用到容器。
+
+3. 提示同步密钥无效
+确认使用的是创建用户时显示的完整密钥，且没有被管理员撤销。
+
+4. 提示服务器已有更新或版本冲突
+重新连接，确认哪一端进度需要保留，再选择恢复或上传。
+当前版本不会自动合并多设备同时修改的记录。
+
+5. 需要自动同步、公开注册或密码登录
+这些功能需要进一步开发；当前版本使用个人密钥和手动快照同步。
+
+十一、参考资料
+
+项目后端说明：backend/README.md
+项目部署工作流：.github/workflows/pages.yml
+前端 API 配置：dist/config.json
+
+GitHub Pages 发布源配置：
+https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+
+Docker Engine 安装：
+https://docs.docker.com/engine/install/
+
+Caddy 自动 HTTPS：
+https://caddyserver.com/docs/automatic-https
+
+以上为部署操作指南，不代表已完成 GitHub 上传或服务器部署。

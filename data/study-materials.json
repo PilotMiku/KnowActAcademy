@@ -1,0 +1,34 @@
+{
+  "materials": [
+    {
+      "path": "question-bank/其他/Vibe_Coding从零入门到独立实践.docx",
+      "category": "编程入门",
+      "id": "ks-867504865d49"
+    },
+    {
+      "path": "question-bank/其他/Git与GitHub从入门到熟练协作.docx",
+      "category": "开发工具",
+      "id": "ks-7904a56a026a"
+    },
+    {
+      "path": "question-bank/其他/Codex常用指令与Agent工作群工作流指南.docx",
+      "category": "开发工具",
+      "id": "ks-d59085a47dcc"
+    },
+    {
+      "path": "question-bank/其他/DeepSeek_Harness插件开发学习路线.docx",
+      "category": "开发工具",
+      "id": "ks-65cec466f30b"
+    },
+    {
+      "path": "question-bank/其他/GitHub-Pages与服务器部署指南.txt",
+      "category": "部署指南",
+      "id": "ks-d148a690c47c"
+    },
+    {
+      "path": "question-bank/其他/东北大学转专业选择与面试准备分析.docx",
+      "category": "升学准备",
+      "id": "ks-f6a3a638a7ef"
+    }
+  ]
+}

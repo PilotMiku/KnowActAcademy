@@ -1,6 +1,7 @@
 import { defaultStudySettings, normalizeStudySettings } from "./preferences.mjs";
 import { pauseExamQuestion } from "./exam-timing.mjs";
 import { normalizeQuestionNotes } from "./question-notes.mjs";
+import { normalizeReadingPositions } from "./knowledge-reading.mjs";
 export const VERSION = 1;
 export const BANK_FORMAT = "local-neumathe.bank.v1";
 export const BACKUP_FORMAT = "local-neumathe.backup.v1";
@@ -82,6 +83,7 @@ export function emptyState() {
     theme: "system",
     studySettings: defaultStudySettings(),
     knowledgeRecallDrafts: {},
+    knowledgePositions: {},
     questionNotes: {},
     knowledgeRecalled: [],
     dailyGoal: 20,
@@ -621,6 +623,7 @@ export function validateBackup(input) {
     Object.values(data.knowledgeRecallDrafts).some((text) => typeof text !== "string" || text.length > 10000)))
     throw new Error("备份中的回忆自测格式错误");
   state.knowledgeRecallDrafts = data.knowledgeRecallDrafts ?? {};
+  state.knowledgePositions = normalizeReadingPositions(data.knowledgePositions);
   const validPractice = (p) => record(p) &&
     Array.isArray(p.questionIds) && p.questionIds.length > 0 &&
     new Set(p.questionIds).size === p.questionIds.length &&

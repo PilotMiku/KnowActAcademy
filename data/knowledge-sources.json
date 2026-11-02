@@ -1,5 +1,5 @@
 {
-  "revision": "knowledge-aa63eff1212f88c3",
+  "revision": "knowledge-322d8ba9a82b21fe",
   "sources": [
     {
       "id": "ks-ccafc8830605",
@@ -264,6 +264,55 @@
       "bytes": 235320,
       "sha256": "1a302aee3c649e0fd3c925f811308e34d073b77c6a804ccae70b588b381ee4a9",
       "pages": 2
+    },
+    {
+      "id": "ks-867504865d49",
+      "path": "question-bank/其他/Vibe_Coding从零入门到独立实践.docx",
+      "name": "Vibe_Coding从零入门到独立实践.docx",
+      "type": "docx",
+      "bytes": 69912,
+      "sha256": "0f51eb080adbc7d8b70359cd8cfa57d8fbe4a1daf53a80699bf2adbc180f8389"
+    },
+    {
+      "id": "ks-7904a56a026a",
+      "path": "question-bank/其他/Git与GitHub从入门到熟练协作.docx",
+      "name": "Git与GitHub从入门到熟练协作.docx",
+      "type": "docx",
+      "bytes": 95635,
+      "sha256": "f0a48d9acfc973c19cf5e2330773d61958b39c992fe00779c2274e7703285b1c"
+    },
+    {
+      "id": "ks-d59085a47dcc",
+      "path": "question-bank/其他/Codex常用指令与Agent工作群工作流指南.docx",
+      "name": "Codex常用指令与Agent工作群工作流指南.docx",
+      "type": "docx",
+      "bytes": 49783,
+      "sha256": "b37dfebbf55c25df3dbab823b99f7b4dc5e5ebd981d1fdc2e9ee323ba1e8cd1d"
+    },
+    {
+      "id": "ks-65cec466f30b",
+      "path": "question-bank/其他/DeepSeek_Harness插件开发学习路线.docx",
+      "name": "DeepSeek_Harness插件开发学习路线.docx",
+      "type": "docx",
+      "bytes": 40238,
+      "sha256": "6285b0741e2a0963beeb314707d57313406dfb15ccf258b0330c24819c9212d0"
+    },
+    {
+      "id": "ks-d148a690c47c",
+      "path": "question-bank/其他/GitHub-Pages与服务器部署指南.txt",
+      "name": "GitHub-Pages与服务器部署指南.txt",
+      "type": "txt",
+      "bytes": 9278,
+      "sha256": "ffdb0450901fd2e2e7dd0098cf034461eeebb6cfdd94ec7362dcbe49ebbe7c47"
+    },
+    {
+      "id": "ks-f6a3a638a7ef",
+      "path": "question-bank/其他/东北大学转专业选择与面试准备分析.docx",
+      "name": "东北大学转专业选择与面试准备分析.docx",
+      "type": "docx",
+      "bytes": 52738,
+      "sha256": "7ee5ecae59d9f3bfb6e7fac994bedbae18a75beee48b76b57ee28bdf54ec2ad8"
     }
-  ]
+  ],
+  "materialsSha256": "37e151b5a50775fe9ddda94b6ed2e285fe22ed898c60d40241c85cad6d0e0dce"
 }

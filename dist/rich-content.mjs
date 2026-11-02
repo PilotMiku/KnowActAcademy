@@ -73,6 +73,7 @@ function safeContent(value, lazyImages = false) {
     "H6",
     "HR",
     "IMG",
+    "A",
   ]);
   const drop = new Set([
     "SCRIPT",
@@ -100,6 +101,29 @@ function safeContent(value, lazyImages = false) {
     const target = document.createElement(
       node.tagName === "H1" ? "h2" : node.tagName.toLowerCase(),
     );
+    if (node.tagName === "A") {
+      try {
+        const href = node.getAttribute("href");
+        if (!href) throw new Error("Empty link");
+        const url = new URL(href, location.href);
+        if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) {
+          for (const child of node.childNodes) append(parent, child);
+          return;
+        }
+        target.href = url.href;
+        target.target = "_blank";
+        target.rel = "noopener noreferrer";
+      } catch {
+        for (const child of node.childNodes) append(parent, child);
+        return;
+      }
+    }
+    if (["TD", "TH"].includes(node.tagName)) {
+      for (const name of ["colspan", "rowspan"]) {
+        const value = node.getAttribute(name);
+        if (/^[1-9]\d?$/.test(value || "")) target.setAttribute(name, value);
+      }
+    }
     if (
       /^H[1-6]$/.test(node.tagName) &&
       /^knowledge-heading-\d+$/.test(node.id)

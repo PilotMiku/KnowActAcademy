@@ -20,13 +20,13 @@ try {
   await page.goto(baseURL);
   await page.getByRole("link", { name: "进入学习", exact: true }).click();
   await page.locator(".knowledge-entry").waitFor();
-  assert.match(await page.locator(".knowledge-entry").innerText(), /20 篇笔记/);
+  assert.match(await page.locator(".knowledge-entry").innerText(), new RegExp(`${data.stats.notes} 篇笔记`));
   await page.locator(".knowledge-entry").click();
   await page.locator(".knowledge-overview").waitFor();
-  assert.equal(await page.locator(".knowledge-card").count(), 22);
+  assert.equal(await page.locator(".knowledge-card").count(), data.articles.length);
   assert.match(
     await page.locator(".knowledge-overview").innerText(),
-    /16 份原始 PDF/,
+    new RegExp(`${data.stats.pdfFiles} 份原始 PDF`),
   );
   await page.screenshot({
     path: "artifacts/knowledge-desktop.png",
@@ -79,7 +79,7 @@ try {
     fullPage: true,
   });
   scenarios.push(
-    "20 original notes and two PDF collections, full-text search, headings, bold and underline, table-of-contents navigation",
+    "original notes and PDF collections, full-text search, headings, bold and underline, table-of-contents navigation",
   );
   scenarios.push(
     "independent favorites and read progress persist after reload",
@@ -134,13 +134,13 @@ try {
   assert.equal(await page.locator(".knowledge-card").count(), 1);
   assert.equal(
     await page.locator(".knowledge-progress>b").innerText(),
-    "1 / 22",
+    `1 / ${data.articles.length}`,
   );
   await page.goto(
     baseURL + "/#/knowledge?category=" + encodeURIComponent("汇编资料"),
   );
   await page.locator(".knowledge-card").first().waitFor();
-  assert.equal(await page.locator(".knowledge-card").count(), 2);
+  assert.equal(await page.locator(".knowledge-card").count(), data.articles.filter(a => a.category === "汇编资料").length);
   await page.locator(".knowledge-title").first().click();
   await page.locator(".pdf-reading-card").waitFor();
   await page.locator('.local-nav a[href="#/library"]').click();
@@ -211,7 +211,7 @@ try {
   sp.on("pageerror", (e) => errors.push(e.message));
   const unsafe = structuredClone(data);
   unsafe.articles.find((a) => a.id === article.id).html +=
-    '<script>window.__knowledgeInjected=true</script><img src="javascript:alert(1)" onerror="window.__knowledgeInjected=true"><iframe srcdoc="test"></iframe>';
+    '<script>window.__knowledgeInjected=true</script><img src="javascript:alert(1)" onerror="window.__knowledgeInjected=true"><iframe srcdoc="test"></iframe><a href="javascript:window.__knowledgeInjected=true">unsafe link</a><a href="data:text/html,test">data link</a><a href="https://example.com/reference" onclick="alert(1)">reference link</a>';
   await sp.route("**/data/knowledge.json", (route) =>
     route.fulfill({
       contentType: "application/json",
@@ -229,6 +229,10 @@ try {
       .count(),
     0,
   );
+  assert.equal(await sp.locator('.reading-content a').count(), 1);
+  assert.equal(await sp.locator('.reading-content a').getAttribute('href'), 'https://example.com/reference');
+  assert.equal(await sp.locator('.reading-content a').getAttribute('rel'), 'noopener noreferrer');
+  assert.equal(await sp.locator('.reading-content [onclick]').count(), 0);
   await sandbox.close();
   scenarios.push("Markdown HTML is sanitized before display");
   assert.deepEqual(errors, []);
