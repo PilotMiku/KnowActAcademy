@@ -85,7 +85,7 @@ try {
   await page.goto(`${baseURL}/#/practice?status=unseen`);
   await page.locator('[data-action="start-practice"]').first().waitFor();
   assert.equal(await page.locator('[data-action="start-practice"]').first().isDisabled(),true);
-  await page.goto(`${baseURL}/#/knowledge`);
+  await page.goto(`${baseURL}/#/knowledge?group=xigai`);
   await page.locator('.knowledge-title').first().click();
   await page.locator('[data-action="knowledge-recall"]').click();
   await page.locator('[data-recall-text]').fill('核心概念与关键词，先独立回忆。');

@@ -2163,6 +2163,10 @@ select:focus,.input:focus { border-color:var(--blue); }
 /* Study notes share the existing local learning workspace. */
 .course-tabs { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .knowledge-entry .course-symbol { background:#f0ebff; color:#8359dd; }
+.knowledge-breadcrumbs { display:flex; flex-wrap:wrap; gap:9px; align-items:center; margin-bottom:16px; color:var(--muted); font-size:12px; }
+.knowledge-breadcrumbs a:hover { color:var(--blue); }
+.knowledge-group-card { display:flex; flex-direction:column; min-width:0; }
+.knowledge-group-card .chapter-description { flex:1; line-height:1.9; }
 .knowledge-overview { padding:28px; display:flex; align-items:center; justify-content:space-between; gap:28px; background:linear-gradient(115deg,var(--surface),var(--blue-light)); }
 .knowledge-overview h2 { font-size:24px; margin:12px 0 7px; }.knowledge-overview p { margin:0; color:var(--muted); font-size:12px; }
 .knowledge-progress { min-width:175px; }.knowledge-progress>b { display:block; font-size:32px; color:var(--blue); }.knowledge-progress small { font-size:14px; color:var(--muted); font-weight:400; }.knowledge-progress>span { font-size:11px; color:var(--muted); }.knowledge-progress .progress-bar { margin-top:12px; }

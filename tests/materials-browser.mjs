@@ -9,10 +9,10 @@ try {
   const page = await browser.newPage({ acceptDownloads: true });
   const errors = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto(`${baseURL}/#/knowledge?category=${encodeURIComponent("开发工具")}`);
+  await page.goto(`${baseURL}/#/knowledge?group=${encodeURIComponent("category:开发工具")}`);
   await page.locator(".knowledge-overview").waitFor();
   assert.equal(await page.locator(".knowledge-card").count(), materials.filter(m => m.category === "开发工具").length);
-  assert.match(await page.locator(".page-head").textContent(), /学习资料/);
+  assert.match(await page.locator(".page-head").textContent(), /开发工具/);
   for (const material of materials) {
     const source = Object.values(data.sources).find(s => s.path === material.path);
     const article = data.articles.find(a => a.sources[0].id === source.id);

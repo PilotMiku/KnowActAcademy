@@ -85,6 +85,9 @@ try {
   // Reduced motion also disables scripted smooth scrolling and modal effects.
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(`${baseURL}/#/knowledge`);
+  await page.locator(".knowledge-group-grid").waitFor();
+  assert.equal(await page.locator(".knowledge-group-grid").evaluate((el) => getComputedStyle(el).animationName), "none");
+  await page.locator('.knowledge-group-title').filter({ hasText: '习概资料' }).click();
   await page.locator(".knowledge-grid").waitFor();
   assert.equal(await page.locator(".knowledge-grid").evaluate((el) => getComputedStyle(el).animationName), "none");
   await page.getByRole("button", { name: "搜索题目与知识点" }).click();

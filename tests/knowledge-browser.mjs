@@ -20,10 +20,25 @@ try {
   await page.goto(baseURL);
   await page.getByRole("link", { name: "进入学习", exact: true }).click();
   await page.locator(".knowledge-entry").waitFor();
-  assert.match(await page.locator(".knowledge-entry").innerText(), new RegExp(`${data.stats.notes} 篇笔记`));
+  assert.match(await page.locator(".knowledge-entry").innerText(), /个分类/);
   await page.locator(".knowledge-entry").click();
-  await page.locator(".knowledge-overview").waitFor();
-  assert.equal(await page.locator(".knowledge-card").count(), data.articles.length);
+  await page.locator(".knowledge-group-grid").waitFor();
+  assert.equal(await page.locator(".knowledge-card").count(), 0);
+  await page.screenshot({ path: "artifacts/knowledge-groups-desktop.png", fullPage: true, animations: "disabled" });
+  await page.locator('.knowledge-group-title').filter({ hasText: '习概资料' }).click();
+  await page.waitForURL(/group=xigai/);
+  await page.locator(".knowledge-card").first().waitFor();
+  assert.equal(await page.locator(".knowledge-card").count(), data.articles.filter(a => a.sources.some(ref => data.sources[ref.id].path.startsWith('question-bank/习概/'))).length);
+  for (const label of ['笔记', '提纲', '汇编资料']) assert.equal(await page.locator('.knowledge-categories').getByRole('link', { name: label, exact: true }).count(), 1);
+  assert.equal(await page.locator('.knowledge-categories').getByRole('link', { name: '开发工具', exact: true }).count(), 0);
+  for (const [label, category] of [['提纲', '专题提纲'], ['汇编资料', '汇编资料'], ['笔记', '章节笔记']]) {
+    await page.locator('.knowledge-categories').getByRole('link', { name: label, exact: true }).click();
+    await page.waitForURL(url => new URLSearchParams(url.hash.split('?')[1]).get('category') === category);
+    await page.waitForFunction(expected => document.querySelectorAll('.knowledge-card').length === expected, data.articles.filter(a => a.category === category).length);
+    assert.equal(await page.locator('.knowledge-card').count(), data.articles.filter(a => a.category === category).length);
+  }
+  await page.locator('.knowledge-categories').getByRole('link', { name: '全部资料', exact: true }).click();
+  await page.waitForURL(url => !url.hash.includes('category='));
   assert.match(
     await page.locator(".knowledge-overview").innerText(),
     new RegExp(`${data.stats.pdfFiles} 份原始 PDF`),
@@ -32,6 +47,11 @@ try {
     path: "artifacts/knowledge-desktop.png",
     fullPage: true,
   });
+  await page.locator('[data-knowledge-query]').fill('Codex');
+  await page.locator('[data-knowledge-query]').press('Enter');
+  await page.getByRole('heading', { name: '没有找到相关资料' }).waitFor();
+  assert.equal(await page.locator('.knowledge-card').count(), 0);
+  assert.ok(page.url().includes('group=xigai'));
   await page.locator("[data-knowledge-query]").fill("民心");
   await page.locator("[data-knowledge-query]").press("Enter");
   await page.waitForURL(/q=/);
@@ -143,6 +163,9 @@ try {
   assert.equal(await page.locator(".knowledge-card").count(), data.articles.filter(a => a.category === "汇编资料").length);
   await page.locator(".knowledge-title").first().click();
   await page.locator(".pdf-reading-card").waitFor();
+  assert.ok((await page.getByRole('link', { name: '返回资料目录', exact: true }).getAttribute('href')).includes('group=xigai'));
+  const adjacent = await page.locator('.reading-adjacent a').evaluateAll(nodes => nodes.map(a => a.getAttribute('href').split('/').at(-1)));
+  assert.ok(adjacent.every(id => data.articles.find(a => a.id === id).sources.some(ref => data.sources[ref.id].path.startsWith('question-bank/习概/'))));
   await page.locator('.local-nav a[href="#/library"]').click();
   const downloadPromise = page.waitForEvent("download");
   await page
@@ -198,7 +221,8 @@ try {
     fullPage: true,
   });
   await page.goto(baseURL + "/#/knowledge");
-  await page.locator(".knowledge-overview").waitFor();
+  await page.locator(".knowledge-group-grid").waitFor();
+  await page.screenshot({ path: 'artifacts/knowledge-groups-mobile-dark.png', animations: 'disabled', fullPage: true });
   assert.equal(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
