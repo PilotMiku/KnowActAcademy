@@ -1,8 +1,58 @@
 import { brandIcon } from "./ui.mjs";
 
+// Fixed seeds keep the sky stable when the page redraws; each star has its own rhythm.
+function starfield() {
+  let seed = 731;
+  const random = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  return Array.from({ length: 62 }, (_, index) => {
+    const x = (random() * 96 + 2).toFixed(2);
+    const y = (random() * 94 + 3).toFixed(2);
+    const size = (random() * 2 + 1.5).toFixed(2);
+    const duration = (random() * 6 + 3).toFixed(2);
+    const delay = (-random() * 12).toFixed(2);
+    return `<i class="welcome-star${index % 9 === 0 ? " welcome-star--cross" : ""}" style="left:${x}%;top:${y}%;--size:${size}px;--twinkle:${duration}s;--delay:${delay}s"></i>`;
+  }).join("");
+}
+
+function constellation(name, path, points, index) {
+  return `<svg class="welcome-constellation welcome-constellation--${name}" viewBox="0 0 160 120" style="--pulse:${10 + index * 1.7}s;--delay:${-index * 2.3}s" focusable="false">
+    <path class="welcome-constellation-line" d="${path}"/>
+    ${points.map(([x, y], i) => `<circle class="welcome-constellation-node" cx="${x}" cy="${y}" r="${i % 3 === 0 ? 2.6 : 1.8}" style="--twinkle:${3.7 + i * .67}s;--delay:${-i * 1.31}s"/>`).join("")}
+  </svg>`;
+}
+
+function orbit(rx, ry, angle, duration, index) {
+  const path = `M ${600 + rx} 600 A ${rx} ${ry} 0 1 1 ${600 - rx} 600 A ${rx} ${ry} 0 1 1 ${600 + rx} 600`;
+  return `<g transform="rotate(${angle} 600 600)" style="--pulse:${11 + index * 3}s;--delay:${-index * 4}s">
+    <ellipse class="welcome-orbit-track" cx="600" cy="600" rx="${rx}" ry="${ry}"/>
+    <path class="welcome-orbit-arc" d="${path}" pathLength="100"/>
+    ${[0, 1].map((dot) => `<g class="welcome-orbit-traveler" style="offset-path:path('${path}');--travel:${duration + dot * 9}s;--travel-delay:${-duration * (.18 + dot * .48)}s">
+      <circle class="welcome-orbit-halo" r="${dot ? 9 : 13}"/>
+      <circle class="welcome-orbit-point" r="${dot ? 2 : 3}"/>
+    </g>`).join("")}
+  </g>`;
+}
+
+function welcomeSky() {
+  return `<div class="welcome-sky" aria-hidden="true">
+    <div class="welcome-nebula welcome-nebula--blue"></div><div class="welcome-nebula welcome-nebula--violet"></div>
+    <div class="welcome-starfield">${starfield()}</div>
+    <svg class="welcome-orbits" viewBox="0 0 1200 1200" focusable="false">
+      ${orbit(540, 325, -28, 48, 0)}${orbit(485, 410, 32, 63, 1)}${orbit(405, 480, -12, 78, 2)}
+    </svg>
+    <div class="welcome-constellations">
+      ${constellation("sum", "M 116 23 L 43 23 L 78 59 L 40 99 L 117 99", [[116,23],[79,23],[43,23],[61,42],[78,59],[59,79],[40,99],[79,99],[117,99]], 0)}
+      ${constellation("infinity", "M 80 60 C 64 35 46 29 31 42 C 8 64 35 98 59 77 L 101 43 C 126 22 152 57 129 78 C 113 92 96 85 80 60 Z", [[80,60],[57,36],[31,42],[26,72],[48,83],[102,42],[127,37],[138,61],[119,83]], 1)}
+      ${constellation("pi", "M 25 30 L 136 30 M 56 30 L 54 65 L 45 99 M 109 30 L 106 75 Q 105 97 128 92", [[25,30],[56,30],[82,30],[109,30],[136,30],[54,65],[45,99],[106,75],[110,91],[128,92]], 2)}
+      ${constellation("root", "M 20 63 L 39 53 L 59 93 L 83 25 L 143 25", [[20,63],[39,53],[49,73],[59,93],[71,59],[83,25],[113,25],[143,25]], 3)}
+      ${constellation("delta", "M 80 20 L 28 101 L 132 101 Z", [[80,20],[54,60],[28,101],[80,101],[132,101],[106,60]], 4)}
+    </div>
+  </div>`;
+}
+
 export function welcomePage() {
   return `<div class="welcome-shell">
-    <div class="welcome-orbit" aria-hidden="true"><span></span></div>
+    ${welcomeSky()}
     <header class="welcome-header">
       <a class="welcome-brand" href="#/welcome" aria-label="知行学习起始页">${brandIcon(document.documentElement.dataset.theme)}<span>知行学习</span></a>
       <span class="welcome-caption">学习，从这里开始</span>
