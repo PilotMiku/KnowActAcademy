@@ -97,6 +97,7 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   57% { opacity:.3; }
   78% { opacity:.95; }
 }
+@keyframes welcome-cross-breathe { 0%,100% { opacity:.38; } 50% { opacity:.62; } }
 @keyframes welcome-orbit-breathe {
   0%,100% { opacity:calc(var(--track-opacity) * .4); }
   48% { opacity:calc(var(--track-opacity) * 1.7); }
@@ -131,6 +132,21 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   .welcome-constellation--delta { left:43%; top:11%; width:54px; }
   .welcome-star:nth-child(3n) { display:none; }
 }
+/* Draw mobile cross rays together, without translated one-pixel pseudo-elements. */
+@media(max-width:600px), (hover:none) and (pointer:coarse) {
+  .welcome-star--cross {
+    width:10px;
+    height:10px;
+    border-radius:0;
+    box-shadow:none;
+    opacity:.5;
+    background:
+      radial-gradient(circle,rgba(var(--star-rgb),.9) 0 1px,transparent 2px),
+      linear-gradient(90deg,transparent,rgba(var(--star-rgb),.6),transparent) center / 10px 2px no-repeat,
+      linear-gradient(transparent,rgba(var(--star-rgb),.6),transparent) center / 2px 10px no-repeat;
+  }
+  .welcome-star--cross::before,.welcome-star--cross::after { content:none; }
+}
 @media(prefers-reduced-motion:no-preference) {
   .welcome-star,.welcome-constellation-node { animation:welcome-twinkle var(--twinkle) ease-in-out var(--delay) infinite; }
   .welcome-orbit-track { animation:welcome-orbit-breathe var(--pulse) ease-in-out var(--delay) infinite; }
@@ -144,4 +160,7 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   .welcome-enter { transition:background .18s,box-shadow .18s; }
   .welcome-enter svg { transition:transform .18s; }
   .welcome-enter:hover svg { transform:translateX(3px); }
+}
+@media(prefers-reduced-motion:no-preference) and (max-width:600px), (prefers-reduced-motion:no-preference) and (hover:none) and (pointer:coarse) {
+  .welcome-star--cross { animation:welcome-cross-breathe calc(var(--twinkle) + 8s) ease-in-out var(--delay) infinite; }
 }
