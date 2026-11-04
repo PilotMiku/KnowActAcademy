@@ -80,7 +80,7 @@
     linear-gradient(90deg,transparent,rgba(var(--star-rgb),.6),transparent) center / 12px 2px no-repeat,
     linear-gradient(transparent,rgba(var(--star-rgb),.6),transparent) center / 2px 12px no-repeat;
 }
-.welcome-orbits { position:absolute; top:49%; left:50%; width:min(100vw,1160px); height:auto; overflow:visible; transform:translate(-50%,-50%); }
+.welcome-orbits { position:absolute; top:50%; left:50%; width:min(100%,1160px); height:100%; max-height:1160px; transform:translate(-50%,-50%); }
 .welcome-orbit-track,.welcome-orbit-arc { fill:none; stroke:rgb(var(--sky-rgb)); stroke-width:1; vector-effect:non-scaling-stroke; }
 .welcome-orbit-track { opacity:var(--track-opacity); }
 .welcome-orbit-arc { opacity:.4; stroke-dasharray:9 24 3 64; }
@@ -105,11 +105,11 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   50% { opacity:calc(.7 * var(--star-strength)); }
 }
 @keyframes welcome-orbit-breathe {
-  0%,100% { opacity:calc(var(--track-opacity) * .4); }
-  48% { opacity:calc(var(--track-opacity) * 1.7); }
+  0%,100% { opacity:calc(var(--track-opacity) * .7); }
+  48% { opacity:calc(var(--track-opacity) * 1.25); }
   72% { opacity:var(--track-opacity); }
 }
-@keyframes welcome-arc-breathe { 0%,100% { opacity:.08; } 50% { opacity:.55; } }
+@keyframes welcome-arc-breathe { 0%,100% { opacity:.16; } 50% { opacity:.32; } }
 @keyframes welcome-orbit-travel { from { offset-distance:0%; } to { offset-distance:100%; } }
 @keyframes welcome-constellation-breathe { 0%,100% { opacity:.45; } 50% { opacity:.75; } }
 @keyframes welcome-constellation-drift {
@@ -129,14 +129,19 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   .welcome-quote footer { font-size:13px; margin-top:20px; }
   .welcome-enter { margin-top:40px; font-size:14px; padding:14px 26px; min-height:50px; }
   .welcome-footer { gap:16px; font-size:11px; padding-bottom:30px; }
-  .welcome-orbits { width:185vw; }
   .welcome-constellation { --float-x:7px; --float-y:-10px; width:83px; }
   .welcome-constellation--sum { left:3%; top:19%; }
   .welcome-constellation--infinity { right:3%; top:21%; }
   .welcome-constellation--pi { left:5%; bottom:15%; }
   .welcome-constellation--root { right:3%; bottom:17%; }
   .welcome-constellation--delta { left:43%; top:11%; width:54px; }
-  .welcome-star:nth-child(3n) { display:none; }
+}
+@media(max-width:600px), (max-width:900px) and (hover:none) and (pointer:coarse) {
+  /* Leave breathing room in both phone orientations, including constellation nodes. */
+  .welcome-star:not(:nth-child(4n + 1)),
+  .welcome-constellation--delta,
+  .welcome-constellation-node:nth-of-type(4n + 2),
+  .welcome-constellation-halo:nth-of-type(4n + 1) { display:none; }
 }
 @media(max-width:600px), (hover:none) and (pointer:coarse) {
   .welcome-star--cross {

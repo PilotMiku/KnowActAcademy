@@ -38,6 +38,37 @@ function assertCalmStars(stars, label) {
   }
 }
 
+async function assertCompleteOrbits(page, label) {
+  const tracks = await page.locator('.welcome-orbit-track').evaluateAll(elements => {
+    const sky = document.querySelector('.welcome-sky').getBoundingClientRect();
+    return elements.map(track => {
+      const matrix = track.getScreenCTM();
+      const cx = track.cx.baseVal.value, cy = track.cy.baseVal.value;
+      // Include the largest traveler's halo, also at the rotated ellipse extremes.
+      const rx = track.rx.baseVal.value + 14, ry = track.ry.baseVal.value + 14;
+      const contained = Array.from({ length: 120 }, (_, i) => {
+        const angle = i * Math.PI / 60;
+        const point = new DOMPoint(cx + rx * Math.cos(angle), cy + ry * Math.sin(angle)).matrixTransform(matrix);
+        return point.x >= sky.left && point.x <= sky.right && point.y >= sky.top && point.y <= sky.bottom;
+      }).every(Boolean);
+      const animation = track.getAnimations()[0], time = animation?.currentTime;
+      animation?.pause();
+      const opacities = [0, .24, .48, .72, 1].map(progress => {
+        if (animation) animation.currentTime = Number(animation.effect.getTiming().duration) * progress;
+        return Number(getComputedStyle(track).opacity);
+      });
+      if (animation) { animation.currentTime = time; animation.play(); }
+      return { contained, minOpacity: Math.min(...opacities), maxOpacity: Math.max(...opacities) };
+    });
+  });
+  assert.equal(tracks.length, 3);
+  for (const track of tracks) {
+    assert.ok(track.contained, `${label}: complete orbit and traveler halo fit inside the sky`);
+    assert.ok(track.minOpacity >= .14, `${label}: complete orbit stays visible throughout its pulse`);
+    assert.ok(track.maxOpacity / track.minOpacity <= 2, `${label}: orbit brightness changes gently`);
+  }
+}
+
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, colorScheme: 'light' });
   const bankGate = new Promise(resolve => { releaseBank = resolve; });
@@ -73,11 +104,12 @@ try {
     return { distance: Math.hypot(end.x - start.x, end.y - start.y), dim, bright, weight: Number(title.fontWeight), family: title.fontFamily, skyInteractive: getComputedStyle(document.querySelector('.welcome-sky')).pointerEvents };
   });
   assert.ok(skyMotion.distance > 10, 'Orbit lights travel along their paths');
-  assert.ok(skyMotion.bright > skyMotion.dim * 2, 'Orbit tracks brighten and dim');
+  assert.ok(skyMotion.bright > skyMotion.dim * 1.25, 'Orbit tracks gently brighten and dim');
   assert.ok(skyMotion.weight >= 800);
   assert.ok(!/KaiTi|Kaiti|serif(?!-)/.test(skyMotion.family.replace('sans-serif', '')));
   assert.equal(skyMotion.skyInteractive, 'none');
   assertCalmStars(await inspectStarMotion(page), 'desktop');
+  await assertCompleteOrbits(page, 'desktop');
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   await page.screenshot({ path: 'artifacts/welcome-desktop-light.png', fullPage: true, animations: 'disabled' });
   await page.locator('.skip').focus();
@@ -156,12 +188,24 @@ try {
   phone.on('pageerror', error => errors.push(error.message));
   await phone.goto(baseURL + '/#/welcome');
   await phone.locator('.welcome-quote').waitFor();
-  for (const [orientation, viewport] of [['portrait', { width: 390, height: 844 }], ['landscape', { width: 844, height: 390 }]]) {
+  for (const [orientation, viewport] of [
+    ['small-portrait', { width: 320, height: 640 }],
+    ['portrait', { width: 390, height: 844 }],
+    ['large-portrait', { width: 430, height: 932 }],
+    ['small-landscape', { width: 568, height: 320 }],
+    ['landscape', { width: 844, height: 390 }],
+  ]) {
     await phone.setViewportSize(viewport);
     for (const theme of ['light', 'dark']) {
       await phone.emulateMedia({ colorScheme: theme });
       await phone.waitForFunction(expected => document.documentElement.dataset.theme === expected, theme);
       assertCalmStars(await inspectStarMotion(phone), `${orientation} ${theme}`);
+      const density = await phone.evaluate(() => {
+        const visible = selector => [...document.querySelectorAll(selector)].filter(el => el.getBoundingClientRect().width > 0).length;
+        return { stars: visible('.welcome-star'), nodes: visible('.welcome-constellation-node') };
+      });
+      assert.ok(density.stars <= 16 && density.nodes <= 18, `${orientation} ${theme}: phone sky has fewer scattered stars and constellation nodes`);
+      await assertCompleteOrbits(phone, `${orientation} ${theme}`);
       const movement = await phone.locator('.welcome-constellation').first().evaluate(el => {
         const animation = el.getAnimations()[0], time = animation.currentTime;
         animation.pause(); animation.currentTime = 0;
@@ -178,6 +222,7 @@ try {
   }
   await phone.emulateMedia({ reducedMotion: 'reduce' });
   assert.equal(await phone.locator('.welcome-sky').evaluate(el => el.getAnimations({ subtree: true }).length), 0);
+  await assertCompleteOrbits(phone, 'reduced motion');
   await mobileContext.close();
   assert.deepEqual(errors, []);
   console.log(`Welcome page passed (${useWebKit ? 'WebKit' : 'Chromium'}): slow loading, keyboard entry, deep links, saved favorites, light/dark, touch portrait/landscape motion cycles and reduced motion.`);
