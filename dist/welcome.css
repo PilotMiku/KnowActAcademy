@@ -9,9 +9,9 @@
   grid-template-rows:auto 1fr auto;
   position:relative;
   isolation:isolate;
-  overflow:clip;
   background:radial-gradient(ellipse at 78% 18%,#b9b8ff24,transparent 46%),radial-gradient(ellipse at 20% 80%,#b4dcff24,transparent 48%),var(--bg);
 }
+.welcome-header,.welcome-main,.welcome-footer { position:relative; z-index:1; }
 .welcome-header {
   width:min(100%,1200px);
   margin:auto;
@@ -62,26 +62,35 @@
 .welcome-footer { display:flex; justify-content:center; align-items:center; gap:22px; padding:28px 24px 36px; color:var(--muted); font-size:12px; letter-spacing:.08em; }
 .welcome-footer>span { opacity:.5; }
 .welcome-footer a:hover { color:var(--blue); }
-.welcome-sky { position:absolute; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+.welcome-sky { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
 .welcome-nebula { position:absolute; width:60%; height:70%; border-radius:50%; opacity:.65; }
 .welcome-nebula--blue { left:-20%; bottom:-30%; background:radial-gradient(ellipse,rgba(92,176,255,.16),transparent 68%); }
 .welcome-nebula--violet { right:-20%; top:-25%; background:radial-gradient(ellipse,rgba(143,125,244,.15),transparent 68%); }
 .welcome-starfield,.welcome-constellations { position:absolute; inset:0; }
-.welcome-starfield { mask-image:radial-gradient(ellipse 33% 30% at 50% 49%,transparent 40%,#000 100%); }
-.welcome-star { position:absolute; width:var(--size); height:var(--size); border-radius:50%; background:rgb(var(--star-rgb)); opacity:.45; box-shadow:0 0 7px rgba(var(--star-rgb),.3); }
-.welcome-star--cross::before,.welcome-star--cross::after { content:""; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); border-radius:50%; background:linear-gradient(transparent,rgba(var(--star-rgb),.65),transparent); }
-.welcome-star--cross::before { width:1px; height:12px; }
-.welcome-star--cross::after { width:12px; height:1px; background:linear-gradient(90deg,transparent,rgba(var(--star-rgb),.65),transparent); }
-.welcome-orbits { position:absolute; top:49%; left:50%; width:min(100vw,1160px); height:auto; overflow:visible; transform:translate(-50%,-50%); mask-image:radial-gradient(ellipse 29% 22% at 50% 50%,transparent 35%,#000 100%); }
+.welcome-star {
+  position:absolute;
+  width:12px;
+  height:12px;
+  opacity:calc(.52 * var(--star-strength));
+  background:radial-gradient(circle,rgba(var(--star-rgb),.9) 0 calc(var(--size) * .3),rgba(var(--star-rgb),.2) calc(var(--size) * .6),transparent calc(var(--size) * 1.5));
+}
+.welcome-star--cross {
+  background:
+    radial-gradient(circle,rgba(var(--star-rgb),.9) 0 1px,transparent 2px),
+    linear-gradient(90deg,transparent,rgba(var(--star-rgb),.6),transparent) center / 12px 2px no-repeat,
+    linear-gradient(transparent,rgba(var(--star-rgb),.6),transparent) center / 2px 12px no-repeat;
+}
+.welcome-orbits { position:absolute; top:49%; left:50%; width:min(100vw,1160px); height:auto; overflow:visible; transform:translate(-50%,-50%); }
 .welcome-orbit-track,.welcome-orbit-arc { fill:none; stroke:rgb(var(--sky-rgb)); stroke-width:1; vector-effect:non-scaling-stroke; }
 .welcome-orbit-track { opacity:var(--track-opacity); }
 .welcome-orbit-arc { opacity:.4; stroke-dasharray:9 24 3 64; }
 .welcome-orbit-traveler { offset-distance:18%; offset-rotate:0deg; }
 .welcome-orbit-halo { fill:rgba(var(--star-rgb),.08); }
-.welcome-orbit-point { fill:rgb(var(--star-rgb)); filter:drop-shadow(0 0 4px rgba(var(--star-rgb),.7)); }
+.welcome-orbit-point { fill:rgb(var(--star-rgb)); }
 .welcome-constellation { --float-x:14px; --float-y:-18px; position:absolute; width:clamp(90px,12vw,170px); height:auto; overflow:visible; color:rgb(var(--sky-rgb)); opacity:var(--constellation-opacity); transform:rotate(var(--tilt)); transform-origin:50% 50%; }
 .welcome-constellation-line { fill:none; stroke:currentColor; stroke-width:1; stroke-linecap:round; stroke-linejoin:round; opacity:.55; }
-.welcome-constellation-node { fill:rgb(var(--star-rgb)); filter:drop-shadow(0 0 3px rgba(var(--star-rgb),.45)); }
+.welcome-constellation-halo { fill:rgba(var(--star-rgb),.12); }
+.welcome-constellation-node { fill:rgb(var(--star-rgb)); }
 .welcome-constellation--sum { --tilt:-9deg; left:10%; top:23%; }
 .welcome-constellation--infinity { --tilt:12deg; --float-x:-18px; --drift-direction:reverse; right:9%; top:24%; }
 .welcome-constellation--pi { --tilt:9deg; --float-y:15px; left:16%; bottom:17%; }
@@ -92,12 +101,9 @@ html[data-theme="dark"] .welcome-shell { --sky-rgb:127,158,223; --star-rgb:171,2
 html[data-theme="dark"] .welcome-nebula--blue { background:radial-gradient(ellipse,rgba(40,98,184,.23),transparent 68%); }
 html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ellipse,rgba(113,77,202,.2),transparent 68%); }
 @keyframes welcome-twinkle {
-  0%,100% { opacity:.16; }
-  33% { opacity:.8; }
-  57% { opacity:.3; }
-  78% { opacity:.95; }
+  0%,100% { opacity:calc(.4 * var(--star-strength)); }
+  50% { opacity:calc(.7 * var(--star-strength)); }
 }
-@keyframes welcome-cross-breathe { 0%,100% { opacity:.38; } 50% { opacity:.62; } }
 @keyframes welcome-orbit-breathe {
   0%,100% { opacity:calc(var(--track-opacity) * .4); }
   48% { opacity:calc(var(--track-opacity) * 1.7); }
@@ -105,7 +111,7 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
 }
 @keyframes welcome-arc-breathe { 0%,100% { opacity:.08; } 50% { opacity:.55; } }
 @keyframes welcome-orbit-travel { from { offset-distance:0%; } to { offset-distance:100%; } }
-@keyframes welcome-constellation-breathe { 0%,100% { opacity:.25; } 50% { opacity:.8; } }
+@keyframes welcome-constellation-breathe { 0%,100% { opacity:.45; } 50% { opacity:.75; } }
 @keyframes welcome-constellation-drift {
   0%,100% { transform:translate(calc(var(--float-x) * -.5),calc(var(--float-y) * .35)) rotate(calc(var(--tilt) - 4deg)); }
   35% { transform:translate(var(--float-x),var(--float-y)) rotate(calc(var(--tilt) + 5deg)); }
@@ -132,23 +138,14 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   .welcome-constellation--delta { left:43%; top:11%; width:54px; }
   .welcome-star:nth-child(3n) { display:none; }
 }
-/* Draw mobile cross rays together, without translated one-pixel pseudo-elements. */
 @media(max-width:600px), (hover:none) and (pointer:coarse) {
   .welcome-star--cross {
-    width:10px;
-    height:10px;
-    border-radius:0;
-    box-shadow:none;
-    opacity:.5;
-    background:
-      radial-gradient(circle,rgba(var(--star-rgb),.9) 0 1px,transparent 2px),
-      linear-gradient(90deg,transparent,rgba(var(--star-rgb),.6),transparent) center / 10px 2px no-repeat,
-      linear-gradient(transparent,rgba(var(--star-rgb),.6),transparent) center / 2px 10px no-repeat;
+    /* Keep thin cross rays steady on touch screens; round stars still twinkle. */
+    animation:none;
   }
-  .welcome-star--cross::before,.welcome-star--cross::after { content:none; }
 }
 @media(prefers-reduced-motion:no-preference) {
-  .welcome-star,.welcome-constellation-node { animation:welcome-twinkle var(--twinkle) ease-in-out var(--delay) infinite; }
+  .welcome-star:not(.welcome-star--cross) { animation:welcome-twinkle var(--twinkle) ease-in-out var(--delay) infinite; }
   .welcome-orbit-track { animation:welcome-orbit-breathe var(--pulse) ease-in-out var(--delay) infinite; }
   .welcome-orbit-arc { animation:welcome-arc-breathe var(--pulse) ease-in-out var(--delay) infinite; }
   .welcome-orbit-traveler { animation:welcome-orbit-travel var(--travel) linear var(--travel-delay) infinite; }
@@ -161,6 +158,6 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   .welcome-enter svg { transition:transform .18s; }
   .welcome-enter:hover svg { transform:translateX(3px); }
 }
-@media(prefers-reduced-motion:no-preference) and (max-width:600px), (prefers-reduced-motion:no-preference) and (hover:none) and (pointer:coarse) {
-  .welcome-star--cross { animation:welcome-cross-breathe calc(var(--twinkle) + 8s) ease-in-out var(--delay) infinite; }
+@media(prefers-reduced-motion:no-preference) and (min-width:601px) and (hover:hover) and (pointer:fine) {
+  .welcome-star--cross { animation:welcome-twinkle var(--twinkle) ease-in-out var(--delay) infinite; }
 }

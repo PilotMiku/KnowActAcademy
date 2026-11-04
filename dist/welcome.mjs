@@ -5,19 +5,22 @@ function starfield() {
   let seed = 731;
   const random = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
   return Array.from({ length: 62 }, (_, index) => {
-    const x = (random() * 96 + 2).toFixed(2);
-    const y = (random() * 94 + 3).toFixed(2);
-    const size = (random() * 2 + 1.5).toFixed(2);
-    const duration = (random() * 6 + 3).toFixed(2);
-    const delay = (-random() * 12).toFixed(2);
-    return `<i class="welcome-star${index % 9 === 0 ? " welcome-star--cross" : ""}" style="left:${x}%;top:${y}%;--size:${size}px;--twinkle:${duration}s;--delay:${delay}s"></i>`;
+    const x = random() * 96 + 2;
+    const y = random() * 94 + 3;
+    const size = Math.round(random() * 2 + 2);
+    const duration = random() * 8 + 10;
+    const delay = (-random() * duration).toFixed(2);
+    // Fade stars near the quote without masking an entire animated layer.
+    const distance = Math.hypot((x - 50) / 33, (y - 49) / 30);
+    const strength = Math.min(1, Math.max(.18, (distance - .4) / .6)).toFixed(2);
+    return `<i class="welcome-star${index % 9 === 0 ? " welcome-star--cross" : ""}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;--size:${size}px;--star-strength:${strength};--twinkle:${duration.toFixed(2)}s;--delay:${delay}s"></i>`;
   }).join("");
 }
 
 function constellation(name, path, points, index) {
   return `<svg class="welcome-constellation welcome-constellation--${name}" viewBox="0 0 160 120" style="--pulse:${10 + index * 1.7}s;--delay:${-index * 2.3}s" focusable="false">
     <path class="welcome-constellation-line" d="${path}"/>
-    ${points.map(([x, y], i) => `<circle class="welcome-constellation-node" cx="${x}" cy="${y}" r="${i % 3 === 0 ? 2.6 : 1.8}" style="--twinkle:${3.7 + i * .67}s;--delay:${-i * 1.31}s"/>`).join("")}
+    ${points.map(([x, y], i) => `<circle class="welcome-constellation-halo" cx="${x}" cy="${y}" r="${i % 3 === 0 ? 6 : 4.5}"/><circle class="welcome-constellation-node" cx="${x}" cy="${y}" r="${i % 3 === 0 ? 2.6 : 1.8}"/>`).join("")}
   </svg>`;
 }
 

@@ -1,8 +1,43 @@
 import { chromium, browserOptions, baseURL } from './browser-helpers.mjs';
+import { webkit } from 'playwright';
 import assert from 'node:assert/strict';
 
-const browser = await chromium.launch(browserOptions), errors = [];
+const useWebKit = process.env.WELCOME_BROWSER_ENGINE === 'webkit';
+const browser = await (useWebKit ? webkit.launch({ headless: true }) : chromium.launch(browserOptions)), errors = [];
 let releaseBank;
+
+// Sample a whole animation cycle, including the loop boundary. Static screenshots
+// with animations disabled cannot catch a star repeatedly disappearing or flaring.
+async function inspectStarMotion(page) {
+  return page.evaluate(() => {
+    const stars = [...document.querySelectorAll('.welcome-star,.welcome-constellation-node')]
+      .filter(el => el.getBoundingClientRect().width > 0);
+    return stars.map(star => {
+      const animation = star.getAnimations()[0];
+      const time = animation?.currentTime;
+      const duration = animation ? Number(animation.effect.getTiming().duration) : 0;
+      const samples = [];
+      animation?.pause();
+      for (let ms = 0; ms <= duration + 100; ms += 100) {
+        if (animation) animation.currentTime = ms;
+        samples.push(Number(getComputedStyle(star).opacity));
+      }
+      if (animation) { animation.currentTime = time; animation.play(); }
+      const min = Math.min(...samples), max = Math.max(...samples);
+      const jump = Math.max(...samples.slice(1).map((value, i) => Math.abs(value - samples[i]))) / max;
+      return { className: star.getAttribute('class'), min, max, jump };
+    });
+  });
+}
+
+function assertCalmStars(stars, label) {
+  assert.ok(stars.length > 30, `${label}: visible stars were sampled`);
+  for (const star of stars) {
+    assert.ok(star.min > 0 && star.max / star.min <= 2, `${label}: ${star.className} stays visible without bright flares (${star.min}–${star.max})`);
+    assert.ok(star.jump <= .04, `${label}: ${star.className} changes brightness smoothly across frames and loop boundaries (${star.jump})`);
+  }
+}
+
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, colorScheme: 'light' });
   const bankGate = new Promise(resolve => { releaseBank = resolve; });
@@ -42,6 +77,7 @@ try {
   assert.ok(skyMotion.weight >= 800);
   assert.ok(!/KaiTi|Kaiti|serif(?!-)/.test(skyMotion.family.replace('sans-serif', '')));
   assert.equal(skyMotion.skyInteractive, 'none');
+  assertCalmStars(await inspectStarMotion(page), 'desktop');
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   await page.screenshot({ path: 'artifacts/welcome-desktop-light.png', fullPage: true, animations: 'disabled' });
   await page.locator('.skip').focus();
@@ -109,8 +145,42 @@ try {
   });
   assert.deepEqual(reducedEntry, { hash: '#/', animations: 0 });
   await page.locator('.local-hero').waitFor();
+
+  // Exercise actual motion on a touch device, in both orientations and themes.
+  // The previous mobile coverage used reduced motion and missed the flicker.
+  const mobileContext = await browser.newContext({
+    viewport: { width: 390, height: 844 }, deviceScaleFactor: 3,
+    isMobile: true, hasTouch: true, reducedMotion: 'no-preference',
+  });
+  const phone = await mobileContext.newPage();
+  phone.on('pageerror', error => errors.push(error.message));
+  await phone.goto(baseURL + '/#/welcome');
+  await phone.locator('.welcome-quote').waitFor();
+  for (const [orientation, viewport] of [['portrait', { width: 390, height: 844 }], ['landscape', { width: 844, height: 390 }]]) {
+    await phone.setViewportSize(viewport);
+    for (const theme of ['light', 'dark']) {
+      await phone.emulateMedia({ colorScheme: theme });
+      await phone.waitForFunction(expected => document.documentElement.dataset.theme === expected, theme);
+      assertCalmStars(await inspectStarMotion(phone), `${orientation} ${theme}`);
+      const movement = await phone.locator('.welcome-constellation').first().evaluate(el => {
+        const animation = el.getAnimations()[0], time = animation.currentTime;
+        animation.pause(); animation.currentTime = 0;
+        const start = el.getBoundingClientRect();
+        animation.currentTime = 4000;
+        const end = el.getBoundingClientRect();
+        animation.currentTime = time; animation.play();
+        return Math.hypot(end.x - start.x, end.y - start.y);
+      });
+      assert.ok(movement > 1, 'Math constellations still float and sway');
+      assert.ok(await phone.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+      await phone.screenshot({ path: `artifacts/welcome-mobile-motion-${orientation}-${theme}.png`, fullPage: true });
+    }
+  }
+  await phone.emulateMedia({ reducedMotion: 'reduce' });
+  assert.equal(await phone.locator('.welcome-sky').evaluate(el => el.getAnimations({ subtree: true }).length), 0);
+  await mobileContext.close();
   assert.deepEqual(errors, []);
-  console.log('Welcome page passed: slow loading, keyboard entry, deep links, saved favorites, light/dark, mobile and reduced motion.');
+  console.log(`Welcome page passed (${useWebKit ? 'WebKit' : 'Chromium'}): slow loading, keyboard entry, deep links, saved favorites, light/dark, touch portrait/landscape motion cycles and reduced motion.`);
 } finally {
   releaseBank?.();
   await browser.close();
