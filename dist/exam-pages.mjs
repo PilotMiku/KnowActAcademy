@@ -1,4 +1,4 @@
-import { getBankIndex } from "./core.mjs";
+import { getBankIndex, hasResponse } from "./core.mjs";
 import { examChapterSummary } from "./exam-view.mjs";
 import { questionNotesHTML } from "./question-notes.mjs";
 import { icon, esc, attr, button, head, empty } from "./ui.mjs";
@@ -54,7 +54,7 @@ export function createExamPages({ getBank, getState, subject, qById, shortDate, 
       .map((id, i) => {
         const q = qById(id);
         if (!q) return "";
-        return `<section class="card question-main"><div class="question-top"><span class="pill ${e.results[id] ? "green" : "coral"}">第 ${i + 1} 题 · ${e.results[id] ? "正确" : "待巩固"}</span>${button(icon("star", 16), "toggle-favorite", `data-id="${attr(id)}" aria-label="收藏题目"`, "icon-btn")}</div>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}<p class="answer-line">你的答案：${esc(Array.isArray(e.answers[id]) ? e.answers[id].join("、") : (e.answers[id] ?? "未作答"))}${e.uncertainIds?.includes(id) ? " · 曾标记拿不准" : ""}${e.questionTimes ? ` · 本题用时 ${Math.round((e.questionTimes[id] ?? 0) / 1000)} 秒` : ""}</p>${resultBox(q, { correct: e.results[id], graded: true, uncertain: e.uncertainIds?.includes(id) }, { mode: "exam" })}${questionNotesHTML(id, state, { esc, attr })}</section>`;
+        return `<section class="card question-main"><div class="question-top"><span class="pill ${e.results[id] ? "green" : "coral"}">第 ${i + 1} 题 · ${e.results[id] ? "正确" : "待巩固"}</span>${button(icon("star", 16), "toggle-favorite", `data-id="${attr(id)}" aria-label="收藏题目"`, "icon-btn")}</div>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}<p class="answer-line">你的答案：${esc(hasResponse(q, e.answers[id]) ? Array.isArray(e.answers[id]) ? e.answers[id].join("、") : e.answers[id] : "未作答")}${e.uncertainIds?.includes(id) ? " · 曾标记拿不准" : ""}${e.questionTimes ? ` · 本题用时 ${Math.round((e.questionTimes[id] ?? 0) / 1000)} 秒` : ""}</p>${resultBox(q, { correct: e.results[id], graded: true, uncertain: e.uncertainIds?.includes(id) }, { mode: "exam" })}${questionNotesHTML(id, state, { esc, attr })}</section>`;
       })
       .join("")}</div>`;
   }

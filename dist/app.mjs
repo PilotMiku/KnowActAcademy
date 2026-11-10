@@ -89,7 +89,7 @@ let toastTimer,
   fileMode = "bank",
   pendingImport = null,
   autoSubmitting = false,
-  startingSession = false;
+  sessionTransitionPending = false;
 let displayedExam = null;
 let displayedPractice = null;
 const app = document.querySelector("#app"),
@@ -103,6 +103,11 @@ const names = {
 };
 const difficultyNames = { easy: "基础", medium: "进阶", hard: "挑战" };
 const DEFAULT_QUESTION_COUNT = 25;
+const sessionTransitions = new Set([
+  "start-practice", "start-collection", "practice-one", "begin-preparation",
+  "next-training", "resume-preparation", "start-spaced", "spaced-one",
+  "begin-exam", "navigate-question", "next-question", "complete-preparation",
+]);
 const routes = {
   welcome: "起始页",
   dashboard: "学习概览",
@@ -1234,12 +1239,12 @@ document.addEventListener("click", (event) => {
   const el = event.target.closest('.option[data-action="answer-option"]') ?? event.target.closest("[data-action]");
   if (el) {
     event.preventDefault();
-    const startsSession = ["start-practice", "start-collection", "practice-one", "begin-preparation", "next-training", "resume-preparation", "start-spaced", "spaced-one"].includes(el.dataset.action);
-    if (startsSession && startingSession) return;
-    if (startsSession) startingSession = true;
+    const transitionsSession = sessionTransitions.has(el.dataset.action);
+    if (transitionsSession && sessionTransitionPending) return;
+    if (transitionsSession) sessionTransitionPending = true;
     handleAction(el.dataset.action, el).catch((err) =>
       toast(err.message ?? "操作失败，请重试"),
-    ).finally(() => { if (startsSession) startingSession = false; });
+    ).finally(() => { if (transitionsSession) sessionTransitionPending = false; });
   } else if (event.target.closest(".local-nav a,.local-brand")) {
     mobileOpen = false;
     updateMenu();
@@ -1371,6 +1376,7 @@ dialog.addEventListener("click", (event) => {
   }
 });
 document.addEventListener("keydown", (event) => {
+  if (event.isComposing || event.keyCode === 229) return;
   if (["Enter", " "].includes(event.key) && event.target.matches('img[data-action="zoom-image"]')) {
     event.preventDefault(); handleAction("zoom-image", event.target);
   }
