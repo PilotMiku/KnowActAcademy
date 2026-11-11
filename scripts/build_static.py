@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 
@@ -61,11 +62,14 @@ def build(workers=4):
     manifest = json.loads((ROOT / 'dist/data/manifest.json').read_text())
     knowledge = json.loads((ROOT / 'dist/data/knowledge.json').read_text())
     registry = json.loads((ROOT / 'data/knowledge-sources.json').read_text())
-    if not index['revision'] == bank['revision'] == manifest['revision']:
+    native = bank.get('contentMode') == 'native'
+    if bank['revision'] != manifest['revision'] or (bank.get('sourcePdfRevision') if native else bank['revision']) != index['revision']:
         raise ValueError('题库索引与题库版本不一致')
     if registry['revision'] != knowledge['revision']:
         raise ValueError('知识点索引与资料版本不一致')
-    if set(index['questions']) != {q['id'] for q in bank['questions']}:
+    bank_ids = {q['id'] for q in bank['questions']}
+    source_ids = set(index['questions'])
+    if not source_ids <= bank_ids or (not native and source_ids != bank_ids):
         raise ValueError('题目索引不完整')
     sources = list(index['documents'].values()) + registry['sources']
     for source in sources:
@@ -77,9 +81,18 @@ def build(workers=4):
         shutil.rmtree(staging)
     shutil.copytree(ROOT / 'dist', staging)
     jobs = []
+    referenced = set()
+    for question in bank['questions']:
+        content = question['stem'] + question['analysis'] + ''.join(o['text'] for o in question['options'])
+        referenced.update(re.findall(r'/api/question-image/([a-z0-9-]+)/(stem|analysis|option-[A-H])/(\d+)\.webp', content))
+    needed = {}
+    for qid, part, number in referenced:
+        if qid not in index['questions'] or part not in index['questions'][qid]['parts'] or int(number) >= len(index['questions'][qid]['parts'][part]):
+            raise ValueError('原题截图引用无效：' + qid + '/' + part + '/' + number)
+        needed.setdefault(qid, {'documentId': index['questions'][qid]['documentId'], 'parts': {}})['parts'][part] = index['questions'][qid]['parts'][part]
     for did, document in index['documents'].items():
-        jobs.append((document, [(qid, q) for qid, q in index['questions'].items()
-                                if q['documentId'] == did], str(cache)))
+        questions = [(qid, q) for qid, q in needed.items() if q['documentId'] == did]
+        if questions:jobs.append((document, questions, str(cache)))
     image_count = 0
     with ProcessPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(render_document, job) for job in jobs]
@@ -90,16 +103,20 @@ def build(workers=4):
     images = staging / 'question-images'
     images.mkdir()
     # Copy only referenced clips, so removed questions never leak from the cache.
-    for qid, question in index['questions'].items():
-        for part, clips in question['parts'].items():
-            for number in range(len(clips)):
-                relative = Path(qid) / part / f'{number}.webp'
-                target = images / relative
-                target.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(cache / relative, target)
-    (staging / 'source-pdf').mkdir()
-    for did, document in index['documents'].items():
-        shutil.copyfile(ROOT / document['path'], staging / 'source-pdf' / f'{did}.pdf')
+    for qid, part, number in referenced:
+        relative = Path(qid) / part / f'{number}.webp'
+        target = images / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(cache / relative, target)
+    image_count = len(referenced)
+    if not native:
+        (staging / 'source-pdf').mkdir()
+        for did, document in index['documents'].items():
+            shutil.copyfile(ROOT / document['path'], staging / 'source-pdf' / f'{did}.pdf')
+    else:
+        for question in bank['questions']:
+            if not question.get('source', {}).get('url', '').startswith('https://github.com/PilotMiku/KnowActAcademy/blob/'):
+                raise ValueError('文字题库缺少原始资料链接：' + question['id'])
     (staging / 'knowledge-source').mkdir()
     for source in registry['sources']:
         shutil.copyfile(ROOT / source['path'], staging / 'knowledge-source' / f"{source['id']}.{source['type']}")
@@ -107,9 +124,12 @@ def build(workers=4):
     total = sum(p.stat().st_size for p in staging.rglob('*') if p.is_file())
     if total > 900 * 1024 * 1024:
         raise ValueError('静态网站超过 900 MiB，请拆分原始资料托管后再部署')
-    report = {'name': '知行学习题库', 'revision': index['revision'],
+    report = {'name': '知行学习题库', 'revision': bank['revision'],
               'knowledgeRevision': knowledge['revision'], 'questions': len(bank['questions']),
               'images': image_count, 'documents': len(index['documents']),
+              'sourcePDFsIncluded': not native,
+              'figures': sum(len(json.loads(p.read_text()).get('figures', {})) for p in (staging / 'question-figures').glob('*.json')) + len(list((staging / 'question-figures').glob('*.webp'))),
+              'figureChunks': len(list((staging / 'question-figures').glob('*.json'))),
               'knowledgeSources': len(registry['sources']), 'bytes': total,
               'bankSha256': sha256(ROOT / 'dist/data/bank.json'),
               'knowledgeSha256': sha256(ROOT / 'dist/data/knowledge.json')}

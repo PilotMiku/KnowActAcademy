@@ -25,6 +25,8 @@ class KnowledgeTests(unittest.TestCase):
     def test_every_source_is_registered_and_unchanged(self):
         catalog = json.loads((ROOT / 'data/catalog.json').read_text())
         math_paths = {d['path'] for s in catalog['subjects'] for c in s['chapters'] for d in c['documents']}
+        supplements = json.loads((ROOT / 'data/supplement-sources.json').read_text())['sources']
+        math_paths.update(s['path'] for s in supplements)
         actual = {p.relative_to(ROOT).as_posix() for p in source_files(ROOT)} - math_paths
         self.assertEqual(actual, {s['path'] for s in self.registry['sources']})
         self.assertEqual(source_report(ROOT), {'unregistered': [], 'unsupported': [], 'missing': [], 'changed': []})

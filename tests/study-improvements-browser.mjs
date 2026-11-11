@@ -2,6 +2,8 @@ import { chromium, browserOptions, baseURL } from './browser-helpers.mjs';
 import assert from 'node:assert/strict';
 import { emptyState, normalizeBank, BACKUP_FORMAT } from '../dist/core.mjs';
 import { fixture } from './fixture.mjs';
+import { readFile } from 'node:fs/promises';
+const sourceBank=JSON.parse(await readFile(new URL('../dist/data/bank.json',import.meta.url),'utf8'));
 const browser=await chromium.launch(browserOptions), errors=[];
 async function stateOf(page) {
   return page.evaluate(async()=>{
@@ -18,6 +20,12 @@ try {
   await page.emulateMedia({colorScheme:'dark', reducedMotion:'reduce'});
   await page.goto(`${baseURL}/#/practice`);
   await page.locator('[data-action="start-practice"][data-mode="sequential"]').click();
+  if(sourceBank.contentMode==='native') {
+    const tag=sourceBank.questions.flatMap(q=>q.stem.match(/<img[^>]+>/g)||[])[0];
+    assert.ok(tag,'The source bank contains a preserved figure for zoom coverage');
+    await page.locator('.question-title').evaluate(async(el,html)=>{const span=document.createElement('span');span.dataset.rich=html;el.append(span);const {renderRich}=await import(new URL('./rich-content.mjs',location.href).href);renderRich(el);},tag);
+    await page.waitForFunction(()=>[...document.querySelectorAll('.question-title img')].every(i=>!i.dataset.figureLoading&&i.complete&&i.naturalWidth>0));
+  }
   const image=page.locator('.question-title img').first();await image.waitFor();
   await image.focus();await page.keyboard.press('Enter');
   await page.locator('#image-zoom').fill('150');

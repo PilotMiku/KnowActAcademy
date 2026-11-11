@@ -1,0 +1,33 @@
+{
+  "answerConflicts": [
+    {
+      "originalId": "s-28375703e59c-q0045",
+      "supplementId": "sup-bc45281a48e3-q0029",
+      "answer": "A",
+      "originalAnswer": "A",
+      "supplementAnswer": "D",
+      "reviewMethod": "visual-comparison-of-all-source-options-and-mathematical-evaluation",
+      "reason": "未给出 a、b 的大小或正负条件；前两条严格正性不等式不恒成立。在 (0,π/4) 上 sin x < cos x，故 D 的不等号方向错误，应选以上都不对。",
+      "sourceReviewImage": "artifacts/pdf-transcription/answer-conflict-1.png"
+    },
+    {
+      "originalId": "s-96a0c9ad9285-q0005",
+      "supplementId": "sup-e664956e5c3c-q0009",
+      "answer": "C",
+      "originalAnswer": "C",
+      "supplementAnswer": "C",
+      "reviewMethod": "visual-source-comparison-and-explicit-odd-periodic-extension",
+      "reason": "奇延拓满足 F(t)=-f(-t)=t cos(t)。对 x∈(π,2π)，S(x)=F(x-2π)=(x-2π)cos(x)。统一稿保留原版 C；该表达式在补充版是 D，补充版误选 C 且解析多写了负号。",
+      "sourceReviewImage": "artifacts/pdf-transcription/answer-conflict-2.png"
+    }
+  ],
+  "questionMatches": [
+    {
+      "originalId": "s-6d7a175c5f89-q0034",
+      "supplementId": "sup-95baed2ef08a-q0022",
+      "optionMapping": {"A":"A","B":"B","C":"C","D":"D"},
+      "evidence": "visually-compared-function-and-options-with-pixel-identical-analysis-source",
+      "sourceReviewImage": "artifacts/pdf-transcription/mean-value-theorem-review.png"
+    }
+  ]
+}

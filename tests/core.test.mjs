@@ -220,7 +220,7 @@ test("corrupt resume data is cleared; malformed exams and reserved question IDs 
 test("expanded PDF bank keeps all 3716 original questions, provenance and nested chapters across backups", async () => {
   const { readFile } = await import("node:fs/promises");
   const raw = JSON.parse(
-    await readFile(new URL("../dist/data/bank.json", import.meta.url), "utf8"),
+    await readFile(new URL("../data/pdf-source-bank.json", import.meta.url), "utf8").catch(() => readFile(new URL("../dist/data/bank.json", import.meta.url), "utf8")),
   );
   const bank = normalizeBank(raw);
   assert.equal(bank.questions.length, 3716);

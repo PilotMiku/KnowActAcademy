@@ -437,7 +437,15 @@ function currentResponse() {
 }
 function sourceInfo(q) {
   if (!q.source?.documentId) return "";
-  return `<div class="source-info"><span>${esc(q.sourceLabel)}</span><a href="./source-pdf/${encodeURIComponent(q.source.documentId)}.pdf#page=${Number(q.source.page) || 1}" target="_blank" rel="noopener">查看原 PDF · 第 ${Number(q.source.page) || 1} 页 ${icon("arrow", 12)}</a></div>`;
+  let href = `./source-pdf/${encodeURIComponent(q.source.documentId)}.pdf#page=${Number(q.source.page) || 1}`;
+  if (q.source.url) {
+    try {
+      const url = new URL(q.source.url);
+      if (url.protocol === "https:" && !url.username && !url.password) href = url.href;
+    } catch {}
+  }
+  const label = q.source.format === "html" ? "查看原始资料" : `查看原 PDF · 第 ${Number(q.source.page) || 1} 页`;
+  return `<div class="source-info"><span>${esc(q.sourceLabel)}</span><a href="${attr(href)}" target="_blank" rel="noopener noreferrer">${label} ${icon("arrow", 12)}</a></div>`;
 }
 function resultBox(q, r, { mode = "practice" } = {}) {
   const preparing = ["prepare-diagnostic", "prepare-training"].includes(mode);
@@ -497,7 +505,7 @@ function practiceSession() {
     answer: q.type === "multiple" ? [] : "",
     graded: false,
   };
-  return `${head(p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : p.mode === "prepare-training" ? `加权训练 · 第 ${p.round} 组` : p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn"))}${questionToolbar()}${isPreparationPractice(p) ? preparationStatus() : ""}<div class="question-layout"><section class="card question-main" data-practice-id="${attr(p.id)}" data-question-id="${attr(q.id)}"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "PDF 原题" : difficultyNames[q.difficulty]}</span></div>${button(icon("star", 18), "toggle-favorite", `data-id="${attr(q.id)}" aria-label="${state.favorites.includes(q.id) ? "取消收藏" : "收藏题目"}" style="color:${state.favorites.includes(q.id) ? "var(--accent)" : "var(--muted)"}"`, "icon-btn")}</div>${isPreparationPractice(p) ? preparationQuestionStatus(q.id) : ""}<p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}${answerInput(q, r.answer, r.graded)}${r.graded ? resultBox(q, r, { mode: p.mode }) : ""}${questionNotesHTML(q.id, state, { esc, attr })}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
+  return `${head(p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : p.mode === "prepare-training" ? `加权训练 · 第 ${p.round} 组` : p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn"))}${questionToolbar()}${isPreparationPractice(p) ? preparationStatus() : ""}<div class="question-layout"><section class="card question-main" data-practice-id="${attr(p.id)}" data-question-id="${attr(q.id)}"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "原题" : difficultyNames[q.difficulty]}</span></div>${button(icon("star", 18), "toggle-favorite", `data-id="${attr(q.id)}" aria-label="${state.favorites.includes(q.id) ? "取消收藏" : "收藏题目"}" style="color:${state.favorites.includes(q.id) ? "var(--accent)" : "var(--muted)"}"`, "icon-btn")}</div>${isPreparationPractice(p) ? preparationQuestionStatus(q.id) : ""}<p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">长公式可左右滑动查看</p>` : ""}${answerInput(q, r.answer, r.graded)}${r.graded ? resultBox(q, r, { mode: p.mode }) : ""}${questionNotesHTML(q.id, state, { esc, attr })}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
 }
 function cloudCard() {
   return `<section class="card library-card cloud-card"><div class="card-head"><h2>跨设备学习进度</h2><span class="pill ${sync.connected ? "green" : ""}">${sync.connected ? "已连接" : "可选"}</span></div><p class="subtitle">${sync.connected ? `服务器进度版本：${sync.version}。上传会替换服务器进度；恢复会替换本机进度。` : "连接自己的同步服务器，在不同设备间接续学习。未连接时，所有刷题功能仍可正常使用。"}</p><div class="flex" style="margin-top:18px">${sync.connected ? `${button("上传本机进度", "cloud-upload", "", "btn primary")}${button("恢复服务器进度", "cloud-download")}${button("断开连接", "cloud-disconnect", "", "text-btn")}` : button("连接同步服务器", "cloud-connect", "", "btn")}</div><p class="format-note" style="margin-top:14px">同步密钥只在当前页面内存中使用，刷新后需重新连接。支持内置知行学习题库；自定义题库请使用完整备份。</p></section>`;
@@ -615,7 +623,7 @@ function confirmDialog(title, body, onConfirm, label = "确认") {
 }
 function download(name, value) {
   const blob = new Blob(
-    [typeof value === "string" ? value : JSON.stringify(value, null, 2)],
+    [typeof value === "string" ? value : JSON.stringify(value)],
     {
       type:
         typeof value === "string"
@@ -910,6 +918,7 @@ async function handleAction(action, el) {
       await persist();
       break;
     case "zoom-image":
+      if (el.dataset.figureLoading || !el.naturalWidth) break;
       openDialog("查看题图", `<div class="image-zoom-controls"><label for="image-zoom">缩放</label><input id="image-zoom" type="range" min="50" max="200" value="100"><output id="image-zoom-value">100%</output>${button("还原", "reset-image-zoom", "", "btn small")}</div><div class="image-zoom-viewport"><img id="zoomed-image" src="${attr(el.src)}" alt="${attr(el.alt)}"></div>`, button("关闭", "close-dialog"));
       break;
     case "reset-image-zoom":

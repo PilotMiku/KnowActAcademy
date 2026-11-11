@@ -1,4 +1,4 @@
-import { questionImageURL } from "./assets.mjs";
+import { questionImageURL, nativeFigureID, nativeFigureChunk, loadNativeFigure } from "./assets.mjs";
 
 export function renderRich(root = document.querySelector("#app"), lazyImages = false) {
   for (const el of root.querySelectorAll("[data-rich]")) {
@@ -72,6 +72,8 @@ function safeContent(value, lazyImages = false) {
     "H5",
     "H6",
     "HR",
+    "DETAILS",
+    "SUMMARY",
     "IMG",
     "A",
   ]);
@@ -133,12 +135,33 @@ function safeContent(value, lazyImages = false) {
       try {
         const rawSource = node.getAttribute("src");
         if (!rawSource) return;
-        const url = new URL(questionImageURL(rawSource));
+        const figureID = nativeFigureID(rawSource);
+        const url = new URL(figureID ? location.href : questionImageURL(rawSource));
         if (url.protocol !== "https:" && url.protocol !== "http:") return;
-        target.src = url.href;
+        if (figureID) {
+          target.dataset.figureLoading = "true";
+          loadNativeFigure(figureID, undefined, undefined, nativeFigureChunk(rawSource)).then(source => {
+            target.src = source;
+            delete target.dataset.figureLoading;
+          }).catch(() => {
+            target.alt = "原题插图加载失败，请刷新页面或查看原始资料";
+            target.classList.add("image-error");
+            delete target.dataset.figureLoading;
+          });
+        } else target.src = url.href;
         target.alt = node.getAttribute("alt") ?? "题目图片";
         target.loading = lazyImages ? "lazy" : "eager";
         target.decoding = "async";
+        if (figureID || (url.origin === location.origin && /\/question-figures\/[a-f0-9]+\.webp$/.test(url.pathname))) {
+          const height = Number(node.getAttribute("data-height"));
+          if (node.getAttribute("data-kind") === "formula" && Number.isFinite(height) && height >= 0.2 && height <= 30) {
+            target.className = "native-formula-image";
+            target.style.height = `${height}em`;
+            target.style.width = "auto";
+            target.style.maxWidth = "none";
+            target.style.verticalAlign = "middle";
+          }
+        }
         if (
           url.origin === location.origin &&
           /^\/api\/question-image\//.test(rawSource)

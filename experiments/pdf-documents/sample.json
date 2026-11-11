@@ -1,0 +1,198 @@
+{
+  "format": "zhixing.pdf-document-trial.v1",
+  "sourceBankRevision": "pdf-ba8cf68633101d8c",
+  "method": "Assistant visual transcription from original PDF pages; punctuation and paragraph breaks normalized. Not an automatic OCR result.",
+  "reviewStatus": "assistant-checked; human review pending",
+  "notes": [
+    "保留原题题号、选项顺序、答案及来源，不以重新解题改写原题。",
+    "函数第2题区间字母按原件记为小写 l；人工复核时请重点核对。",
+    "矩阵第1、2题在原件中重复但选项顺序不同，分别保留。",
+    "本试样没有几何图形，不代表带图题也能完全转为纯文字。"
+  ],
+  "questions": [
+    {
+      "id": "s-6b82188494c1-q0001",
+      "stem": "已知 $f(x)=x^2-5x+8$，则 $f(2x+1)=[\\quad]$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "$4x^2+6x+4$"
+        },
+        {
+          "id": "B",
+          "text": "$4x^2-6x+4$"
+        },
+        {
+          "id": "C",
+          "text": "以上说法都不正确。"
+        },
+        {
+          "id": "D",
+          "text": "$4x^2-6x-4$"
+        }
+      ],
+      "analysis": "由 $f(x)=x^2-5x+8$，可知\n\n$$f(2x+1)=(2x+1)^2-5(2x+1)+8=4x^2-6x+4.$$"
+    },
+    {
+      "id": "s-6b82188494c1-q0002",
+      "stem": "若 $f$ 是 $(-l,l)$ 上的奇函数，并且有反函数 $f^{-1}$，则 $f^{-1}$ 为 $[\\quad]$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "偶函数"
+        },
+        {
+          "id": "B",
+          "text": "奇函数"
+        },
+        {
+          "id": "C",
+          "text": "无法判断"
+        },
+        {
+          "id": "D",
+          "text": "非奇非偶"
+        }
+      ],
+      "analysis": "因 $\\forall x\\in f$ 的值域，有 $f(f^{-1}(-x))=-x$，\n\n于是 $x=-f(f^{-1}(-x))=f(-f^{-1}(-x))$，$f^{-1}(x)=f^{-1}(f(-f^{-1}(-x)))=-f^{-1}(-x)$，即表明 $f^{-1}(x)$ 是奇函数。"
+    },
+    {
+      "id": "s-0cda94732a27-q0001",
+      "stem": "$x_n=n(-1)^n$ 的极限值为 $[\\quad]$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "不存在"
+        },
+        {
+          "id": "B",
+          "text": "$2$"
+        },
+        {
+          "id": "C",
+          "text": "$1$"
+        },
+        {
+          "id": "D",
+          "text": "$0$"
+        }
+      ],
+      "analysis": "当 $n$ 为偶数时，$x_n\\to+\\infty\\ (n\\to\\infty)$；当 $n$ 为奇数时，$x_n\\to-\\infty\\ (n\\to\\infty)$，所以 $\\{x_n\\}$ 不存在极限。"
+    },
+    {
+      "id": "s-0cda94732a27-q0002",
+      "stem": "$x_n=\\frac{1}{2^n}$ 的极限值为 $[\\quad]$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "$\\frac{1}{2}$"
+        },
+        {
+          "id": "B",
+          "text": "$1$"
+        },
+        {
+          "id": "C",
+          "text": "$2$"
+        },
+        {
+          "id": "D",
+          "text": "$0$"
+        }
+      ],
+      "analysis": "$$\\lim_{n\\to+\\infty}x_n=\\lim_{n\\to+\\infty}\\frac{1}{2^n}=0.$$"
+    },
+    {
+      "id": "s-85dbedd0155c-q0001",
+      "stem": "不定积分 $\\displaystyle\\int\\frac{dx}{e^x-e^{-x}}$ 的值为 $[\\quad]$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "$\\displaystyle\\frac{1}{2}\\ln\\left|\\frac{e^x-1}{e^x+1}\\right|+C$"
+        },
+        {
+          "id": "B",
+          "text": "$\\displaystyle\\frac{1}{2}\\ln\\left|\\frac{e^x+1}{e^x-1}\\right|+C$"
+        },
+        {
+          "id": "C",
+          "text": "$\\displaystyle\\frac{1}{4}\\ln\\left|\\frac{e^x-1}{e^x+1}\\right|+C$"
+        },
+        {
+          "id": "D",
+          "text": "$\\displaystyle\\ln\\left|\\frac{e^x-1}{e^x+1}\\right|+C$"
+        }
+      ],
+      "analysis": "解答：原式 $\\displaystyle=\\int\\frac{e^x dx}{(e^x)^2-1}=\\int\\frac{d e^x}{(e^x)^2-1}=\\frac{1}{2}\\ln\\left|\\frac{e^x-1}{e^x+1}\\right|+C$。"
+    },
+    {
+      "id": "s-85dbedd0155c-q0002",
+      "stem": "$C$ 为任意常数，且 $F^{\\prime}(x)=f(x)$，下列等式成立的是 $[\\quad]$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "$\\displaystyle\\int f(x)dx=F(x)+C$"
+        },
+        {
+          "id": "B",
+          "text": "$\\displaystyle\\int f^{\\prime}(x)dx=f(x)+C$"
+        },
+        {
+          "id": "C",
+          "text": "$\\displaystyle\\int F^{\\prime}(x)dx=f(x)+C$"
+        },
+        {
+          "id": "D",
+          "text": "$\\displaystyle\\int F(x)dx=f(x)+C$"
+        }
+      ],
+      "analysis": "解答：定义。"
+    },
+    {
+      "id": "s-8df004948022-q0001",
+      "stem": "设 $\\displaystyle A=\\begin{pmatrix}2&2&2\\\\1&2&3\\\\1&3&6\\end{pmatrix}$，则 $|A^3|=(\\quad)$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "$\\frac{1}{8}$"
+        },
+        {
+          "id": "B",
+          "text": "$-\\frac{1}{8}$"
+        },
+        {
+          "id": "C",
+          "text": "$-8$"
+        },
+        {
+          "id": "D",
+          "text": "$8$"
+        }
+      ],
+      "analysis": "$\\displaystyle |A|=\\begin{vmatrix}2&2&2\\\\1&2&3\\\\1&3&6\\end{vmatrix}=2$，$|A^3|=|A|^3=8$。"
+    },
+    {
+      "id": "s-8df004948022-q0002",
+      "stem": "设 $\\displaystyle A=\\begin{pmatrix}2&2&2\\\\1&2&3\\\\1&3&6\\end{pmatrix}$，则 $|A^3|=(\\quad)$。",
+      "options": [
+        {
+          "id": "A",
+          "text": "$\\frac{1}{8}$"
+        },
+        {
+          "id": "B",
+          "text": "$-8$"
+        },
+        {
+          "id": "C",
+          "text": "$-\\frac{1}{8}$"
+        },
+        {
+          "id": "D",
+          "text": "$8$"
+        }
+      ],
+      "analysis": "$\\displaystyle |A|=\\begin{vmatrix}2&2&2\\\\1&2&3\\\\1&3&6\\end{vmatrix}=2$，$|A^3|=|A|^3=8$。"
+    }
+  ]
+}

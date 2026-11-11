@@ -44,7 +44,7 @@ try {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(`${baseURL}/#/practice?subject=calculus&chapter=s-6b82188494c1`);
   await page.getByRole("button", { name: /顺序练习/ }).click();
-  await page.waitForFunction(() => [...document.querySelectorAll(".original-pdf-image")].every((i) => i.complete && i.naturalWidth > 0));
+  await page.waitForFunction(() => [...document.querySelectorAll(".rich img")].every((i) => !i.dataset.figureLoading && i.complete && i.naturalWidth > 0));
   await rememberQuestion(page);
   await page.locator(".index-btn.current").click();
   await assertQuestionRetained(page);

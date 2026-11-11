@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.8.1 直角坐标系下平面曲线的弧长(11题)</title>
+  <style>
+    body {
+      margin-top: 0;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    main>div {
+      margin-top: .5rem;
+    }
+
+    tr {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      border: 2px dashed gray;
+      border-bottom: none;
+    }
+
+    tr:last-child {
+      border-bottom: 2px dashed gray;
+    }
+
+    .g {
+      background-color: #00ff006e;
+    }
+
+    td {
+      mix-blend-mode: multiply;
+    }
+
+    div>div {
+      background-color: yellow;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+
+    <div>
+      <div>#1-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#2-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#3-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#4-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#5-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#6-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#7-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#8-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#9-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#10-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div>#11-Averge</div>
+      <table>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr class="g">
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr >
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+        <tr>
+          <td><img
+              src="data:image/png;base64,PGh0bWw+DQo8aGVhZD48dGl0bGU+NDA0IE5vdCBGb3VuZDwvdGl0bGU+PC9oZWFkPg0KPGJvZHkgYmdjb2xvcj0id2hpdGUiPg0KPGNlbnRlcj48aDE+NDA0IE5vdCBGb3VuZDwvaDE+PC9jZW50ZXI+DQo8aHI+PGNlbnRlcj5uZ2lueC8xLjEyLjE8L2NlbnRlcj4NCjwvYm9keT4NCjwvaHRtbD4NCg==">
+          </td>
+        </tr>
+      </table>
+    </div>
+</main></body></html>

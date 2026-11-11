@@ -162,6 +162,9 @@ def index_pdf(row):
     return {'section':{'id':sid,'name':row['name'],'subjectId':row['subjectId'],'parentId':row['parentId'],'chapterNo':chapter_no,'number':section_number,'file':row['path'],'questionCount':expected,'pages':row['pages'],'sha256':row['sha256']},'questions':questions,'images':images,'review':review}
 
 def main():
+    existing=ROOT/'dist/data/bank.json'
+    if existing.exists() and json.loads(existing.read_text()).get('contentMode')=='native':
+        raise RuntimeError('题库已统一为文字版，不能用旧版截图索引覆盖。请先更新 PDF/HTML 转写与合并结果；原题库未修改。')
     catalog, inventory = load_inventory(ROOT)
     # Persist IDs for new entries so future directory changes cannot reset progress.
     ids_by_path = {row['path']: row['id'] for row in inventory}

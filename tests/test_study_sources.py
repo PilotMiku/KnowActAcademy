@@ -131,6 +131,24 @@ class StudySourceTests(unittest.TestCase):
         self.assertIn('学习资料待登记', output.getvalue())
         self.assertIn('data/study-materials.json', output.getvalue())
 
+    def test_supplementary_html_is_registered_separately_and_hash_checked(self):
+        build_knowledge(self.root)
+        relative='question-bank/高数补充/1.1 函数.html'
+        source=self.root/relative
+        source.parent.mkdir();source.write_text('<table>原始题目</table>')
+        registry={'format':'zhixing.supplement-sources.v1','sources':[
+            {'path':relative,'sha256':hashlib.sha256(source.read_bytes()).hexdigest()}]}
+        path=self.root/'data/supplement-sources.json'
+        path.write_text(json.dumps(registry,ensure_ascii=False))
+        self.assertFalse(any(source_report(self.root).values()))
+        source.write_text('<table>更新的题目</table>')
+        self.assertIn(relative,source_report(self.root)['changed'])
+        source.unlink()
+        self.assertIn(relative,source_report(self.root)['missing'])
+        registry['sources'][0]['path']='question-bank/../outside.html'
+        path.write_text(json.dumps(registry))
+        with self.assertRaisesRegex(ValueError,'来源登记无效'):source_report(self.root)
+
 
 if __name__ == '__main__':
     unittest.main()

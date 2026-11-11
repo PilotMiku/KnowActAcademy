@@ -15,7 +15,8 @@ from check_bank import scan_sources
 class PdfBankTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.bank = json.loads((ROOT / 'dist/data/bank.json').read_text())
+        baseline = ROOT / 'data/pdf-source-bank.json'
+        cls.bank = json.loads((baseline if baseline.exists() else ROOT / 'dist/data/bank.json').read_text())
         cls.index = json.loads((ROOT / 'data/render-index.json').read_text())
         cls.report = json.loads((ROOT / 'data/extraction-report.json').read_text())
 

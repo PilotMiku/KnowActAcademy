@@ -66,8 +66,8 @@ try {
     assert.ok(section, name);
     await page.goto(`${baseURL}/#/practice?subject=linear&chapter=${section.id}`);
     await page.locator('[data-action="start-practice"][data-mode="sequential"]').click();
-    await page.waitForFunction(() => [...document.querySelectorAll('.question-title img,.option img')].length > 0 &&
-      [...document.querySelectorAll('.question-title img,.option img')].every(image => image.complete && image.naturalWidth > 0));
+    await page.locator('.question-title').waitFor();
+    await page.waitForFunction(() => [...document.querySelectorAll('.question-title img,.option img')].every(image => !image.dataset.figureLoading && image.complete && image.naturalWidth > 0));
     assert.equal(await page.locator(".option").count(), 4);
   }
   await page.locator('[data-action="toggle-theme"]').click();

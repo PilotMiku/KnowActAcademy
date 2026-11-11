@@ -61,7 +61,7 @@ try {
   await page.locator(".question-main").waitFor();
   const all = (await stateOf(page)).practice;
   const expected = filterQuestions(bank, { subjectId: "linear", chapterId: "linear-chapter-1" }).map((q) => q.id);
-  assert.equal(all.questionIds.length, 92);
+  assert.equal(all.questionIds.length, expected.length);
   assert.deepEqual([...all.questionIds].sort(), [...expected].sort());
   assert.notDeepEqual(all.questionIds, expected);
   await page.getByRole("button", { name: "下一组", exact: true }).click();

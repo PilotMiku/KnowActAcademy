@@ -7,6 +7,7 @@ import { fixture } from "./fixture.mjs";
 const bank = normalizeBank(JSON.parse(await readFile(new URL("../dist/data/bank.json", import.meta.url), "utf8")));
 const browser = await chromium.launch(browserOptions);
 const errors = [];
+const rootChapterCount = bank.subjects.reduce((sum, subject) => sum + subject.chapters.filter(c => !c.parentId).length, 0);
 const chapterValue = (subjectId, chapterId) => JSON.stringify([subjectId, chapterId]);
 const chapterInput = (page, subjectId, chapterId) => page.locator(`[data-exam-chapter][value='${chapterValue(subjectId, chapterId)}']`);
 const readStored = (page) => page.evaluate(() => new Promise((resolve, reject) => {
@@ -28,9 +29,9 @@ try {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(`${baseURL}/#/exams`);
   await page.getByRole("button", { name: "新建模拟考试" }).click();
-  assert.equal(await page.locator("[data-exam-chapter]").count(), 14);
+  assert.equal(await page.locator("[data-exam-chapter]").count(), rootChapterCount);
   assert.ok(await page.locator("#exam-all-chapters").isChecked());
-  assert.match(await page.locator("#exam-availability").innerText(), /3716/);
+  assert.ok((await page.locator("#exam-availability").innerText()).replaceAll(',', '').includes(String(bank.questions.length)));
 
   for (const subject of bank.subjects) {
     for (const chapter of subject.chapters.filter((c) => !c.parentId)) {
@@ -42,13 +43,14 @@ try {
   }
   await page.locator("#exam-subject").selectOption("calculus");
   assert.ok(await page.locator("#exam-all-chapters").isChecked());
-  assert.equal(await page.locator("[data-exam-chapter]").count(), 7);
+  assert.equal(await page.locator("[data-exam-chapter]").count(), bank.subjects.find(s=>s.id==='calculus').chapters.filter(c=>!c.parentId).length);
   await page.locator("#exam-subject").selectOption("");
   await chapterInput(page, "linear", "linear-chapter-1").check();
   assert.equal(await page.locator("#exam-subject").inputValue(), "");
-  await page.locator("#exam-count").fill("100");
+  const available = filterQuestions(bank, {subjectId:'linear', chapterId:'linear-chapter-1'}).length;
+  await page.locator("#exam-count").fill(String(available + 1));
   await page.getByRole("button", { name: "开始考试" }).click();
-  assert.match(await page.locator("#exam-error").innerText(), /92/);
+  assert.match(await page.locator("#exam-error").innerText(), new RegExp(String(available)));
   await chapterInput(page, "linear", "linear-chapter-1").uncheck();
   assert.equal(await page.locator("#exam-error").getAttribute("class"), "");
   assert.match(await page.locator("#exam-availability").innerText(), /请至少选择/);
@@ -63,7 +65,7 @@ try {
   assert.match(await page.locator("#exam-availability").innerText(), new RegExp(`共 ${expectedQuestions.length} 道.*已选 3 个`));
   await page.locator("#exam-all-chapters").check();
   assert.equal(await page.locator("[data-exam-chapter]:checked").count(), 0);
-  assert.match(await page.locator("#exam-availability").innerText(), /3716/);
+  assert.ok((await page.locator("#exam-availability").innerText()).replaceAll(',', '').includes(String(bank.questions.length)));
   for (const scope of selected) await chapterInput(page, scope.subjectId, scope.chapterId).check();
   await page.screenshot({ path: "artifacts/exam-chapters-desktop.png", fullPage: true, animations: "disabled" });
   await page.locator("#exam-count").fill("5");
@@ -145,7 +147,7 @@ try {
   assert.equal(mobileExam.chapters.length, 2);
   await mobile.close();
   assert.deepEqual(errors, []);
-  console.log("Exam chapters passed: 14 major chapters, multiple/cross-subject scopes, empty/all selections, persistence, backups, reports and mobile layout.");
+  console.log(`Exam chapters passed: ${rootChapterCount} major chapters, multiple/cross-subject scopes, empty/all selections, persistence, backups, reports and mobile layout.`);
 } finally {
   await browser.close();
 }

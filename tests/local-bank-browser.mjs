@@ -23,9 +23,9 @@ try {
   const waitImages = async () => {
     try {
       await page.waitForFunction(() =>
-        [...document.querySelectorAll(".original-pdf-image")].every(i => i.complete && i.naturalWidth > 0));
+        [...document.querySelectorAll(".rich img")].every(i => !i.dataset.figureLoading && i.complete && i.naturalWidth > 0));
     } catch (error) {
-      const images = await page.locator(".original-pdf-image").evaluateAll(nodes =>
+      const images = await page.locator(".rich img").evaluateAll(nodes =>
         nodes.map(node => ({ src: node.src, complete: node.complete, width: node.naturalWidth })));
       throw new Error(JSON.stringify({ images, imageFailures }) + "\n" + error.message);
     }
@@ -33,7 +33,7 @@ try {
   await page.goto(origin);
   await page.getByRole("link", { name: "进入学习", exact: true }).click();
   await page.locator(".local-hero").waitFor();
-  assert.equal(await page.locator(".chapter-card").count(), 7);
+  assert.equal(await page.locator(".chapter-card").count(), bank.subjects[0].chapters.length);
   assert.equal(
     await page.locator(".local-stat-strip b").first().innerText(),
     bank.questions.length.toLocaleString("en-US"),
@@ -57,18 +57,19 @@ try {
   await page.locator(".course-tab[href*=calculus]").click();
   await page.locator(".course-tab.active[href*=calculus]").waitFor();
   scenarios.push(
-    "3716 real PDF questions are bundled and loaded automatically",
+    `${bank.questions.length} source questions are bundled and loaded automatically`,
   );
   await page.goto(origin + "/#/practice?subject=calculus&chapter=chapter-1");
   await page.locator(".practice-start").waitFor();
-  assert.match(await page.locator(".practice-start").innerText(), /504/);
+  assert.ok((await page.locator(".practice-start").innerText()).replaceAll(',', '').includes(String(bank.subjects[0].chapters.find(c=>c.id==='chapter-1').questionCount)));
   await page.locator("#chapter-filter").selectOption(bank.sections[0].id);
   await page.waitForURL(new RegExp(bank.sections[0].id));
-  assert.match(await page.locator(".practice-start").innerText(), /51/);
+  assert.ok((await page.locator(".practice-start").innerText()).replaceAll(',', '').includes(String(bank.sections[0].questionCount)));
   await page.getByRole("button", { name: "顺序练习", exact: false }).click();
   await page.locator(".question-main").waitFor();
   await waitImages();
-  assert.equal(await page.locator(".question-title img").count(), 1);
+  if (bank.contentMode === 'native') assert.ok(await page.locator('.question-title .katex').count()>=2);
+  else assert.equal(await page.locator(".question-title img").count(), 1);
   assert.equal(await page.locator(".option").count(), 4);
   assert.equal(await page.locator(".analysis").count(), 0);
   assert.equal(await page.locator(".option.correct").count(), 0);
@@ -93,13 +94,14 @@ try {
     await page.locator(".option.correct .option-key").innerText(),
     "B",
   );
-  assert.equal(await page.locator(".analysis img").count(), 1);
+  if (bank.contentMode === 'native') assert.ok(await page.locator('.analysis .katex').count()>0);
+  else assert.equal(await page.locator(".analysis img").count(), 1);
   await page.screenshot({
     path: "artifacts/local-answer-desktop.png",
     fullPage: true,
   });
   await page.reload();
-  await page.locator(".analysis img").waitFor();
+  await page.locator(".analysis").waitFor();
   await waitImages();
   assert.equal(
     await page.locator(".option.correct .option-key").innerText(),
@@ -111,9 +113,9 @@ try {
   await page.getByRole("button", { name: "第 27 题", exact: true }).click();
   await page.locator('[data-action="answer-option"][data-value="C"]').click();
   await page.getByRole("button", { name: "确认答案", exact: true }).click();
-  await page
-    .getByText("这道题的原 PDF 未附解析，请查看原 PDF 核对。", { exact: true })
-    .waitFor();
+  const originalMissing=bank.questions.find(q=>q.id==='s-6b82188494c1-q0027');
+  if(originalMissing.analysisMissing) await page.getByText(bank.contentMode==='native'?'原始资料未提供可用解析。':'这道题的原 PDF 未附解析，请查看原 PDF 核对。',{exact:true}).waitFor();
+  else {await page.locator('.analysis').waitFor();await waitImages();assert.ok((await page.locator('.analysis').innerHTML()).length>20);}
   assert.equal(
     await page.locator(".option.correct .option-key").innerText(),
     "C",
@@ -124,14 +126,15 @@ try {
   // Representative questions include tall fractions, integral bounds and spatial geometry.
   for (const subject of bank.subjects)
     for (const root of subject.chapters) {
-      const section = root.children[Math.floor(root.children.length / 2)];
+      const available = root.children.filter(c=>c.questionCount>0);
+      const section = available[Math.floor(available.length / 2)];
       await page.goto(
         origin + "/#/practice?subject=" + subject.id + "&chapter=" + section.id,
       );
       await page
         .getByRole("button", { name: "顺序练习", exact: false })
         .click();
-      await page.locator(".question-title img").waitFor();
+      await page.locator(".question-title").waitFor();
       await waitImages();
       assert.equal(await page.locator(".option").count(), 4);
       const first = bank.questions.find((q) => q.chapterId === section.id);
@@ -154,9 +157,14 @@ try {
   const pdf = await page.request.get(origin + "/source-pdf/" + sid + ".pdf", {
     headers: { Range: "bytes=0-99" },
   });
-  assert.ok([200, 206].includes(pdf.status()));
-  if (pdf.status() === 206) assert.equal((await pdf.body()).length, 100);
-  assert.match((await pdf.body()).toString(), /^%PDF/);
+  if (bank.contentMode === 'native') {
+    assert.equal(pdf.status(),404);
+    assert.match(bank.questions[0].source.url,/^https:\/\/github\.com\/PilotMiku\/KnowActAcademy\/blob\//);
+  } else {
+    assert.ok([200, 206].includes(pdf.status()));
+    if (pdf.status() === 206) assert.equal((await pdf.body()).length, 100);
+    assert.match((await pdf.body()).toString(), /^%PDF/);
+  }
   assert.equal(
     (
       await page.request.get(origin + "/question-images/unknown/stem/0.webp")

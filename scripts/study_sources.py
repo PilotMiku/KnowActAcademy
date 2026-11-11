@@ -59,13 +59,32 @@ def source_report(root):
     registry = root / 'data/knowledge-sources.json'
     metadata = json.loads(registry.read_text()) if registry.exists() else {}
     sources = metadata.get('sources', [])
-    registered = math | {s['path'] for s in sources}
+    supplement_registry = root / 'data/supplement-sources.json'
+    supplements = []
+    if supplement_registry.exists():
+        supplementary = json.loads(supplement_registry.read_text())
+        if supplementary.get('format') != 'zhixing.supplement-sources.v1':
+            raise ValueError('补充题库来源登记格式不支持')
+        supplements = supplementary.get('sources', [])
+        seen = set()
+        for source in supplements:
+            relative = Path(source['path'])
+            resolved = (root / relative).resolve()
+            if (relative.is_absolute() or '..' in relative.parts
+                    or not relative.parts or relative.parts[0] != 'question-bank'
+                    or relative.suffix.lower() != '.html'
+                    or (root / 'question-bank').resolve() not in resolved.parents
+                    or source['path'] in seen
+                    or not re.fullmatch(r'[a-f0-9]{64}', source.get('sha256', ''))):
+                raise ValueError('补充题库来源登记无效：' + source['path'])
+            seen.add(source['path'])
+    registered = math | {s['path'] for s in sources + supplements}
     actual = {p.relative_to(root).as_posix(): p for p in source_files(root)}
     changed = []
     materials = root / 'data/study-materials.json'
     if materials.exists() and metadata.get('materialsSha256') != hashlib.sha256(materials.read_bytes()).hexdigest():
         changed.append('data/study-materials.json')
-    for source in sources:
+    for source in sources + supplements:
         path = root / source['path']
         if (root / 'question-bank').resolve() not in path.resolve().parents:
             raise ValueError('学习资料路径越界：' + source['path'])
@@ -75,7 +94,9 @@ def source_report(root):
     if metadata.get('materialsSha256') and not materials.exists():
         missing.add('data/study-materials.json')
     return {'unregistered': sorted(set(actual) - registered),
-            'unsupported': sorted(name for name, p in actual.items() if p.suffix.lower() not in SUPPORTED),
+            'unsupported': sorted(name for name, p in actual.items()
+                                  if p.suffix.lower() not in SUPPORTED
+                                  and name not in {s['path'] for s in supplements}),
             'missing': sorted(missing), 'changed': sorted(changed)}
 
 
