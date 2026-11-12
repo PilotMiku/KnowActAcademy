@@ -19,19 +19,7 @@ async function withPage(path, run) {
 }
 
 async function storedState(page) {
-  return page.evaluate(async () => {
-    const { storageName } = await import("./assets.mjs");
-    const db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open(storageName, 1);
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction("kv"), request = tx.objectStore("kv").get("state");
-      tx.oncomplete = () => { db.close(); resolve(request.result); };
-      tx.onerror = () => { db.close(); reject(tx.error); };
-    });
-  });
+  return page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
 }
 
 async function importQuestions(page, questions) {
@@ -58,6 +46,22 @@ test("repeated start clicks create exactly one exam", () => withPage("/exams", a
   });
   await page.locator(".question-main").waitFor();
   assert.equal((await storedState(page)).exams.length, 1);
+}));
+
+test("unverified questions can be read and annotated without grading or scheduling", () => withPage("/library", async page => {
+  const question = { ...fixture.questions[0], answerVerified: false, sourceIncomplete: true };
+  await importQuestions(page, [question, fixture.questions[1]]);
+  await page.goto(baseURL + "/#/practice");
+  await page.locator('[data-action="practice-one"]').first().click();
+  await page.getByRole('button', { name: '查看参考（不计分）', exact: true }).click();
+  await page.getByText('仅供查阅 · 本题不计分', { exact: true }).waitFor();
+  assert.equal(await page.locator('.option.correct').count(), 0);
+  assert.equal((await storedState(page)).attempts.length, 0);
+  await page.reload();
+  await page.getByText('仅供查阅 · 本题不计分', { exact: true }).waitFor();
+  await page.goto(baseURL + '/#/prepare?subject=math');
+  await page.locator('#prepare-availability').waitFor();
+  assert.match(await page.locator('#prepare-availability').innerText(), /共 1 道题/);
 }));
 
 test("repeated next clicks advance one question and release the navigation lock", () => withPage("/library", async page => {

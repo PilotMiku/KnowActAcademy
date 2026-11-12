@@ -9,9 +9,11 @@ import re
 import secrets
 import sqlite3
 import time
+import zlib
 from urllib.parse import urlsplit
 
 MAX_BODY = 10 * 1024 * 1024
+MAX_PROGRESS = 50 * 1024 * 1024
 FORMAT = 'zhixing.progress.v1'
 
 
@@ -96,11 +98,11 @@ class ProgressAPI:
             return respond('404 Not Found', {'error': '接口不存在'})
         if method == 'OPTIONS':
             if (not origin or environ.get('HTTP_ACCESS_CONTROL_REQUEST_METHOD') not in ['GET', 'PUT'] or
-                    any(h.strip().lower() not in ['authorization', 'content-type', 'if-match']
+                    any(h.strip().lower() not in ['authorization', 'content-type', 'if-match', 'content-encoding']
                         for h in environ.get('HTTP_ACCESS_CONTROL_REQUEST_HEADERS', '').split(',') if h.strip())):
                 return respond('403 Forbidden', {'error': '跨域请求未获允许'})
             headers.extend([('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS'),
-                            ('Access-Control-Allow-Headers', 'Authorization, Content-Type, If-Match'),
+                            ('Access-Control-Allow-Headers', 'Authorization, Content-Type, If-Match, Content-Encoding'),
                             ('Access-Control-Max-Age', '600')])
             return respond('200 OK', {'ok': True})
         if path == '/v1/health':
@@ -120,7 +122,8 @@ class ProgressAPI:
                                      (token_hash,)).fetchone()
                     return respond('200 OK', {'version': row[0] if row else 0,
                                              'payload': json.loads(row[1]) if row else None,
-                                             'updatedAt': row[2] if row else None})
+                                             'updatedAt': row[2] if row else None,
+                                             'capabilities': {'gzipUpload': True, 'maxProgressBytes': MAX_PROGRESS}})
                 if method != 'PUT':
                     return respond('405 Method Not Allowed', {'error': '方法不支持'})
                 if environ.get('CONTENT_TYPE', '').split(';')[0] != 'application/json':
@@ -138,11 +141,21 @@ class ProgressAPI:
                     raw = environ['wsgi.input'].read(length)
                     if len(raw) != length:
                         raise ValueError('incomplete body')
+                    encoding = environ.get('HTTP_CONTENT_ENCODING', 'identity').lower()
+                    if encoding == 'gzip':
+                        decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
+                        raw = decoder.decompress(raw, MAX_PROGRESS + 1)
+                        if len(raw) > MAX_PROGRESS or decoder.unconsumed_tail:
+                            return respond('413 Content Too Large', {'error': '解压后的学习数据超过 50 MiB'})
+                        if not decoder.eof or decoder.unused_data:
+                            raise ValueError('incomplete gzip body')
+                    elif encoding != 'identity':
+                        return respond('415 Unsupported Media Type', {'error': '不支持的数据压缩格式'})
                     payload = json.loads(raw, parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
                     if not valid_payload(payload):
                         raise ValueError('invalid payload')
                     encoded = json.dumps(payload, ensure_ascii=False, allow_nan=False)
-                except (ValueError, UnicodeError, RecursionError):
+                except (ValueError, UnicodeError, RecursionError, zlib.error):
                     return respond('400 Bad Request', {'error': '学习数据格式错误'})
                 db.execute('BEGIN IMMEDIATE')
                 row = db.execute('SELECT version,payload,updated_at FROM snapshots WHERE token_hash=?',

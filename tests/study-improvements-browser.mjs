@@ -6,13 +6,7 @@ import { readFile } from 'node:fs/promises';
 const sourceBank=JSON.parse(await readFile(new URL('../dist/data/bank.json',import.meta.url),'utf8'));
 const browser=await chromium.launch(browserOptions), errors=[];
 async function stateOf(page) {
-  return page.evaluate(async()=>{
-    const {storageName}=await import('./assets.mjs');
-    return new Promise((resolve,reject)=>{
-      const r=indexedDB.open(storageName,1);r.onerror=()=>reject(r.error);
-      r.onsuccess=()=>{const db=r.result,t=db.transaction('kv'),v=t.objectStore('kv').get('state');t.oncomplete=()=>{db.close();resolve(v.result)};t.onerror=()=>reject(t.error)};
-    });
-  });
+  return page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
 }
 try {
   const page=await browser.newPage({viewport:{width:1440,height:1000}});

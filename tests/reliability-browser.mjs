@@ -10,19 +10,7 @@ async function open(context, path = "/practice") {
   await page.locator(".local-shell").waitFor();
   return page;
 }
-const stored = page => page.evaluate(async () => {
-  const { storageName } = await import("./assets.mjs");
-  const db = await new Promise((resolve, reject) => {
-    const request = indexedDB.open(storageName, 1);
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction("kv"), request = tx.objectStore("kv").get("state");
-    tx.oncomplete = () => { db.close(); resolve(request.result); };
-    tx.onerror = () => reject(tx.error);
-  });
-});
+const stored = page => page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
 async function answer(page) {
   await page.locator("[data-question-id]").waitFor();
   const id = await page.locator("[data-question-id]").getAttribute("data-question-id");

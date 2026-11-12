@@ -33,6 +33,51 @@
 | 📊 学习统计 | 查看每日目标、有效作答、章节完成度和正确率，随时接续上次学习。 |
 | 🎨 阅读体验 | 适配桌面与手机，支持浅色 / 深色主题、字号调整、专注布局和题图放大。 |
 
+## 本地开发与验证
+
+可使用与 CI 相同的 Python 3.12、Node.js 22。首次运行：
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+npm ci
+npx playwright install chromium
+npm run build
+npm run dev
+```
+
+打开 `http://127.0.0.1:4188`。普通构建使用已登记题库，不需要 OCR 模型或历史数学原件。
+
+提交前执行：
+
+```sh
+npm run check:bank
+npm test
+npm run test:python
+npm run build
+npm run verify
+npm run test:browser
+```
+
+单独验证加载、5 万条作答增量保存、压缩同步和报告懒加载：
+
+```sh
+node scripts/run_browser_tests.mjs optimization-browser
+```
+
+测试报告及截图保存在忽略提交的 `artifacts/`。PR 会执行构建与完整检查，通过后才可由主分支工作流部署；PR 本身不部署。
+
+## 学习数据与题目质量
+
+缺损题及明确标记答案未核实的题目可查阅、收藏和记笔记，但不计有效完成、正确率、掌握度或复习日程，也不进入新考试和备考组。已有历史记录保留。
+
+完整备份使用 `zhixing.backup.v2`，将每题原始记录和标准化差异分别编码，避免重复保存题干与解析；保留来源及自定义字段，支持恢复旧版完整备份。轻量进度备份只包含学习记录，恢复时要求相同版本的内置题库；自定义题库使用完整备份。两种文件的恢复上限均为 50 MiB，导出时检查文件大小。
+
+作答记录在 IndexedDB 内按条追加，与会话元数据在同一版本检查事务内提交。数据库升级到版本 2，旧数据首次打开时自动迁移；升级会关闭旧版本标签页的连接，防止旧代码覆盖新日志。恢复备份或清空记录时原子替换作答日志。应用内的作答记录视为不可变数据；修改历史时须替换 `state.attempts` 数组，以便持久化和统计索引重建。读取完整持久化快照使用 `storage.mjs` 的 `readSavedData()` / `readSavedState()`。
+
+插图在构建时按小节和题目顺序重打包，原图字节和题库引用不变。小索引兼容旧备份中的插图地址；报告滚动到相应位置时才加载图片包。可选资料和同步配置独立加载，网络请求超时不再无限阻塞练习。
+
 ## 项目结构
 
 ```text

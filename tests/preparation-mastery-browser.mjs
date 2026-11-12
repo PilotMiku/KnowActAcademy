@@ -7,18 +7,7 @@ const raw = structuredClone(fixture);
 raw.questions = [raw.questions[0], raw.questions[4], raw.questions[3]];
 const browser = await chromium.launch(browserOptions), errors = [];
 async function stateOf(page) {
-  return page.evaluate(async () => {
-    const { storageName } = await import("./assets.mjs");
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(storageName, 1);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
-        const db = request.result, tx = db.transaction("kv"), state = tx.objectStore("kv").get("state");
-        tx.oncomplete = () => { db.close(); resolve(state.result); };
-        tx.onerror = () => reject(tx.error);
-      };
-    });
-  });
+  return page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
 }
 async function visitQuestion(page, id) {
   const state = await stateOf(page), index = state.practice.questionIds.indexOf(id);

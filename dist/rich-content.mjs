@@ -1,6 +1,8 @@
 import { questionImageURL, nativeFigureID, nativeFigureChunk, loadNativeFigure } from "./assets.mjs";
+import { loadImageWhenVisible, pruneLazyImages } from "./lazy-images.mjs";
 
 export function renderRich(root = document.querySelector("#app"), lazyImages = false) {
+  pruneLazyImages();
   for (const el of root.querySelectorAll("[data-rich]")) {
     const content = el.dataset.rich;
     el.removeAttribute("data-rich");
@@ -140,14 +142,14 @@ function safeContent(value, lazyImages = false) {
         if (url.protocol !== "https:" && url.protocol !== "http:") return;
         if (figureID) {
           target.dataset.figureLoading = "true";
-          loadNativeFigure(figureID, undefined, undefined, nativeFigureChunk(rawSource)).then(source => {
+          loadImageWhenVisible(target, () => loadNativeFigure(figureID, undefined, undefined, nativeFigureChunk(rawSource)).then(source => {
             target.src = source;
             delete target.dataset.figureLoading;
           }).catch(() => {
             target.alt = "原题插图加载失败，请刷新页面或查看原始资料";
             target.classList.add("image-error");
             delete target.dataset.figureLoading;
-          });
+          }), lazyImages);
         } else target.src = url.href;
         target.alt = node.getAttribute("alt") ?? "题目图片";
         target.loading = lazyImages ? "lazy" : "eager";

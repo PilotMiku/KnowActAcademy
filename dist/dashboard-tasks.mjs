@@ -3,17 +3,17 @@ import { currentPreparationPractice, diagnosticProgress, practiceProgress } from
 import { spacedReview } from "./study.mjs";
 
 export function dailyTasks(bank, state, now = Date.now()) {
-  const completed = stats(state, now).today;
+  const completed = stats(state, now, bank).today;
   const goal = state.dailyGoal;
   const exam = state.exams.find(e => e.status === "active" && e.endsAt > now) ?? null;
   const session = currentPreparationPractice(state);
   const preparation = state.preparation ? {
     subjectId: state.preparation.subjectId,
-    diagnostic: !diagnosticProgress(state).ready,
-    progress: session ? practiceProgress(session) : null,
+    diagnostic: !diagnosticProgress(state, bank).ready,
+    progress: session ? practiceProgress(session, bank) : null,
   } : null;
   const practice = state.practice && !state.practice.preparationId ? {
-    progress: practiceProgress(state.practice), mode: state.practice.mode,
+    progress: practiceProgress(state.practice, bank), mode: state.practice.mode,
   } : null;
   return { completed, goal, remaining: Math.max(0, goal - completed), exam, preparation, practice,
     due: spacedReview(bank, state, now).due.length };

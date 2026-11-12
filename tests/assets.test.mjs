@@ -23,7 +23,7 @@ test('native figures use versioned shared chunks under repository subpaths', asy
   assert.equal(nativeFigureChunk(`/api/question-figure/${version}/${a}`),version);
   assert.equal(nativeFigureID('/api/question-figure/../../private'),null);
   let requests=0;
-  const fetcher=async url=>{requests++;assert.equal(url,`https://host/repo/question-figures/ab-${version}.json`);
+  const fetcher=async url=>{if(url.includes('/figure-index/'))return {ok:false,status:404};requests++;assert.equal(url,`https://host/repo/question-figures/ab-${version}.json`);
     return {ok:true,json:async()=>({format:'zhixing.figure-chunk.v1',figures:{[a]:'data:image/webp;base64,AAAA',[b]:'data:image/webp;base64,BBBB'}})};};
   const result=await Promise.all([loadNativeFigure(a,new URL('https://host/repo/'),fetcher,version),loadNativeFigure(b,new URL('https://host/repo/'),fetcher,version)]);
   assert.equal(requests,1);assert.equal(result[1],'data:image/webp;base64,BBBB');
@@ -35,4 +35,17 @@ test('native figure loader rejects executable payloads and retries failed chunks
   await assert.rejects(loadNativeFigure(id,base,request),/offline/);
   await assert.rejects(loadNativeFigure(id,base,request),/内容无效/);
   assert.equal(requests,2);
+});
+
+test('legacy figure references resolve through small indexes and reuse a topical pack', async () => {
+  const a='aa0123456789012345678901', b='bb0123456789012345678902', version='abcdef0123456789', pack='0123456789abcdef';
+  let packs=0;
+  const request=async url => {
+    if(url.includes('/figure-index/')) return {ok:true,json:async()=>({format:'zhixing.figure-index.v1',packs:{[a]:pack,[b]:pack}})};
+    assert.equal(url,`https://host/packed/figure-packs/${pack}.json`); packs++;
+    return {ok:true,json:async()=>({format:'zhixing.figure-chunk.v1',figures:{[a]:'data:image/webp;base64,AAAA',[b]:'data:image/webp;base64,BBBB'}})};
+  };
+  const sources=await Promise.all([a,b].map(id=>loadNativeFigure(id,new URL('https://host/packed/'),request,version)));
+  assert.equal(packs,1); assert.equal(sources[1],'data:image/webp;base64,BBBB');
+  await assert.rejects(loadNativeFigure(a,new URL('https://host/invalid-index/'),async()=>({ok:true,json:async()=>({format:'zhixing.figure-index.v1',packs:{[a]:'../../private'}})}),version),/索引无效/);
 });

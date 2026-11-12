@@ -9,19 +9,7 @@ const bank = normalizeBank(JSON.parse(await readFile("dist/data/bank.json", "utf
 const browser = await chromium.launch(browserOptions);
 const errors = [];
 async function stateOf(page) {
-  return page.evaluate(async () => {
-    const { storageName } = await import("./assets.mjs");
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(storageName, 1);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
-        const db = request.result, tx = db.transaction("kv");
-        const state = tx.objectStore("kv").get("state");
-        tx.oncomplete = () => { db.close(); resolve(state.result); };
-        tx.onerror = () => reject(tx.error);
-      };
-    });
-  });
+  return page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
 }
 async function answerCurrent(page, questions, correct) {
   const state = await stateOf(page);

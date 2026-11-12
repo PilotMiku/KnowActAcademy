@@ -10,18 +10,7 @@ const errors = [];
 const rootChapterCount = bank.subjects.reduce((sum, subject) => sum + subject.chapters.filter(c => !c.parentId).length, 0);
 const chapterValue = (subjectId, chapterId) => JSON.stringify([subjectId, chapterId]);
 const chapterInput = (page, subjectId, chapterId) => page.locator(`[data-exam-chapter][value='${chapterValue(subjectId, chapterId)}']`);
-const readStored = (page) => page.evaluate(() => new Promise((resolve, reject) => {
-  const request = indexedDB.open("zhixing-study:" + new URL("./", location.href).pathname, 1);
-  request.onerror = () => reject(request.error);
-  request.onsuccess = () => {
-    const db = request.result;
-    const tx = db.transaction("kv");
-    const state = tx.objectStore("kv").get("state");
-    const bank = tx.objectStore("kv").get("bank");
-    tx.oncomplete = () => { resolve({ state: state.result, bank: bank.result }); db.close(); };
-    tx.onerror = () => reject(tx.error);
-  };
-}));
+const readStored = page => page.evaluate(async () => (await import('./storage.mjs')).readSavedData());
 
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1060 } });
@@ -31,13 +20,13 @@ try {
   await page.getByRole("button", { name: "新建模拟考试" }).click();
   assert.equal(await page.locator("[data-exam-chapter]").count(), rootChapterCount);
   assert.ok(await page.locator("#exam-all-chapters").isChecked());
-  assert.ok((await page.locator("#exam-availability").innerText()).replaceAll(',', '').includes(String(bank.questions.length)));
+  assert.ok((await page.locator("#exam-availability").innerText()).replaceAll(',', '').includes(String(examQuestions(bank).length)));
 
   for (const subject of bank.subjects) {
     for (const chapter of subject.chapters.filter((c) => !c.parentId)) {
       await page.locator("#exam-subject").selectOption(subject.id);
       await chapterInput(page, subject.id, chapter.id).check();
-      const expected = filterQuestions(bank, { subjectId: subject.id, chapterId: chapter.id }).length;
+      const expected = filterQuestions(bank, { subjectId: subject.id, chapterId: chapter.id }).filter(q => q.answerVerified !== false && !q.sourceIncomplete && q.type !== "solution").length;
       assert.match(await page.locator("#exam-availability").innerText(), new RegExp(`共 ${expected} 道`));
     }
   }
@@ -47,7 +36,7 @@ try {
   await page.locator("#exam-subject").selectOption("");
   await chapterInput(page, "linear", "linear-chapter-1").check();
   assert.equal(await page.locator("#exam-subject").inputValue(), "");
-  const available = filterQuestions(bank, {subjectId:'linear', chapterId:'linear-chapter-1'}).length;
+  const available = filterQuestions(bank, {subjectId:'linear', chapterId:'linear-chapter-1'}).filter(q => q.answerVerified !== false && !q.sourceIncomplete && q.type !== 'solution').length;
   await page.locator("#exam-count").fill(String(available + 1));
   await page.getByRole("button", { name: "开始考试" }).click();
   assert.match(await page.locator("#exam-error").innerText(), new RegExp(String(available)));
@@ -65,7 +54,7 @@ try {
   assert.match(await page.locator("#exam-availability").innerText(), new RegExp(`共 ${expectedQuestions.length} 道.*已选 3 个`));
   await page.locator("#exam-all-chapters").check();
   assert.equal(await page.locator("[data-exam-chapter]:checked").count(), 0);
-  assert.ok((await page.locator("#exam-availability").innerText()).replaceAll(',', '').includes(String(bank.questions.length)));
+  assert.ok((await page.locator("#exam-availability").innerText()).replaceAll(',', '').includes(String(examQuestions(bank).length)));
   for (const scope of selected) await chapterInput(page, scope.subjectId, scope.chapterId).check();
   await page.screenshot({ path: "artifacts/exam-chapters-desktop.png", fullPage: true, animations: "disabled" });
   await page.locator("#exam-count").fill("5");

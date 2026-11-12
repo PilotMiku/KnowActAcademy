@@ -91,7 +91,7 @@ try {
     page.evaluate(
       () =>
         new Promise((resolve, reject) => {
-          const r = indexedDB.open("zhixing-study:" + new URL("./", location.href).pathname, 1);
+          const r = indexedDB.open("zhixing-study:" + new URL("./", location.href).pathname);
           r.onsuccess = () => {
             const tx = r.result.transaction("kv");
             const get = tx.objectStore("kv").get("state");

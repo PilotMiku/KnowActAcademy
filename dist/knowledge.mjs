@@ -59,6 +59,7 @@ export function filterKnowledge(data, query, state) {
 }
 
 export function knowledgePage(data, state, route, ui) {
+  if (data.loading) return '<section class="card" role="status"><h1>学习资料</h1><p>正在加载资料，可先到题库练习。</p></section>';
   const { esc, attr, icon, button, head } = ui;
   const groups = knowledgeGroups(data);
   const breadcrumbs = group => `<nav class="knowledge-breadcrumbs" aria-label="资料路径"><a href="#/knowledge">学习资料</a>${group ? `<span aria-hidden="true">/</span><a href="${knowledgeGroupURL(group.id)}">${esc(group.name)}</a>` : ""}</nav>`;

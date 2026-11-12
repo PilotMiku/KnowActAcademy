@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { apiEndpoint, createSyncClient, PROGRESS_FORMAT } from '../dist/sync.mjs';
+import { apiEndpoint, createSyncClient, PROGRESS_FORMAT, encodeProgress } from '../dist/sync.mjs';
 
 test('sync endpoint accepts HTTPS and loopback, rejects credentials and mixed content', () => {
   assert.equal(apiEndpoint('https://api.example.com/api/'), 'https://api.example.com/api');
@@ -56,4 +56,14 @@ test('concurrent sync actions cannot mutate the same session', async () => {
   assert.throws(() => client.disconnect(), /正在进行/);
   finish(new Response(JSON.stringify({ version: 0, payload: null })));
   await first;
+});
+
+test('large uploads compress without loss and old servers keep the JSON protocol', async () => {
+  const payload={text:'学习记录'.repeat(100000)};
+  const encoded=await encodeProgress(payload);
+  assert.equal(encoded.headers['Content-Encoding'],'gzip');
+  const decoded=await new Response(new Blob([encoded.body]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+  assert.deepEqual(JSON.parse(decoded),payload);
+  const legacy=await encodeProgress(payload,{gzip:false});
+  assert.equal(typeof legacy.body,'string'); assert.deepEqual(legacy.headers,{});
 });

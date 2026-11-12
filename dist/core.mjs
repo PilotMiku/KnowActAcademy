@@ -2,6 +2,8 @@ import { defaultStudySettings, normalizeStudySettings } from "./preferences.mjs"
 import { pauseExamQuestion } from "./exam-timing.mjs";
 import { normalizeQuestionNotes } from "./question-notes.mjs";
 import { normalizeReadingPositions } from "./knowledge-reading.mjs";
+import { COMPACT_BACKUP_FORMAT, PROGRESS_BACKUP_FORMAT, expandBank } from "./backup-codec.mjs";
+import { getAttemptIndex } from "./attempt-index.mjs";
 export const VERSION = 1;
 export const BANK_FORMAT = "local-neumathe.bank.v1";
 export const BACKUP_FORMAT = "local-neumathe.backup.v1";
@@ -270,6 +272,7 @@ export function normalizeBank(input, { allowEmpty = false } = {}) {
       sourceLabel: string(q.sourceLabel),
       searchText: string(q.searchText),
       answerVerified: q.answerVerified,
+      ...(q.sourceIncomplete || q.original?.sourceIncomplete ? { sourceIncomplete: true } : {}),
       analysisMissing: q.analysisMissing,
       original: q.original ?? q,
     };
@@ -310,8 +313,11 @@ export function upgradeBundledBank(previous, candidate) {
 function normalizeFill(a) {
   return String(a).normalize("NFKC").replace(/\s+/g, "").replace(/[−–]/g, "-");
 }
+export function isScorable(question) {
+  return !!question && question.answerVerified !== false && !question.sourceIncomplete && !question.original?.sourceIncomplete;
+}
 export function judge(question, response) {
-  if (question.type === "solution") return null;
+  if (!isScorable(question) || question.type === "solution") return null;
   if (question.type === "multiple") {
     const a = Array.isArray(response)
       ? [...new Set(response.map(String))].sort()
@@ -338,6 +344,7 @@ export function hasResponse(q, response) {
         String(response).trim() !== "";
 }
 export function isEffectiveAttempt(attempt, question) {
+  if (question && !isScorable(question)) return false;
   if (!attempt || typeof attempt.correct !== "boolean" || !Number.isFinite(attempt.at)) return false;
   if (question?.type === "solution" || attempt.manual === true) return true;
   return hasResponse(question ?? { type: Array.isArray(attempt.answer) ? "multiple" : "single" }, attempt.answer);
@@ -385,14 +392,14 @@ const questionSearchText = new WeakMap();
 export function examQuestions(bank, { subjectId = "", chapters = null } = {}) {
   const index = getBankIndex(bank);
   const pool = subjectId ? index.subjectQuestions.get(subjectId) ?? [] : bank.questions;
-  if (chapters === null) return pool.filter((q) => q.type !== "solution");
+  if (chapters === null) return pool.filter((q) => isScorable(q) && q.type !== "solution");
   const ids = new Set();
   for (const selected of chapters) {
     if (subjectId && selected.subjectId !== subjectId) continue;
     for (const q of index.chapterQuestions.get(selected.subjectId)?.get(selected.chapterId) ?? [])
       ids.add(q.id);
   }
-  return pool.filter((q) => ids.has(q.id) && q.type !== "solution");
+  return pool.filter((q) => ids.has(q.id) && isScorable(q) && q.type !== "solution");
 }
 function searchableText(q) {
   if (!questionSearchText.has(q))
@@ -427,8 +434,9 @@ export function filterQuestions(bank, filter = {}, state = emptyState()) {
   );
 }
 export function recordAttempt(state, q, answer, correct, options = {}) {
+  if (!isScorable(q)) return false;
   const id = options.id ?? uid();
-  if (state.attempts.some((a) => a.id === id)) return false;
+  if (getAttemptIndex(state).ids.has(id)) return false;
   const at = options.at ?? Date.now();
   state.attempts.push({
     id,
@@ -513,7 +521,7 @@ export function finishExam(state, bank, exam, now = Date.now()) {
     status: "submitted",
     submittedAt: now,
     timedOut: now >= exam.endsAt,
-    score: Math.round((correct / exam.questionIds.length) * 100),
+    score: Math.round(correct / Math.max(1, exam.questionIds.filter((id) => isScorable(questions.get(id)) && questions.get(id).type !== "solution").length) * 100),
     correct,
     results,
   });
@@ -523,11 +531,10 @@ export function dayKey(at = Date.now()) {
   const d = new Date(at);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
-export function stats(state, now = Date.now()) {
-  const answered = state.attempts.filter((a) => isEffectiveAttempt(a));
-  const right = answered.filter((a) => a.correct).length;
-  const today = answered.filter((a) => dayKey(a.at) === dayKey(now));
-  const days = new Set(answered.map((a) => dayKey(a.at)));
+export function stats(state, now = Date.now(), bank = null) {
+  const index = getAttemptIndex(state, bank);
+  const today = index.days.get(dayKey(now)) ?? { total: 0, correct: 0 };
+  const days = index.days;
   let streak = 0;
   const cursor = new Date(now);
   if (!days.has(dayKey(cursor))) cursor.setDate(cursor.getDate() - 1);
@@ -536,22 +543,24 @@ export function stats(state, now = Date.now()) {
     cursor.setDate(cursor.getDate() - 1);
   }
   return {
-    total: answered.length,
-    correct: right,
-    accuracy: answered.length ? Math.round((right / answered.length) * 100) : 0,
-    today: today.length,
-    todayCorrect: today.filter((a) => a.correct).length,
+    total: index.answered.length,
+    correct: index.correct,
+    accuracy: index.answered.length ? Math.round(index.correct / index.answered.length * 100) : 0,
+    today: today.total,
+    todayCorrect: today.correct,
     streak,
-    minutes: Math.floor(
-      answered.reduce((sum, a) => sum + (Number.isFinite(a.durationMs) ? Math.max(0, a.durationMs) : 0), 0) / 60000,
-    ),
+    minutes: Math.floor(index.duration / 60000),
     activeDays: days.size,
   };
 }
-export function validateBackup(input) {
-  if (![BACKUP_FORMAT, "shijie.backup.v1"].includes(input?.format))
+export function validateBackup(input, installedBank = null) {
+  if (![BACKUP_FORMAT, "shijie.backup.v1", COMPACT_BACKUP_FORMAT, PROGRESS_BACKUP_FORMAT].includes(input?.format))
     throw new Error("这不是知行学习或 Local-NEUMathe 兼容备份文件");
-  const bank = normalizeBank(input.bank, { allowEmpty: true });
+  if (input.format === PROGRESS_BACKUP_FORMAT && (!installedBank || installedBank.managedBundle === false ||
+      !installedBank.revision || input.bankRevision !== installedBank.revision))
+    throw new Error('进度备份与当前题库版本不一致，请使用对应版本题库或完整备份');
+  const bank = normalizeBank(input.format === PROGRESS_BACKUP_FORMAT ? installedBank
+    : input.format === COMPACT_BACKUP_FORMAT ? expandBank(input.bank) : input.bank, { allowEmpty: true });
   const data = input.state;
   const record = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
   if (
@@ -660,12 +669,13 @@ export function validateBackup(input) {
     state.preparation = null;
   const scopeIds = new Set(state.preparation?.chapterIds.flatMap((id) =>
     index.chapterQuestions.get(state.preparation.subjectId).get(id).map((q) => q.id)) ?? []);
+  const eligibleDiagnosticIds = state.preparation?.diagnosticIds.filter((id) => isScorable(index.questions.get(id))) ?? [];
   const validPreparationPractice = (p) => validPractice(p) && state.preparation &&
     typeof p.id === "string" && p.preparationId === state.preparation.id && p.questionIds.length <= 20 &&
     p.questionIds.every((id) => scopeIds.has(id)) &&
     (p.mode === "prepare-diagnostic" ? p.id === state.preparation.diagnosticPracticeId &&
-      p.questionIds.length === state.preparation.diagnosticIds.length &&
-      p.questionIds.every((id, i) => id === state.preparation.diagnosticIds[i])
+      [state.preparation.diagnosticIds, eligibleDiagnosticIds].some((selected) =>
+        p.questionIds.length === selected.length && p.questionIds.every((id, i) => id === selected[i]))
       : p.mode === "prepare-training" && Number.isInteger(p.round) && p.round > 0);
   if (state.preparation?.session && !validPreparationPractice(state.preparation.session))
     state.preparation = { ...state.preparation, session: null };

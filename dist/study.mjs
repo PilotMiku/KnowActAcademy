@@ -1,13 +1,13 @@
-import { getBankIndex, isEffectiveAttempt } from "./core.mjs";
+import { getBankIndex, isEffectiveAttempt, isScorable } from "./core.mjs";
+import { getAttemptIndex } from "./attempt-index.mjs";
 
 export function learningProgress(questions, state) {
-  const scope = new Map(questions.map((q) => [q.id, q]));
+  const scope = new Map(questions.filter(isScorable).map((q) => [q.id, q]));
   const latest = new Map();
-  for (const attempt of state.attempts) {
-    const q = scope.get(attempt.questionId);
-    if (!q || !isEffectiveAttempt(attempt, q)) continue;
-    const previous = latest.get(q.id);
-    if (!previous || attempt.at >= previous.at) latest.set(q.id, attempt);
+  const index = getAttemptIndex(state);
+  for (const q of scope.values()) {
+    const attempt = (q.type === 'solution' ? index.latestResults : index.latest).get(q.id);
+    if (attempt && isEffectiveAttempt(attempt, q)) latest.set(q.id, attempt);
   }
   const total = scope.size, completed = latest.size;
   const correct = [...latest.values()].filter((a) => a.correct).length;
@@ -21,19 +21,26 @@ const intervals = [1, 3, 7, 14, 30, 60];
 
 // Rebuild from portable attempt records so normal practice, exams, backups and
 // sync all share the same schedule without a second mutable source of truth.
+const schedules = new WeakMap();
 export function spacedReview(bank, state, now = Date.now()) {
-  const questions = getBankIndex(bank).questions, schedule = new Map();
-  const attempts = state.attempts.filter((a) => questions.has(a.questionId) && isEffectiveAttempt(a, questions.get(a.questionId)))
-    .sort((a, b) => a.at - b.at);
-  for (const a of attempts) {
-    const previous = schedule.get(a.questionId);
-    // Repeating a correct answer before it is due does not skip memory stages.
-    const early = a.correct && !a.uncertain && previous && a.at < previous.dueAt;
-    const streak = a.correct && !a.uncertain ? early ? previous.streak : (previous?.streak ?? 0) + 1 : 0;
-    const intervalDays = intervals[Math.min(intervals.length - 1, Math.max(0, streak - 1))];
-    schedule.set(a.questionId, { questionId: a.questionId, streak, intervalDays, lastAt: a.at,
-      dueAt: early ? previous.dueAt : a.at + intervalDays * DAY_MS });
+  const index = getAttemptIndex(state, bank);
+  let cached = schedules.get(index);
+  if (!cached || cached.version !== index.version) {
+    const schedule = new Map();
+    const attempts = [...index.answered].sort((a, b) => a.at - b.at);
+    for (const a of attempts) {
+      const previous = schedule.get(a.questionId);
+      // Repeating a correct answer before it is due does not skip memory stages.
+      const early = a.correct && !a.uncertain && previous && a.at < previous.dueAt;
+      const streak = a.correct && !a.uncertain ? early ? previous.streak : (previous?.streak ?? 0) + 1 : 0;
+      const intervalDays = intervals[Math.min(intervals.length - 1, Math.max(0, streak - 1))];
+      schedule.set(a.questionId, { questionId: a.questionId, streak, intervalDays, lastAt: a.at,
+        dueAt: early ? previous.dueAt : a.at + intervalDays * DAY_MS });
+    }
+    cached = { version: index.version, schedule };
+    schedules.set(index, cached);
   }
+  const schedule = cached.schedule;
   const due = [...schedule.values()].filter((item) => item.dueAt <= now).sort((a, b) => a.dueAt - b.dueAt);
   const upcoming = [...schedule.values()].filter((item) => item.dueAt > now).sort((a, b) => a.dueAt - b.dueAt);
   return { schedule, due, upcoming };
@@ -63,7 +70,7 @@ export function preparationTrends(bank, state, preparationId) {
   if (!plan) return [];
   const index = getBankIndex(bank);
   const allowed = new Set(plan.chapterIds.flatMap((id) =>
-    (index.chapterQuestions.get(plan.subjectId)?.get(id) ?? []).map((q) => q.id)));
+    (index.chapterQuestions.get(plan.subjectId)?.get(id) ?? []).filter(isScorable).map((q) => q.id)));
   const groups = new Map();
   for (const a of state.attempts) {
     if (a.preparationId !== plan.id || !allowed.has(a.questionId) ||

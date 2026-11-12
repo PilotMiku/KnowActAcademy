@@ -1,11 +1,13 @@
 from concurrent.futures import ThreadPoolExecutor
 import io
+import gzip
 import json
 from pathlib import Path
 import sqlite3
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'backend'))
 from app import ProgressAPI, create_user, MAX_BODY
@@ -58,7 +60,8 @@ class BackendTests(unittest.TestCase):
                 ProgressAPI(self.db, [origin])
 
     def test_save_restore_user_isolation_and_cas(self):
-        self.assertEqual(self.request()['data'], {'version': 0, 'payload': None, 'updatedAt': None})
+        self.assertEqual(self.request()['data'], {'version': 0, 'payload': None, 'updatedAt': None,
+            'capabilities': {'gzipUpload': True, 'maxProgressBytes': 50 * 1024 * 1024}})
         self.assertEqual(self.request('PUT', version=0, payload=self.payload)['status'], 200)
         self.assertEqual(self.request()['data']['payload'], self.payload)
         self.assertEqual(self.request(token=self.other)['data']['version'], 0)
@@ -87,6 +90,22 @@ class BackendTests(unittest.TestCase):
         with sqlite3.connect(self.db) as db:
             self.assertEqual(db.execute('SELECT count(*) FROM history').fetchone()[0], 10)
         self.assertEqual(self.request()['data']['version'], 13)
+
+    def test_compressed_progress_roundtrip_and_bounded_decompression(self):
+        self.payload['state']['attempts'] = [{'questionId': 'example', 'answer': 'A', 'correct': True}] * 20000
+        raw = json.dumps(self.payload).encode()
+        compressed = gzip.compress(raw)
+        response = self.request('PUT', version=0, HTTP_CONTENT_ENCODING='gzip',
+                                CONTENT_LENGTH=str(len(compressed)), **{'wsgi.input': io.BytesIO(compressed)})
+        self.assertEqual(response['status'], 200)
+        self.assertEqual(self.request()['data']['payload'], self.payload)
+        for bad in [compressed[:-4], b'not gzip', compressed + b'trailing']:
+            self.assertEqual(self.request('PUT', version=1, HTTP_CONTENT_ENCODING='gzip',
+                CONTENT_LENGTH=str(len(bad)), **{'wsgi.input': io.BytesIO(bad)})['status'], 400)
+        with patch('app.MAX_PROGRESS', 1024):
+            self.assertEqual(self.request('PUT', version=1, HTTP_CONTENT_ENCODING='gzip',
+                CONTENT_LENGTH=str(len(compressed)), **{'wsgi.input': io.BytesIO(compressed)})['status'], 413)
+        self.assertEqual(self.request()['data']['version'], 1)
 
 
 if __name__ == '__main__':

@@ -1,4 +1,17 @@
 export const PROGRESS_FORMAT = 'zhixing.progress.v1';
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+export const MAX_PROGRESS_BYTES = 50 * 1024 * 1024;
+
+export async function encodeProgress(payload, { gzip = true } = {}) {
+  const text = JSON.stringify(payload), bytes = new Blob([text]);
+  if (bytes.size > MAX_PROGRESS_BYTES) throw new Error('学习进度超过 50 MiB，请导出备份并整理历史记录');
+  if (gzip && bytes.size > 512 * 1024 && typeof CompressionStream === 'function') {
+    const body = await new Response(bytes.stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+    if (body.byteLength <= MAX_UPLOAD_BYTES) return { body, headers: { 'Content-Encoding': 'gzip' } };
+  }
+  if (bytes.size > MAX_UPLOAD_BYTES) throw new Error('学习进度超过服务器上传上限，请使用支持压缩的浏览器或导出备份');
+  return { body: text, headers: {} };
+}
 
 export function apiEndpoint(value) {
   const url = new URL(value);
@@ -21,7 +34,7 @@ export function validateRemote(value) {
 }
 
 export function createSyncClient(fetcher = fetch) {
-  let base = '', token = '', version = null, busy = false;
+  let base = '', token = '', version = null, busy = false, gzipUpload = false;
   async function exclusive(operation) {
     if (busy) throw new Error('同步正在进行，请稍候');
     busy = true;
@@ -56,6 +69,7 @@ export function createSyncClient(fetcher = fetch) {
         if (!/^[A-Za-z0-9_-]{43}$/.test(secret)) throw new Error('同步密钥格式不正确');
         const remote = validateRemote(await request(candidate, secret));
         base = candidate; token = secret; version = remote.version;
+        gzipUpload = remote.capabilities?.gzipUpload === true;
         return remote;
       });
     },
@@ -64,15 +78,17 @@ export function createSyncClient(fetcher = fetch) {
         if (version === null) throw new Error('请先连接同步服务器');
         const remote = validateRemote(await request(base, token));
         version = remote.version;
+        gzipUpload = remote.capabilities?.gzipUpload === true;
         return remote;
       });
     },
     async upload(payload) {
       return exclusive(async () => {
         if (version === null) throw new Error('请先连接同步服务器');
+        const encoded = await encodeProgress(payload, { gzip: gzipUpload });
         const result = await request(base, token, {
-          method: 'PUT', headers: { 'Content-Type': 'application/json', 'If-Match': String(version) },
-          body: JSON.stringify(payload),
+          method: 'PUT', headers: { 'Content-Type': 'application/json', 'If-Match': String(version), ...encoded.headers },
+          body: encoded.body,
         });
         if (!Number.isSafeInteger(result.version) || result.version !== version + 1)
           throw new Error('服务器同步版本不正确，请重新连接核对');
@@ -82,7 +98,7 @@ export function createSyncClient(fetcher = fetch) {
     },
     disconnect() {
       if (busy) throw new Error('同步正在进行，请稍候');
-      base = ''; token = ''; version = null;
+      base = ''; token = ''; version = null; gzipUpload = false;
     },
   };
 }

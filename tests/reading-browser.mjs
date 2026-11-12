@@ -51,7 +51,7 @@ try {
     savedPosition = await page.evaluate(async id => {
       const { storageName } = await import('./assets.mjs');
       return new Promise(resolve => {
-        const request = indexedDB.open(storageName, 1);
+        const request = indexedDB.open(storageName);
         request.onsuccess = () => {
           const db = request.result, tx = db.transaction('kv');
           const value = tx.objectStore('kv').get('state');

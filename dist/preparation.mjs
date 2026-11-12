@@ -1,4 +1,4 @@
-import { createPractice, getBankIndex, hasResponse, shuffle, uid } from "./core.mjs";
+import { createPractice, getBankIndex, hasResponse, isScorable, shuffle, uid } from "./core.mjs";
 import { getConceptIndex } from "./concepts.mjs";
 import { spacedReview, reviewWeight } from "./study.mjs";
 import { readinessForecast } from "./forecast.mjs";
@@ -12,7 +12,7 @@ export function preparationQuestions(bank, { subjectId, chapterIds = [] }) {
   const index = getBankIndex(bank);
   const ids = new Set(chapterIds.flatMap((id) =>
     (index.chapterQuestions.get(subjectId)?.get(id) ?? []).map((q) => q.id)));
-  return (index.subjectQuestions.get(subjectId) ?? []).filter((q) => ids.has(q.id));
+  return (index.subjectQuestions.get(subjectId) ?? []).filter((q) => ids.has(q.id) && isScorable(q));
 }
 
 export function createPreparation(bank, scope, random = Math.random) {
@@ -29,14 +29,15 @@ export function createPreparation(bank, scope, random = Math.random) {
   return { preparation, practice };
 }
 
-export function diagnosticProgress(state) {
+export function diagnosticProgress(state, bank = null) {
   const prep = state.preparation;
   if (!prep) return { completed: 0, total: 0, ready: false };
   const answered = new Set(state.attempts.filter((a) =>
     a.preparationId === prep.id && a.mode === "prepare-diagnostic" && typeof a.correct === "boolean")
     .map((a) => a.questionId));
-  const completed = prep.diagnosticIds.filter((id) => answered.has(id)).length;
-  return { completed, total: prep.diagnosticIds.length, ready: completed === prep.diagnosticIds.length };
+  const ids = prep.diagnosticIds.filter((id) => !bank || isScorable(getBankIndex(bank).questions.get(id)));
+  const completed = ids.filter((id) => answered.has(id)).length;
+  return { completed, total: ids.length, ready: completed === ids.length };
 }
 
 export function currentPreparationPractice(state) {
@@ -45,16 +46,16 @@ export function currentPreparationPractice(state) {
   return state.practice?.preparationId === prep.id ? state.practice : prep.session ?? null;
 }
 
-export function restoreDiagnostic(state) {
+export function restoreDiagnostic(state, bank = null) {
   const prep = state.preparation;
   if (!prep) throw new Error("请先开始备考测评");
-  const practice = createPractice(prep.diagnosticIds, "prepare-diagnostic");
+  const practice = createPractice(prep.diagnosticIds.filter((id) => !bank || isScorable(getBankIndex(bank).questions.get(id))), "prepare-diagnostic");
   Object.assign(practice, { id: prep.diagnosticPracticeId, preparationId: prep.id, startedAt: prep.startedAt });
   for (const a of state.attempts) {
     if (a.preparationId === prep.id && a.mode === "prepare-diagnostic" && prep.diagnosticIds.includes(a.questionId))
       practice.responses[a.questionId] = { answer: a.answer, correct: a.correct, uncertain: !!a.uncertain, graded: typeof a.correct === "boolean" };
   }
-  practice.index = Math.max(0, prep.diagnosticIds.findIndex((id) => !practice.responses[id]?.graded));
+  practice.index = Math.max(0, practice.questionIds.findIndex((id) => !practice.responses[id]?.graded));
   return practice;
 }
 
@@ -141,7 +142,7 @@ export function preparationMetrics(bank, state) {
   const active = currentPreparationPractice(state);
   const trainingScore = mastery.covered ? Math.round(expected / mastery.total * 1000) / 10 : null;
   return { ...mastery, ...readinessForecast(mastery.pool, mastery.questions, state, state.preparation, trainingScore),
-    round: active ? practiceProgress(active) : { completed: 0, total: 0, correct: 0, ready: false } };
+    round: active ? practiceProgress(active, bank) : { completed: 0, total: 0, correct: 0, ready: false } };
 }
 
 export function preparationProfile(bank, state, now = Date.now()) {
@@ -201,7 +202,7 @@ export function trainingCount(bank, preparation) {
 }
 
 export function createTraining(bank, state, random = Math.random) {
-  if (!diagnosticProgress(state).ready) throw new Error("请先完成本次测评的所有题目；解答题需完成自评");
+  if (!diagnosticProgress(state, bank).ready) throw new Error("请先完成本次测评的所有题目；解答题需完成自评");
   const { questions, weights } = preparationProfile(bank, state);
   const mastery = preparationMastery(bank, state);
   const count = trainingCount(bank, state.preparation);
@@ -220,9 +221,10 @@ export function createTraining(bank, state, random = Math.random) {
   return practice;
 }
 
-export function practiceProgress(practice) {
-  const results = practice.questionIds.map((id) => practice.responses[id])
+export function practiceProgress(practice, bank = null) {
+  const ids = practice.questionIds.filter((id) => !bank || isScorable(getBankIndex(bank).questions.get(id)));
+  const results = ids.map((id) => practice.responses[id])
     .filter((r) => r?.graded && typeof r.correct === "boolean");
   return { completed: results.length, correct: results.filter((r) => r.correct).length,
-    total: practice.questionIds.length, ready: results.length === practice.questionIds.length };
+    total: ids.length, ready: results.length === ids.length };
 }

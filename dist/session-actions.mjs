@@ -1,4 +1,4 @@
-import { shuffle, filterQuestions } from "./core.mjs";
+import { shuffle, filterQuestions, isScorable, getBankIndex } from "./core.mjs";
 import { preparationQuestions, createPreparation, diagnosticProgress, restoreDiagnostic,
   createTraining, practiceProgress, currentPreparationPractice } from "./preparation.mjs";
 import { practicePool, balancedSample, collectionQueue, collectionPageSlice, reviewBatchSize } from "./study-planning.mjs";
@@ -66,21 +66,21 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
         if (!state.preparation) return true;
         if (state.practice?.preparationId !== state.preparation.id) {
           const saved = currentPreparationPractice(state);
-          if (!saved && diagnosticProgress(state).ready) {
+          if (!saved && diagnosticProgress(state, bank).ready) {
             go("/prepare");
             return true;
           }
-          state.practice = saved ? structuredClone(saved) : restoreDiagnostic(state);
+          state.practice = saved ? structuredClone(saved) : restoreDiagnostic(state, bank);
           state.practice.questionStartedAt = null;
           await persist();
         }
-        go("/prepare?session=1" + (practiceProgress(state.practice).ready ? "&summary=1" : ""));
+        go("/prepare?session=1" + (practiceProgress(state.practice, bank).ready ? "&summary=1" : ""));
         break;
       }
       case "complete-preparation": {
         const p = state.practice;
         pausePracticeQuestion(p);
-        const i = p.questionIds.findIndex((id) => typeof p.responses[id]?.correct !== "boolean");
+        const i = p.questionIds.findIndex((id) => isScorable(getBankIndex(bank).questions.get(id)) && typeof p.responses[id]?.correct !== "boolean");
         p.index = Math.max(0, i);
         p.questionStartedAt = null;
         await persist();
@@ -89,7 +89,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
       }
       case "next-training": {
         const active = currentPreparationPractice(state);
-        if (active && !practiceProgress(active).ready) {
+        if (active && !practiceProgress(active, bank).ready) {
           toast("请先完成本组题目，解答题需完成自评");
           return true;
         }

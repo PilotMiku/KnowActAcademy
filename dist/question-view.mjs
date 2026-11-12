@@ -1,4 +1,7 @@
+import { isScorable } from "./core.mjs";
+
 export function feedbackHTML(q, response, { mode = "practice", mastery = null, mistake = null }, { icon, attr, button }) {
+  if (!isScorable(q)) return `<section class="result-box"><div class="result-label">仅供查阅 · 本题不计分</div><div class="answer-line">原资料标注答案（待核实）：<span data-rich="${attr(Array.isArray(q.answer) ? q.answer.join("、") : q.answer)}"></span></div><div class="analysis"><b>原资料解析</b><div class="rich" data-rich="${attr(q.analysis)}"></div></div><div class="result-footer"></div></section>`;
   const preparing = ["prepare-diagnostic", "prepare-training"].includes(mode);
   const label = response.correct === null ? "对照参考答案，自评掌握情况"
     : response.correct ? mode === "exam" ? response.uncertain ? "本题答对，但标记为拿不准" : "本题回答正确" : preparing ? response.uncertain ? "这次答对但不确定，继续巩固" : mastery?.mastered ? "连续答对两次，已掌握" : "这次答对了，再巩固一次"
@@ -6,7 +9,7 @@ export function feedbackHTML(q, response, { mode = "practice", mastery = null, m
   return `<section class="result-box ${response.correct === false ? "wrong" : ""}"><div class="result-label">${icon(response.correct === false ? "mistake" : response.correct === null ? "info" : "check", 16)} ${label}</div><div class="answer-line">参考答案：<span class="rich" data-rich="${attr(Array.isArray(q.answer) ? q.answer.join(q.type === "multiple" ? "、" : " / ") : q.answer)}"></span></div><div class="analysis"><b>思路与解析</b><div class="rich" data-rich="${attr(q.analysis || "这道题的原 PDF 未附解析，请查看原 PDF 核对。")}"></div></div><div class="result-footer">${q.type === "solution" && response.correct === null ? `<div class="flex self-grade-actions" style="margin-top:18px">${button(preparing ? "本次答对" : "我掌握了", "self-grade", 'data-correct="true"', "btn small")}${button(preparing ? "本次答错" : "还需练习", "self-grade", 'data-correct="false"', "btn small soft")}</div>` : ""}${!preparing && mistake && !mistake.resolved ? `<div style="margin-top:14px">${button(`${icon("check", 12)} 标记已掌握`, "resolve-mistake", `data-id="${attr(q.id)}"`, "text-btn")}</div>` : ""}</div></section>`;
 }
 
-export function patchPracticeAnswer({ root, question: q, practice, response, feedback, status, questionStatus, renderRich }) {
+export function patchPracticeAnswer({ root, question: q, practice, response, feedback, status, questionStatus, progress, renderRich }) {
   const main = root.querySelector(".question-main");
   if (main?.dataset.practiceId !== practice.id || main.dataset.questionId !== q.id) return false;
   const answers = new Set(Array.isArray(q.answer) ? q.answer : [String(q.answer)]);
@@ -14,7 +17,7 @@ export function patchPracticeAnswer({ root, question: q, practice, response, fee
   for (const option of main.querySelectorAll(".option")) {
     option.disabled = true;
     option.classList.remove("selected", "correct", "wrong");
-    if (answers.has(option.dataset.value)) option.classList.add("correct");
+    if (isScorable(q) && answers.has(option.dataset.value)) option.classList.add("correct");
     else if (selected.has(option.dataset.value) && response.correct === false) option.classList.add("wrong");
   }
   const uncertainty = root.querySelector(".uncertain-control");
@@ -34,11 +37,12 @@ export function patchPracticeAnswer({ root, question: q, practice, response, fee
   }
   main.querySelector('[data-action="submit-answer"]')?.remove();
   main.querySelector('[data-action="next-question"]')?.classList.add("primary");
-  const completed = practice.questionIds.filter((id) => typeof practice.responses[id]?.correct === "boolean").length;
+  const completed = progress?.completed ?? practice.questionIds.filter((id) => typeof practice.responses[id]?.correct === "boolean").length;
+  const total = progress?.total ?? practice.questionIds.length;
   const nav = root.querySelector(".question-nav");
   if (nav) {
-    nav.querySelector(".card-head .muted").textContent = `${completed}/${practice.questionIds.length}`;
-    nav.querySelector(".progress-bar>span").style.width = `${completed / practice.questionIds.length * 100}%`;
+    nav.querySelector(".card-head .muted").textContent = `${completed}/${total}`;
+    nav.querySelector(".progress-bar>span").style.width = `${total ? completed / total * 100 : 0}%`;
     const current = nav.querySelector(".index-btn.current");
     current?.classList.remove("correct", "wrong", "answered");
     current?.classList.add(response.correct === true ? "correct" : response.correct === false ? "wrong" : "answered");

@@ -13,6 +13,7 @@ import fitz
 from PIL import Image, ImageDraw
 from study_sources import verify_sources
 from source_archives import verify_source
+from pack_figures import pack_figures
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -80,6 +81,9 @@ def build(workers=4):
     if staging.exists():
         shutil.rmtree(staging)
     shutil.copytree(ROOT / 'dist', staging, ignore=shutil.ignore_patterns('.DS_Store', 'Thumbs.db'))
+    packed = pack_figures(ROOT / 'dist/question-figures', staging, bank)
+    for path in (staging / 'question-figures').glob('*.json'):
+        path.unlink()
     jobs = []
     referenced = set()
     for question in bank['questions']:
@@ -128,8 +132,8 @@ def build(workers=4):
               'knowledgeRevision': knowledge['revision'], 'questions': len(bank['questions']),
               'images': image_count, 'documents': len(index['documents']),
               'sourcePDFsIncluded': not native,
-              'figures': sum(len(json.loads(p.read_text()).get('figures', {})) for p in (staging / 'question-figures').glob('*.json')) + len(list((staging / 'question-figures').glob('*.webp'))),
-              'figureChunks': len(list((staging / 'question-figures').glob('*.json'))),
+              **packed,
+              'figures': packed['figures'] + len(list((staging / 'question-figures').glob('*.webp'))),
               'knowledgeSources': len(registry['sources']), 'bytes': total,
               'bankSha256': sha256(ROOT / 'dist/data/bank.json'),
               'knowledgeSha256': sha256(ROOT / 'dist/data/knowledge.json')}

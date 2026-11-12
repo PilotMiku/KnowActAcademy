@@ -13,20 +13,7 @@ const bank = normalizeBank(JSON.parse(await readFile('dist/data/bank.json', 'utf
 const browser = await chromium.launch(browserOptions);
 const errors = [];
 async function stateOf(page) {
-  return page.evaluate(async () => {
-    const { storageName } = await import('./assets.mjs');
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(storageName, 1);
-      request.onsuccess = () => {
-        const db = request.result;
-        const tx = db.transaction('kv');
-        const value = tx.objectStore('kv').get('state');
-        tx.oncomplete = () => { db.close(); resolve(value.result); };
-        tx.onerror = () => reject(tx.error);
-      };
-      request.onerror = () => reject(request.error);
-    });
-  });
+  return page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
 }
 async function connect(page) {
   await page.goto(baseURL + '/#/library');

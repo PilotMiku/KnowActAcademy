@@ -256,7 +256,7 @@ try {
       state.practice = createPractice([oldId]);
       state.exams = [createExam([oldId], 30, "calculus")];
       const database = await new Promise((resolve, reject) => {
-        const r = indexedDB.open("zhixing-study:" + new URL("./", location.href).pathname, 1);
+        const r = indexedDB.open("zhixing-study:" + new URL("./", location.href).pathname);
         r.onsuccess = () => resolve(r.result);
         r.onerror = () => reject(r.error);
       });
@@ -277,22 +277,7 @@ try {
     await upgradePage.locator(".local-stat-strip b").first().innerText(),
     bank.questions.length.toLocaleString("en-US"),
   );
-  const stored = await upgradePage.evaluate(
-    () =>
-      new Promise((resolve, reject) => {
-        const r = indexedDB.open("zhixing-study:" + new URL("./", location.href).pathname, 1);
-        r.onsuccess = () => {
-          const tx = r.result.transaction("kv");
-          const b = tx.objectStore("kv").get("bank"),
-            s = tx.objectStore("kv").get("state");
-          tx.oncomplete = () => {
-            resolve({ bank: b.result, state: s.result });
-            r.result.close();
-          };
-          tx.onerror = () => reject(tx.error);
-        };
-      }),
-  );
+  const stored = await upgradePage.evaluate(async () => (await import('./storage.mjs')).readSavedData());
   assert.equal(stored.bank.revision, bank.revision);
   assert.equal(stored.state.attempts[0].id, "kept-attempt");
   assert.deepEqual(stored.state.favorites, [oldId]);

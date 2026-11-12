@@ -22,7 +22,7 @@ def verify():
     knowledge = json.loads((ROOT / 'data/knowledge-sources.json').read_text())
     report = json.loads((site / 'build-manifest.json').read_text())
     for source in (ROOT / 'dist').rglob('*'):
-        if source.is_file() and source.name not in {'.DS_Store', 'Thumbs.db'}:
+        if source.is_file() and source.name not in {'.DS_Store', 'Thumbs.db'} and not (source.parent.name == 'question-figures' and source.suffix == '.json'):
             assert source.read_bytes() == (site / source.relative_to(ROOT / 'dist')).read_bytes(), source
     expected = set()
     for question in bank['questions']:
@@ -54,24 +54,34 @@ def verify():
     assert figure_refs == figures, f'题目插图缺失或多余：{figure_refs ^ figures}'
     for figure in figures:
         with Image.open(site / figure) as bitmap:bitmap.verify()
-    chunk_figures = {}
-    for path in (site / 'question-figures').glob('*.json'):
-        if '-' in path.stem:assert hashlib.sha256(path.read_bytes()).hexdigest()[:16] == path.stem.split('-')[1]
+    original_figures = {}
+    for path in (ROOT / 'dist/question-figures').glob('*.json'):
+        original_figures.update(json.loads(path.read_text())['figures'])
+    chunk_figures, pack_members = {}, {}
+    for path in (site / 'figure-packs').glob('*.json'):
+        assert hashlib.sha256(path.read_bytes()).hexdigest()[:16] == path.stem
         chunk = json.loads(path.read_text())
         assert chunk['format'] == 'zhixing.figure-chunk.v1'
+        pack_members[path.stem] = chunk['figures']
         for fid, source in chunk['figures'].items():
-            assert re.fullmatch(r'[a-f0-9]{24}', fid) and fid.startswith(path.stem.split('-')[0])
-            assert source.startswith('data:image/webp;base64,')
-            assert fid not in chunk_figures
+            assert re.fullmatch(r'[a-f0-9]{24}', fid)
+            assert source.startswith('data:image/webp;base64,') and fid not in chunk_figures
+            assert source == original_figures[fid], '插图内容发生变化：' + fid
             chunk_figures[fid] = source
-    expected_figures = set()
+    expected_figures, indexes = set(), {}
     for question in bank['questions']:
         content = question['stem'] + question['analysis'] + ''.join(o['text'] for o in question['options'])
         for version, fid in re.findall(r'/api/question-figure/([a-f0-9]{16})/([a-f0-9]{24})', content):
             expected_figures.add(fid)
-            chunk_path = site / 'question-figures' / f'{fid[:2]}-{version}.json'
-            assert chunk_path.is_file()
+            name = f'{fid[:2]}-{version}'
+            if name not in indexes:
+                data = json.loads((site / 'figure-index' / (name + '.json')).read_text())
+                assert data['format'] == 'zhixing.figure-index.v1'
+                indexes[name] = data['packs']
+            assert fid in pack_members[indexes[name][fid]]
     assert expected_figures == set(chunk_figures), '原题公式插图缺失或多余'
+    assert report['figureChunks'] == len(pack_members)
+    assert set().union(*(set(entries) for entries in indexes.values())) == expected_figures
     for fid, source in chunk_figures.items():
         with Image.open(io.BytesIO(base64.b64decode(source.split(',', 1)[1], validate=True))) as bitmap:bitmap.verify()
     assert report.get('figures', 0) == len(figures) + len(chunk_figures)
