@@ -3,6 +3,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from source_archives import load_archives
 
 SUPPORTED = {'.pdf', '.md', '.docx', '.txt'}
 
@@ -90,7 +91,8 @@ def source_report(root):
             raise ValueError('学习资料路径越界：' + source['path'])
         if source['path'] in actual and hashlib.sha256(path.read_bytes()).hexdigest() != source['sha256']:
             changed.append(source['path'])
-    missing = registered - set(actual)
+    archives = load_archives(root)
+    missing = registered - set(actual) - set(archives)
     if metadata.get('materialsSha256') and not materials.exists():
         missing.add('data/study-materials.json')
     return {'unregistered': sorted(set(actual) - registered),

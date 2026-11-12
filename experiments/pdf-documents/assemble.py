@@ -9,9 +9,11 @@ import json
 from pathlib import Path
 import re
 import unicodedata
+import sys
 from latex_normalization import normalize as normalize_latex
 
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'scripts'))
 CACHE=ROOT/'.cache/pdf-transcription'
 SUPPLEMENT=ROOT/'.cache/supplement-transcription'
 OUTPUT=ROOT/'artifacts/pdf-transcription'

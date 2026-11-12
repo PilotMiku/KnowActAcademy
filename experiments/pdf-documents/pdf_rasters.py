@@ -7,6 +7,7 @@ from pathlib import Path
 import fitz
 from PIL import Image
 from glyphs import ROOT,CACHE
+from extract import local_source_path
 
 
 def pixels(image):
@@ -25,7 +26,7 @@ def main():
     links=[];docs={};fingerprints={};matches=0
     for item in data['figures']:
         qid=item['questionId'];did=next(d['documentId'] for d in data['documents'] if any(q['id']==qid for q in d['questions']))
-        if did not in docs:docs[did]=fitz.open(ROOT/sources[did]['path'])
+        if did not in docs:docs[did]=fitz.open(local_source_path(ROOT,sources[did]['path']))
         doc=docs[did];page=doc[item['page']-1]
         candidates=[image for image in page.get_image_info(xrefs=True)
                     if max(abs(a-b) for a,b in zip(image['bbox'],item['bbox']))<.001]

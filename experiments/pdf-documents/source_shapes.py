@@ -7,7 +7,7 @@ import statistics
 import re
 
 import fitz
-from extract import dark, within
+from extract import dark, within, local_source_path
 from glyphs import GlyphMatcher, CACHE, ROOT
 
 LABEL_FILE=CACHE/'verified-glyph-labels.json'
@@ -163,7 +163,7 @@ def extract_shapes():
     with output.open('w', encoding='utf-8') as stream:
         for docno, document in enumerate(extraction['documents'], 1):
             did = document['documentId']
-            with fitz.open(ROOT / document['source']['path']) as pdf:
+            with fitz.open(local_source_path(ROOT, document['source']['path'])) as pdf:
                 for pi, formulas in groups[did].items():
                     drawings = [d for d in pdf[pi].get_drawings() if dark(d)]
                     for formula, location in formulas:

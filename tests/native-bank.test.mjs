@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 import test from 'node:test';
 import vm from 'node:vm';
 import {normalizeBank} from '../dist/core.mjs';
@@ -8,6 +8,20 @@ const read=name=>JSON.parse(readFileSync(new URL(name,import.meta.url),'utf8'));
 const bank=read('../dist/data/bank.json');
 const original=read('../data/pdf-source-bank.json');
 const manifest=read('../dist/data/manifest.json');
+const archives=read('../data/archived-math-sources.json');
+
+test('removed math originals resolve to immutable historical sources',()=>{
+  const byPath=new Map(archives.sources.map(s=>[s.path,s]));
+  assert.equal(byPath.size,319);
+  for(const source of archives.sources){
+    assert.equal(existsSync(new URL('../'+source.path,import.meta.url)),false,source.path);
+    assert.match(source.commit,/^[a-f0-9]{40}$/);
+  }
+  for(const q of bank.questions){
+    const archived=byPath.get(q.source.file);assert.ok(archived,q.id);
+    assert.ok(q.source.url.includes('/blob/'+archived.commit+'/'),q.id);
+  }
+});
 
 test('unified bank retains original identities, answer keys and section references',()=>{
   const normalized=normalizeBank(bank), questions=new Map(normalized.questions.map(q=>[q.id,q]));
@@ -30,7 +44,7 @@ test('unified bank retains original identities, answer keys and section referenc
       assert.match(q.stem,/原始资料有缺损/);
       assert.equal(q.answerVerified,false);
     }
-    assert.match(q.source.url,/^https:\/\/github\.com\/PilotMiku\/KnowActAcademy\/blob\/main\//);
+    assert.match(q.source.url,/^https:\/\/github\.com\/PilotMiku\/KnowActAcademy\/blob\/[a-f0-9]{40}\//);
     assert.doesNotMatch([q.stem,q.analysis,...q.options.map(o=>o.text)].join(''),/api\/question-image\//);
   }
 });

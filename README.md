@@ -16,7 +16,7 @@
 
 知行学习是基于 NEUMathe 修改与适配的在线学习网站，汇集高等数学、线性代数题库与习概、编程等学习资料，将练习、备考、复习和阅读整合在一起。
 
-内置 **3,716 道题目**，覆盖 **14 个章节、137 个小节**，提供原题、答案与解析。打开即学，无需登录；学习记录自动保存在浏览器，也可通过完整备份或自建服务同步进度。
+内置 **8,425 道题目**，覆盖 **17 个章节、182 个小节**，提供题目、答案与解析。部分转写仍待校对，相关内容已标注。打开即学，无需登录；学习记录自动保存在浏览器，也可通过完整备份或自建服务同步进度。
 
 ![知行学习网站预览：学习概览、每日目标、复习安排与章节入口](docs/images/preview.png)
 
@@ -38,7 +38,8 @@
 ```text
 知行学习/
 ├── dist/             # 前端源码、样式、图标与题库数据
-├── question-bank/    # 原始题库与学习资料
+├── question-bank/    # 网站仍在使用的学习资料
+├── question-bank-markdown/ # 全量文字与 LaTeX 分章稿、逐题压缩包
 ├── data/             # 资料目录、题图索引与提取记录
 ├── scripts/          # 资料索引、静态构建与资源校验
 ├── backend/          # 可选的学习进度同步服务
@@ -47,4 +48,17 @@
 ├── .github/          # GitHub Pages 构建与部署配置
 ├── _site/            # 构建生成的静态网站（不入库）
 └── server.py         # 本地预览服务
+```
+
+## 题库文档与原件
+
+[查看 Markdown 题库](question-bank-markdown/) · [下载全部逐题 Markdown](question-bank-markdown/逐题Markdown.zip)
+
+137 份数学 PDF 和 182 份图片型补充 HTML 已从当前分支移除，共约 276 MiB。原件保留在[转换后的历史提交](https://github.com/PilotMiku/KnowActAcademy/tree/276c33298d98f896b31daf7d73607977bffd666a/question-bank)，题目的来源链接固定指向该提交；SHA-256 与文件清单见 [归档登记](data/archived-math-sources.json)。网站需要的公式、图形以及学习资料继续保留，普通构建不需要下载历史原件。
+
+继续校对或重跑 OCR 时，可将原件恢复到被 Git 忽略的本地缓存：
+
+```sh
+git fetch origin 276c33298d98f896b31daf7d73607977bffd666a
+python scripts/source_archives.py --restore-local
 ```

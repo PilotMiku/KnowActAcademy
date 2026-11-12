@@ -14,9 +14,42 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from check_bank import scan_sources, print_report, has_issues
 from index_knowledge import build_knowledge
 from study_sources import load_materials, source_report
+from source_archives import load_archives, local_source_path, source_url, verify_source
 
 
 class StudySourceTests(unittest.TestCase):
+    def test_archived_math_sources_keep_pinned_links_and_verified_local_recovery(self):
+        build_knowledge(self.root)
+        name='question-bank/补充/题目.html';payload=b'<p>original question</p>'
+        source=self.root/name;source.parent.mkdir();source.write_bytes(payload)
+        digest=hashlib.sha256(payload).hexdigest();commit='a'*40
+        (self.root/'data/supplement-sources.json').write_text(json.dumps({'format':'zhixing.supplement-sources.v1','sources':[{'path':name,'sha256':digest}]}))
+        entry={'path':name,'sha256':digest,'bytes':len(payload),'commit':commit}
+        manifest=self.root/'data/archived-math-sources.json'
+        manifest.write_text(json.dumps({'format':'zhixing.archived-math-sources.v1','sources':[entry]}))
+        source.unlink()
+        self.assertFalse(any(source_report(self.root).values()))
+        verify_source(self.root,name,digest)
+        self.assertIn('/blob/'+commit+'/',source_url(self.root,name))
+        with self.assertRaises(FileNotFoundError):local_source_path(self.root,name)
+        cached=self.root/'.cache/source-archives'/commit/name;cached.parent.mkdir(parents=True);cached.write_bytes(payload)
+        self.assertEqual(local_source_path(self.root,name),cached)
+        cached.write_bytes(b'corrupt')
+        with self.assertRaises(FileNotFoundError):local_source_path(self.root,name)
+        source.write_bytes(b'changed original')
+        with self.assertRaisesRegex(ValueError,'校验失败'):verify_source(self.root,name,digest)
+        entry['sha256']='b'*64
+        manifest.write_text(json.dumps({'format':'zhixing.archived-math-sources.v1','sources':[entry]}))
+        with self.assertRaisesRegex(ValueError,'归档登记无效'):load_archives(self.root)
+
+    def test_math_archive_cannot_hide_a_missing_reading_document(self):
+        build_knowledge(self.root)
+        source=self.root/'question-bank/习概/第一章/note.pdf'
+        entry={'path':source.relative_to(self.root).as_posix(),'sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'bytes':source.stat().st_size,'commit':'a'*40}
+        (self.root/'data/archived-math-sources.json').write_text(json.dumps({'format':'zhixing.archived-math-sources.v1','sources':[entry]}))
+        source.unlink()
+        with self.assertRaisesRegex(ValueError,'归档登记无效'):source_report(self.root)
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)

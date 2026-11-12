@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from source_archives import verify_source
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -40,14 +41,13 @@ if __name__ == '__main__':
         raise SystemExit('原项目内容发生变化：' + ', '.join(errors))
     for name, expected in snapshot.items():
         if name.startswith('question-bank/') and Path(name).name != '.DS_Store':
-            if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != expected:
-                raise SystemExit('原始资料内容不一致：' + name)
+            verify_source(ROOT,name,expected)
     for name in ['dist/data/knowledge.json', 'data/knowledge-sources.json']:
         if (ROOT / name).read_bytes() != (args.original / name).read_bytes():
             raise SystemExit('知识资料内容不一致：' + name)
     try:
         compare_questions(json.loads((args.original / 'dist/data/bank.json').read_text()),
-                          json.loads((ROOT / 'dist/data/bank.json').read_text()))
+                          json.loads((ROOT / 'data/pdf-source-bank.json' if (ROOT / 'data/pdf-source-bank.json').exists() else ROOT / 'dist/data/bank.json').read_text()))
         compare_regions(json.loads((args.original / 'data/render-index.json').read_text()),
                         json.loads((ROOT / 'data/render-index.json').read_text()))
     except ValueError as error:

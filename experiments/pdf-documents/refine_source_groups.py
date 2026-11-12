@@ -1,6 +1,7 @@
 """Recover exact drawing groups when bounding rectangles overlap other math."""
 from collections import defaultdict
 import json
+from extract import local_source_path
 import fitz
 
 from extract import page_events,within
@@ -26,7 +27,7 @@ def main():
     for record in affected:groups[record['location']['documentId']].append(record)
     matcher=GlyphMatcher();fixed=unresolved=0;changed={}
     for did,records in groups.items():
-        with fitz.open(ROOT/index['documents'][did]['path']) as pdf:
+        with fitz.open(local_source_path(ROOT,index['documents'][did]['path'])) as pdf:
             pages={};parts={}
             for record in records:
                 loc=record['location'];qid=loc['questionId'];part=loc['part'];key=(qid,part)

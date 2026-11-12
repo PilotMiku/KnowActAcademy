@@ -23,6 +23,7 @@ import fitz
 import numpy as np
 from PIL import Image,ImageDraw
 from assemble import ROOT,CACHE,SUPPLEMENT,Resolver,ordered_lines,jsonl,read
+from source_archives import load_archives, source_url
 
 OUT=ROOT/'artifacts/pdf-transcription'
 CHECKED={'source-contours-checked','independent-reading-checked','source-raster-brackets-checked','manually-reviewed'}
@@ -59,6 +60,7 @@ class Figures:
 
 class SiteBank:
     def __init__(self):
+        self.archives=load_archives(ROOT)
         self.resolver=Resolver();self.figures=Figures();self.counts=Counter();self.question_report={}
         self.source=read(CACHE/'extraction.json');self.originals={q['id']:q for d in self.source['documents'] for q in d['questions']}
         self.segments={}
@@ -202,8 +204,7 @@ class SiteBank:
                 errata.append({'questionId':q['id'],'part':'option-A','before':old,'after':q['options'][0]['text'],
                                'reason':'由 m=1/[3(ξ−1)^(2/3)] 解出 ξ=1+1/√(27m³)，原选项漏倒数及系数。'})
             original_source=q['source'];original_source['format']='html' if original_source['file'].endswith('.html') else 'pdf'
-            original_source['url']='https://github.com/PilotMiku/KnowActAcademy/blob/main/'+quote(original_source['file'],safe='/')
-            if original_source['format']=='pdf':original_source['url']+='#page='+str(original_source.get('page',1))
+            original_source['url']=source_url(ROOT,original_source['file'],original_source.get('page',1) if original_source['format']=='pdf' else None,self.archives)
             q['searchText']=re.sub(r'<[^>]+>',' ',q['sourceLabel']+' '+q['stem'])
             self.question_report[q['id']]={key:value-before[key] for key,value in self.counts.items() if value!=before[key]}
         bank['contentMode']='native';bank['transcriptionDraft']=False;bank['managedBundle']=True

@@ -5,11 +5,15 @@ import pathlib
 import re
 
 import fitz
+from source_archives import load_archives
 
 
 def load_inventory(root):
     root = pathlib.Path(root).resolve()
     catalog = json.loads((root / 'data/catalog.json').read_text())
+    archives = load_archives(root)
+    saved_path = root / 'data/pdf-inventory.json'
+    saved = {r['path']: r for r in json.loads(saved_path.read_text())} if saved_path.exists() else {}
     inventory, paths, subject_ids, chapter_ids, document_ids = [], set(), set(), set(), set()
     for subject in catalog['subjects']:
         if subject['id'] in subject_ids:
@@ -36,6 +40,15 @@ def load_inventory(root):
                 if document_id in document_ids:
                     raise ValueError('Duplicate document ID: ' + document_id)
                 document_ids.add(document_id)
+                archived = archives.get(relative.as_posix())
+                if archived and not path.exists():
+                    record = saved.get(relative.as_posix())
+                    if (not record or record['id'] != document_id or record['sha256'] != archived['sha256']
+                            or record['bytes'] != archived['bytes'] or record['subjectId'] != subject['id']
+                            or record['parentId'] != chapter['id']):
+                        raise ValueError('Archived PDF metadata does not match catalog: ' + str(relative))
+                    inventory.append({k:v for k,v in record.items() if k!='revision'})
+                    continue
                 with fitz.open(path) as document:
                     match = re.search(r'共\s*(\d+)\s*道题', document[0].get_text())
                     if not match:

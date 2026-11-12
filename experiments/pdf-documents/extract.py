@@ -9,11 +9,14 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import sys
 
 import fitz
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'scripts'))
+from source_archives import local_source_path
 CACHE = ROOT / '.cache/pdf-transcription'
 
 
@@ -171,7 +174,7 @@ def extract(limit=None):
     for docno, (did, source) in enumerate(index['documents'].items(), 1):
         if limit and docno > limit:
             break
-        data = (ROOT / source['path']).read_bytes()
+        data = local_source_path(ROOT, source['path']).read_bytes()
         if hashlib.sha256(data).hexdigest() != source['sha256']:
             raise ValueError('PDF checksum mismatch: ' + source['path'])
         with fitz.open(stream=data, filetype='pdf') as document:

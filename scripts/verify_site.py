@@ -9,6 +9,7 @@ from urllib.parse import urlsplit
 
 from PIL import Image
 from study_sources import verify_sources
+from source_archives import load_archives, source_url
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,7 +22,7 @@ def verify():
     knowledge = json.loads((ROOT / 'data/knowledge-sources.json').read_text())
     report = json.loads((site / 'build-manifest.json').read_text())
     for source in (ROOT / 'dist').rglob('*'):
-        if source.is_file():
+        if source.is_file() and source.name not in {'.DS_Store', 'Thumbs.db'}:
             assert source.read_bytes() == (site / source.relative_to(ROOT / 'dist')).read_bytes(), source
     expected = set()
     for question in bank['questions']:
@@ -41,6 +42,10 @@ def verify():
     else:
         assert not (site / 'source-pdf').exists()
         assert all(q['source']['url'].startswith('https://github.com/PilotMiku/KnowActAcademy/blob/') for q in bank['questions'])
+        archives=load_archives(ROOT)
+        for q in bank['questions']:
+            source=q['source']
+            assert source['url']==source_url(ROOT,source['file'],source.get('page',1) if source['format']=='pdf' else None,archives)
     figure_refs = set()
     for question in bank['questions']:
         content = question['stem'] + question['analysis'] + ''.join(o['text'] for o in question['options'])
@@ -76,7 +81,7 @@ def verify():
     assert report['questions'] == len(bank['questions'])
     assert not (site / 'backend').exists()
     assert not list(site.rglob('*.sqlite3'))
-    pdf_location = '随站点发布' if report.get('sourcePDFsIncluded', True) else '保留在仓库，通过来源链接查看'
+    pdf_location = '随站点发布' if report.get('sourcePDFsIncluded', True) else '通过固定的历史来源链接查看'
     print(f"静态校验通过：{len(bank['questions'])} 道题，{len(chunk_figures) + len(figures)} 张共享插图，"
           f"{len(actual)} 张旧版题图；{len(index['documents'])} 份数学 PDF {pdf_location}，"
           f"{len(knowledge['sources'])} 份知识资料。")

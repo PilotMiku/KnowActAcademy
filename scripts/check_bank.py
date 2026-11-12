@@ -8,6 +8,7 @@ import re
 
 import fitz
 from study_sources import source_report, source_files, load_materials
+from source_archives import load_archives
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -31,7 +32,9 @@ def scan_sources(root=ROOT):
     registered = {d['path']: (s['id'], c['id']) for s in catalog['subjects']
                   for c in s['chapters'] for d in c['documents']}
     inventory = root / 'data/pdf-inventory.json'
-    hashes = {d['path']: d['sha256'] for d in json.loads(inventory.read_text())} if inventory.exists() else {}
+    saved = {d['path']: d for d in json.loads(inventory.read_text())} if inventory.exists() else {}
+    hashes = {name:d['sha256'] for name,d in saved.items()}
+    archives = load_archives(root)
     study_registry = root / 'data/knowledge-sources.json'
     study_sources = json.loads(study_registry.read_text())['sources'] if study_registry.exists() else []
     study_paths = {s['path'] for s in study_sources}
@@ -59,6 +62,13 @@ def scan_sources(root=ROOT):
         except Exception as error:
             row['error'] = str(error)
         result.append(row)
+    for name,entry in archives.items():
+        if name not in registered or (root/name).exists():continue
+        record=saved[name]
+        result.append({'path':name,'registered':True,'subjectId':registered[name][0],
+                       'chapterId':registered[name][1],'suggestedChapterId':None,'archived':True,
+                       'pages':record['pages'],'questions':record['expectedQuestions'],
+                       'sha256':entry['sha256'],'changed':False})
     found = {r['path'] for r in result}
     return {'files': result, 'missing': sorted(set(registered) - found),
             'new': sum(not r['registered'] for r in result),
@@ -114,6 +124,8 @@ def print_report(report, verbose=False):
     types = report['studyTypes']
     labels = {'pdf': 'PDF', 'md': 'Markdown', 'docx': 'Word', 'txt': 'TXT'}
     print(f"数学题库：{len(report['files'])} 份 PDF、{report['questions']} 题；待登记 {report['new']} 份，更改 {report['changed']} 份。")
+    archived=sum(r.get('archived',False) for r in report['files'])
+    if archived:print(f'其中 {archived} 份数学 PDF 已从当前分支移除，来源可通过固定的历史提交查看。')
     print(f"学习资料：{sum(types.values())} 份已索引原文件（" + '、'.join(f'{labels.get(k, k)} {v}' for k, v in sorted(types.items())) + '）。')
     print('检查未通过，请按以上提示处理。' if has_issues(report) else '检查通过，全部原始资料已登记且与索引一致。')
 

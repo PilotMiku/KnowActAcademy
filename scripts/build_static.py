@@ -12,6 +12,7 @@ import shutil
 import fitz
 from PIL import Image, ImageDraw
 from study_sources import verify_sources
+from source_archives import verify_source
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -73,13 +74,12 @@ def build(workers=4):
         raise ValueError('题目索引不完整')
     sources = list(index['documents'].values()) + registry['sources']
     for source in sources:
-        if sha256(ROOT / source['path']) != source['sha256']:
-            raise ValueError(f"原始资料校验失败：{source['path']}")
+        verify_source(ROOT, source['path'], source['sha256'])
     cache = ROOT / '.cache' / f"{index['revision']}-raster-v2"
     staging = ROOT / '.build'
     if staging.exists():
         shutil.rmtree(staging)
-    shutil.copytree(ROOT / 'dist', staging)
+    shutil.copytree(ROOT / 'dist', staging, ignore=shutil.ignore_patterns('.DS_Store', 'Thumbs.db'))
     jobs = []
     referenced = set()
     for question in bank['questions']:

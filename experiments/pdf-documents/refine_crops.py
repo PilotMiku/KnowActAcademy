@@ -11,7 +11,7 @@ import statistics
 import fitz
 import numpy as np
 from PIL import Image
-from extract import normalize_crop
+from extract import normalize_crop, local_source_path
 from glyphs import CACHE,ROOT
 
 
@@ -34,7 +34,7 @@ def main():
                 did=location['documentId'];pi=location['page']-1
                 if did!=current:
                     if pdf:pdf.close()
-                    pdf=fitz.open(ROOT/sources[did]['path']);current=did;pages={}
+                    pdf=fitz.open(local_source_path(ROOT,sources[did]['path']));current=did;pages={}
                 if pi not in pages:
                     pix=pdf[pi].get_pixmap(matrix=fitz.Matrix(4,4),colorspace=fitz.csGRAY)
                     pages[pi]=Image.frombytes('L',(pix.width,pix.height),pix.samples)

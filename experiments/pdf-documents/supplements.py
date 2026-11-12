@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 
 from PIL import Image
+from extract import local_source_path
 
 ROOT=Path(__file__).resolve().parents[2]
 CACHE=ROOT/'.cache/supplement-transcription'
@@ -41,14 +42,18 @@ def inventory():
     CACHE.mkdir(parents=True,exist_ok=True)
     images=CACHE/'images';images.mkdir(exist_ok=True)
     files=[];questions=[];issues=[];image_metadata={}
-    for directory in sorted((ROOT/'question-bank').iterdir()):
-        if not directory.is_dir() or '补充' not in directory.name:continue
+    registry=ROOT/'data/supplement-sources.json'
+    registered=[r['path'] for r in json.loads(registry.read_text())['sources']] if registry.exists() else []
+    directories=set((ROOT/'question-bank').iterdir())|{(ROOT/path).parent for path in registered}
+    for directory in sorted(directories):
+        if '补充' not in directory.name:continue
         subject='calculus' if '高数' in directory.name else 'linear'
-        for source in sorted(directory.glob('*.html')):
+        sources={p.relative_to(ROOT).as_posix():p for p in directory.glob('*.html')}
+        sources.update({name:local_source_path(ROOT,name) for name in registered if (ROOT/name).parent==directory})
+        for relative,source in sorted(sources.items()):
             data=source.read_bytes();parser=ExportParser();parser.feed(data.decode('utf-8-sig'))
             match=re.search(r'\((\d+)题\)',source.stem)
             expected=int(match[1]) if match else None
-            relative=source.relative_to(ROOT).as_posix()
             fid='sup-'+hashlib.sha256(relative.encode()).hexdigest()[:12]
             section=re.sub(r'\(\d+题\)$','',source.stem).strip()
             metadata={'id':fid,'path':relative,'sha256':hashlib.sha256(data).hexdigest(),

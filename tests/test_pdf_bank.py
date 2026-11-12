@@ -5,14 +5,20 @@ import shutil
 import sys
 import tempfile
 import unittest
+import fitz
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from catalog import load_inventory
 from check_bank import scan_sources
+from source_archives import load_archives, verify_source
 
 
 class PdfBankTests(unittest.TestCase):
+    def make_source(self,path,count=39):
+        with fitz.open() as pdf:
+            page=pdf.new_page();page.insert_text((72,72),f'共 {count} 道题',fontname='china-s');pdf.save(path)
+
     @classmethod
     def setUpClass(cls):
         baseline = ROOT / 'data/pdf-source-bank.json'
@@ -37,6 +43,11 @@ class PdfBankTests(unittest.TestCase):
         self.assertEqual(len(originals), 132)
         actual = {r['path']: r['sha256'] for r in inventory}
         self.assertTrue(all(actual.get(p) == digest for p, digest in originals.items()))
+        archives=load_archives(ROOT)
+        for record in inventory:
+            verify_source(ROOT,record['path'],record['sha256'])
+            self.assertIn(record['path'],archives)
+            self.assertFalse((ROOT/record['path']).exists())
 
     def test_intake_reports_pending_registration_without_modifying_sources(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -44,15 +55,15 @@ class PdfBankTests(unittest.TestCase):
             (root / 'data').mkdir()
             directory = root / 'question-bank/线性代数'
             directory.mkdir(parents=True)
-            source = ROOT / 'question-bank/线性代数/线性空间.pdf'
-            target = directory / source.name
-            shutil.copyfile(source, target)
+            target = directory / '线性空间.pdf'
+            self.make_source(target)
+            before=target.read_bytes()
             (root / 'data/catalog.json').write_text('{"subjects": []}')
             report = scan_sources(root)
             self.assertEqual(report['new'], 1)
             self.assertEqual(report['questions'], 39)
             self.assertEqual(report['files'][0]['suggestedChapterId'], 'linear-chapter-7')
-            self.assertEqual(target.read_bytes(), source.read_bytes())
+            self.assertEqual(target.read_bytes(), before)
 
     def test_document_id_and_checksum_survive_a_file_move(self):
         catalog = json.loads((ROOT / 'data/catalog.json').read_text())
@@ -60,7 +71,7 @@ class PdfBankTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary)
             (root / 'data').mkdir()
-            shutil.copyfile(ROOT / source['path'], root / 'before.pdf')
+            self.make_source(root / 'before.pdf')
             document = {**source, 'path': 'before.pdf'}
             fixture = {'subjects': [{'id': 'test', 'name': '测试', 'chapters': [
                 {'id': 'chapter', 'name': '章节', 'documents': [document]}]}]}
