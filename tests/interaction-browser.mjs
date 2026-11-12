@@ -9,6 +9,13 @@ async function storedState(page) {
   return page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
 }
 async function rememberQuestion(page) {
+  // An empty image list also passes every(). Wait for the real question before
+  // taking references, especially while a lazy content request is still pending.
+  await page.waitForFunction(() => {
+    const question = document.querySelector('.question-main');
+    return question && [...question.querySelectorAll('img')].every(image =>
+      !image.dataset.figureLoading && image.complete && image.naturalWidth > 0);
+  });
   await page.evaluate(() => {
     window.stableQuestion = {
       main: document.querySelector("#main"),
@@ -20,7 +27,8 @@ async function rememberQuestion(page) {
 async function assertQuestionRetained(page) {
   assert.ok(await page.evaluate(() => {
     const stable = window.stableQuestion;
-    return stable.main === document.querySelector("#main") &&
+    return stable.question?.isConnected &&
+      stable.main === document.querySelector("#main") &&
       stable.question === document.querySelector(".question-main") &&
       stable.images.every((image) => image.isConnected);
   }), "Interaction must retain the current question and images");
@@ -29,10 +37,19 @@ async function assertQuestionRetained(page) {
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1060 } });
   page.on("pageerror", (error) => errors.push(error.message));
+  let releaseContent;
+  const contentGate = new Promise(resolve => { releaseContent = resolve; });
+  await page.route('**/question-content/*.json', async route => {
+    await contentGate;
+    await route.continue();
+  });
   await page.goto(`${baseURL}/#/practice?subject=calculus&chapter=s-6b82188494c1`);
   await page.getByRole("button", { name: /顺序练习/ }).click();
-  await page.waitForFunction(() => [...document.querySelectorAll(".rich img")].every((i) => !i.dataset.figureLoading && i.complete && i.naturalWidth > 0));
-  await rememberQuestion(page);
+  const questionSnapshot = rememberQuestion(page);
+  await page.getByRole('status').filter({ hasText: '正在加载题目' }).waitFor();
+  releaseContent();
+  await questionSnapshot;
+  await page.unroute('**/question-content/*.json');
   await page.locator(".index-btn.current").click();
   await assertQuestionRetained(page);
   const answer = page.locator('[data-action="answer-option"][data-value="B"]');
