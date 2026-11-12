@@ -90,7 +90,7 @@ export async function enterStudy(shell, navigate) {
   shell.dataset.leaving = "true";
   shell.inert = true;
   try {
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches && shell.animate) {
+    if (document.documentElement.dataset.motion !== 'reduced' && !matchMedia("(prefers-reduced-motion: reduce)").matches && shell.animate) {
       exit.animation = shell.animate(
         [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0, transform: "translateY(-6px)" }],
         { duration: 180, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" },

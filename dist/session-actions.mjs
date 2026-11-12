@@ -11,7 +11,7 @@ const actions = new Set(["start-practice", "prepare-select-all", "prepare-select
 
 // Own practice/preparation transitions; persistence and navigation stay explicit.
 export function createSessionActions({ getBank, getState, getFilters, route, subject,
-  startPractice, persist, go, toast, render, isPreparationPractice, preparationSelection,
+  startPractice, persist, go, toast, render, returnToPractice, isPreparationPractice, preparationSelection,
   updatePreparationSelection, showConceptDetails, currentQuestion, currentExam,
   updateSelectedOptions, updateExamProgress, tickExam, submitPractice, openDialog, defaultCount }) {
   return async (action, el) => {
@@ -116,7 +116,8 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
         go(isPreparationPractice() ? "/prepare?session=1" : "/practice?session=1");
         break;
       case "exit-practice":
-        go(isPreparationPractice() ? "/prepare" : state.practice?.mode === "spaced" ? "/spaced" : "/practice");
+        if (!isPreparationPractice() && state.practice?.mode !== "spaced" && returnToPractice) returnToPractice();
+        else go(isPreparationPractice() ? "/prepare" : state.practice?.mode === "spaced" ? "/spaced" : "/practice");
         break;
       case "answer-option": {
         const q = currentQuestion(),

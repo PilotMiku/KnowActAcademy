@@ -1,4 +1,4 @@
-import { chromium, browserOptions, baseURL } from "./browser-helpers.mjs";
+import { chromium, browserOptions, baseURL, revealPreparationOptions } from "./browser-helpers.mjs";
 import { readFile, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { fixture } from "./fixture.mjs";
@@ -48,6 +48,7 @@ try {
   await page.getByRole("button", { name: "确认导入", exact: true }).click();
   await page.locator(".local-hero").waitFor();
   await page.goto(`${baseURL}/#/prepare`);
+  await revealPreparationOptions(page);
   await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.locator(".question-main").waitFor();
@@ -73,6 +74,7 @@ try {
   assert.equal(completed.attempts.length, 12);
 
   await page.goto(`${baseURL}/#/prepare`);
+  await revealPreparationOptions(page);
   await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.locator(".question-main").waitFor();

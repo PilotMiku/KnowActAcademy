@@ -67,7 +67,7 @@ try {
   await page.locator('.option[data-value="B"][aria-pressed="true"]').waitFor();
   assert.ok(await page.locator("body").evaluate((el) => el.classList.contains("dark")));
   await page.getByRole("button", { name: "确认答案", exact: true }).click();
-  await page.getByText("这道题，掌握了", { exact: false }).waitFor();
+  await page.getByText("本次答对了，记得继续巩固", { exact: false }).waitFor();
 
   // Reduced motion also disables scripted smooth scrolling and modal effects.
   await page.emulateMedia({ reducedMotion: "reduce" });

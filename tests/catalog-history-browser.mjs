@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile, writeFile } from 'node:fs/promises';
-import { chromium, browserOptions, baseURL } from './browser-helpers.mjs';
+import { chromium, browserOptions, baseURL, revealPracticeOptions } from './browser-helpers.mjs';
 
 const browser = await chromium.launch(browserOptions), report = {}, errors = [];
 try {
@@ -48,8 +48,11 @@ try {
   assert.ok(!requests.some(url => url.endsWith('/data/bank.json') || url.includes('/question-content/')));
   const data = await page.evaluate(async () => (await import('./storage.mjs')).readSavedData());
   assert.ok(data.bank.contentCatalog);
+  await revealPracticeOptions(page);
   assert.match(await page.locator('.practice-start .question-count-note').innerText(), /PDF 3,716 题、补充 4,709 题/);
+  await page.locator('.practice-options > summary').click();
   const recount = JSON.parse(await readFile('data/question-counts.json', 'utf8'));
+  await page.locator('.practice-view-switch a').filter({ hasText: '章节目录' }).click();
   for (const subject of recount.subjects) for (const chapter of subject.chapters.filter(c => !c.parentId)) {
     const card = page.locator('.chapter-card').filter({ has: page.locator(`a.chapter-title[href="#/practice?subject=${subject.id}&chapter=${chapter.id}"]`) });
     assert.equal(await card.locator('.pill').innerText(), `${chapter.counts.total} 题`);
@@ -60,6 +63,7 @@ try {
   await page.screenshot({ path: 'artifacts/question-counts-mobile-dark.png', fullPage: true });
   await page.setViewportSize({ width: 1280, height: 900 });
   report.siteAndChapterCounts = true;
+  await page.locator('.practice-view-switch a').filter({ hasText: '题目列表' }).click();
   await page.locator('[data-action="practice-one"]').first().click();
   await page.locator('.question-title .katex').first().waitFor();
   assert.equal(requests.filter(url => url.includes('/question-content/')).length, 1);

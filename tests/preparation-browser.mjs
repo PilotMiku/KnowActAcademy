@@ -1,4 +1,4 @@
-import { chromium, browserOptions, baseURL } from "./browser-helpers.mjs";
+import { chromium, browserOptions, baseURL, revealPracticeOptions, revealPreparationOptions } from "./browser-helpers.mjs";
 import { readFile, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { normalizeBank, filterQuestions } from "../dist/core.mjs";
@@ -44,6 +44,7 @@ try {
   await page.locator(".question-main").waitFor();
   assert.equal((await stateOf(page)).practice.questionIds.length, 25);
   await page.goto(randomURL);
+  await revealPracticeOptions(page);
   await page.locator("#random-count").selectOption("all");
   await page.getByRole("button", { name: /随机所有题目/ }).click();
   await page.locator(".question-main").waitFor();
@@ -74,7 +75,8 @@ try {
   assert.match(await page.locator("#prepare-availability").innerText(), new RegExp(`共 ${pool.length} 道`));
   await page.reload();
   await page.locator("#prepare-subject").waitFor();
-  assert.equal(await page.locator("[data-prepare-chapter]:checked").count(), 2);
+  assert.equal(await page.locator("[data-prepare-chapter]:checked:not(:disabled)").count(), 2);
+  await revealPreparationOptions(page);
   await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.getByRole("heading", { name: "备考测评", exact: true }).waitFor();
@@ -163,6 +165,7 @@ try {
   await page.goto(`${baseURL}/#/prepare`);
   await page.locator("#prepare-subject").waitFor();
   assert.match(await page.locator("#prepare-availability").innerText(), /不足 20 题/);
+  await revealPreparationOptions(page);
   await page.locator("#prepare-round-policy").selectOption("fixed");
   await page.locator('[data-action="begin-preparation"]').click();
   await page.locator(".question-main").waitFor();

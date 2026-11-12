@@ -1,4 +1,4 @@
-import { chromium, browserOptions, baseURL } from "./browser-helpers.mjs";
+import { chromium, browserOptions, baseURL, revealPracticeOptions } from "./browser-helpers.mjs";
 import assert from "node:assert/strict";
 import { writeFile } from "node:fs/promises";
 import { fixture } from "./fixture.mjs";
@@ -10,6 +10,15 @@ raw.questions.push({ ...raw.questions[0], id: "extra-q", chapterId: "extra" });
 raw.questions.push({ ...raw.questions[0], id: "other-q", subjectId: "other" });
 const browser = await chromium.launch(browserOptions), errors = [];
 async function expectProgress(page, { completion, accuracy, count }, within = ".learning-progress") {
+  const details = page.locator('.practice-progress');
+  const preparationDetails = page.locator('.preparation-progress');
+  if (within.startsWith('#prepare-learning-progress')) {
+    await preparationDetails.waitFor({ state: 'attached' });
+    if (!await preparationDetails.evaluate(el => el.open)) await preparationDetails.locator(':scope > summary').click();
+  }
+  if (within === '.learning-progress') await details.waitFor({ state: 'attached' });
+  if (await details.count() && !await details.evaluate(el => el.open))
+    await details.locator(':scope > summary').click();
   const card = page.locator(within);
   await card.locator("[data-progress-count]").filter({ hasText: count }).waitFor();
   assert.equal(await card.locator("[data-progress-completion]").innerText(), completion);
@@ -26,7 +35,7 @@ try {
   const practiceURL = `${baseURL}/#/practice?subject=math&chapter=root`;
   await page.goto(practiceURL);
   await expectProgress(page, { completion: "0%", accuracy: "—", count: "已完成 0 / 6 题" });
-  assert.ok(await page.locator(".filter-bar").evaluate((el) => el.nextElementSibling.classList.contains("learning-progress")));
+  assert.ok(await page.locator(".filter-bar").evaluate((el) => !!el.closest('.practice-start')));
   await page.getByRole("button", { name: /顺序练习/ }).click();
   await page.locator('[data-action="answer-option"][data-value="A"]').click();
   await page.locator('[data-action="submit-answer"]').click();
@@ -37,6 +46,7 @@ try {
   await page.locator(".result-box").waitFor();
   await page.goto(practiceURL);
   await expectProgress(page, { completion: "33.33%", accuracy: "50%", count: "已完成 2 / 6 题" });
+  await revealPracticeOptions(page);
   await page.locator("#type-filter").selectOption("multiple");
   await expectProgress(page, { completion: "100%", accuracy: "100%", count: "已完成 1 / 1 题" });
   await page.goto(practiceURL);
@@ -60,6 +70,7 @@ try {
   await page.locator("#subject-filter").selectOption("other");
   await expectProgress(page, { completion: "0%", accuracy: "—", count: "已完成 0 / 1 题" });
   await page.goto(practiceURL);
+  await revealPracticeOptions(page);
   await page.locator("#question-search").fill("不存在的关键词");
   await page.locator("#question-search").dispatchEvent("change");
   await expectProgress(page, { completion: "0%", accuracy: "—", count: "已完成 0 / 0 题" });
@@ -67,6 +78,8 @@ try {
   await page.goto(`${baseURL}/#/prepare?subject=math&scope=custom&chapter=root`);
   const within = "#prepare-learning-progress .learning-progress";
   await expectProgress(page, { completion: "50%", accuracy: "66.67%", count: "已完成 3 / 6 题" }, within);
+  await page.locator('[data-prepare-chapter][value="root"]').uncheck();
+  await page.locator('.preparation-scope-group').first().locator('details > summary').click();
   const child = page.locator('[data-prepare-chapter][value="limits"]');
   await child.check();
   await expectProgress(page, { completion: "50%", accuracy: "66.67%", count: "已完成 3 / 6 题" }, within);

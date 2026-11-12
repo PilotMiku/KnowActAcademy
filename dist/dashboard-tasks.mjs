@@ -35,7 +35,7 @@ export function dailyTasksHTML(bank, state, ui) {
     const progress = tasks.practice.progress;
     items.push(`<article><strong>上次练习还没完成</strong><p>已完成 ${progress.completed} / ${progress.total} 题，继续保留原顺序</p>${button("继续章节练习", "resume-practice", "", tasks.exam || tasks.preparation ? "btn" : "btn primary")}</article>`);
   }
-  items.push(`<article><strong>${tasks.due ? `待复习 ${tasks.due} 题` : "到期复习已安排"}</strong><p>${tasks.due ? "先巩固快忘记的题，再练新题" : "做过的题会按复习间隔回到这里"}</p>${tasks.due ? button("复习到期题", "start-spaced", "", items.length ? "btn" : "btn primary") : '<a class="btn" href="#/spaced">查看复习安排</a>'}</article>`);
+  items.push(`<article><strong>${tasks.due ? `待复习 ${tasks.due} 题` : "暂无到期复习"}</strong><p>${tasks.due ? "先巩固快忘记的题，再练新题" : "做过的题会按复习间隔回到这里"}</p>${tasks.due ? button("复习到期题", "start-spaced", "", items.length ? "btn" : "btn primary") : '<a class="btn" href="#/spaced">查看复习安排</a>'}</article>`);
   if (!tasks.exam && !tasks.preparation && (!tasks.practice || tasks.practice.progress.ready))
     items.unshift('<article><strong>开始今天的练习</strong><p>选择章节，或围绕薄弱项开展备考训练</p><a class="btn primary" href="#/practice">选择今天的练习</a></article>');
   return `<section class="card daily-tasks" aria-label="今日学习安排"><div class="daily-task-head"><div><span class="pill blue">今天接着学</span><h2>${tasks.remaining ? `距离今日目标还差 ${tasks.remaining} 题` : "今天的学习目标已完成"}</h2><p>今日有效作答 ${tasks.completed} 题次 · 目标 ${tasks.goal} 题</p></div>${button("调整每日目标", "goal", "", "btn small")}</div><div class="progress-bar" role="progressbar" aria-label="每日目标题量" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><span style="width:${percent}%"></span></div><div class="daily-task-items">${items.join("")}</div></section>`;

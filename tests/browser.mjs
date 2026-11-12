@@ -1,4 +1,4 @@
-import { chromium, browserOptions, baseURL } from "./browser-helpers.mjs";
+import { chromium, browserOptions, baseURL, revealPracticeOptions } from "./browser-helpers.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { fixture } from "./fixture.mjs";
@@ -49,15 +49,15 @@ try {
   await page.locator(".question-title .katex").first().waitFor();
   await page.locator('[data-action="answer-option"][data-value="A"]').click();
   await page.getByRole("button", { name: "确认答案", exact: true }).click();
-  await page.getByText("没关系，把思路再理一遍").waitFor();
+  await page.getByText("本次答错了，把思路再理一遍").waitFor();
   await page.getByRole("button", { name: "收藏题目", exact: true }).click();
   await page.getByRole("button", { name: "下一题", exact: false }).click();
   await page.locator('[data-action="answer-option"][data-value="A"]').click();
   await page.locator('[data-action="answer-option"][data-value="B"]').click();
   await page.getByRole("button", { name: "确认答案", exact: true }).click();
-  await page.getByText("这道题，掌握了").waitFor();
+  await page.getByText("本次答对了，记得继续巩固").waitFor();
   await page.reload();
-  await page.getByText("这道题，掌握了").waitFor();
+  await page.getByText("本次答对了，记得继续巩固").waitFor();
   await page.screenshot({
     path: "artifacts/qa-synthetic-practice-desktop.png",
     fullPage: true,
@@ -160,6 +160,7 @@ try {
     "5", // The unanswered timed-out exam does not count as completed work.
   );
   await page.locator('.local-nav a[href="#/practice"]').click();
+  await revealPracticeOptions(page);
   await page.locator("#question-search").fill("安全排版");
   await page.locator("#question-search").dispatchEvent("change");
   await page.waitForURL(/q=/);

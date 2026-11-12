@@ -1,0 +1,150 @@
+/* Learning flow: keep the next action near the scope it acts on. */
+[hidden] { display:none !important; }
+.practice-setup.practice-start { display:block; margin-top:0; padding:24px; }
+.practice-filters { padding:0; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.practice-scope-summary { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:18px 0 14px; }
+.practice-scope-summary strong { font-size:15px; }
+.practice-scope-summary span { font-size:13px; color:var(--muted); }
+.practice-primary-actions { display:flex; gap:12px; }
+.practice-primary-actions .btn { min-height:44px; }
+.practice-options { margin-top:18px; border-top:1px solid var(--line); }
+.practice-options > summary { padding:14px 0 0; cursor:pointer; color:var(--blue); font-size:13px; min-height:40px; }
+.practice-options-body { padding-top:18px; }
+.practice-advanced-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.practice-options .practice-extra-controls { margin:18px 0; }
+.practice-options .question-count-note { margin-top:14px; }
+.practice-progress { margin:16px 0; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+.practice-progress > summary { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; padding:16px 20px; cursor:pointer; font-size:13px; }
+.practice-progress > summary > span:last-child { color:var(--muted); }
+.practice-progress > summary > span:first-child { display:flex; align-items:center; gap:6px; }
+.practice-progress[open] > summary svg { transform:rotate(90deg); }
+.practice-progress .learning-progress { margin:0; border:0; box-shadow:none; }
+.practice-view-switch { display:flex; align-items:center; gap:6px; margin:20px 0 0; border-bottom:1px solid var(--line); }
+.practice-view-switch a { display:flex; gap:5px; align-items:center; justify-content:center; padding:12px 15px; font-size:14px; min-height:44px; border-bottom:2px solid transparent; }
+.practice-view-switch a[aria-current] { color:var(--blue); border-color:var(--blue); font-weight:600; }
+.practice-view-switch .practice-prepare-link { margin-left:auto; color:var(--muted); font-size:12px; }
+@media(max-width:600px) {
+  .practice-setup.practice-start { padding:18px; }
+  .practice-primary-actions .btn { flex:1; padding:10px 8px; font-size:13px; }
+  .practice-progress > summary { padding:14px 16px; font-size:12px; }
+  .practice-view-switch a { padding:10px; font-size:13px; }
+  .practice-view-switch .practice-prepare-link { padding-right:0; font-size:12px; }
+}
+
+/* Guided entry and a compact dashboard heading. */
+.learning-guide { padding:24px; margin-bottom:22px; }
+.guide-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.guide-heading h2 { margin:12px 0 18px; font-size:24px; }
+.guide-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.guide-options > a { display:flex; flex-direction:column; align-items:flex-start; gap:12px; padding:20px; border:1px solid var(--line); border-radius:14px; }
+.guide-options > a:hover { background:var(--blue-light); }
+.guide-options svg,.guide-options > a > span { color:var(--blue); }
+.guide-options strong { font-size:17px; }
+.guide-options p { color:var(--muted); font-size:14px; }
+.guide-options > a > span { margin-top:auto; font-size:14px; }
+.learning-guide > .format-note { margin-top:18px; }
+.local-hero.dashboard-heading { min-height:0; padding:10px 0 22px; display:flex; justify-content:space-between; gap:16px; }
+.dashboard-heading h1 { font-size:25px; margin:0 0 6px; letter-spacing:normal; }
+
+/* Show exactly what a checked chapter includes. */
+.preparation-launch { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:18px 0; padding:16px; border-radius:12px; background:var(--blue-light); }
+.preparation-launch #prepare-availability { margin:0; font-size:14px; }
+.preparation-launch .btn { flex-shrink:0; }
+.preparation-chapters .scope-help { margin:12px 0; color:var(--muted); font-size:13px; }
+.preparation-chapter-options { display:block; max-height:320px; overflow-y:auto; overscroll-behavior:contain; scrollbar-gutter:stable; }
+.preparation-scope-group { padding:5px 0; border-bottom:1px solid var(--line); }
+.preparation-scope-group:last-child { border:0; }
+.preparation-scope-group label { display:flex; flex-wrap:wrap; gap:8px; align-items:center; min-height:44px; padding:10px; }
+.preparation-scope-group label > span:first-of-type { flex:1; min-width:0; }
+.preparation-scope-group label small { white-space:nowrap; font-size:12px; }
+.preparation-scope-group .scope-selection { flex-basis:100%; padding-left:24px; font-size:12px; color:var(--muted); }
+.preparation-scope-group details > summary { padding:10px 12px; min-height:44px; font-size:13px; color:var(--blue); cursor:pointer; }
+.preparation-scope-group details > summary span { margin-left:8px; color:var(--muted); }
+.preparation-scope-children { border-left:2px solid var(--line); margin-left:16px; }
+.preparation-scope-children label:has(input:disabled) { color:var(--muted); background:var(--side); }
+.preparation-progress,.preparation-options { margin-top:14px; border-top:1px solid var(--line); }
+.preparation-progress > summary,.preparation-options > summary { padding:14px 0; min-height:44px; cursor:pointer; font-size:14px; }
+.preparation-options > .field { margin-top:12px; }
+.preparation-setup .learning-progress { margin:0; }
+
+/* Readable labels and forgiving touch targets. Dark colors remain in theme.css. */
+:root { --muted:#596377; --green:#08794f; --blue:#005bc6; --accent:#005bc6; --motion-press:120ms; --motion-panel:200ms; }
+.format-note,.source-info,.pdf-reading-note,.chapter-description,.section-list small,
+.chapter-title > span,.eyebrow,.local-stat-strip small,.collection-meta,
+.shortcut-hint,.navigator-note,.footer,.page-head .eyebrow { font-size:12px; line-height:1.7; }
+.practice-start p { font-size:13px; }
+.page-head .subtitle,.field > label,.field > span { font-size:14px; }
+.btn,.btn.small,.icon-btn,.text-btn { min-height:44px; }
+.btn.small { font-size:13px; }
+.icon-btn { min-width:44px; }
+.text-btn { display:inline-flex; align-items:center; gap:5px; }
+.chapter-link,.chapter-card summary,.section-list > a { min-height:44px; align-items:center; }
+.chapter-link,.chapter-card summary { font-size:14px; }
+.section-list > a { font-size:13px; }
+.chapter-title h3 { line-height:1.55; }
+.pill,.chapter-card-head .pill { font-size:12px; }
+.muted[style*="font-size:10px"],.muted[style*="font-size:11px"] { font-size:12px !important; }
+.library-card [style*="font-size:9px"],.exam-card .subtitle { font-size:12px !important; }
+.question-index .index-btn { min-height:40px; max-height:none; }
+.save-indicator { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:20px; font-size:12px; color:var(--muted); }
+.save-indicator[data-failed="true"] { color:var(--ink); font-weight:600; }
+
+@media(max-width:600px) {
+  .guide-options { grid-template-columns:minmax(0,1fr); }
+  .learning-guide { padding:18px; }
+  .guide-options > a { padding:16px; gap:8px; }
+  .guide-heading h2 { font-size:22px; }
+  .preparation-setup { padding:18px; }
+  .preparation-launch { flex-direction:column; align-items:stretch; gap:10px; padding:12px; }
+  .preparation-launch .btn { width:100%; }
+  .preparation-chapter-options { max-height:260px; }
+  .field select,.input { font-size:16px; }
+  .local-header-actions { gap:2px; }
+  .local-header-actions .icon-btn { min-width:40px; width:40px; }
+  .local-brand { gap:7px; }
+  .chapter-title h3 { font-size:16px; }
+  .section-list > a { font-size:14px; }
+  .practice-scope-summary { gap:6px; }
+  .practice-view-switch .practice-prepare-link { font-size:13px; }
+  .practice-view-switch a { padding:10px 8px; }
+  .practice-progress > summary { font-size:13px; }
+  .question-nav .question-index { grid-template-columns:repeat(6,minmax(0,1fr)); }
+}
+@media(max-width:420px) {
+  .chapter-grid,.knowledge-grid { grid-template-columns:minmax(0,1fr); }
+}
+
+/* A single action area stays reachable while a long question is read. */
+@media(max-width:600px) {
+  body[data-study-activity="question"] .local-main { padding-top:14px; padding-bottom:110px; }
+  body[data-study-activity="question"] .page-head { flex-direction:row; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  body[data-study-activity="question"] .page-head h1 { font-size:20px; }
+  body[data-study-activity="question"] .page-head .eyebrow { display:none; }
+  body[data-study-activity="question"] .page-head .subtitle { font-size:13px; }
+  body[data-study-activity="question"] .page-head > .btn { min-height:40px; padding:8px 10px; font-size:13px; }
+  .question-toolbar { gap:6px; margin:8px 0 14px; flex-wrap:wrap; }
+  .question-toolbar .btn { min-height:40px; padding:8px; font-size:12px; }
+  body[data-study-activity="question"] .question-top { margin-bottom:10px; }
+  body[data-study-activity="question"] .question-main { padding:16px; }
+  body[data-study-activity="question"] .question-actions { position:fixed; left:0; right:0; bottom:var(--keyboard-inset,0px); z-index:35; display:flex; flex-wrap:nowrap; margin:0; padding:12px 12px calc(12px + env(safe-area-inset-bottom)); background:var(--surface); border-top:1px solid var(--line); box-shadow:0 -4px 18px #0000000a; }
+  .question-actions .btn { font-size:13px; min-height:44px; flex:1; padding:8px; }
+  .question-actions .grow { display:none; }
+  .question-actions .btn svg { width:13px; }
+  .question-actions .btn:disabled { flex:.8; }
+  .question-nav { margin-bottom:24px; }
+  .result-box { scroll-margin-top:85px; scroll-margin-bottom:105px; }
+}
+
+/* Interaction feedback is brief; continuous decoration pauses in background. */
+@media(prefers-reduced-motion:no-preference) {
+  .btn,.icon-btn,.chapter-card { transition:background-color var(--motion-press),box-shadow var(--motion-panel),transform var(--motion-press); }
+  .local-main[data-enter] > :not(.footer) { animation-duration:var(--motion-panel); }
+  body[data-study-activity="question"] .local-main[data-enter] > * { animation:none; }
+  body[data-study-activity="question"] .local-main[data-enter] .question-main { animation:study-fade 160ms ease-out; }
+  .welcome-main { animation-duration:250ms; }
+  .result-box { animation-duration:180ms; }
+}
+html[data-background-hidden] .welcome-sky * { animation-play-state:paused !important; }
+html[data-motion="reduced"] *,html[data-motion="reduced"] *::before,html[data-motion="reduced"] *::after {
+  animation:none !important; transition:none !important; scroll-behavior:auto !important;
+}

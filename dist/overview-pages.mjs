@@ -8,7 +8,7 @@ import { questionCounts, questionCountDescription } from "./question-counts.mjs"
 import { icon, esc, attr, button, head } from "./ui.mjs";
 
 // Read current data at render time, including after imports and server restores.
-export function createOverviewPages({ getBank, getState, getKnowledge, getFilters, subject, qById }) {
+export function createOverviewPages({ getBank, getState, getKnowledge, getFilters, subject, qById, getGuideHTML = () => "" }) {
   function heatmap() {
     const state = getState();
     const counts = getAttemptIndex(state, getBank()).days;
@@ -33,7 +33,7 @@ export function createOverviewPages({ getBank, getState, getKnowledge, getFilter
       s.chapters.filter((c) => !c.parentId),
     );
     const activeSubject = subject(getFilters().subjectId) ?? bank.subjects[0];
-    return `${dailyTasksHTML(bank, state, { esc, attr, button })}<section class="local-hero"><div class="hero-copy"><span class="pill blue">${icon("spark", 14)} 知行学习</span><h1>学习，<br><span>贵在知行合一。</span></h1><p>在阅读中理解，在练习中求证。<br>让学到的知识，成为用得上的能力。</p><div class="flex"><a class="btn primary" href="#/practice">开始练习 ${icon("arrow", 16)}</a>${state.practice ? button("继续上次练习", "resume-practice", "", "btn") : `<a class="btn" href="#/exams">模拟考试</a>`}</div><div class="hero-source"><span class="status-dot"></span>打开即学 · 无需登录 · 自动保存进度</div></div><div class="math-visual" aria-hidden="true"><div class="math-orbit orbit-one"></div><div class="math-orbit orbit-two"></div><div class="math-grid"></div><div class="math-equation learning-mark">知<span>⇄</span>行</div><div class="math-caption">以知促行，以行求知</div><div class="float-formula learning-note formula-a">学以致用</div><div class="float-formula learning-note formula-b">以行促知</div></div></section><section class="card local-stat-strip">${[
+    return `${getGuideHTML()}${dailyTasksHTML(bank, state, { esc, attr, button })}<section class="local-hero dashboard-heading"><div><h1>学习概览</h1><p class="subtitle">接续上次的进度，安排今天的练习。</p></div>${button("学习指南", "open-guide", "", "btn")}</section><section class="card local-stat-strip">${[
       ["book", questionCounts(bank.questions).total.toLocaleString(), "题目记录（含补充）"],
       ["folder", parents.length, "已接入章节"],
       ["target", s.today, "今日完成"],

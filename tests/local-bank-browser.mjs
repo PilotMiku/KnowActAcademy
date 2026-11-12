@@ -88,7 +88,7 @@ try {
   );
   await page.locator('[data-action="answer-option"][data-value="B"]').click();
   await page.getByRole("button", { name: "确认答案", exact: true }).click();
-  await page.getByText("这道题，掌握了", { exact: false }).waitFor();
+  await page.getByText("本次答对了，记得继续巩固", { exact: false }).waitFor();
   await waitImages();
   assert.equal(
     await page.locator(".option.correct .option-key").innerText(),
@@ -138,9 +138,17 @@ try {
       await waitImages();
       assert.equal(await page.locator(".option").count(), 4);
       const first = bank.questions.find((q) => q.chapterId === section.id);
-      await page
-        .locator(`[data-action="answer-option"][data-value="${first.answer}"]`)
-        .click();
+      try {
+        await page.locator(`[data-action="answer-option"][data-value="${first.answer}"]`).click();
+      } catch (error) {
+        console.error('Question layout diagnostics:', JSON.stringify(await page.locator('.option').evaluateAll(nodes => nodes.map(el => ({
+          value: el.dataset.value, rect: el.getBoundingClientRect().toJSON(), scrollY,
+          viewport: [innerWidth, innerHeight], overflow: getComputedStyle(el).overflow,
+        })))));
+        console.error('Question:', first.id);
+        await page.screenshot({ path: 'artifacts/question-layout-failure.png', animations: 'disabled' });
+        throw error;
+      }
       await page.getByRole("button", { name: "确认答案", exact: true }).click();
       await page.locator(".result-box").waitFor();
       await waitImages();

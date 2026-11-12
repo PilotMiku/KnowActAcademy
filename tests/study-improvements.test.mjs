@@ -109,7 +109,7 @@ test('exam timing excludes inactive periods, caps at deadline, and exports uncer
 });
 test('new preferences and recall drafts roundtrip; malformed timing and uncertainty are rejected', () => {
   const {bank,state}=setup();
-  state.studySettings={fontSize:'larger',lineSpacing:'relaxed',focus:true};
+  state.studySettings={fontSize:'larger',lineSpacing:'relaxed',focus:true,motion:'reduced'};
   state.knowledgeRecallDrafts={note:'核心概念'}; state.knowledgeRecalled=['note'];
   const payload={format:BACKUP_FORMAT,bank,state};
   assert.deepEqual(validateBackup(structuredClone(payload)).state.studySettings,state.studySettings);

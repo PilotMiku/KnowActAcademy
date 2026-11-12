@@ -17,6 +17,8 @@
       try {
         const key = "zhixing-ui:" + new URL("./", location.href).pathname;
         const choice = JSON.parse(localStorage.getItem(key) || "{}").theme || "system";
+        const motion = JSON.parse(localStorage.getItem(key) || "{}").motion;
+        document.documentElement.dataset.motion = motion === 'reduced' || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full';
         const dark = choice === "dark" || choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches;
         document.documentElement.dataset.theme = dark ? "dark" : "light";
         document.documentElement.style.colorScheme = dark ? "dark" : "light";
@@ -28,6 +30,7 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./theme.css" />
     <link rel="stylesheet" href="./welcome.css" />
+    <link rel="stylesheet" href="./learning-experience.css" />
     <script defer src="./vendor/katex/katex.min.js"></script>
     <script defer src="./vendor/katex/auto-render.min.js"></script>
     <script type="module" src="./app.mjs"></script>
@@ -46,6 +49,7 @@
       </div>
     </div>
     <div id="toast" role="status" aria-live="polite"></div>
+    <div id="answer-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
     <input id="file-input" type="file" accept=".json,application/json" hidden />
     <noscript>知行学习需要 JavaScript 才能保存练习进度和进行答题。</noscript>

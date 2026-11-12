@@ -1,16 +1,17 @@
 {
   "status": "completed_locally",
-  "saved_at_local": "2026-11-12T14:05:25+08:00",
+  "saved_at_local": "2026-11-12T18:30:11+08:00",
   "pause_reason": null,
-  "base_commit": "533dcccf2d65139d3c1f20368a0e7344dd28a8d2",
+  "base_commit": "dd9f7449c74b438dd4c77e2f091ca2af6b58821d",
   "branch": "main",
   "publication": {
     "last_published_commit": "533dcccf2d65139d3c1f20368a0e7344dd28a8d2",
     "current_changes_committed": false,
     "current_changes_pushed": false,
-    "current_changes_deployed": false
+    "current_changes_deployed": false,
+    "last_synced_commit": "dd9f7449c74b438dd4c77e2f091ca2af6b58821d"
   },
-  "resume_rule": "本轮本地实现已完成；如需继续，以用户的新要求为准。题量按记录统计，未确认的数学等价关系不能当成去重依据。",
+  "resume_rule": "This UX round is complete. Continue only with the next user request; preserve every question and learning record.",
   "user_constraints": [
     "新增要求：重新统计全站及章节/小节题量。用户明确要求不要删除题目，只重新统计题目数量。",
     "不得因统计或去重而删除/合并题目记录，保留全部题目、ID、答案、来源和学习记录。",
@@ -59,38 +60,28 @@
     }
   ],
   "validation": {
-    "javascript_unit_tests": {
-      "passed": 87,
-      "command": "npm test"
-    },
-    "python_tests": {
-      "passed": 39,
-      "command": ".venv/bin/python -m unittest discover -s tests -p test_*.py"
-    },
-    "static_build": "最终构建成功；完整题库 SHA-256 不变；目录 5994103 字节，本机 gzip 389852 字节，352 个正文包，总产物 122184208 字节。",
-    "static_verify": "最终静态校验通过；所有正文逐字段与原记录一致，所有插图一致。",
-    "browser_latest_targeted": [
-      "sync-browser",
-      "exam-chapters-browser",
-      "welcome-browser",
-      "brand-theme-browser",
-      "optimization-browser",
-      "preparation-mastery-browser",
-      "catalog-history-browser",
-      "catalog-history-browser（最终新增冲突标签页导出用例）"
-    ],
-    "browser_earlier_stage": [
-      "local-bank-browser",
-      "recovery-browser",
-      "interaction-safety-browser"
-    ],
-    "full_browser_regression": "全部 21 组浏览器回归通过（根路径、仓库子路径、真实后端同步）；最终补充的冲突标签页无正文进度导出专项也已通过。",
+    "javascript_unit_tests": 90,
+    "python_tests": 39,
+    "browser_suites": 23,
+    "full_browser": "passed at root and repository prefix, including real backend sync",
+    "static_build": "passed",
+    "static_resources": "passed; every original question and figure retained",
+    "bankSha256": "e8faa4f4215366a5bfe64437b609d4d8d2fcbe5618099e6fdcfcddf143341032",
     "reports": [
+      "artifacts/learning-experience-report.json",
+      "artifacts/practice-layout-report.json",
       "artifacts/catalog-history-report.json",
-      "artifacts/recovery-report.json",
-      "artifacts/optimization-report.json"
+      "artifacts/recovery-report.json"
     ],
-    "whitespace_check": "最近 git diff --check 无错误。"
+    "screens": [
+      "390x844",
+      "320x568",
+      "1440x1000"
+    ],
+    "practice_start_top_px": 358.625,
+    "preparation_start_top_px": 503.375,
+    "final_experience_check": "passed after screenshot update",
+    "preview": "docs/images/preview.png"
   },
   "count_audit": {
     "status": "已完成全站、科目、17 个根章和 182 个小节的记录数重算与来源对账，生成报告并接入入库检查。",
@@ -148,50 +139,156 @@
   "changed_tracked_files": [
     "README.md",
     "dist/app.mjs",
-    "dist/backup-codec.mjs",
-    "dist/core.mjs",
-    "dist/forecast.mjs",
+    "dist/dashboard-tasks.mjs",
     "dist/index.html",
-    "dist/library-pages.mjs",
     "dist/overview-pages.mjs",
-    "dist/storage.mjs",
-    "dist/study-view.mjs",
-    "dist/sync.mjs",
+    "dist/preferences-view.mjs",
+    "dist/preferences.mjs",
+    "dist/question-counts.mjs",
+    "dist/question-view.mjs",
+    "dist/session-actions.mjs",
+    "dist/welcome.mjs",
     "docs/REVIEW.md",
-    "scripts/build_static.py",
-    "scripts/check_bank.py",
+    "docs/WORK_IN_PROGRESS.json",
+    "docs/images/preview.png",
     "scripts/run_browser_tests.mjs",
-    "scripts/verify_site.py",
-    "tests/brand-theme-browser.mjs",
+    "tests/browser-helpers.mjs",
     "tests/browser.mjs",
-    "tests/exam-chapters-browser.mjs",
-    "tests/optimization-browser.mjs",
-    "tests/study-improvements.test.mjs",
-    "tests/welcome-browser.mjs"
+    "tests/catalog-history-browser.mjs",
+    "tests/interaction-browser.mjs",
+    "tests/learning-progress-browser.mjs",
+    "tests/local-bank-browser.mjs",
+    "tests/preparation-browser.mjs",
+    "tests/preparation-mastery-browser.mjs",
+    "tests/study-browser.mjs",
+    "tests/study-improvements.test.mjs"
   ],
   "new_source_files": [
-    "data/question-counts.json",
-    "dist/question-content.mjs",
-    "dist/question-counts.mjs",
-    "dist/restore-guard.mjs",
-    "docs/QUESTION_COUNTS.md",
-    "docs/WORK_IN_PROGRESS.json",
-    "scripts/count_questions.py",
-    "scripts/pack_questions.py",
-    "tests/catalog-history-browser.mjs",
-    "tests/forecast-coverage.test.mjs",
-    "tests/question-content.test.mjs",
-    "tests/question-counts.test.mjs",
-    "tests/recovery-browser.mjs",
-    "tests/restore-guard.test.mjs",
-    "tests/test_question_counts.py",
-    "tests/test_question_packs.py"
+    "dist/learning-experience.css",
+    "dist/learning-guide.mjs",
+    "dist/preparation-scope.mjs",
+    "tests/learning-experience-browser.mjs",
+    "tests/learning-experience.test.mjs",
+    "tests/practice-layout-browser.mjs"
   ],
   "checkpoint_file": "docs/WORK_IN_PROGRESS.json",
   "resumed_at_local": "2026-11-12",
-  "completion": "已完成本轮五项优化、题量重算和本地验证；未提交、推送或部署。",
-  "publication_note": "当前是本地完成状态，是否提交和同步由用户后续安排。",
-  "documentation": "README.md 和 docs/REVIEW.md 已更新数据库 v3、目录/正文加载、考试日志、恢复隔离、估分覆盖门槛、计数口径及静态体积权衡。",
+  "completion": "All seven UX steps completed locally and verified; not committed, pushed or deployed.",
+  "publication_note": "Completed locally; changes are not committed, pushed or deployed.",
+  "documentation": "README.md and docs/REVIEW.md document all seven steps, validation and preview artifacts.",
   "pause_snapshot_zip": "artifacts/paused-work-20261112-133828.zip",
-  "workspace_snapshot_zip": "artifacts/completed-work-20261112-140525.zip"
+  "active_work": {
+    "goal": "逐项改善排版、动画和新用户引导",
+    "current_step": 7,
+    "steps": [
+      {
+        "id": 1,
+        "goal": "章节练习页的首屏、信息分层和内容浏览",
+        "status": "completed_and_verified",
+        "changes": [
+          "科目和章节选择紧邻开始按钮；高级筛选与详细进度默认收起",
+          "题目列表与章节目录分别显示，URL 保留筛选及视图",
+          "展示记录总数和可评分数；保留全部题号、正文和学习记录"
+        ],
+        "evidence": "artifacts/practice-layout-report.json"
+      },
+      {
+        "id": 2,
+        "goal": "欢迎页衔接首次引导，提供学习方式选择与老用户继续入口",
+        "status": "completed_and_verified",
+        "evidence": "artifacts/learning-experience-report.json"
+      },
+      {
+        "id": 3,
+        "goal": "备考章节选择的层级、整章/部分选择和开始入口",
+        "status": "completed_and_verified",
+        "evidence": "artifacts/learning-experience-report.json"
+      },
+      {
+        "id": 4,
+        "goal": "统一字号、浅色对比度和触控区域",
+        "status": "completed_and_verified",
+        "evidence": "artifacts/learning-experience-report.json"
+      },
+      {
+        "id": 5,
+        "goal": "手机答题顶部、底部操作区和结果反馈",
+        "status": "completed_and_verified",
+        "evidence": "artifacts/learning-experience-report.json"
+      },
+      {
+        "id": 6,
+        "goal": "动画节奏、减少动态效果与后台暂停",
+        "status": "completed_and_verified",
+        "evidence": "artifacts/learning-experience-report.json"
+      },
+      {
+        "id": 7,
+        "goal": "统一学习状态措辞、题量说明与保存状态",
+        "status": "completed_and_verified",
+        "evidence": "artifacts/learning-experience-report.json"
+      }
+    ],
+    "next_step": null,
+    "verification": {
+      "javascript_unit_tests": 90,
+      "python_tests": 39,
+      "browser_suites": 23,
+      "full_browser": "passed at root and repository prefix, including real backend sync",
+      "static_build": "passed",
+      "static_resources": "passed; every original question and figure retained",
+      "bankSha256": "e8faa4f4215366a5bfe64437b609d4d8d2fcbe5618099e6fdcfcddf143341032",
+      "reports": [
+        "artifacts/learning-experience-report.json",
+        "artifacts/practice-layout-report.json",
+        "artifacts/catalog-history-report.json",
+        "artifacts/recovery-report.json"
+      ],
+      "screens": [
+        "390x844",
+        "320x568",
+        "1440x1000"
+      ],
+      "practice_start_top_px": 358.625,
+      "preparation_start_top_px": 503.375,
+      "final_experience_check": "passed after screenshot update",
+      "preview": "docs/images/preview.png"
+    }
+  },
+  "previous_round_validation": {
+    "javascript_unit_tests": {
+      "passed": 87,
+      "command": "npm test"
+    },
+    "python_tests": {
+      "passed": 39,
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_*.py"
+    },
+    "static_build": "最终构建成功；完整题库 SHA-256 不变；目录 5994103 字节，本机 gzip 389852 字节，352 个正文包，总产物 122184208 字节。",
+    "static_verify": "最终静态校验通过；所有正文逐字段与原记录一致，所有插图一致。",
+    "browser_latest_targeted": [
+      "sync-browser",
+      "exam-chapters-browser",
+      "welcome-browser",
+      "brand-theme-browser",
+      "optimization-browser",
+      "preparation-mastery-browser",
+      "catalog-history-browser",
+      "catalog-history-browser（最终新增冲突标签页导出用例）"
+    ],
+    "browser_earlier_stage": [
+      "local-bank-browser",
+      "recovery-browser",
+      "interaction-safety-browser"
+    ],
+    "full_browser_regression": "全部 21 组浏览器回归通过（根路径、仓库子路径、真实后端同步）；最终补充的冲突标签页无正文进度导出专项也已通过。",
+    "reports": [
+      "artifacts/catalog-history-report.json",
+      "artifacts/recovery-report.json",
+      "artifacts/optimization-report.json"
+    ],
+    "whitespace_check": "最近 git diff --check 无错误。"
+  },
+  "previous_round_snapshot_zip": "artifacts/completed-work-20261112-140525.zip",
+  "workspace_snapshot_zip": "artifacts/learning-experience-completed-20261112-183011.zip"
 }

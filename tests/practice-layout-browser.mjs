@@ -1,0 +1,70 @@
+import assert from 'node:assert/strict';
+import { writeFile } from 'node:fs/promises';
+import { chromium, browserOptions, baseURL, revealPracticeOptions } from './browser-helpers.mjs';
+
+const browser = await chromium.launch(browserOptions), errors = [], report = [];
+try {
+  const page = await browser.newPage({ reducedMotion: 'reduce' });
+  page.on('pageerror', error => errors.push(error.message));
+  for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 568 }, { width: 1440, height: 1000 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto(baseURL + '/#/practice');
+    const start = page.locator('[data-action="start-practice"][data-mode="sequential"]');
+    await start.waitFor();
+    const box = await start.boundingBox();
+    assert.ok(box.y >= 0 && box.y + box.height <= viewport.height, JSON.stringify({ viewport, box }));
+    assert.equal(await page.locator('.practice-options').evaluate(el => el.open), false);
+    assert.equal(await page.locator('.practice-progress').evaluate(el => el.open), false);
+    assert.equal(await page.locator('.chapter-grid').count(), 0);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    report.push({ viewport, startTop: box.y, startHeight: box.height });
+    if (viewport.width === 390) await page.screenshot({ path: 'artifacts/practice-first-screen-mobile.png' });
+  }
+  await page.locator('#subject-filter').selectOption('linear');
+  await page.locator('#chapter-filter').selectOption('linear-chapter-1');
+  await revealPracticeOptions(page);
+  await page.locator('#type-filter').selectOption('single');
+  await page.locator('#type-filter').selectOption('');
+  assert.equal(await page.locator('.practice-options').evaluate(el => el.open), true);
+  await page.locator('#type-filter').selectOption('single');
+  await page.locator('#random-distribution').selectOption('balanced');
+  await page.locator('#practice-status').selectOption('unseen');
+  await page.locator('#random-count').selectOption('all');
+  const expected = await page.evaluate(() => location.hash);
+  await page.locator('.practice-view-switch a').filter({ hasText: '章节目录' }).click();
+  await page.locator('.chapter-grid').waitFor();
+  assert.equal(await page.locator('[data-action="practice-one"]').count(), 0);
+  assert.equal(await page.locator('.subject-label').innerText(), '线性代数');
+  await page.reload();
+  await page.locator('.chapter-grid').waitFor();
+  await page.locator('.practice-view-switch a').filter({ hasText: '题目列表' }).click();
+  await page.locator('[data-action="practice-one"]').first().waitFor();
+  for (const key of ['subject', 'chapter', 'type', 'distribution', 'status', 'count'])
+    assert.equal(new URLSearchParams((await page.evaluate(() => location.hash)).split('?')[1]).get(key), new URLSearchParams(expected.split('?')[1]).get(key));
+  assert.equal(await page.locator('#type-filter').inputValue(), 'single');
+  assert.equal(await page.locator('.practice-options').evaluate(el => el.open), true);
+  await page.locator('.practice-progress > summary').click();
+  await page.locator('.learning-progress').waitFor();
+  await page.locator('[data-action="start-practice"][data-mode="random"]').click();
+  await page.locator('.question-main').waitFor();
+  const saved = await page.evaluate(async () => (await import('./storage.mjs')).readSavedData());
+  const selected = saved.bank.questions.filter(q => q.subjectId === 'linear' && q.type === 'single');
+  assert.ok(saved.state.practice.questionIds.length > 25);
+  assert.ok(saved.state.practice.questionIds.every(id => selected.some(q => q.id === id)));
+  await page.locator('[data-action="exit-practice"]').click();
+  await page.locator('[data-action="resume-practice"]').click();
+  await page.locator('.question-main').waitFor();
+  assert.equal((await page.evaluate(async () => (await import('./storage.mjs')).readSavedState())).practice.id, saved.state.practice.id);
+  await page.goto(baseURL + '/#/practice?q=' + encodeURIComponent('没有这样的题目-qzx987'));
+  await page.getByRole('heading', { name: '没有符合条件的题目' }).waitFor();
+  assert.equal(await page.locator('[data-action="start-practice"][data-mode="sequential"]').isDisabled(), true);
+  await page.getByRole('link', { name: '清除筛选', exact: true }).click();
+  await page.locator('.practice-start').waitFor();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('[data-action="toggle-theme"]').click();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  await page.screenshot({ path: 'artifacts/practice-first-screen-mobile-dark.png' });
+  assert.deepEqual(errors, []);
+  await writeFile('artifacts/practice-layout-report.json', JSON.stringify({ screens: report, filterPersistence: true, randomAllAndResume: true, emptyScope: true, pageErrors: errors }, null, 2));
+  console.log('Practice layout passed:', JSON.stringify(report));
+} finally { await browser.close(); }

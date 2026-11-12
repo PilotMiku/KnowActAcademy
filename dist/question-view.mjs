@@ -3,10 +3,10 @@ import { isScorable } from "./core.mjs";
 export function feedbackHTML(q, response, { mode = "practice", mastery = null, mistake = null }, { icon, attr, button }) {
   if (!isScorable(q)) return `<section class="result-box"><div class="result-label">仅供查阅 · 本题不计分</div><div class="answer-line">原资料标注答案（待核实）：<span data-rich="${attr(Array.isArray(q.answer) ? q.answer.join("、") : q.answer)}"></span></div><div class="analysis"><b>原资料解析</b><div class="rich" data-rich="${attr(q.analysis)}"></div></div><div class="result-footer"></div></section>`;
   const preparing = ["prepare-diagnostic", "prepare-training"].includes(mode);
-  const label = response.correct === null ? "对照参考答案，自评掌握情况"
+  const label = response.correct === null ? "对照参考答案，自评本次作答"
     : response.correct ? mode === "exam" ? response.uncertain ? "本题答对，但标记为拿不准" : "本题回答正确" : preparing ? response.uncertain ? "这次答对但不确定，继续巩固" : mastery?.mastered ? "连续答对两次，已掌握" : "这次答对了，再巩固一次"
-      : response.uncertain ? "这次答对但不确定，建议再练一次" : "这道题，掌握了" : "没关系，把思路再理一遍";
-  return `<section class="result-box ${response.correct === false ? "wrong" : ""}"><div class="result-label">${icon(response.correct === false ? "mistake" : response.correct === null ? "info" : "check", 16)} ${label}</div><div class="answer-line">参考答案：<span class="rich" data-rich="${attr(Array.isArray(q.answer) ? q.answer.join(q.type === "multiple" ? "、" : " / ") : q.answer)}"></span></div><div class="analysis"><b>思路与解析</b><div class="rich" data-rich="${attr(q.analysis || "这道题的原 PDF 未附解析，请查看原 PDF 核对。")}"></div></div><div class="result-footer">${q.type === "solution" && response.correct === null ? `<div class="flex self-grade-actions" style="margin-top:18px">${button(preparing ? "本次答对" : "我掌握了", "self-grade", 'data-correct="true"', "btn small")}${button(preparing ? "本次答错" : "还需练习", "self-grade", 'data-correct="false"', "btn small soft")}</div>` : ""}${!preparing && mistake && !mistake.resolved ? `<div style="margin-top:14px">${button(`${icon("check", 12)} 标记已掌握`, "resolve-mistake", `data-id="${attr(q.id)}"`, "text-btn")}</div>` : ""}</div></section>`;
+      : response.uncertain ? "这次答对但不确定，建议再练一次" : "本次答对了，记得继续巩固" : "本次答错了，把思路再理一遍";
+  return `<section class="result-box ${response.correct === false ? "wrong" : ""}"><div class="result-label">${icon(response.correct === false ? "mistake" : response.correct === null ? "info" : "check", 16)} ${label}</div><div class="answer-line">参考答案：<span class="rich" data-rich="${attr(Array.isArray(q.answer) ? q.answer.join(q.type === "multiple" ? "、" : " / ") : q.answer)}"></span></div><div class="analysis"><b>思路与解析</b><div class="rich" data-rich="${attr(q.analysis || "这道题的原 PDF 未附解析，请查看原 PDF 核对。")}"></div></div><div class="result-footer">${q.type === "solution" && response.correct === null ? `<div class="flex self-grade-actions" style="margin-top:18px">${button("本次答对", "self-grade", 'data-correct="true"', "btn small")}${button("本次答错", "self-grade", 'data-correct="false"', "btn small soft")}</div>` : ""}${!preparing && mistake && !mistake.resolved ? `<div style="margin-top:14px">${button(`${icon("check", 12)} 标记已掌握`, "resolve-mistake", `data-id="${attr(q.id)}"`, "text-btn")}</div>` : ""}</div></section>`;
 }
 
 export function patchPracticeAnswer({ root, question: q, practice, response, feedback, status, questionStatus, progress, renderRich }) {
@@ -32,7 +32,7 @@ export function patchPracticeAnswer({ root, question: q, practice, response, fee
     existing.querySelector(".result-label").innerHTML = replacement.querySelector(".result-label").innerHTML;
     existing.querySelector(".result-footer").innerHTML = replacement.querySelector(".result-footer").innerHTML;
   } else {
-    main.querySelector(".question-actions").before(replacement);
+    (main.querySelector('.question-notes') ?? main.querySelector(".question-actions")).before(replacement);
     renderRich(replacement);
   }
   main.querySelector('[data-action="submit-answer"]')?.remove();

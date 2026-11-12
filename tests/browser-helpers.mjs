@@ -17,3 +17,16 @@ export const browserOptions = {
   ...(executablePath ? { executablePath } : {}),
 };
 await mkdir("artifacts", { recursive: true });
+
+export async function revealPracticeOptions(page) {
+  const options = page.locator('.practice-options');
+  await options.waitFor({ state: 'attached' });
+  if (!await options.evaluate(el => el.open))
+    await options.locator(':scope > summary').click();
+}
+
+export async function revealPreparationOptions(page) {
+  const options = page.locator('.preparation-options');
+  await options.waitFor({ state: 'attached' });
+  if (!await options.evaluate(el => el.open)) await options.locator(':scope > summary').click();
+}

@@ -24,5 +24,6 @@ export function questionCountDescription(questions) {
   if (counts.pdf) parts.push(`PDF ${counts.pdf.toLocaleString()} 题`);
   if (counts.supplement) parts.push(`补充 ${counts.supplement.toLocaleString()} 题`);
   if (counts.other) parts.push(`其他来源 ${counts.other.toLocaleString()} 题`);
-  return `按题号统计 ${counts.total.toLocaleString()} 条记录${parts.length ? `（${parts.join('、')}）` : ''}；未确认等价的相似题分别保留。`;
+  const quality = counts.total > counts.scorable ? `其中 ${counts.scorable.toLocaleString()} 题可评分，${counts.total - counts.scorable} 题仅供查阅；` : '';
+  return `按题号统计 ${counts.total.toLocaleString()} 条记录${parts.length ? `（${parts.join('、')}）` : ''}；${quality}未确认等价的相似题分别保留。`;
 }

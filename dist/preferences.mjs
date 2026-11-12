@@ -1,7 +1,8 @@
-export const defaultStudySettings = () => ({ fontSize: "normal", lineSpacing: "normal", focus: false });
+export const defaultStudySettings = () => ({ fontSize: "normal", lineSpacing: "normal", focus: false, motion: "system" });
 export function normalizeStudySettings(value) {
   return { fontSize: ["normal", "large", "larger"].includes(value?.fontSize) ? value.fontSize : "normal",
-    lineSpacing: value?.lineSpacing === "relaxed" ? "relaxed" : "normal", focus: value?.focus === true };
+    lineSpacing: value?.lineSpacing === "relaxed" ? "relaxed" : "normal", focus: value?.focus === true,
+    motion: value?.motion === "reduced" ? "reduced" : "system" };
 }
 export function resolvedTheme(theme, systemDark = false) {
   return theme === "dark" || theme === "system" && systemDark ? "dark" : "light";
@@ -10,6 +11,7 @@ export function applyPreferences(state) {
   const theme = resolvedTheme(state.theme, matchMedia("(prefers-color-scheme: dark)").matches);
   const settings = normalizeStudySettings(state.studySettings);
   document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.motion = settings.motion === 'reduced' || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full';
   document.documentElement.style.colorScheme = theme;
   document.body.classList.toggle("dark", theme === "dark");
   document.body.classList.toggle("focus-study", settings.focus);
@@ -20,6 +22,6 @@ export function applyPreferences(state) {
     const attribute = element.tagName === "LINK" ? "href" : "src";
     if (element.getAttribute(attribute) !== source) element.setAttribute(attribute, source);
   }
-  try { localStorage.setItem("zhixing-ui:" + new URL("./", location.href).pathname, JSON.stringify({ theme: state.theme })); } catch { /* Optional first-paint cache. */ }
+  try { localStorage.setItem("zhixing-ui:" + new URL("./", location.href).pathname, JSON.stringify({ theme: state.theme, motion: settings.motion })); } catch { /* Optional first-paint cache. */ }
   return theme;
 }
