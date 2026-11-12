@@ -1,17 +1,17 @@
 {
-  "status": "completed_locally",
-  "saved_at_local": "2026-11-12T18:30:11+08:00",
+  "status": "validated_for_github_sync",
+  "saved_at_local": "2026-11-12T23:46:10+08:00",
   "pause_reason": null,
   "base_commit": "dd9f7449c74b438dd4c77e2f091ca2af6b58821d",
   "branch": "main",
   "publication": {
     "last_published_commit": "533dcccf2d65139d3c1f20368a0e7344dd28a8d2",
-    "current_changes_committed": false,
-    "current_changes_pushed": false,
-    "current_changes_deployed": false,
-    "last_synced_commit": "dd9f7449c74b438dd4c77e2f091ca2af6b58821d"
+    "last_synced_commit": "dd9f7449c74b438dd4c77e2f091ca2af6b58821d",
+    "sync_requested": true,
+    "target_branch": "main",
+    "status": "User requested GitHub synchronization; Git history and Actions determine actual publication state."
   },
-  "resume_rule": "This UX round is complete. Continue only with the next user request; preserve every question and learning record.",
+  "resume_rule": "These nine improvements are complete locally and verified. Continue with the next user request; preserve every question and learning record.",
   "user_constraints": [
     "新增要求：重新统计全站及章节/小节题量。用户明确要求不要删除题目，只重新统计题目数量。",
     "不得因统计或去重而删除/合并题目记录，保留全部题目、ID、答案、来源和学习记录。",
@@ -60,18 +60,19 @@
     }
   ],
   "validation": {
-    "javascript_unit_tests": 90,
-    "python_tests": 39,
-    "browser_suites": 23,
-    "full_browser": "passed at root and repository prefix, including real backend sync",
+    "javascript_unit_tests": 99,
+    "python_tests": 40,
+    "browser_suites": 24,
+    "full_browser": "all 24 suites passed across targeted regression runs at root and repository prefix, including real backend sync",
     "static_build": "passed",
-    "static_resources": "passed; every original question and figure retained",
+    "static_resources": "passed; all 8425 question records and source assets retained",
     "bankSha256": "e8faa4f4215366a5bfe64437b609d4d8d2fcbe5618099e6fdcfcddf143341032",
     "reports": [
       "artifacts/learning-experience-report.json",
       "artifacts/practice-layout-report.json",
       "artifacts/catalog-history-report.json",
-      "artifacts/recovery-report.json"
+      "artifacts/recovery-report.json",
+      "artifacts/product-improvements-report.json"
     ],
     "screens": [
       "390x844",
@@ -173,11 +174,117 @@
   ],
   "checkpoint_file": "docs/WORK_IN_PROGRESS.json",
   "resumed_at_local": "2026-11-12",
-  "completion": "All seven UX steps completed locally and verified; not committed, pushed or deployed.",
-  "publication_note": "Completed locally; changes are not committed, pushed or deployed.",
+  "completion": "All nine product improvement directions implemented and verified. User requested GitHub synchronization.",
+  "publication_note": "Implementation and local validation complete. GitHub synchronization requested; refer to Git history and Actions for commit and deployment status.",
   "documentation": "README.md and docs/REVIEW.md document all seven steps, validation and preview artifacts.",
   "pause_snapshot_zip": "artifacts/paused-work-20261112-133828.zip",
   "active_work": {
+    "goal": "完成项目审查提出的九个方向改进",
+    "steps": [
+      {
+        "id": "discovery",
+        "goal": "题目分页、内容预览与搜索高亮",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "quality",
+        "goal": "个人纠错、核对状态与质量清单",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "guidance",
+        "goal": "独立难度、知识点和解题方法标注",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "statistics",
+        "goal": "覆盖率、最近正确率与隔日巩固统计",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "dashboard",
+        "goal": "精简首页与最近章节",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "collections",
+        "goal": "错因筛选、选题组练与离线打印",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "reading",
+        "goal": "最近阅读、手机目录与17章数学速查",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "exams",
+        "goal": "章节配额、模板与报告后续练习",
+        "status": "implemented_and_verified"
+      },
+      {
+        "id": "backups",
+        "goal": "独立备份页与导出时间",
+        "status": "implemented_and_verified"
+      }
+    ],
+    "verification": {
+      "unit_tests": 99,
+      "python_tests": 40,
+      "targeted_browser": "passed final new flows including offline illustrated print, backup restore, and real backend synchronization",
+      "bankSha256": "e8faa4f4215366a5bfe64437b609d4d8d2fcbe5618099e6fdcfcddf143341032",
+      "browser_suites": 24,
+      "static_build": "passed",
+      "static_verify": "passed",
+      "source_intake": "passed; 38 knowledge sources",
+      "new_material": "OpenClaw CLI guide appended; previous 28 articles unchanged",
+      "report": "artifacts/product-improvements-report.json"
+    },
+    "publication": "Implementation and local validation complete. GitHub synchronization requested; refer to Git history and Actions for commit and deployment status.",
+    "scope": {
+      "editorial_annotations": 9,
+      "chapter_reference_cards": 17,
+      "knowledge_articles": 29,
+      "question_records": 8425
+    },
+    "next_step": null
+  },
+  "previous_round_validation": {
+    "javascript_unit_tests": {
+      "passed": 87,
+      "command": "npm test"
+    },
+    "python_tests": {
+      "passed": 39,
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_*.py"
+    },
+    "static_build": "最终构建成功；完整题库 SHA-256 不变；目录 5994103 字节，本机 gzip 389852 字节，352 个正文包，总产物 122184208 字节。",
+    "static_verify": "最终静态校验通过；所有正文逐字段与原记录一致，所有插图一致。",
+    "browser_latest_targeted": [
+      "sync-browser",
+      "exam-chapters-browser",
+      "welcome-browser",
+      "brand-theme-browser",
+      "optimization-browser",
+      "preparation-mastery-browser",
+      "catalog-history-browser",
+      "catalog-history-browser（最终新增冲突标签页导出用例）"
+    ],
+    "browser_earlier_stage": [
+      "local-bank-browser",
+      "recovery-browser",
+      "interaction-safety-browser"
+    ],
+    "full_browser_regression": "全部 21 组浏览器回归通过（根路径、仓库子路径、真实后端同步）；最终补充的冲突标签页无正文进度导出专项也已通过。",
+    "reports": [
+      "artifacts/catalog-history-report.json",
+      "artifacts/recovery-report.json",
+      "artifacts/optimization-report.json"
+    ],
+    "whitespace_check": "最近 git diff --check 无错误。"
+  },
+  "previous_round_snapshot_zip": "artifacts/completed-work-20261112-140525.zip",
+  "workspace_snapshot_zip": "artifacts/learning-experience-completed-20261112-183011.zip",
+  "previous_active_work": {
     "goal": "逐项改善排版、动画和新用户引导",
     "current_step": 7,
     "steps": [
@@ -254,41 +361,5 @@
       "final_experience_check": "passed after screenshot update",
       "preview": "docs/images/preview.png"
     }
-  },
-  "previous_round_validation": {
-    "javascript_unit_tests": {
-      "passed": 87,
-      "command": "npm test"
-    },
-    "python_tests": {
-      "passed": 39,
-      "command": ".venv/bin/python -m unittest discover -s tests -p test_*.py"
-    },
-    "static_build": "最终构建成功；完整题库 SHA-256 不变；目录 5994103 字节，本机 gzip 389852 字节，352 个正文包，总产物 122184208 字节。",
-    "static_verify": "最终静态校验通过；所有正文逐字段与原记录一致，所有插图一致。",
-    "browser_latest_targeted": [
-      "sync-browser",
-      "exam-chapters-browser",
-      "welcome-browser",
-      "brand-theme-browser",
-      "optimization-browser",
-      "preparation-mastery-browser",
-      "catalog-history-browser",
-      "catalog-history-browser（最终新增冲突标签页导出用例）"
-    ],
-    "browser_earlier_stage": [
-      "local-bank-browser",
-      "recovery-browser",
-      "interaction-safety-browser"
-    ],
-    "full_browser_regression": "全部 21 组浏览器回归通过（根路径、仓库子路径、真实后端同步）；最终补充的冲突标签页无正文进度导出专项也已通过。",
-    "reports": [
-      "artifacts/catalog-history-report.json",
-      "artifacts/recovery-report.json",
-      "artifacts/optimization-report.json"
-    ],
-    "whitespace_check": "最近 git diff --check 无错误。"
-  },
-  "previous_round_snapshot_zip": "artifacts/completed-work-20261112-140525.zip",
-  "workspace_snapshot_zip": "artifacts/learning-experience-completed-20261112-183011.zip"
+  }
 }

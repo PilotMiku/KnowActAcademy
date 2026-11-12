@@ -1,4 +1,5 @@
 import { getBankIndex } from "./core.mjs";
+import { questionGuidance } from './question-guidance.mjs';
 
 // Associations describe the chapter headings in the supplied bank. They do not
 // infer a precise concept from the rasterized text of individual questions.
@@ -15,12 +16,13 @@ const rules = [
   { name: "特征值与二次型", subjects: ["linear"], match: /特征值|特征向量|相似|二次型|矩阵合同/ },
 ];
 const indexes = new WeakMap();
-export function getConceptIndex(bank) {
-  if (indexes.has(bank)) return indexes.get(bank);
+export function getConceptIndex(bank, annotations) {
+  const cached = indexes.get(bank);
+  if (cached && cached.annotations === annotations) return cached.index;
   const bankIndex = getBankIndex(bank), questions = new Map(), concepts = new Map();
   for (const q of bank.questions) {
     const chapterName = bankIndex.chapters.get(q.subjectId)?.get(q.chapterId)?.name ?? "";
-    const explicit = [...(q.concepts ?? []), ...(q.tags ?? []).filter((t) => /^知识点[:：]/.test(t)).map((t) => t.slice(4))];
+    const explicit = [...questionGuidance(q, annotations).concepts, ...(q.tags ?? []).filter((t) => /^知识点[:：]/.test(t)).map((t) => t.slice(4))];
     const names = [...new Set([...explicit, ...rules.filter((r) => r.subjects.includes(q.subjectId) && r.match.test(chapterName)).map((r) => r.name)]
       .map((name) => String(name).trim()).filter(Boolean))];
     questions.set(q.id, names);
@@ -35,6 +37,6 @@ export function getConceptIndex(bank) {
     }
   }
   const index = { questions, concepts };
-  indexes.set(bank, index);
+  indexes.set(bank, { annotations, index });
   return index;
 }

@@ -62,7 +62,7 @@ try {
   await examPage.locator(".score").waitFor();
   await examPage.goto(`${baseURL}/#/`);
   await examPage.locator(".local-hero").waitFor();
-  assert.equal(await examPage.locator(".local-stat-strip b").nth(2).innerText(), "0");
+  assert.equal(await examPage.locator(".local-stat-strip b").nth(2).textContent(), "0");
   assert.ok((await examPage.locator(".chapter-description").allTextContents()).every(text => /已练 0 题/.test(text)));
   assert.equal((await stored(examPage)).exams[0].score, 0);
   const scheduleCount = await examPage.evaluate(async () => {

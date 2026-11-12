@@ -1,5 +1,5 @@
 import { getBankIndex, hasResponse, isScorable } from "./core.mjs";
-import { examChapterSummary, examResultSummary } from "./exam-view.mjs";
+import { examChapterSummary, examResultSummary, examInsights } from "./exam-view.mjs";
 import { questionNotesHTML } from "./question-notes.mjs";
 import { icon, esc, attr, button, head, empty } from "./ui.mjs";
 
@@ -51,7 +51,7 @@ export function createExamPages({ getBank, getState, subject, qById, shortDate, 
       .filter((id) => e.results[id] === false)
       .map(qById)
       .filter(isScorable);
-    return `${head("每一次检验，都带来新的方向。", "把分数放在一边，也看看自己真正学会了什么。", `<a href="#/exams" class="btn">${icon("back", 13)} 考试记录</a>`)}<section class="card score-hero"><span class="pill green">${e.timedOut ? "时间到，已自动交卷" : "本次考试已完成"}</span><div class="score">${outcome.score ?? "—"}<span style="font-size:19px"> 分</span></div><p>${examScope(e)}模拟考试</p><div class="score-meta"><span><b>${outcome.correct}/${outcome.total}</b>答对题目</span><span><b>${Math.min(e.minutes, Math.max(1, Math.ceil((e.submittedAt - e.startedAt) / 60000)))}</b>用时 / 分钟</span><span><b>${wrong.length}</b>待巩固题目</span></div>${outcome.excluded ? `<p class="format-note">${outcome.excluded} 道题待核实，仅供查阅，已从评分和章节统计中排除。</p>` : ""}</section>${examChapterSummary(bank, e, { esc })}<div class="section-head"><h2>逐题回顾</h2><span class="muted" style="font-size:10px">本次错题已进入错题本</span></div><div class="stack">${e.questionIds
+    return `${head("每一次检验，都带来新的方向。", "把分数放在一边，也看看自己真正学会了什么。", `<a href="#/exams" class="btn">${icon("back", 13)} 考试记录</a>`)}<section class="card score-hero"><span class="pill green">${e.timedOut ? "时间到，已自动交卷" : "本次考试已完成"}</span><div class="score">${outcome.score ?? "—"}<span style="font-size:19px"> 分</span></div><p>${examScope(e)}模拟考试</p><div class="score-meta"><span><b>${outcome.correct}/${outcome.total}</b>答对题目</span><span><b>${Math.min(e.minutes, Math.max(1, Math.ceil((e.submittedAt - e.startedAt) / 60000)))}</b>用时 / 分钟</span><span><b>${wrong.length}</b>待巩固题目</span></div>${outcome.excluded ? `<p class="format-note">${outcome.excluded} 道题待核实，仅供查阅，已从评分和章节统计中排除。</p>` : ""}</section>${examInsights(bank, e, { esc, attr, button })}${examChapterSummary(bank, e, { esc })}<div class="section-head"><h2>逐题回顾</h2><span class="muted" style="font-size:10px">本次错题已进入错题本</span></div><div class="stack">${e.questionIds
       .map((id, i) => {
         const q = qById(id);
         if (!q) return "";

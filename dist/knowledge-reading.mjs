@@ -73,6 +73,11 @@ export function createReadingController({ getState, canSave, schedule, toast }) 
   function mount(root) {
     paper = root.querySelector('[data-reading-article]');
     if (!paper) return;
+    const state = getState(), id = paper.dataset.readingArticle;
+    if (canSave() && state.readingHistory?.[0]?.id !== id) {
+      state.readingHistory = [{ id, at: Date.now() }, ...(state.readingHistory || []).filter(row => row.id !== id)].slice(0,10);
+      schedule();
+    }
     // Buttons are created after sanitizing; imported HTML cannot add executable controls.
     for (const pre of paper.querySelectorAll('.reading-content pre:has(code)')) {
       const button = document.createElement("button");

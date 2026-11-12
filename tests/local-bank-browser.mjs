@@ -33,11 +33,14 @@ try {
   await page.goto(origin);
   await page.getByRole("link", { name: "进入学习", exact: true }).click();
   await page.locator(".local-hero").waitFor();
-  assert.equal(await page.locator(".chapter-card").count(), bank.subjects[0].chapters.length);
+  assert.equal(await page.locator(".chapter-card").count(), Math.min(3, bank.subjects[0].chapters.length));
+  await page.locator('.overview-details > summary').click();
   assert.equal(
     await page.locator(".local-stat-strip b").first().innerText(),
     bank.questions.length.toLocaleString("en-US"),
   );
+  await page.locator('.overview-details > summary').click();
+  await page.evaluate(() => scrollTo(0,0));
   await page.screenshot({
     path: "artifacts/local-home-desktop.png",
     fullPage: true,
@@ -53,9 +56,12 @@ try {
   );
   await page.locator(".course-tab[href*=linear]").click();
   await page.locator(".course-tab.active[href*=linear]").waitFor();
-  assert.equal(await page.locator(".chapter-card").count(), 7);
+  assert.equal(await page.locator(".chapter-card").count(), 3);
   await page.locator(".course-tab[href*=calculus]").click();
   await page.locator(".course-tab.active[href*=calculus]").waitFor();
+  await page.locator('.section-head a[href*="view=chapters"]').click();
+  await page.locator('.subject-chapters').waitFor();
+  assert.equal(await page.locator('.chapter-card').count(), bank.subjects[0].chapters.length);
   scenarios.push(
     `${bank.questions.length} source questions are bundled and loaded automatically`,
   );
@@ -282,7 +288,7 @@ try {
   await upgradePage.reload();
   await upgradePage.locator(".local-hero").waitFor();
   assert.equal(
-    await upgradePage.locator(".local-stat-strip b").first().innerText(),
+    await upgradePage.locator(".local-stat-strip b").first().textContent(),
     bank.questions.length.toLocaleString("en-US"),
   );
   const stored = await upgradePage.evaluate(async () => (await import('./storage.mjs')).readSavedData());

@@ -48,6 +48,7 @@ function safeContent(value, lazyImages = false) {
     "SPAN",
     "BR",
     "STRONG",
+    "MARK",
     "B",
     "EM",
     "I",

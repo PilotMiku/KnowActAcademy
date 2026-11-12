@@ -1,10 +1,8 @@
 import { getAttemptIndex } from "./attempt-index.mjs";
 import { stats, dayKey, getBankIndex, isScorable } from "./core.mjs";
-import { spacedReview } from "./study.mjs";
-import { reviewCard } from "./study-view.mjs";
-import { dailyTasksHTML } from "./dashboard-tasks.mjs";
-import { knowledgeGroups } from "./knowledge.mjs";
 import { questionCounts, questionCountDescription } from "./question-counts.mjs";
+import { learningSummary } from './learning-summary.mjs';
+import { compactDashboard, weakSectionsHTML } from './dashboard-view.mjs';
 import { icon, esc, attr, button, head } from "./ui.mjs";
 
 // Read current data at render time, including after imports and server restores.
@@ -29,35 +27,31 @@ export function createOverviewPages({ getBank, getState, getKnowledge, getFilter
   function dashboard() {
     const bank = getBank(), state = getState(), knowledge = getKnowledge();
     const s = stats(state, Date.now(), bank);
-    const parents = bank.subjects.flatMap((s) =>
-      s.chapters.filter((c) => !c.parentId),
-    );
     const activeSubject = subject(getFilters().subjectId) ?? bank.subjects[0];
-    return `${getGuideHTML()}${dailyTasksHTML(bank, state, { esc, attr, button })}<section class="local-hero dashboard-heading"><div><h1>学习概览</h1><p class="subtitle">接续上次的进度，安排今天的练习。</p></div>${button("学习指南", "open-guide", "", "btn")}</section><section class="card local-stat-strip">${[
-      ["book", questionCounts(bank.questions).total.toLocaleString(), "题目记录（含补充）"],
-      ["folder", parents.length, "已接入章节"],
-      ["target", s.today, "今日完成"],
-      ["chart", s.total ? s.accuracy + "%" : "—", "累计正确率"],
-    ]
-      .map(
-        ([i, v, l]) =>
-          `<div>${icon(i, 22)}<span><b>${v}</b><small>${l}</small></span></div>`,
-      )
-      .join(
-        "",
-      )}</section><p class="format-note question-count-note">${esc(questionCountDescription(bank.questions))}</p>${reviewCard(spacedReview(bank, state), { button, icon })}<div class="course-tabs" role="navigation" aria-label="选择学习科目">${bank.subjects.map((s) => `<a href="#/?subject=${encodeURIComponent(s.id)}" class="course-tab ${s.id === activeSubject?.id ? "active" : ""}" ${s.id === activeSubject?.id ? 'aria-current="true"' : ""}><span class="course-symbol">${s.id === "linear" ? "A" : "∫"}</span><span><b>${esc(s.name)}</b><small>${questionCounts(getBankIndex(bank).subjectQuestions.get(s.id)).total.toLocaleString()} 题 · ${s.chapters.filter((c) => !c.parentId).length} 章</small></span>${icon("arrow", 16)}</a>`).join("")}<a href="#/knowledge" class="course-tab knowledge-entry"><span class="course-symbol">${icon("book", 23)}</span><span><b>学习资料</b><small>${knowledge.stats.notes ? `${knowledgeGroups(knowledge).length} 个分类 · ${knowledge.articles.length} 份资料` : "查看复习资料"}</small></span>${icon("arrow", 16)}</a></div><div class="section-head"><h2>${esc(activeSubject?.name ?? "章节")} <small>选择章节，开始练习</small></h2><a href="#/practice?subject=${encodeURIComponent(activeSubject?.id ?? "")}" class="text-btn">全部章节 ${icon("arrow", 15)}</a></div>${chapterCards(false, activeSubject?.id)}<div class="grid-2 local-shortcuts"><a class="card" href="#/review"><span class="shortcut-icon pink">${icon("mistake", 23)}</span><div><h3>错题回顾</h3><p>查漏补缺，把薄弱知识点逐个巩固</p></div>${icon("arrow", 18)}</a><a class="card" href="#/favorites"><span class="shortcut-icon purple">${icon("star", 23)}</span><div><h3>我的收藏</h3><p>留下值得再练的题目，随时复习</p></div>${icon("arrow", 18)}</a></div>`;
+    return compactDashboard({ bank, state, knowledge, activeSubject, stats:s, guide:getGuideHTML(), chapters:chapterCards(false, activeSubject?.id, 3) });
   }
-  function chapterCards(expanded = true, subjectId = "") {
+
+  function chapterCards(expanded = true, subjectId = "", limit = Infinity) {
     const bank = getBank(), state = getState();
     const filters = getFilters();
     const index = getBankIndex(bank);
     const practiced = getAttemptIndex(state, bank).latest;
+    const recency = new Map();
+    for (const [id, attempt] of practiced) {
+      const q = index.questions.get(id), chapter = index.chapters.get(q.subjectId)?.get(q.chapterId);
+      const key = q.subjectId + ':' + (chapter?.parentId || chapter?.id);
+      recency.set(key, Math.max(recency.get(key) || 0, attempt.at));
+    }
     return `<div class="chapter-grid">${bank.subjects
       .filter((s) => !subjectId || s.id === subjectId)
       .flatMap((s) =>
         s.chapters
           .filter((c) => !c.parentId)
-          .map((c, i) => {
+          .map((c, displayIndex) => ({ ...c, displayIndex }))
+          .sort((a,b) => expanded ? 0 : (recency.get(s.id+':'+b.id)||0)-(recency.get(s.id+':'+a.id)||0))
+          .slice(0,limit)
+          .map((c) => {
+            const i = c.displayIndex;
             const questions = index.chapterQuestions.get(s.id).get(c.id);
             const eligible = questions.filter(isScorable);
             const done = eligible.filter((q) => practiced.has(q.id)).length;
@@ -72,6 +66,7 @@ export function createOverviewPages({ getBank, getState, getKnowledge, getFilter
   function statsPage() {
     const bank = getBank(), state = getState();
     const s = stats(state, Date.now(), bank);
+    const summary = learningSummary(bank, state);
     const daily = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
@@ -92,13 +87,12 @@ export function createOverviewPages({ getBank, getState, getKnowledge, getFilter
       .map(([l, v]) => `<div class="card big-stat"><p>${l}</p><b>${v}</b></div>`)
       .join(
         "",
-      )}</div><div class="grid-2"><section class="card activity-card"><div class="card-head"><h2>近七天练习</h2><span class="muted" style="font-size:10px">单位：题次</span></div><div class="chart" role="img" aria-label="近七天练习数量">${daily.map((d) => `<div class="bar-column"><span class="bar-value">${d.count}</span><div class="bar" style="height:${Math.max(2, (d.count / max) * 100)}%"></div><span>${d.label}</span></div>`).join("")}</div></section><section class="card activity-card"><div class="card-head"><h2>学习足迹</h2><span class="pill">近十五周</span></div>${heatmap()}</section></div><div class="section-head"><h2>科目掌握情况</h2><span class="muted" style="font-size:10px">按实际答题记录计算</span></div><section class="card" style="padding:12px 24px">${bank.subjects
+      )}</div><div class="grid-2"><section class="card activity-card"><div class="card-head"><h2>近七天练习</h2><span class="muted" style="font-size:10px">单位：题次</span></div><div class="chart" role="img" aria-label="近七天练习数量">${daily.map((d) => `<div class="bar-column"><span class="bar-value">${d.count}</span><div class="bar" style="height:${Math.max(2, (d.count / max) * 100)}%"></div><span>${d.label}</span></div>`).join("")}</div></section><section class="card activity-card"><div class="card-head"><h2>学习足迹</h2><span class="pill">近十五周</span></div>${heatmap()}</section></div><div class="section-head"><h2>科目学习情况</h2><span class="muted" style="font-size:10px">按实际答题记录计算</span></div><section class="card" style="padding:12px 24px">${bank.subjects
       .map((sub) => {
-        const a = getAttemptIndex(state, bank).subjects.get(sub.id) ?? { total: 0, correct: 0 };
-        const pct = a.total ? Math.round(a.correct / a.total * 100) : 0;
-        return `<div class="chapter-row"><span class="grow">${esc(sub.name)}</span><span class="muted">${a.total} 次练习</span><div class="progress-bar"><span style="width:${pct}%"></span></div><span style="width:35px;text-align:right">${a.total ? pct + "%" : "—"}</span></div>`;
+        const row = summary.subjects.find(r => r.id === sub.id);
+        return `<article class="subject-learning-row"><h3>${esc(sub.name)}</h3><div class="subject-learning-metrics"><span>题库覆盖 <b>${row.coverage}%</b><small>${row.covered} / ${row.total} 题</small></span><span>最近作答正确率 <b>${row.accuracy === null ? '—' : row.accuracy+'%'}</b><small>每题最近一次有效作答</small></span><span>隔日巩固 <b>${row.stable} 题</b><small>最近两次确定答对分属不同日期</small></span></div></article>`;
       })
-      .join("")}</section>`;
+      .join("")}</section>${weakSectionsHTML(summary)}`;
   }
 
   return { dashboard, chapterCards, statsPage };

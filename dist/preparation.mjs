@@ -151,7 +151,7 @@ export function preparationProfile(bank, state, now = Date.now()) {
   const allowed = new Set(questions.map((q) => q.id));
   const index = getBankIndex(bank);
   const chapters = new Map(), skills = new Map(), individuals = new Map(), conceptNeeds = new Map();
-  const conceptIndex = getConceptIndex(bank);
+  const conceptIndex = getConceptIndex(bank, state.questionAnnotations);
   // recordAttempt appends in answer order; null (reference answer only) is ignored.
   for (const a of state.attempts) {
     if (a.preparationId !== prep?.id || !allowed.has(a.questionId) || typeof a.correct !== "boolean") continue;

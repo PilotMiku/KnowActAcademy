@@ -9,6 +9,21 @@ from pack_questions import pack_questions
 
 
 class QuestionPackTests(unittest.TestCase):
+    def test_preview_decodes_entities_and_keeps_quality_flags_without_changing_source(self):
+        question = dict(id='q', subjectId='math', chapterId='section', type='single',
+                        stem='<p>公式 \\(x&lt;y\\) &amp; 图形<img src="figure"></p>',
+                        options=[{'id': 'A', 'text': 'A'}], answer='A', analysis='', analysisMissing=True)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'data').mkdir()
+            packed = pack_questions({'revision': 'pdf-abcd', 'questions': [question], 'subjects': []}, root)
+            entry = json.loads((root / packed['path']).read_bytes())['questions'][0]
+            self.assertEqual(entry['previewText'], '公式 \\(x<y\\) & 图形')
+            self.assertTrue(entry['previewHasImages'])
+            self.assertTrue(entry['analysisMissing'])
+            body = json.loads((root / 'question-content' / (entry['contentChunk'] + '.json')).read_bytes())
+            self.assertEqual(body['questions'][0], question)
+
     def test_catalog_is_light_and_every_body_retains_its_exact_source_record(self):
         questions = [dict(id='q'+str(i), subjectId='math', chapterId='chapter'+str(i//2),
             type='single', stem='原始题干'*30, options=[{'id': 'A', 'text': '选项全文'}],

@@ -106,11 +106,15 @@ try {
     const content = document.querySelector('.reading-content');
     window.scrollTo({ top: scrollY + content.getBoundingClientRect().top + 350, behavior: 'instant' });
   });
-  const mobileScroll = await page.evaluate(() => scrollY);
+  const mobileAnchorTop = await page.locator('#' + chapter).evaluate(el => el.getBoundingClientRect().top);
   await waitForSavedOffset(350);
   await page.reload();
   await ready();
-  assert.ok(Math.abs((await page.evaluate(() => scrollY)) - mobileScroll) < 10, JSON.stringify(await page.evaluate(expected => ({expected, actual: scrollY, paperTop: document.querySelector(".reading-paper").getBoundingClientRect().top, headings: [...document.querySelectorAll(".reading-content [id]")].map(h=>[h.id,h.getBoundingClientRect().top])}),mobileScroll)));
+  // The mobile TOC starts collapsed after reload, so compare the reading anchor,
+  // not absolute document scroll coordinates from the previous expanded layout.
+  const restoredAnchorTop = await page.locator('#' + chapter).evaluate(el => el.getBoundingClientRect().top);
+  assert.ok(Math.abs(restoredAnchorTop - mobileAnchorTop) < 10, JSON.stringify({ expected:mobileAnchorTop, actual:restoredAnchorTop }));
+  assert.equal(await page.locator('.reading-toc details').evaluate(el=>el.open), false);
   await page.locator('.reading-chapters').scrollIntoViewIfNeeded();
   await page.screenshot({ path: 'artifacts/reading-chapters-mobile-dark.png', animations: 'disabled' });
   await page.getByRole('link', { name: '查看全文', exact: true }).click();

@@ -1,6 +1,8 @@
 """Build a lightweight question catalog and immutable section content chunks."""
 import hashlib
 import json
+import re
+import html
 
 
 def encode(value):
@@ -34,11 +36,13 @@ def pack_questions(bank, destination, target_bytes=128 * 1024):
         size += entry_size
     flush()
     fields = ['id', 'subjectId', 'chapterId', 'type', 'answer', 'tags', 'sourceLabel',
-              'searchText', 'answerVerified', 'sourceIncomplete', 'concepts', 'acceptedAnswers', 'difficulty']
+              'searchText', 'answerVerified', 'sourceIncomplete', 'analysisMissing', 'concepts', 'acceptedAnswers', 'difficulty']
     catalog = {**bank, 'contentCatalog': {'format': 'zhixing.question-catalog.v1', 'revision': bank['revision']}}
     catalog['questions'] = []
     for q in bank['questions']:
         record = {k: q[k] for k in fields if k in q}
+        record['previewText'] = html.unescape(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', q.get('stem', ''))).strip())
+        record['previewHasImages'] = '<img' in q.get('stem', '').lower()
         record.update(stem=q.get('sourceLabel') or q['id'], analysis='',
                       options=[{'id': o['id'], 'text': o['id']} for o in q['options']],
                       contentChunk=pointers[q['id']])

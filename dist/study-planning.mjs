@@ -1,6 +1,7 @@
 import { filterQuestions, getBankIndex, isEffectiveAttempt, shuffle } from "./core.mjs";
 import { preparationMastery } from "./preparation.mjs";
 import { spacedReview } from "./study.mjs";
+import { questionGuidance } from './question-guidance.mjs';
 
 export function questionActivity(questions, state) {
   const scope = new Map(questions.map((q) => [q.id, q])), activity = new Map();
@@ -19,7 +20,11 @@ export function questionActivity(questions, state) {
 }
 
 export function practicePool(bank, filters, state) {
-  const questions = filterQuestions(bank, filters, state);
+  const questions = filterQuestions(bank, { ...filters, difficulty: '' }, state).filter(q => {
+    const guide = questionGuidance(q, state.questionAnnotations);
+    return (!filters.difficulty || guide.difficulty === filters.difficulty) &&
+      (!filters.concept || guide.concepts.some(name => name.toLocaleLowerCase().includes(filters.concept.toLocaleLowerCase())));
+  });
   if (!filters.status) return questions;
   const activity = questionActivity(questions, state);
   const mastery = filters.status === "unmastered" ? preparationMastery(bank, state) : null;
@@ -53,7 +58,9 @@ export function balancedSample(bank, questions, count, random = Math.random) {
 }
 
 export function collectionQueue(bank, filters, state, mode, sort = "priority", now = Date.now()) {
-  const questions = filterQuestions(bank, { ...filters, mistakes: mode === "review", favorites: mode === "favorites" }, state);
+  const questions = filterQuestions(bank, { ...filters, mistakes: mode === "review", favorites: mode === "favorites" }, state)
+    .filter(q => (!filters.reason || state.questionNotes?.[q.id]?.reasons.includes(filters.reason)) &&
+      (!filters.notes || !!state.questionNotes?.[q.id]?.text.trim()) && (!filters.repeated || (state.mistakes[q.id]?.wrongCount || 0) >= 2));
   if (sort === "bank") return questions;
   const activity = questionActivity(questions, state);
   const { schedule } = spacedReview(bank, state, now);

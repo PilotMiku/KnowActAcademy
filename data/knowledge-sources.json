@@ -1,5 +1,5 @@
 {
-  "revision": "knowledge-322d8ba9a82b21fe",
+  "revision": "knowledge-803a9c6bc34db000",
   "sources": [
     {
       "id": "ks-ccafc8830605",
@@ -312,7 +312,15 @@
       "type": "docx",
       "bytes": 52738,
       "sha256": "7ee5ecae59d9f3bfb6e7fac994bedbae18a75beee48b76b57ee28bdf54ec2ad8"
+    },
+    {
+      "id": "ks-11afd287e05e",
+      "path": "question-bank/其他/OpenClaw CLI 使用指南.docx",
+      "name": "OpenClaw CLI 使用指南.docx",
+      "type": "docx",
+      "bytes": 15423,
+      "sha256": "f60ca68a5b0077f2da9e2c3f22ea47f86f5377f90f8aefcd1f399ff227b839d7"
     }
   ],
-  "materialsSha256": "37e151b5a50775fe9ddda94b6ed2e285fe22ed898c60d40241c85cad6d0e0dce"
+  "materialsSha256": "c41e82fc84e62e6eb49362684c9fe26f5a16a58ba724f4cb004848fdc20e7458"
 }

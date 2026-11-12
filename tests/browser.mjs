@@ -31,7 +31,7 @@ try {
     await page
       .locator(".local-stat-strip>div:nth-child(3) b")
       .first()
-      .innerText(),
+      .textContent(),
     "0",
   );
   await page.locator('.local-nav a[href="#/library"]').click();
@@ -156,7 +156,7 @@ try {
     await page
       .locator(".local-stat-strip>div:nth-child(3) b")
       .first()
-      .innerText(),
+      .textContent(),
     "5", // The unanswered timed-out exam does not count as completed work.
   );
   await page.locator('.local-nav a[href="#/practice"]').click();

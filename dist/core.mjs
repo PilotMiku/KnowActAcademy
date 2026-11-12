@@ -4,6 +4,8 @@ import { normalizeQuestionNotes } from "./question-notes.mjs";
 import { normalizeReadingPositions } from "./knowledge-reading.mjs";
 import { COMPACT_BACKUP_FORMAT, PROGRESS_BACKUP_FORMAT, expandBank } from "./backup-codec.mjs";
 import { getAttemptIndex } from "./attempt-index.mjs";
+import { normalizeQuestionFeedback, normalizeQuestionAnnotations } from './question-guidance.mjs';
+import { normalizeExamTemplates } from './exam-design.mjs';
 export const VERSION = 1;
 export const BANK_FORMAT = "local-neumathe.bank.v1";
 export const BACKUP_FORMAT = "local-neumathe.backup.v1";
@@ -86,7 +88,13 @@ export function emptyState() {
     studySettings: defaultStudySettings(),
     knowledgeRecallDrafts: {},
     knowledgePositions: {},
+    readingHistory: [],
+    lastBackupAt: null,
+    lastBackupKind: null,
+    examTemplates: [],
     questionNotes: {},
+    questionFeedback: {},
+    questionAnnotations: {},
     knowledgeRecalled: [],
     dailyGoal: 20,
     knowledgeRead: [],
@@ -274,6 +282,8 @@ export function normalizeBank(input, { allowEmpty = false, allowCatalog = false 
       source: q.source,
       sourceLabel: string(q.sourceLabel),
       searchText: string(q.searchText),
+      previewText: string(q.previewText),
+      previewHasImages: !!q.previewHasImages,
       answerVerified: q.answerVerified,
       ...(q.sourceIncomplete || q.original?.sourceIncomplete ? { sourceIncomplete: true } : {}),
       analysisMissing: q.analysisMissing,
@@ -624,6 +634,9 @@ export function validateBackup(input, installedBank = null) {
     throw new Error("备份中的考试记录不完整");
   const state = { ...emptyState(), ...data, version: VERSION };
   state.questionNotes = normalizeQuestionNotes(data.questionNotes, ids);
+  state.questionFeedback = normalizeQuestionFeedback(data.questionFeedback, ids);
+  state.questionAnnotations = normalizeQuestionAnnotations(data.questionAnnotations, ids);
+  state.examTemplates = normalizeExamTemplates(data.examTemplates, bank);
   state.exams = state.exams.map((exam) => ({ ...exam, questionStartedAt: null }));
   for (const key of ["knowledgeRead", "knowledgeFavorites", "knowledgeRecalled"]) {
     if (
@@ -642,6 +655,14 @@ export function validateBackup(input, installedBank = null) {
     throw new Error("备份中的回忆自测格式错误");
   state.knowledgeRecallDrafts = data.knowledgeRecallDrafts ?? {};
   state.knowledgePositions = normalizeReadingPositions(data.knowledgePositions);
+  if (data.readingHistory !== undefined && (!Array.isArray(data.readingHistory) || data.readingHistory.length > 10 ||
+    data.readingHistory.some(row => !record(row) || typeof row.id !== 'string' || row.id.length > 150 || !Number.isFinite(row.at))))
+    throw new Error('备份中的最近阅读记录格式错误');
+  state.readingHistory = data.readingHistory || [];
+  if (data.lastBackupAt !== undefined && data.lastBackupAt !== null && (!Number.isFinite(data.lastBackupAt) || data.lastBackupAt < 0))
+    throw new Error('备份导出时间格式错误');
+  state.lastBackupAt = data.lastBackupAt || null;
+  state.lastBackupKind = ['full','progress'].includes(data.lastBackupKind) ? data.lastBackupKind : null;
   const validPractice = (p) => record(p) &&
     Array.isArray(p.questionIds) && p.questionIds.length > 0 &&
     new Set(p.questionIds).size === p.questionIds.length &&
