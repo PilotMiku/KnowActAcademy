@@ -72,10 +72,10 @@ async function assertCompleteOrbits(page, label) {
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, colorScheme: 'light' });
   const bankGate = new Promise(resolve => { releaseBank = resolve; });
-  await context.route('**/data/bank.json', async route => { await bankGate; await route.continue(); });
+  await context.route('**/data/question-catalog-*.json', async route => { await bankGate; await route.continue(); });
   const page = await context.newPage();
   page.on('pageerror', error => errors.push(error.message));
-  const requestedBank = page.waitForRequest('**/data/bank.json');
+  const requestedBank = page.waitForRequest('**/data/question-catalog-*.json');
   await page.goto(baseURL + '/', { waitUntil: 'domcontentloaded' });
   await requestedBank;
   await page.locator('.welcome-quote').waitFor();

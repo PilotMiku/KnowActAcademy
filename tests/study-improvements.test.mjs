@@ -65,8 +65,13 @@ test('forecast stays pending with sparse samples and uses only recent in-scope m
   assert.equal(preparationMetrics(bank,state).estimatedScore,null);
   state.exams=[base];
   const m=preparationMetrics(bank,state);
-  assert.equal(m.evidence,'模拟成绩参考');
-  assert.equal(m.estimatedScore,Math.round((m.trainingScore+80)/2*10)/10);
+  assert.equal(m.evidence,'样本不足');
+  assert.equal(m.estimatedScore,null);
+  assert.equal(m.referenceExamScore,80);
+  for (const q of bank.questions) for (const round of [1,2]) attempt(state,q,true,round);
+  const sufficient=preparationMetrics(bank,state);
+  assert.equal(sufficient.evidence,'模拟成绩参考');
+  assert.equal(sufficient.estimatedScore,Math.round((sufficient.trainingScore+80)/2*10)/10);
 });
 test('unseen and unmastered practice filters keep independent meaning', () => {
   const {bank,state}=setup();

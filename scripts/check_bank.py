@@ -9,6 +9,7 @@ import re
 import fitz
 from study_sources import source_report, source_files, load_materials
 from source_archives import load_archives
+from count_questions import check_report
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -136,6 +137,7 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', action='store_true', help='显示全部数学 PDF 的逐文件结果')
     args = parser.parse_args()
     try:
+        check_report()
         report = scan_sources()
     except (ValueError, OSError, KeyError) as error:
         if args.json:

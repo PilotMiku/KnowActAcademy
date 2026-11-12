@@ -1,3 +1,4 @@
+import { questionCountDescription } from "./question-counts.mjs";
 import { createExamSetup } from "./exam-setup.mjs";
 import { createLibraryPages } from "./library-pages.mjs";
 import { icon, brandIcon, esc, attr, button, head, empty } from "./ui.mjs";
@@ -30,7 +31,8 @@ import {
   validateBackup,
   textOnly,
 } from "./core.mjs";
-import { openStorage, saveStorage, onStorageConflict, storageConflicted, StorageConflictError } from "./storage.mjs";
+import { openStorage, saveStorage, onStorageConflict, storageConflicted, storageVersion, StorageConflictError } from "./storage.mjs";
+import { createRestoreGuard } from "./restore-guard.mjs";
 import {
   PREPARATION_COUNT, preparationQuestions, diagnosticProgress,
   preparationProfile, trainingCount, practiceProgress,
@@ -45,7 +47,8 @@ import { questionNotesHTML, installQuestionNotes } from "./question-notes.mjs";
 import { welcomePage, enterStudy, cancelWelcomeExit } from "./welcome.mjs";
 import { createSaveScheduler } from "./save-scheduler.mjs";
 import { fetchJSON } from "./resources.mjs";
-import { createBackup, MAX_BACKUP_BYTES } from "./backup-codec.mjs";
+import { createBackup, MAX_BACKUP_BYTES, PROGRESS_BACKUP_FORMAT } from "./backup-codec.mjs";
+import { loadedQuestion, loadQuestionContent, materializeBank } from "./question-content.mjs";
 import { pauseExamQuestion, resumeExamQuestion } from "./exam-timing.mjs";
 import { pausePracticeQuestion, resumePracticeQuestion } from "./practice-timing.mjs";
 import { feedbackHTML, patchPracticeAnswer } from "./question-view.mjs";
@@ -92,6 +95,11 @@ let toastTimer,
   sessionTransitionPending = false;
 let displayedExam = null;
 let displayedPractice = null;
+let localEditVersion = 0;
+let dialogGeneration = 0;
+const restoreGuard = createRestoreGuard(() => ({ bank, state, version: storageVersion(),
+  edits: localEditVersion, conflict: storageConflicted(), drafts: deferredSaves.pending,
+  hash: location.hash, dialog: dialogGeneration }));
 const app = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
 const names = {
@@ -146,7 +154,7 @@ function chapter(q) {
   );
 }
 function qById(id) {
-  return getBankIndex(bank).questions.get(id);
+  return loadedQuestion(bank, id) ?? getBankIndex(bank).questions.get(id);
 }
 function shortDate(at) {
   return new Date(at).toLocaleString("zh-CN", {
@@ -164,6 +172,7 @@ function toast(message) {
   toastTimer = setTimeout(() => el.classList.remove("show"), 3500);
 }
 function persist() {
+  localEditVersion++;
   readingController.capture(false);
   deferredSaves.cancel();
   if (!storageReady)
@@ -196,6 +205,7 @@ const readingController = createReadingController({ getState: () => state,
 installQuestionNotes({ getState: () => state, getQuestion: qById,
   save: () => persist(), schedule: () => deferredSaves.schedule() });
 onStorageConflict(() => {
+  restoreGuard.cancel();
   pausePracticeQuestion(displayedPractice);
   pauseExamQuestion(displayedExam);
   deferredSaves.cancel();
@@ -203,10 +213,14 @@ onStorageConflict(() => {
   dialog.close();
   app.inert = true;
   document.querySelector("#storage-conflict").hidden = false;
+  document.querySelector("#export-stale-progress").hidden = bank.managedBundle === false || !bank.revision?.startsWith('pdf-');
 });
 document.querySelector("#reload-latest").addEventListener("click", () => location.reload());
-document.querySelector("#export-stale-page").addEventListener("click", () => {
-  try { downloadBackup(`知行学习-此页备份-${dayKey()}.json`); } catch (error) { toast(error.message); }
+document.querySelector("#export-stale-page").addEventListener("click", async () => {
+  try { await downloadBackup(`知行学习-此页备份-${dayKey()}.json`); } catch (error) { toast(error.message); }
+});
+document.querySelector("#export-stale-progress").addEventListener("click", async () => {
+  try { await downloadBackup(`知行学习-此页进度备份-${dayKey()}.json`, true); } catch (error) { toast(error.message); }
 });
 function bankNotice() {
   return !bank.questions.length
@@ -254,7 +268,7 @@ function practicePage() {
   const filters = getFilters();
   const questions = practicePool(bank, filters, state);
   const randomCount = route().query.get("count") === "all" ? "all" : "25";
-  return `${head("章节练习", "选择章节与知识点，按自己的节奏练习。", state.practice ? button(`继续上次练习 ${icon("arrow", 14)}`, "resume-practice", "", "btn soft") : "")}${filtersHTML(filters)}${learningProgressCard(learningProgress(filterQuestions(bank, filters, state), state))}${practiceControls()}<section class="card practice-start"><div><span class="pill blue">${esc(subject(filters.subjectId)?.name ?? "全部科目")}</span><h2>${filters.chapterId ? esc(bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters).find((c) => c.id === filters.chapterId)?.name ?? "当前章节") : "全部题目"}</h2><p>当前范围共 <strong>${questions.length}</strong> 道题 · 题目、答案来自你提供的 PDF</p></div><div class="practice-controls">${button(`${icon("book", 17)} 顺序练习`, "start-practice", `data-mode="sequential" ${questions.length ? "" : "disabled"}`, "btn primary")}<div class="random-controls"><div class="field"><label for="random-count">随机题量</label><select id="random-count" data-filter="count"><option value="25" ${randomCount === "25" ? "selected" : ""}>25 题</option><option value="all" ${randomCount === "all" ? "selected" : ""}>所有题目（${questions.length} 题）</option></select></div>${button(`${icon("refresh", 17)} ${randomCount === "all" ? "随机所有题目" : `随机 ${DEFAULT_QUESTION_COUNT} 题`}`, "start-practice", `data-mode="random" ${questions.length ? "" : "disabled"}`, "btn")}</div><a href="#/prepare" class="text-btn">${icon("target", 15)} 备考模式：先测评，再专项训练</a></div></section><div class="section-head"><h2>章节目录 <small>展开查看小节</small></h2><span class="muted">${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => !c.parentId)).length} 章 · ${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => c.parentId)).length} 个小节</span></div>${bank.subjects
+  return `${head("章节练习", "选择章节与知识点，按自己的节奏练习。", state.practice ? button(`继续上次练习 ${icon("arrow", 14)}`, "resume-practice", "", "btn soft") : "")}${filtersHTML(filters)}${learningProgressCard(learningProgress(filterQuestions(bank, filters, state), state))}${practiceControls()}<section class="card practice-start"><div><span class="pill blue">${esc(subject(filters.subjectId)?.name ?? "全部科目")}</span><h2>${filters.chapterId ? esc(bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters).find((c) => c.id === filters.chapterId)?.name ?? "当前章节") : "全部题目"}</h2><p>当前范围共 <strong>${questions.length}</strong> 道题</p><p class="format-note question-count-note">${esc(questionCountDescription(questions))}</p></div><div class="practice-controls">${button(`${icon("book", 17)} 顺序练习`, "start-practice", `data-mode="sequential" ${questions.length ? "" : "disabled"}`, "btn primary")}<div class="random-controls"><div class="field"><label for="random-count">随机题量</label><select id="random-count" data-filter="count"><option value="25" ${randomCount === "25" ? "selected" : ""}>25 题</option><option value="all" ${randomCount === "all" ? "selected" : ""}>所有题目（${questions.length} 题）</option></select></div>${button(`${icon("refresh", 17)} ${randomCount === "all" ? "随机所有题目" : `随机 ${DEFAULT_QUESTION_COUNT} 题`}`, "start-practice", `data-mode="random" ${questions.length ? "" : "disabled"}`, "btn")}</div><a href="#/prepare" class="text-btn">${icon("target", 15)} 备考模式：先测评，再专项训练</a></div></section><div class="section-head"><h2>章节目录 <small>展开查看小节</small></h2><span class="muted">${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => !c.parentId)).length} 章 · ${bank.subjects.filter((s) => !filters.subjectId || s.id === filters.subjectId).flatMap((s) => s.chapters.filter((c) => c.parentId)).length} 个小节</span></div>${bank.subjects
     .filter((s) => !filters.subjectId || s.id === filters.subjectId)
     .map(
       (s) =>
@@ -539,6 +553,26 @@ const sessionActions = createSessionActions({
 
 let renderPending = false;
 let lastView = "";
+let contentLoad = null;
+function prepareQuestionView(ids) {
+  const key = JSON.stringify(ids), currentBank = bank;
+  if (contentLoad && (contentLoad.bank !== bank || contentLoad.key !== key)) {
+    contentLoad.controller.abort(); contentLoad = null;
+  }
+  if (!bank.contentCatalog || !ids.length || ids.some(id => !getBankIndex(bank).questions.has(id)) || ids.every(id => loadedQuestion(bank, id))) return "";
+  if (!contentLoad) {
+    const pending = { bank, key, controller: new AbortController(), error: null };
+    contentLoad = pending;
+    loadQuestionContent(bank, ids, undefined, { signal: pending.controller.signal }).then(() => {
+      if (contentLoad === pending && bank === currentBank) { contentLoad = null; render(); }
+    }).catch(error => {
+      if (contentLoad === pending && error.name !== 'AbortError') { pending.error = error; render(); }
+    });
+  }
+  return contentLoad?.error
+    ? `<section class="card" role="alert"><h2>题目暂时无法加载</h2><p>${esc(contentLoad.error.message)}</p>${button("重新加载题目", "retry-content", "", "btn primary")}<a class="btn" href="#/practice">返回题库</a></section>`
+    : '<section class="card" role="status"><p>正在加载题目…</p><a class="text-btn" href="#/practice">返回题库</a></section>';
+}
 function render() {
   if (renderPending) return;
   renderPending = true;
@@ -575,6 +609,10 @@ function draw() {
     app.innerHTML = '<main id="main" class="boot"><span class="boot-mark">∑</span><p role="status">正在准备学习空间…</p></main>';
     return;
   }
+  const ids = page === 'exam' && exam ? exam.status === 'submitted' ? exam.questionIds : [exam.questionIds[exam.index]]
+    : practice ? [practice.questionIds[practice.index]] : [];
+  const contentNotice = prepareQuestionView(ids);
+  if (contentNotice) { pausePracticeQuestion(displayedPractice); pauseExamQuestion(displayedExam); }
   const view = `${location.hash}:${state.practice?.id}:${state.practice?.index}:${exam?.id}:${exam?.index}:${exam?.status}`;
   const entering = view !== lastView;
   lastView = view;
@@ -591,7 +629,7 @@ function draw() {
   const countWrong = Object.values(state.mistakes).filter(
     (m) => !m.resolved,
   ).length;
-  app.innerHTML = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/" aria-label="知行学习 首页">${brandIcon(document.documentElement.dataset.theme)}<strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}</div></div></header><main id="main" class="local-main" tabindex="-1">${page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : libraryPage()}<footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><span>知行学习题库 · 学习记录自动保存在当前浏览器</span></footer></main></div>`;
+  app.innerHTML = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/" aria-label="知行学习 首页">${brandIcon(document.documentElement.dataset.theme)}<strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}</div></div></header><main id="main" class="local-main" tabindex="-1">${contentNotice || (page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : libraryPage())}<footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><span>知行学习题库 · 学习记录自动保存在当前浏览器</span></footer></main></div>`;
   document.title = `${routes[page]} · 知行学习`;
   document.querySelector("#main").toggleAttribute("data-enter", entering);
   renderRich(app, page === "exam" && exam?.status === "submitted");
@@ -606,6 +644,8 @@ function watchActiveExams() {
   }
 }
 function openDialog(title, body, actions = "") {
+  restoreGuard.cancel();
+  dialogGeneration++;
   dialog.innerHTML = `<header class="dialog-head"><h2 id="dialog-title">${title}</h2>${button(icon("close", 18), "close-dialog", 'aria-label="关闭"', "icon-btn")}</header><div class="dialog-body">${body}</div>${actions ? `<div class="dialog-actions">${actions}</div>` : ""}`;
   dialog.showModal();
   renderRich(dialog);
@@ -635,8 +675,11 @@ function download(name, value) {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-function downloadBackup(name, progressOnly = false) {
-  const payload = createBackup(bank, state, progressOnly);
+async function downloadBackup(name, progressOnly = false, { signal } = {}) {
+  const snapshotBank = bank, snapshotState = structuredClone(state);
+  const full = progressOnly ? snapshotBank : await materializeBank(snapshotBank);
+  if (signal?.aborted) throw new DOMException('恢复已取消', 'AbortError');
+  const payload = createBackup(full, snapshotState, progressOnly);
   const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
   if (blob.size > MAX_BACKUP_BYTES)
     throw new Error(progressOnly ? '进度备份超过 50 MiB，请先连接服务器同步' : '完整备份超过 50 MiB，请导出轻量进度备份或连接服务器同步');
@@ -860,8 +903,13 @@ function showSearch() {
 }
 async function handleAction(action, el) {
   if (storageConflicted()) throw new StorageConflictError();
+  if (restoreGuard.pending && action !== "close-dialog") {
+    toast("正在恢复学习记录，请等待或关闭弹窗取消恢复"); return;
+  }
   if (await sessionActions(action, el)) return;
   switch (action) {
+    case 'retry-content':
+      contentLoad?.controller.abort(); contentLoad = null; render(); break;
     case "question-notes":
       if (qById(el.dataset.id)) openDialog("错因与个人笔记", questionNotesHTML(el.dataset.id, state, { esc, attr }, { open: true }), button("完成", "close-dialog"));
       break;
@@ -935,22 +983,34 @@ async function handleAction(action, el) {
       requireBundledBank();
       confirmDialog("恢复服务器学习进度？", "将替换当前浏览器的学习进度，并先自动下载一份本机完整备份。题库内容保持原样。", async () => {
         requireBundledBank();
-        const remote = await sync.read();
+        const dialogAtStart = dialogGeneration;
+        await deferredSaves.flush();
+        await saving;
+        if (!dialog.open || dialogAtStart !== dialogGeneration) throw new DOMException('恢复已取消', 'AbortError');
+        const token = restoreGuard.start();
+        try {
+        const remote = await sync.read({ signal: token.controller.signal });
+        restoreGuard.assert(token);
         if (!remote.payload) throw new Error("服务器还没有学习进度，请先从有进度的设备上传");
         if (remote.payload.bankRevision !== bank.revision) throw new Error("两端题库版本不一致，请先更新网站或使用完整备份迁移");
-        const restored = validateBackup({ format: BACKUP_FORMAT, bank, state: remote.payload.state });
+        const restored = validateBackup({ format: PROGRESS_BACKUP_FORMAT, bankRevision: remote.payload.bankRevision, state: remote.payload.state }, bank);
         // Finish any exam that expired while the remote snapshot was idle.
         for (const exam of restored.state.exams)
           if (exam.status === "active" && exam.endsAt <= Date.now()) finishExam(restored.state, bank, exam);
         if (restored.state.exams.some((exam) => exam.status === "active"))
           throw new Error("服务器进度包含正在进行的考试，请在原设备完成后重新上传");
         await saving;
-        downloadBackup(`知行学习-同步前备份-${dayKey()}.json`);
+        restoreGuard.assert(token);
+        requireBundledBank();
+        await downloadBackup(`知行学习-同步前备份-${dayKey()}.json`, false, { signal: token.controller.signal });
+        restoreGuard.assert(token);
         const previous = state;
         state = normalizeKnowledgeRecords(restored.state);
         syncPreparationMistakes(bank, state);
         try { await persist(); } catch (error) { state = previous; throw error; }
+        restoreGuard.finish(token);
         go("/library"); render(); toast("服务器进度已恢复");
+        } finally { restoreGuard.finish(token); }
       }, "确认恢复");
       break;
     case "open-knowledge":
@@ -1010,6 +1070,7 @@ async function handleAction(action, el) {
       await persist();
       break;
     case "close-dialog":
+      restoreGuard.cancel();
       if (dialog.querySelector("[data-note-id]")) {
         await deferredSaves.flush();
         dialog.close();
@@ -1018,12 +1079,14 @@ async function handleAction(action, el) {
       dialog.close();
       pendingImport = null;
       break;
-    case "confirm-dialog":
-      if (dialog._confirming) return;
-      dialog._confirming = true;
-      try { await dialog._confirm?.(); dialog.close(); }
-      finally { dialog._confirming = false; }
+    case "confirm-dialog": {
+      const confirm = dialog._confirm;
+      if (!confirm || dialog._confirming === confirm) return;
+      dialog._confirming = confirm;
+      try { await confirm(); if (dialog._confirm === confirm) dialog.close(); }
+      finally { if (dialog._confirming === confirm) dialog._confirming = null; }
       break;
+    }
     case "search":
       showSearch();
       break;
@@ -1094,15 +1157,15 @@ async function handleAction(action, el) {
       download("知行学习-导入格式说明.txt", IMPORT_GUIDE);
       break;
     case "export-bank":
-      download(`知行学习-题库-${dayKey()}.json`, bank);
+      download(`知行学习-题库-${dayKey()}.json`, await materializeBank(bank));
       toast("题库已导出");
       break;
     case "export-backup":
-      downloadBackup(`知行学习-完整备份-${dayKey()}.json`);
+      await downloadBackup(`知行学习-完整备份-${dayKey()}.json`);
       toast("完整备份已导出");
       break;
     case "export-progress":
-      downloadBackup(`知行学习-进度备份-${dayKey()}.json`, true);
+      await downloadBackup(`知行学习-进度备份-${dayKey()}.json`, true);
       toast("进度备份已导出，恢复时需要相同版本的内置题库");
       break;
     case "reset-data":
@@ -1209,9 +1272,9 @@ document.addEventListener("click", (event) => {
     const transitionsSession = sessionTransitions.has(el.dataset.action);
     if (transitionsSession && sessionTransitionPending) return;
     if (transitionsSession) sessionTransitionPending = true;
-    handleAction(el.dataset.action, el).catch((err) =>
-      toast(err.message ?? "操作失败，请重试"),
-    ).finally(() => { if (transitionsSession) sessionTransitionPending = false; });
+    handleAction(el.dataset.action, el).catch((err) => {
+      if (err.name !== "AbortError") toast(err.message ?? "操作失败，请重试");
+    }).finally(() => { if (transitionsSession) sessionTransitionPending = false; });
   } else if (event.target.closest(".local-nav a,.local-brand")) {
     mobileOpen = false;
     updateMenu();
@@ -1325,7 +1388,8 @@ document.addEventListener("input", (event) => {
 document.querySelector("#file-input").addEventListener("change", (e) => {
   if (e.target.files[0]) readFile(e.target.files[0]);
 });
-dialog.addEventListener("close", () => clearTimeout(searchTimer));
+dialog.addEventListener("close", () => { clearTimeout(searchTimer); restoreGuard.cancel(); });
+dialog.addEventListener("cancel", () => restoreGuard.cancel());
 dialog.addEventListener("compositionstart", () => clearTimeout(searchTimer));
 dialog.addEventListener("compositionend", (event) => {
   if (event.target.id === "global-search") scheduleSearch(event.target);
@@ -1358,6 +1422,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 window.addEventListener("hashchange", () => {
+  restoreGuard.cancel();
   cancelWelcomeExit();
   readingController.detach();
   deferredSaves.flush().catch(() => {});

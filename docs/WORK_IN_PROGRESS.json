@@ -1,0 +1,197 @@
+{
+  "status": "completed_locally",
+  "saved_at_local": "2026-11-12T14:05:25+08:00",
+  "pause_reason": null,
+  "base_commit": "533dcccf2d65139d3c1f20368a0e7344dd28a8d2",
+  "branch": "main",
+  "publication": {
+    "last_published_commit": "533dcccf2d65139d3c1f20368a0e7344dd28a8d2",
+    "current_changes_committed": false,
+    "current_changes_pushed": false,
+    "current_changes_deployed": false
+  },
+  "resume_rule": "本轮本地实现已完成；如需继续，以用户的新要求为准。题量按记录统计，未确认的数学等价关系不能当成去重依据。",
+  "user_constraints": [
+    "新增要求：重新统计全站及章节/小节题量。用户明确要求不要删除题目，只重新统计题目数量。",
+    "不得因统计或去重而删除/合并题目记录，保留全部题目、ID、答案、来源和学习记录。",
+    "原来的五项改进继续保留，题量核查是追加任务，不替换原目标。"
+  ],
+  "original_objectives": [
+    {
+      "id": "restore_race",
+      "goal": "防止服务器恢复的迟到响应覆盖本地新操作。",
+      "implemented": "restore-guard.mjs；取消读取信号；关闭弹窗/切换路由取消恢复；提交前检查本地版本、编辑计数和上下文；确认回调隔离。",
+      "verification": "隔离浏览器重现用例已通过：取消恢复后新建考试保留，无取消后的备份下载。",
+      "status": "implemented_and_verified"
+    },
+    {
+      "id": "legacy_backup",
+      "goal": "旧截图备份恢复时立即迁移为现有内置题库。",
+      "implemented": "validateBackup 对受管理的旧 pdf 题库调用 upgradeBundledBank，保持旧题 ID 和学习状态。自定义题库不自动替换。",
+      "verification": "旧 3716 题备份恢复后立即使用当前 8425 条记录，首题图片失败请求为 0，原有作答保留。",
+      "status": "implemented_and_verified"
+    },
+    {
+      "id": "lazy_question_content",
+      "goal": "题库目录先加载，题干/选项/解析按需加载，完整导出保留原始内容。",
+      "implemented": "pack_questions.py 生成 352 个正文包和 5,770,344 字节目录；question-content.mjs 负责内容缓存、版本检查、重试与取消；页面加载前阻止显示目录占位；完整备份/导出先 materializeBank；轻量备份可直接导出。",
+      "verification": "首开无完整 bank.json 请求；正文单包加载、失败重试、导航隔离通过；完整导出的每条 original 与完整原始题库一致；冲突旧页面在正文 503 时仍可导出进度。",
+      "tradeoffs": [
+        "保留完整 data/bank.json 兼容下载/导出；静态产物 122184208 字节，包含目录和正文副本。",
+        "完整导出需要取得对应版本的完整题库；过期页面增加无需取得正文的进度备份按钮。"
+      ],
+      "status": "implemented_and_verified"
+    },
+    {
+      "id": "incremental_exam_history",
+      "goal": "大量考试历史下只保存变化的考试，维持原子恢复/清空和版本冲突保护。",
+      "implemented": "IndexedDB 升至版本 3；exam:顺序键与 examCount；元数据中 _examLog 标记；活动考试保存、已提交历史按引用/状态检查；恢复和清空原子替换。",
+      "verification": "v2 数据库升级后作答和考试保留，旧连接关闭；1000 份历史考试场景中一次活动考试保存仅写入 1 条，历史克隆为 0，本机约 0.6ms；交卷、替换、清空通过。",
+      "maintenance_contract": "已提交的历史考试若要修改，应替换该记录对象或整个 exams 数组；活动考试会正常持续保存。",
+      "status": "implemented_and_verified"
+    },
+    {
+      "id": "forecast_coverage",
+      "goal": "避免少量重复题覆盖不足却显示全范围单一估分。",
+      "implemented": "要求覆盖至少 min(题库大小,max(20,题库10%,各小节最低样本之和))；每个非空小节至少练 2 道不同题（不足则全部）；有效独立试次门槛为覆盖门槛的 2 倍；UI 展示样本比例和达标小节数。样本不足仅显示训练表现/模拟参考。",
+      "verification": "新增测试：1000 题范围重复 20 题不产生估分；只覆盖一个小节不产生估分；覆盖 100 题且均衡覆盖小节后才显示。原有小题库预测测试通过。",
+      "status": "implemented_and_verified"
+    }
+  ],
+  "validation": {
+    "javascript_unit_tests": {
+      "passed": 87,
+      "command": "npm test"
+    },
+    "python_tests": {
+      "passed": 39,
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_*.py"
+    },
+    "static_build": "最终构建成功；完整题库 SHA-256 不变；目录 5994103 字节，本机 gzip 389852 字节，352 个正文包，总产物 122184208 字节。",
+    "static_verify": "最终静态校验通过；所有正文逐字段与原记录一致，所有插图一致。",
+    "browser_latest_targeted": [
+      "sync-browser",
+      "exam-chapters-browser",
+      "welcome-browser",
+      "brand-theme-browser",
+      "optimization-browser",
+      "preparation-mastery-browser",
+      "catalog-history-browser",
+      "catalog-history-browser（最终新增冲突标签页导出用例）"
+    ],
+    "browser_earlier_stage": [
+      "local-bank-browser",
+      "recovery-browser",
+      "interaction-safety-browser"
+    ],
+    "full_browser_regression": "全部 21 组浏览器回归通过（根路径、仓库子路径、真实后端同步）；最终补充的冲突标签页无正文进度导出专项也已通过。",
+    "reports": [
+      "artifacts/catalog-history-report.json",
+      "artifacts/recovery-report.json",
+      "artifacts/optimization-report.json"
+    ],
+    "whitespace_check": "最近 git diff --check 无错误。"
+  },
+  "count_audit": {
+    "status": "已完成全站、科目、17 个根章和 182 个小节的记录数重算与来源对账，生成报告并接入入库检查。",
+    "scope": "全站、科目、大章节、小节；保留所有原题和学习状态。",
+    "verified_record_counts": {
+      "total": 8425,
+      "unique_question_ids": 8425,
+      "calculus": 6985,
+      "linear": 1440,
+      "original_pdf": 3716,
+      "supplement_html": 5346,
+      "previously_merged_source_entries": 637,
+      "raw_source_entries_before_prior_merge": 9062
+    },
+    "source_title_counts": {
+      "supplement_declared": 5384,
+      "supplement_actual": 5346
+    },
+    "chapter_consistency": "全部科目、根章及小节与独立 Python 重算和 JS 运行时索引逐项一致。根章合计等于全站记录数，父子章不重复累加。",
+    "duplicate_findings": [
+      "按当前发布 HTML 题干及有序选项去空白的严格字面比较，仅发现 1 组重复（多计 1 条）；这不是完整的数学等价去重统计。",
+      "仅比较题干会有 68 条重复，但选项可能不同，不能直接视为相同题。",
+      "禁止用去 HTML 后的 searchText/空文本作为去重键：保留图像的公式会丢失，产生巨量假重复。"
+    ],
+    "important_interpretation": "8425 是现有合并记录数，并不自动等于已核验的独立数学题数。不要为了得到更低的数字而猜测合并；所有版本均保留，只在具有可靠证据时建立统计等价组。",
+    "evidence_files": [
+      "data/questionbank-unification.json",
+      "data/pdf-source-bank.json",
+      "data/supplement-sources.json",
+      "data/catalog.json",
+      "dist/data/bank.json",
+      "artifacts/pdf-transcription/comparison.json",
+      "artifacts/pdf-transcription/semantic-comparison.json",
+      "artifacts/pdf-transcription/unification-report.json",
+      "artifacts/pdf-transcription/unified-native-draft.json",
+      "artifacts/pdf-transcription/unified-review.json"
+    ],
+    "evidence_notes": "原始跨版本比对中有 11679 个候选对；候选通常仅中文题干相似，不能据此算重复。语义确认匹配和既有合并已记在 unification 报告。未确认相似题当时保留为独立记录。",
+    "next_steps": [],
+    "result": {
+      "records": 8425,
+      "scorable": 8406,
+      "originalPdf": 3716,
+      "supplementAdded": 4709,
+      "calculus": 6985,
+      "linear": 1440,
+      "report": "docs/QUESTION_COUNTS.md",
+      "machine_report": "data/question-counts.json",
+      "script": "scripts/count_questions.py",
+      "bankSha256": "e8faa4f4215366a5bfe64437b609d4d8d2fcbe5618099e6fdcfcddf143341032"
+    },
+    "limitation": "本次确认的是记录数量；没有证据支持将全部相似的数学题都视为重复，不能声称已确定独立数学题量或已解决所有跨资料相似问题。"
+  },
+  "remaining_work": [],
+  "changed_tracked_files": [
+    "README.md",
+    "dist/app.mjs",
+    "dist/backup-codec.mjs",
+    "dist/core.mjs",
+    "dist/forecast.mjs",
+    "dist/index.html",
+    "dist/library-pages.mjs",
+    "dist/overview-pages.mjs",
+    "dist/storage.mjs",
+    "dist/study-view.mjs",
+    "dist/sync.mjs",
+    "docs/REVIEW.md",
+    "scripts/build_static.py",
+    "scripts/check_bank.py",
+    "scripts/run_browser_tests.mjs",
+    "scripts/verify_site.py",
+    "tests/brand-theme-browser.mjs",
+    "tests/browser.mjs",
+    "tests/exam-chapters-browser.mjs",
+    "tests/optimization-browser.mjs",
+    "tests/study-improvements.test.mjs",
+    "tests/welcome-browser.mjs"
+  ],
+  "new_source_files": [
+    "data/question-counts.json",
+    "dist/question-content.mjs",
+    "dist/question-counts.mjs",
+    "dist/restore-guard.mjs",
+    "docs/QUESTION_COUNTS.md",
+    "docs/WORK_IN_PROGRESS.json",
+    "scripts/count_questions.py",
+    "scripts/pack_questions.py",
+    "tests/catalog-history-browser.mjs",
+    "tests/forecast-coverage.test.mjs",
+    "tests/question-content.test.mjs",
+    "tests/question-counts.test.mjs",
+    "tests/recovery-browser.mjs",
+    "tests/restore-guard.test.mjs",
+    "tests/test_question_counts.py",
+    "tests/test_question_packs.py"
+  ],
+  "checkpoint_file": "docs/WORK_IN_PROGRESS.json",
+  "resumed_at_local": "2026-11-12",
+  "completion": "已完成本轮五项优化、题量重算和本地验证；未提交、推送或部署。",
+  "publication_note": "当前是本地完成状态，是否提交和同步由用户后续安排。",
+  "documentation": "README.md 和 docs/REVIEW.md 已更新数据库 v3、目录/正文加载、考试日志、恢复隔离、估分覆盖门槛、计数口径及静态体积权衡。",
+  "pause_snapshot_zip": "artifacts/paused-work-20261112-133828.zip",
+  "workspace_snapshot_zip": "artifacts/completed-work-20261112-140525.zip"
+}

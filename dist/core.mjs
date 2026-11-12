@@ -130,7 +130,10 @@ const typeAliases = {
   解答题: "solution",
   计算题: "solution",
 };
-export function normalizeBank(input, { allowEmpty = false } = {}) {
+export function normalizeBank(input, { allowEmpty = false, allowCatalog = false } = {}) {
+  if (input?.contentCatalog && (!allowCatalog || input.contentCatalog.format !== 'zhixing.question-catalog.v1' ||
+      input.contentCatalog.revision !== input.revision))
+    throw new Error('题库目录不能作为完整题库导入，请选择完整题库或进度备份');
   if (!input || typeof input !== "object" || Array.isArray(input))
     throw new Error("题库必须是包含 subjects 和 questions 的 JSON 对象");
   if (!Array.isArray(input.subjects) || !input.subjects.length)
@@ -274,7 +277,7 @@ export function normalizeBank(input, { allowEmpty = false } = {}) {
       answerVerified: q.answerVerified,
       ...(q.sourceIncomplete || q.original?.sourceIncomplete ? { sourceIncomplete: true } : {}),
       analysisMissing: q.analysisMissing,
-      original: q.original ?? q,
+      ...(input.contentCatalog ? { contentChunk: requireText(q.contentChunk, '题目内容版本') } : { original: q.original ?? q }),
     };
   });
   return {
@@ -289,6 +292,7 @@ export function normalizeBank(input, { allowEmpty = false } = {}) {
     revision: input.revision,
     sections: input.sections,
     managedBundle: input.managedBundle,
+    ...(input.contentCatalog ? { contentCatalog: input.contentCatalog } : {}),
   };
 }
 // Upgrading an installed PDF bundle never replaces an explicitly imported custom bank,
@@ -299,9 +303,9 @@ export function upgradeBundledBank(previous, candidate) {
     (previous.managedBundle === false || !previous.revision?.startsWith("pdf-"))
   )
     return previous;
-  if (previous.questions.length && previous.revision === candidate.revision)
+  if (previous.questions.length && previous.revision === candidate.revision && !candidate.contentCatalog)
     return previous;
-  const next = normalizeBank(candidate);
+  const next = normalizeBank(candidate, { allowCatalog: !!candidate.contentCatalog });
   const ids = new Set(next.questions.map((q) => q.id));
   if (previous.questions.some((q) => !ids.has(q.id)))
     throw new Error(
@@ -559,8 +563,13 @@ export function validateBackup(input, installedBank = null) {
   if (input.format === PROGRESS_BACKUP_FORMAT && (!installedBank || installedBank.managedBundle === false ||
       !installedBank.revision || input.bankRevision !== installedBank.revision))
     throw new Error('进度备份与当前题库版本不一致，请使用对应版本题库或完整备份');
-  const bank = normalizeBank(input.format === PROGRESS_BACKUP_FORMAT ? installedBank
-    : input.format === COMPACT_BACKUP_FORMAT ? expandBank(input.bank) : input.bank, { allowEmpty: true });
+  let bank = normalizeBank(input.format === PROGRESS_BACKUP_FORMAT ? installedBank
+    : input.format === COMPACT_BACKUP_FORMAT ? expandBank(input.bank) : input.bank, {
+      allowEmpty: true, allowCatalog: input.format === PROGRESS_BACKUP_FORMAT && !!installedBank?.contentCatalog });
+  if (installedBank?.questions.length && installedBank.managedBundle !== false &&
+      installedBank.revision?.startsWith('pdf-') && bank.managedBundle !== false &&
+      bank.revision?.startsWith('pdf-') && bank.revision !== installedBank.revision)
+    bank = upgradeBundledBank(bank, installedBank);
   const data = input.state;
   const record = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
   if (

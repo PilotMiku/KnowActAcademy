@@ -2,6 +2,7 @@ import { chromium, browserOptions, baseURL } from "./browser-helpers.mjs";
 import { readFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { normalizeBank, filterQuestions, examQuestions, validateBackup, BACKUP_FORMAT } from "../dist/core.mjs";
+import { PROGRESS_BACKUP_FORMAT } from '../dist/backup-codec.mjs';
 import { fixture } from "./fixture.mjs";
 
 const bank = normalizeBank(JSON.parse(await readFile(new URL("../dist/data/bank.json", import.meta.url), "utf8")));
@@ -68,7 +69,7 @@ try {
   assert.equal(exam.questionIds.length, 5);
   assert.equal(new Set(exam.questionIds).size, 5);
   assert.ok(exam.questionIds.every((id) => expectedIds.has(id)));
-  assert.deepEqual(validateBackup({ format: BACKUP_FORMAT, ...stored }).state.exams.at(-1).chapters, selected);
+  assert.deepEqual(validateBackup({ format: PROGRESS_BACKUP_FORMAT, bankRevision: stored.bank.revision, state: stored.state }, stored.bank).state.exams.at(-1).chapters, selected);
   await page.reload();
   await page.locator("[data-timer]").waitFor();
   assert.match(await page.locator(".page-head .subtitle").innerText(), /第1章 行列式/);

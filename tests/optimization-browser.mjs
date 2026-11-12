@@ -94,7 +94,7 @@ try {
     const queued = await storage.readSavedState();
     if (queued.attempts.length !== 50003 || queued.attempts.at(-2).id !== 'queued-a' || queued.attempts.at(-1).id !== 'queued-b') throw Error('Lost queued append');
     const { createBackup } = await import('./backup-codec.mjs');
-    const full = createBackup(bank, state), light = createBackup(bank, state, true);
+    const full = createBackup(await (await import('./question-content.mjs')).materializeBank(bank), state), light = createBackup(bank, state, true);
     const { validateBackup } = await import('./core.mjs');
     if (validateBackup(light, bank).state.attempts.length !== 50003) throw Error('Lost progress backup');
     let synced = false;

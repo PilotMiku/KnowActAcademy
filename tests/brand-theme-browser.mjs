@@ -40,14 +40,14 @@ try {
   // A saved manual choice applies to the welcome logo and favicons before bank loading finishes.
   let releaseBank;
   const gate = new Promise(resolve => { releaseBank = resolve; });
-  await page.route('**/data/bank.json', async route => { await gate; await route.continue(); });
+  await page.route('**/data/question-catalog-*.json', async route => { await gate; await route.continue(); });
   try {
     await page.goto(baseURL + '/#/welcome', { waitUntil: 'domcontentloaded' });
     await page.locator('.welcome-brand').waitFor();
     await assertBrand(page, 'dark');
   } finally {
     releaseBank();
-    await page.unroute('**/data/bank.json');
+    await page.unroute('**/data/question-catalog-*.json');
   }
   await page.getByRole('link', { name: '进入学习', exact: true }).click();
   await page.locator('.local-hero').waitFor();

@@ -22,8 +22,26 @@ def verify():
     knowledge = json.loads((ROOT / 'data/knowledge-sources.json').read_text())
     report = json.loads((site / 'build-manifest.json').read_text())
     for source in (ROOT / 'dist').rglob('*'):
-        if source.is_file() and source.name not in {'.DS_Store', 'Thumbs.db'} and not (source.parent.name == 'question-figures' and source.suffix == '.json'):
+        if source.is_file() and source.name not in {'.DS_Store', 'Thumbs.db'} and not (source.parent.name == 'question-figures' and source.suffix == '.json') and source != ROOT / 'dist/data/manifest.json':
             assert source.read_bytes() == (site / source.relative_to(ROOT / 'dist')).read_bytes(), source
+    manifest = json.loads((site / 'data/manifest.json').read_text())
+    original_manifest = json.loads((ROOT / 'dist/data/manifest.json').read_text())
+    assert {key: manifest[key] for key in original_manifest} == original_manifest
+    catalog_path = site / manifest['catalog']['path']
+    assert hashlib.sha256(catalog_path.read_bytes()).hexdigest() == manifest['catalog']['sha256']
+    catalog = json.loads(catalog_path.read_text())
+    assert catalog['revision'] == bank['revision'] and len(catalog['questions']) == len(bank['questions'])
+    original_questions = {q['id']: q for q in bank['questions']}
+    contents = {}
+    for path in (site / 'question-content').glob('*.json'):
+        assert hashlib.sha256(path.read_bytes()).hexdigest()[:16] == path.stem
+        chunk = json.loads(path.read_text())
+        assert chunk['format'] == 'zhixing.question-chunk.v1' and chunk['revision'] == bank['revision']
+        for question in chunk['questions']:
+            assert question['id'] not in contents and question == original_questions[question['id']]
+            contents[question['id']] = path.stem
+    assert set(contents) == set(original_questions)
+    assert all(contents[q['id']] == q['contentChunk'] for q in catalog['questions'])
     expected = set()
     for question in bank['questions']:
         html = question['stem'] + question['analysis'] + ''.join(o['text'] for o in question['options'])

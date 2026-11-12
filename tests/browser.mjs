@@ -87,26 +87,11 @@ try {
   await page.evaluate(() => { Math.random = window.__qaRandom; });
   await page.reload();
   await page.locator("[data-timer]").waitFor();
-  const readExam = () =>
-    page.evaluate(
-      () =>
-        new Promise((resolve, reject) => {
-          const r = indexedDB.open("zhixing-study:" + new URL("./", location.href).pathname);
-          r.onsuccess = () => {
-            const tx = r.result.transaction("kv");
-            const get = tx.objectStore("kv").get("state");
-            get.onsuccess = () => {
-              const exam = get.result.exams.find((e) => e.status === "active");
-              resolve({
-                id: exam.id,
-                questionId: exam.questionIds[exam.index],
-                index: exam.index,
-              });
-            };
-            get.onerror = () => reject(get.error);
-          };
-        }),
-    );
+  const readExam = () => page.evaluate(async () => {
+    const state = await (await import('./storage.mjs')).readSavedState();
+    const exam = state.exams.find(e => e.status === 'active');
+    return { id: exam.id, questionId: exam.questionIds[exam.index], index: exam.index };
+  });
   await page.evaluate(() => { window.__qaSaveDelayMs = 250; });
   for (let i = 0; i < 3; i++) {
     // Navigation renders after its save completes. Do not read the previous

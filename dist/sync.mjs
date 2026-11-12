@@ -42,6 +42,10 @@ export function createSyncClient(fetcher = fetch) {
   }
   async function request(endpoint, secret, options = {}) {
     const controller = new AbortController();
+    const external = options.signal;
+    const abort = () => controller.abort();
+    if (external?.aborted) abort();
+    else external?.addEventListener('abort', abort, { once: true });
     const timeout = setTimeout(() => controller.abort(), 15000);
     try {
       const response = await fetcher(endpoint + '/v1/progress', {
@@ -51,13 +55,15 @@ export function createSyncClient(fetcher = fetch) {
         redirect: 'error', referrerPolicy: 'no-referrer',
       });
       const data = await response.json();
+      if (external?.aborted) throw new DOMException('同步已取消', 'AbortError');
       if (!response.ok) throw new Error(data.error || `同步失败（${response.status}）`);
       return data;
     } catch (error) {
+      if (external?.aborted) throw new DOMException('同步已取消', 'AbortError');
       if (error.name === 'AbortError') throw new Error('连接超时，学习记录已保存在当前浏览器');
       if (error instanceof TypeError) throw new Error('无法连接同步服务器，请检查地址、网络及服务器的允许来源');
       throw error;
-    } finally { clearTimeout(timeout); }
+    } finally { clearTimeout(timeout); external?.removeEventListener('abort', abort); }
   }
   return {
     get connected() { return version !== null; },
@@ -73,10 +79,10 @@ export function createSyncClient(fetcher = fetch) {
         return remote;
       });
     },
-    async read() {
+    async read({ signal } = {}) {
       return exclusive(async () => {
         if (version === null) throw new Error('请先连接同步服务器');
-        const remote = validateRemote(await request(base, token));
+        const remote = validateRemote(await request(base, token, { signal }));
         version = remote.version;
         gzipUpload = remote.capabilities?.gzipUpload === true;
         return remote;

@@ -31,5 +31,6 @@ export function createBackup(bank, state, progressOnly = false) {
       throw new Error('自定义题库请导出完整备份');
     return { format: PROGRESS_BACKUP_FORMAT, bankRevision: bank.revision, state };
   }
+  if (bank.contentCatalog) throw new Error('完整备份需要完整题库，请先加载题库正文');
   return { format: COMPACT_BACKUP_FORMAT, bank: compactBank(bank), state };
 }

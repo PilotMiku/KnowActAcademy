@@ -14,6 +14,7 @@ from PIL import Image, ImageDraw
 from study_sources import verify_sources
 from source_archives import verify_source
 from pack_figures import pack_figures
+from pack_questions import pack_questions
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -81,6 +82,8 @@ def build(workers=4):
     if staging.exists():
         shutil.rmtree(staging)
     shutil.copytree(ROOT / 'dist', staging, ignore=shutil.ignore_patterns('.DS_Store', 'Thumbs.db'))
+    catalog = pack_questions(bank, staging)
+    (staging / 'data/manifest.json').write_bytes(json.dumps({**manifest, 'catalog': catalog}, ensure_ascii=False, separators=(',', ':')).encode())
     packed = pack_figures(ROOT / 'dist/question-figures', staging, bank)
     for path in (staging / 'question-figures').glob('*.json'):
         path.unlink()
@@ -129,6 +132,7 @@ def build(workers=4):
     if total > 900 * 1024 * 1024:
         raise ValueError('静态网站超过 900 MiB，请拆分原始资料托管后再部署')
     report = {'name': '知行学习题库', 'revision': bank['revision'],
+              'questionCatalog': catalog,
               'knowledgeRevision': knowledge['revision'], 'questions': len(bank['questions']),
               'images': image_count, 'documents': len(index['documents']),
               'sourcePDFsIncluded': not native,
