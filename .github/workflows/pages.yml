@@ -41,8 +41,8 @@ jobs:
         run: python scripts/build_static.py
       - name: Verify every static resource
         run: python scripts/verify_site.py
-      - name: Install browser
-        run: npx playwright install --with-deps chromium
+      - name: Install browsers
+        run: npx playwright install --with-deps chromium webkit
       - name: Browser regression with repository prefix
         run: npm run test:browser
       - uses: actions/configure-pages@v5

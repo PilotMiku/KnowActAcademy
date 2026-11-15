@@ -4,7 +4,28 @@ export function reducedMotion() {
 
 let previousScene = null;
 let pendingFocus = null;
+let viewportRestore = null;
 const updates = new WeakMap();
+function reserveViewport(main, position) {
+  const viewport = CSS.supports('height', '100lvh') ? '100lvh' : `${innerHeight}px`;
+  main.style.minHeight = `max(0px, calc(${viewport} + ${position.y - position.top}px))`;
+}
+// WebKit may clamp scroll before applying the new viewport-unit height.
+// Only finish the recent navigation; a new user gesture immediately takes over.
+for (const type of ['touchstart', 'pointerdown', 'wheel', 'keydown'])
+  window.addEventListener(type, () => { viewportRestore = null; }, { capture:true, passive:true });
+function restoreResizedViewport() {
+  const saved = viewportRestore;
+  const valid = () => viewportRestore === saved && saved?.main.isConnected &&
+    saved.width === innerWidth && performance.now() < saved.until &&
+    !document.activeElement?.matches('input,textarea,select,[contenteditable]');
+  if (!valid()) return;
+  reserveViewport(saved.main, saved.position);
+  const restore = () => { if (valid()) window.scrollTo({ left:saved.position.x, top:saved.position.y, behavior:'instant' }); };
+  restore(); requestAnimationFrame(restore);
+}
+window.addEventListener('resize', restoreResizedViewport);
+window.visualViewport?.addEventListener('resize', restoreResizedViewport);
 export function renderStudyLayout(root, html, scene = null) {
   const template = document.createElement('template');
   template.innerHTML = html;
@@ -12,8 +33,10 @@ export function renderStudyLayout(root, html, scene = null) {
   const existingMain = root.querySelector('.local-main');
   const position = sameSession && existingMain ? { x:scrollX, y:scrollY,
     top:existingMain.getBoundingClientRect().top + scrollY } : null;
-  // Keep enough document height for this viewport when the next question is shorter.
-  if (position) existingMain.style.minHeight = `${Math.max(0, position.y + innerHeight - position.top)}px`;
+  // The mobile viewport can grow after a tap dismisses the keyboard/toolbars.
+  // A live viewport unit keeps the scroll range valid after that later resize.
+  if (position) reserveViewport(existingMain, position);
+  else viewportRestore = null;
   if (!sameSession) pendingFocus = null;
   const focused = document.activeElement;
   if (sameSession && root.contains(focused) && ['next-question', 'navigate-question'].includes(focused.dataset.action))
@@ -76,7 +99,10 @@ export function renderStudyLayout(root, html, scene = null) {
   }
   // Keep the last visible question across a loading state, for direction and focus.
   previousScene = sameSession && !scene.questionId ? previousScene : scene;
-  return position ? () => window.scrollTo({ left:position.x, top:position.y, behavior:'instant' }) : null;
+  return position ? () => {
+    window.scrollTo({ left:position.x, top:position.y, behavior:'instant' });
+    viewportRestore = { main:existingMain, position, width:innerWidth, until:performance.now() + 900 };
+  } : null;
 }
 
 // Expand only the new feedback, keeping the statement and selected options fixed.

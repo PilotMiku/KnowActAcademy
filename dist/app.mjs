@@ -12,6 +12,7 @@ import { normalizeRevisionPlan, revisionSchedule, dateNumber } from './revision-
 import { revisionCalendarPage, revisionScopeHTML } from './revision-planner-view.mjs';
 import { learningCardsHTML, questionHintsHTML } from './question-learning.mjs';
 import { renderStudyLayout, reducedMotion } from './study-motion.mjs';
+import { installQuestionGestures } from './question-gestures.mjs';
 import { referencePage } from './math-reference.mjs';
 import { drawExam, normalizeExamTemplates } from './exam-design.mjs';
 import { preparationTreeHTML, syncPreparationTree, changeScope } from "./preparation-scope.mjs";
@@ -133,6 +134,12 @@ const restoreGuard = createRestoreGuard(() => ({ bank, state, version: storageVe
   hash: location.hash, dialog: dialogGeneration }));
 const app = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
+installQuestionGestures(app, {
+  getSession: () => !dialog.open && !storageConflicted() && !sessionTransitionPending &&
+    document.body.dataset.studyActivity === 'question' && document.querySelector('.question-main')
+    ? currentExam() ?? state.practice : null,
+  navigate: index => invokeAction('navigate-question', { dataset:{ index:String(index) } }),
+});
 const names = {
   single: "单选题",
   multiple: "多选题",
@@ -1092,7 +1099,7 @@ async function handleAction(action, el) {
     }
     case 'close-learning': closeLearningPanel(); break;
     case 'shortcut-help':
-      openDialog('键盘答题', '<p>A–D：选择对应选项；Enter：确认练习答案，判分后进入下一题；← / →：切题；Esc：收起知识卡片。</p><p>输入笔记、填写答案、操作表单或打开弹窗时，答题快捷键暂停。</p>'); break;
+      openDialog('切题与答题操作', '<p>在题目区域左滑切换下一题，右滑返回上一题。长公式仍可横向滚动查看。</p><p>A–D：选择对应选项；Enter：确认练习答案，判分后进入下一题；← / →：切题；Esc：收起知识卡片。</p><p>输入笔记、填写答案、操作表单或打开弹窗时，答题快捷键暂停。</p>'); break;
     case 'question-learning': {
       if (currentExam()?.status === 'active') break;
       const q = qById(el.dataset.id);
