@@ -39,9 +39,11 @@ export function renderStudyLayout(root, html, scene = null) {
   else viewportRestore = null;
   if (!sameSession) pendingFocus = null;
   const focused = document.activeElement;
-  if (sameSession && root.contains(focused) && ['next-question', 'navigate-question'].includes(focused.dataset.action))
+  if (sameSession && root.contains(focused) &&
+      (['next-question', 'navigate-question', 'next-pending-question'].includes(focused.dataset.action) || focused.closest('[data-question-jump]')))
     pendingFocus = { action: focused.dataset.action, index: focused.dataset.index,
-      followCurrent: focused.matches('.index-btn'), inActions: !!focused.closest('.question-actions') };
+      followCurrent: focused.matches('.index-btn,[data-action="next-pending-question"]') || !!focused.closest('[data-question-jump]'),
+      inActions: !!focused.closest('.question-actions') };
   const bars = new Map([...root.querySelectorAll('[data-progress-key]')].map(bar => [bar.dataset.progressKey, bar]));
   // Move existing bars into the new view so updates interpolate from their actual width.
   for (const fresh of template.content.querySelectorAll('[data-progress-key]')) {
@@ -88,6 +90,9 @@ export function renderStudyLayout(root, html, scene = null) {
         { opacity: 0, transform: `translateX(${scene.index < previousScene.index ? -8 : 8}px)` },
         { opacity: 1, transform: 'translateX(0)' },
       ], { duration: 160, easing: 'ease-out' });
+    root.querySelector('.index-btn.current')?.animate([
+      { boxShadow:'0 0 0 0 transparent' }, { boxShadow:'0 0 0 3px var(--blue-light)' }, { boxShadow:'0 0 0 0 transparent' },
+    ], { duration:220, easing:'ease-out' });
   }
   if (scene?.questionId && pendingFocus) {
     const candidates = [...root.querySelectorAll(`[data-action="${pendingFocus.action}"]`)];

@@ -1,5 +1,5 @@
 import { createOfflineManager } from './offline-client.mjs';
-import { offlinePage, formatBytes } from './offline-view.mjs';
+import { offlinePage, formatBytes, offlineProgressDisplay } from './offline-view.mjs';
 import { openLearningPanel, closeLearningPanel, syncLearningPanel } from './learning-panel.mjs';
 import { installDisclosureMotion, toggleMenuMotion } from './disclosure-motion.mjs';
 import { entryPreferences, rememberEntry, resumeRoute, guideHTML } from "./learning-guide.mjs";
@@ -13,6 +13,7 @@ import { revisionCalendarPage, revisionScopeHTML } from './revision-planner-view
 import { learningCardsHTML, questionHintsHTML } from './question-learning.mjs';
 import { renderStudyLayout, reducedMotion } from './study-motion.mjs';
 import { installQuestionGestures } from './question-gestures.mjs';
+import { sessionNavigationHTML, updateSessionNavigation, pendingQuestionIndices, nextPendingIndex } from './session-navigation.mjs';
 import { referencePage } from './math-reference.mjs';
 import { drawExam, normalizeExamTemplates } from './exam-design.mjs';
 import { preparationTreeHTML, syncPreparationTree, changeScope } from "./preparation-scope.mjs";
@@ -87,9 +88,9 @@ const offline = createOfflineManager(kind => {
   if (kind === 'progress') {
     const progress = document.querySelector('#offline-progress');
     if (progress && offline.state.progress) {
-      const { done, total } = offline.state.progress;
-      progress.querySelector('progress').value = total ? done / total * 100 : 0;
-      progress.querySelector('label').textContent = `已处理 ${formatBytes(done)} / ${formatBytes(total)}`;
+      const display = offlineProgressDisplay(offline.state.progress);
+      progress.querySelector('progress').value = display.percent;
+      progress.querySelector('label').textContent = display.label;
     }
   } else if (route().page === 'offline' && storageReady) render();
 });
@@ -152,7 +153,7 @@ const DEFAULT_QUESTION_COUNT = 25;
 const sessionTransitions = new Set([
   "start-practice", "start-collection", "practice-one", "begin-preparation",
   "next-training", "resume-preparation", "start-spaced", "spaced-one",
-  "begin-exam", "navigate-question", "next-question", "complete-preparation",
+  "begin-exam", "navigate-question", "next-pending-question", "next-question", "complete-preparation",
   'practice-selected', 'practice-exam-weak', 'revision-practice',
 ]);
 const routes = {
@@ -513,6 +514,7 @@ function updateExamProgress(exam) {
   nav.querySelector('.progress-bar').setAttribute('aria-valuenow', String(completed / exam.questionIds.length * 100));
   nav.querySelector(".progress-bar > span").style.width = `${completed / exam.questionIds.length * 100}%`;
   nav.querySelector(".index-btn.current")?.classList.toggle("answered", hasResponse(qById(currentId), exam.answers[currentId]));
+  updateSessionNavigation(app, exam, bank, true);
 }
 function updateMenu() {
   toggleMenuMotion(app.querySelector(".local-nav"), mobileOpen);
@@ -578,6 +580,7 @@ function refreshGradedPractice(p, q) {
     questionStatus: isPreparationPractice(p) ? preparationQuestionStatus(q.id) : "", progress: practiceProgress(p, bank), renderRich })) {
     if (currentQuestion()?.id === q.id && route().query.has("session")) render();
   }
+  updateSessionNavigation(app, p, bank);
   requestAnimationFrame(() => {
     if (currentQuestion()?.id !== q.id || !route().query.has("session")) return;
     const result = app.querySelector('.result-box');
@@ -622,7 +625,7 @@ function questionNavigation(p, exam = false) {
     })
     .join(
       "",
-    )}</div>${p.questionIds.length > 40 ? `<div class="flex nav-pages">${button("上一组", "navigate-question", `data-index="${Math.max(0, navStart - 40)}" ${navStart === 0 ? "disabled" : ""}`, "btn small")}${button("下一组", "navigate-question", `data-index="${navStart + 40}" ${navStart + 40 >= p.questionIds.length ? "disabled" : ""}`, "btn small")}</div><small class="muted">${navStart + 1}–${Math.min(navStart + 40, p.questionIds.length)} / ${p.questionIds.length}</small>` : ""}<p class="navigator-note">${exam ? "答案会自动保存在当前浏览器。交卷后查看结果与解析。" : "答完一题，再前进一步。练习进度会自动保存。"}</p>${exam ? `<div style="border-top:1px solid var(--line);padding-top:17px;margin-top:19px"><p class="muted" style="font-size:10px">剩余时间</p><div class="timer" data-timer="${attr(p.id)}">${timeRemaining(p)}</div><div style="margin-top:15px">${button("提交试卷", "submit-exam", "", "btn coral")}</div></div>` : ""}</aside>`;
+    )}</div>${p.questionIds.length > 40 ? `<div class="flex nav-pages">${button("上一组", "navigate-question", `data-index="${Math.max(0, navStart - 40)}" ${navStart === 0 ? "disabled" : ""}`, "btn small")}${button("下一组", "navigate-question", `data-index="${navStart + 40}" ${navStart + 40 >= p.questionIds.length ? "disabled" : ""}`, "btn small")}</div><small class="muted">${navStart + 1}–${Math.min(navStart + 40, p.questionIds.length)} / ${p.questionIds.length}</small>` : ""}${sessionNavigationHTML(p, bank, exam)}<p class="navigator-note">${exam ? "答案会自动保存在当前浏览器。交卷后查看结果与解析。" : "答完一题，再前进一步。练习进度会自动保存。"}</p>${exam ? `<div style="border-top:1px solid var(--line);padding-top:17px;margin-top:19px"><p class="muted" style="font-size:10px">剩余时间</p><div class="timer" data-timer="${attr(p.id)}">${timeRemaining(p)}</div><div style="margin-top:15px">${button("提交试卷", "submit-exam", "", "btn coral")}</div></div>` : ""}</aside>`;
 }
 function practiceSession() {
   const p = state.practice;
@@ -689,7 +692,7 @@ function prepareQuestionView(ids) {
   }
   return contentLoad?.error
     ? `<section class="card question-placeholder" role="alert"><h2>题目暂时无法加载</h2><p>${esc(contentLoad.error.message)}</p>${button("重新加载题目", "retry-content", "", "btn primary")}<a class="btn" href="#/practice">返回题库</a><a class="btn" href="#/offline">检查离线章节</a></section>`
-    : '<section class="card question-placeholder" role="status" aria-busy="true"><p>正在加载题目…</p><a class="text-btn" href="#/practice">返回题库</a></section>';
+    : '<section class="card question-placeholder" role="status" aria-busy="true"><p>正在加载题目…</p><div class="question-loading-lines" aria-hidden="true"><span></span><span></span><span></span></div><a class="text-btn" href="#/practice">返回题库</a></section>';
 }
 function render() {
   if (renderPending) return;
@@ -1098,6 +1101,13 @@ async function handleAction(action, el) {
       break;
     }
     case 'close-learning': closeLearningPanel(); break;
+    case 'next-pending-question': {
+      const exam = currentExam(), session = exam ?? state.practice;
+      if (!session) break;
+      const index = nextPendingIndex(pendingQuestionIndices(session, bank, !!exam), session.index);
+      if (index !== null) await sessionActions('navigate-question', { dataset:{ index:String(index) } });
+      break;
+    }
     case 'shortcut-help':
       openDialog('切题与答题操作', '<p>在题目区域左滑切换下一题，右滑返回上一题。长公式仍可横向滚动查看。</p><p>A–D：选择对应选项；Enter：确认练习答案，判分后进入下一题；← / →：切题；Esc：收起知识卡片。</p><p>输入笔记、填写答案、操作表单或打开弹窗时，答题快捷键暂停。</p>'); break;
     case 'question-learning': {
@@ -1575,6 +1585,15 @@ document.addEventListener("toggle", (event) => {
   if (event.target.matches('.practice-progress')) practiceProgressOpen = event.target.open;
 }, true);
 document.addEventListener('submit', async event => {
+  if (event.target.matches('[data-question-jump]')) {
+    event.preventDefault();
+    const form = event.target, session = currentExam() ?? state.practice;
+    if (!session || form.dataset.sessionId !== session.id || !form.reportValidity()) return;
+    const index = Number(new FormData(form).get('questionNumber')) - 1;
+    if (Number.isSafeInteger(index) && index >= 0 && index < session.questionIds.length)
+      invokeAction('navigate-question', { dataset:{ index:String(index) } });
+    return;
+  }
   if (event.target.id !== 'revision-plan-form') return;
   event.preventDefault();
   const form = event.target, submit = form.querySelector('[type="submit"]');
@@ -1748,7 +1767,7 @@ dialog.addEventListener("click", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.isComposing || event.keyCode === 229) return;
-  if (event.key === 'Escape' && !document.getElementById('learning-panel').hidden) { event.preventDefault(); closeLearningPanel(); return; }
+  if (event.key === 'Escape' && !dialog.open && !document.getElementById('learning-panel').hidden) { event.preventDefault(); closeLearningPanel(); return; }
   if (!event.repeat && !dialog.open && !storageConflicted() && !event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey &&
       !event.target.closest('input,textarea,select,[contenteditable],a,summary,[role="button"]') && document.body.dataset.studyActivity === 'question' && document.querySelector('.question-main')) {
     const q = currentQuestion(), session = currentExam() ?? state.practice;

@@ -9,6 +9,7 @@ suites.push('calendar-motion-browser');
 suites.push('second-round-browser', 'offline-browser');
 suites.push('keyboard-navigation-browser');
 suites.push('mobile-navigation-browser');
+suites.push('usability-review-browser');
 const requested = process.argv.slice(2);
 if (requested.some(name => !suites.includes(name))) throw new Error('Unknown browser suite');
 const python = process.env.PYTHON || 'python3';

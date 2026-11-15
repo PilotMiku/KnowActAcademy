@@ -159,7 +159,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
         const target = currentExam() ?? state.practice;
         if (!target) return true;
         const i = Number(el.dataset.index);
-        if (i < 0 || i >= target.questionIds.length) return true;
+        if (!Number.isSafeInteger(i) || i < 0 || i >= target.questionIds.length) return true;
         if (i === target.index) return true;
         if (currentExam()) pauseExamQuestion(target);
         else pausePracticeQuestion(target);
