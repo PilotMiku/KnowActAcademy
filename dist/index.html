@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="./welcome.css" />
     <link rel="stylesheet" href="./learning-experience.css" />
     <link rel="stylesheet" href="./improvements.css" />
+    <link rel="stylesheet" href="./revision-learning.css" />
     <script defer src="./vendor/katex/katex.min.js"></script>
     <script defer src="./vendor/katex/auto-render.min.js"></script>
     <script type="module" src="./app.mjs"></script>
@@ -49,7 +50,12 @@
         <p>正在加载知行学习题库…</p>
       </div>
     </div>
+    <div id="offline-banner" class="offline-banner" hidden role="status">当前离线，仅已下载的章节可用。<a href="#/offline">查看离线题库</a></div>
     <div id="toast" role="status" aria-live="polite"></div>
+    <aside id="learning-panel" class="learning-panel" role="region" aria-labelledby="learning-panel-title" hidden>
+      <header><h2 id="learning-panel-title">相关知识卡片</h2><button type="button" class="icon-btn" data-action="close-learning" aria-label="收起知识卡片">×</button></header>
+      <p class="format-note">可对照原题阅读，收起后继续作答。</p><div data-learning-content></div>
+    </aside>
     <div id="answer-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
     <input id="file-input" type="file" accept=".json,application/json" hidden />

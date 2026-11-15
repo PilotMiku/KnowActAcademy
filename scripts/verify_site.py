@@ -109,6 +109,17 @@ def verify():
     assert report['questions'] == len(bank['questions'])
     assert not (site / 'backend').exists()
     assert not list(site.rglob('*.sqlite3'))
+    offline = json.loads((site / 'offline-manifest.json').read_text())
+    version = offline.pop('version')
+    assert hashlib.sha256(json.dumps(offline, ensure_ascii=False, separators=(',', ':'), sort_keys=True).encode()).hexdigest() == version
+    assert offline['bankRevision'] == bank['revision']
+    assert 'data/bank.json' not in offline['files']
+    for name, record in offline['files'].items():
+        assert not Path(name).is_absolute() and '..' not in Path(name).parts
+        payload = (site / name).read_bytes()
+        assert len(payload) == record['bytes'] and hashlib.sha256(payload).hexdigest() == record['sha256'], name
+    assert all(path in offline['files'] for path in offline['shell'])
+    assert all(path in offline['files'] for chapter in offline['chapters'] for path in chapter['assets'])
     pdf_location = '随站点发布' if report.get('sourcePDFsIncluded', True) else '通过固定的历史来源链接查看'
     print(f"静态校验通过：{len(bank['questions'])} 道题，{len(chunk_figures) + len(figures)} 张共享插图，"
           f"{len(actual)} 张旧版题图；{len(index['documents'])} 份数学 PDF {pdf_location}，"

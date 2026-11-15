@@ -166,3 +166,9 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
 @media(prefers-reduced-motion:no-preference) and (min-width:601px) and (hover:hover) and (pointer:fine) {
   .welcome-star--cross { animation:welcome-twinkle var(--twinkle) ease-in-out var(--delay) infinite; }
 }
+@media(max-width:600px), (hover:none) and (pointer:coarse) {
+  .welcome-star:not(:nth-child(8n + 1)) { display:none; }
+  .welcome-constellation-line,.welcome-nebula,.welcome-orbit-track,.welcome-orbit-arc { animation:none; }
+  .welcome-orbit-traveler:nth-of-type(even) { display:none; }
+  .welcome-constellation { animation-duration:30s; }
+}

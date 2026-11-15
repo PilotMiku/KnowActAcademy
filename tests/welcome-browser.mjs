@@ -31,7 +31,7 @@ async function inspectStarMotion(page) {
 }
 
 function assertCalmStars(stars, label) {
-  assert.ok(stars.length > 30, `${label}: visible stars were sampled`);
+  assert.ok(stars.length >= 16, `${label}: visible stars were sampled`);
   for (const star of stars) {
     assert.ok(star.min > 0 && star.max / star.min <= 2, `${label}: ${star.className} stays visible without bright flares (${star.min}–${star.max})`);
     assert.ok(star.jump <= .04, `${label}: ${star.className} changes brightness smoothly across frames and loop boundaries (${star.jump})`);

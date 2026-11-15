@@ -56,6 +56,16 @@ try {
   await a.goto(baseURL + '/#/knowledge/' + note.id);
   await a.getByRole('button', { name: /标为已读/ }).click();
   await a.getByRole('button', { name: '收藏知识点', exact: true }).click();
+  await a.goto(baseURL + '/#/calendar');
+  await a.locator('#revision-plan-form').waitFor();
+  const examDate = await a.evaluate(() => {
+    const date = new Date(); date.setDate(date.getDate() + 30);
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  });
+  await a.locator('[name="title"]').fill('跨设备期末复习');
+  await a.locator('[name="examDate"]').fill(examDate);
+  await a.locator('#revision-plan-form [type="submit"]').click();
+  await a.locator('.revision-overview').waitFor();
   const original = await stateOf(a);
   await connect(a);
   assert.deepEqual(await stateOf(a), original); // Connecting never changes local progress.
@@ -83,12 +93,14 @@ try {
   assert.deepEqual(restored.preparation, original.preparation);
   assert.deepEqual(restored.preparationHistory, original.preparationHistory);
   assert.deepEqual(restored.practice, original.practice);
+  assert.deepEqual(restored.revisionPlan, original.revisionPlan);
   assert.deepEqual(preparationMetrics(bank, restored), preparationMetrics(bank, original));
   const beforeBackup = JSON.parse(await readFile('artifacts/pre-sync-backup.json', 'utf8'));
   assert.equal(beforeBackup.state.attempts.length, 0);
   await b.reload();
   await b.getByRole('button', { name: '连接同步服务器', exact: true }).waitFor();
   assert.deepEqual((await stateOf(b)).favorites, original.favorites);
+  assert.deepEqual((await stateOf(b)).revisionPlan, original.revisionPlan);
   // A same-origin neighboring repository and the original app have separate databases.
   const databases = await b.evaluate(() => indexedDB.databases());
   assert.deepEqual(databases.map(db => db.name), ['zhixing-study:/test-repo/']);

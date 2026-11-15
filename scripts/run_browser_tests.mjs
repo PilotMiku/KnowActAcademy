@@ -4,6 +4,9 @@ import { createInterface } from 'node:readline';
 
 const processes = [];
 const suites = ['welcome-browser', 'brand-theme-browser', 'local-bank-browser', 'browser', 'exam-chapters-browser', 'preparation-browser', 'preparation-mastery-browser', 'study-browser', 'learning-progress-browser', 'interaction-browser', 'interaction-safety-browser', 'knowledge-browser', 'materials-browser', 'reading-browser', 'sync-browser', 'study-improvements-browser', 'reliability-browser', 'daily-notes-browser', 'optimization-browser', 'recovery-browser', 'catalog-history-browser', 'practice-layout-browser', 'learning-experience-browser', 'product-improvements-browser'];
+// Includes durable calendar, knowledge-aid and motion regressions.
+suites.push('calendar-motion-browser');
+suites.push('second-round-browser', 'offline-browser');
 const requested = process.argv.slice(2);
 if (requested.some(name => !suites.includes(name))) throw new Error('Unknown browser suite');
 const python = process.env.PYTHON || 'python3';

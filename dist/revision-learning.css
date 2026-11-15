@@ -1,0 +1,94 @@
+.revision-summary { display:flex; justify-content:space-between; align-items:center; gap:20px; margin:18px 0; padding:24px; }
+.revision-summary h2 { font-size:18px; margin:10px 0; }
+.revision-summary p,.revision-overview p { color:var(--muted); line-height:1.8; }
+.revision-summary > .btn { flex-shrink:0; }
+.revision-overview { margin-bottom:24px; padding:28px; }
+.revision-overview h2 { font-size:25px; margin:15px 0 10px; }
+.revision-overview .progress-bar { margin:20px 0 12px; }
+.revision-overview .notice { color:var(--ink); }
+.revision-days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:12px; }
+.revision-day { padding:17px 12px; min-width:0; }
+.revision-day.is-today { border-color:var(--blue); background:var(--blue-light); }
+.revision-day time { display:block; font-weight:650; font-size:16px; }
+.revision-day time small { color:var(--muted); font-size:12px; margin-left:6px; }
+.revision-day p { font-size:12px; line-height:1.8; margin:12px 0; }
+.revision-day .text-btn { font-size:12px; min-height:32px; }
+.revision-pagination { display:flex; justify-content:flex-end; gap:12px; margin:18px 0 24px; }
+.revision-editor { margin:22px 0; padding:24px; }
+.revision-editor > summary,.related-learning > summary { cursor:pointer; font-weight:600; line-height:1.8; padding:4px 0; }
+.revision-editor form { margin-top:22px; }
+.revision-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.revision-fields .input,.revision-fields select { width:100%; min-width:0; }
+.revision-scope { border:1px solid var(--line); border-radius:12px; padding:16px; margin:22px 0; }
+.revision-scope legend { padding:0 8px; font-size:13px; }
+#revision-scope { display:block; max-height:420px; overflow:auto; }
+#revision-scope .preparation-scope-group { padding:10px 0; }
+#revision-scope .preparation-root { font-weight:600; }
+#revision-scope label { display:flex; align-items:flex-start; gap:8px; font-size:13px; line-height:1.7; }
+#revision-scope input { margin-top:5px; flex-shrink:0; accent-color:var(--blue); }
+#revision-form-error { color:var(--accent); }
+#revision-scope-summary { line-height:1.8; color:var(--blue); font-size:13px; }
+.daily-complete { color:var(--green); line-height:1.8; }
+.daily-complete > span { display:inline-grid; place-items:center; width:24px; height:24px; border:1px solid currentColor; border-radius:50%; margin-right:6px; }
+.learning-panel { position:fixed; top:90px; right:20px; width:380px; max-height:calc(100dvh - 115px); overflow:auto; z-index:45; background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:20px; box-shadow:0 12px 50px #0002; overscroll-behavior:contain; }
+.learning-panel[hidden] { display:none; }
+.learning-panel > header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.learning-panel h2 { font-size:18px; }
+.learning-panel > header button { font-size:25px; }
+@media(min-width:1100px) {
+  body.learning-panel-open .local-main { padding-right:420px; max-width:1440px; }
+  body.learning-panel-open .question-layout { grid-template-columns:minmax(0,1fr); }
+  body.learning-panel-open .question-index { grid-template-columns:repeat(auto-fill,36px); justify-content:start; }
+  body.learning-panel-open .question-index .index-btn { width:36px; height:36px; aspect-ratio:auto; }
+}
+@media(max-width:1099px) {
+  .learning-panel { top:auto; bottom:calc(82px + env(safe-area-inset-bottom)); left:12px; right:12px; width:auto; max-height:40dvh; border-radius:18px; padding:16px; }
+}
+details { overflow-anchor:none; }
+.hint-step { margin:14px 0; padding:12px; border-left:3px solid var(--blue); background:var(--side); line-height:1.9; }
+.hint-step[hidden] { display:none; }
+.offline-overview,.offline-download,.offline-package { padding:24px; margin:18px 0; }
+.offline-overview p,.offline-package p { line-height:1.8; color:var(--muted); }
+.offline-overview .flex,.offline-package .flex { flex-wrap:wrap; }
+.offline-download .field { margin:18px 0; }
+.offline-download select { max-width:100%; width:100%; }
+.offline-banner { padding:12px 20px; background:var(--blue-light); color:var(--ink); font-size:13px; line-height:1.8; }
+.offline-banner a { color:var(--blue); margin-left:12px; }
+#offline-progress { margin:18px 0; }
+#offline-progress label { display:block; font-size:13px; margin-bottom:10px; }
+#offline-progress progress { width:100%; accent-color:var(--blue); }
+#offline-status { overflow-wrap:anywhere; }
+@media(max-width:600px) { .offline-overview,.offline-download,.offline-package { padding:20px; } }
+.learning-cards { display:grid; gap:14px; margin:14px 0; }
+.learning-card { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px; font-size:14px; line-height:1.9; min-width:0; }
+.learning-card h3 { margin:12px 0; font-size:17px; }
+.learning-card h4 { margin:15px 0 5px; font-size:13px; }
+.learning-card .rich { overflow-x:auto; }
+.learning-card > a { display:inline-block; margin-top:14px; }
+.related-learning { border-top:1px solid var(--line); margin-top:18px; padding-top:14px; }
+.related-learning summary { font-size:14px; }
+.question-placeholder { min-height:340px; }
+.question-placeholder[aria-busy] { background:linear-gradient(135deg,var(--surface),var(--side)); }
+.question-editorial .text-btn { white-space:nowrap; }
+@media(min-width:601px) and (max-width:1100px) { .revision-days { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+@media(max-width:600px) {
+  .revision-summary { align-items:flex-start; flex-direction:column; padding:20px; }
+  .revision-summary > .btn { width:100%; }
+  .revision-days { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .revision-day { padding:16px; }
+  .revision-fields,#revision-scope { grid-template-columns:minmax(0,1fr); }
+  .revision-overview,.revision-editor { padding:20px; }
+  .revision-editor .flex { flex-wrap:wrap; }
+  .revision-fields .input { min-height:44px; }
+  .learning-card { padding:14px; }
+}
+@media(prefers-reduced-motion:no-preference) {
+  .local-main[data-study-session] .question-main { animation:none !important; }
+  .local-main[data-study-session] .result-box { animation:none !important; }
+  .local-main[data-study-session] > * { animation:none !important; }
+  .option { transition:background-color 120ms ease-out,border-color 120ms ease-out; }
+  .progress-bar > span { transition:width 220ms ease-out; }
+  .related-learning[open] > .learning-cards { animation:study-fade 160ms ease-out; }
+  .revision-day { transition:border-color 120ms ease-out,background-color 120ms ease-out; }
+  .daily-complete > span { animation:study-select 220ms ease-out; }
+}

@@ -1,15 +1,43 @@
 {
   "status": "validated_for_github_sync",
-  "saved_at_local": "2026-11-12T23:46:10+08:00",
+  "latest_work": {
+    "date": "2026-11-15",
+    "scope": "Second round: unified daily tasks, subsection calendar, prefetch, learning panel, keyboard, layered hints, motion and offline chapters",
+    "status": "ready_for_github_sync",
+    "entry_points": [
+      "#/calendar",
+      "#/offline",
+      "question learning panel and keyboard help"
+    ],
+    "verification": {
+      "javascript_unit_tests": 109,
+      "python_tests": 41,
+      "browser_suites": 27,
+      "static_build": "passed",
+      "static_resources": "passed",
+      "two_device_calendar_sync": "passed",
+      "progress_backup_restore": "passed",
+      "offline_corruption_rollback": "passed",
+      "offline_update_and_removal": "passed",
+      "final_targeted_regressions": "passed: panel focus and mobile reading position, offline chapters, long-history content cache"
+    },
+    "publication": "User requested pushing these verified changes to main; Git history and Actions determine synchronization and deployment status.",
+    "reports": [
+      "artifacts/second-round-report.json",
+      "artifacts/offline-report.json",
+      "artifacts/second-round-unit-tests.log"
+    ]
+  },
+  "saved_at_local": "2026-11-15T21:19:59+08:00",
   "pause_reason": null,
-  "base_commit": "dd9f7449c74b438dd4c77e2f091ca2af6b58821d",
+  "base_commit": "ec2ac5742108edba9af480686cc1e093206b6078",
   "branch": "main",
   "publication": {
     "last_published_commit": "533dcccf2d65139d3c1f20368a0e7344dd28a8d2",
     "last_synced_commit": "dd9f7449c74b438dd4c77e2f091ca2af6b58821d",
     "sync_requested": true,
     "target_branch": "main",
-    "status": "User requested GitHub synchronization; Git history and Actions determine actual publication state."
+    "status": "User requested synchronization of the revision calendar, learning aids and offline chapters; inspect the latest Git commit and Pages workflow for actual publication."
   },
   "resume_rule": "These nine improvements are complete locally and verified. Continue with the next user request; preserve every question and learning record.",
   "user_constraints": [

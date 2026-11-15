@@ -1,0 +1,121 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile } from 'node:fs/promises';
+import { chromium, browserOptions, baseURL } from './browser-helpers.mjs';
+
+const browser = await chromium.launch(browserOptions), errors = [], report = {};
+try {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(baseURL + '/#/calendar');
+  await page.locator('#revision-plan-form').waitFor();
+  const date = await page.evaluate(() => { const d = new Date(); d.setDate(d.getDate() + 5); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; });
+  await page.locator('[name="title"]').fill('期末复习');
+  await page.locator('[name="examDate"]').fill(date);
+  await page.locator('[name="minutesPerDay"]').fill('30');
+  for (const input of await page.locator('#revision-scope .preparation-root input').all()) await input.uncheck();
+  await page.locator('#revision-plan-form [type="submit"]').click();
+  await page.locator('#revision-form-error').filter({ hasText: '无效' }).waitFor();
+  assert.equal((await page.evaluate(async () => (await import('./storage.mjs')).readSavedState())).revisionPlan, null);
+  await page.locator('[name="revision-chapter"]').first().check();
+  await page.locator('#revision-plan-form [type="submit"]').click();
+  await page.locator('.revision-overview').waitFor();
+  assert.equal(await page.locator('.revision-day').count(), 5);
+  assert.match(await page.locator('.revision-overview').innerText(), /距考试 5 天/);
+  assert.match(await page.locator('.revision-overview .notice').innerText(), /未能安排/);
+  await page.reload();
+  await page.locator('.revision-overview').waitFor();
+  assert.equal(await page.locator('.revision-overview h2').innerText(), '期末复习');
+  const saved = await page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
+  assert.equal(saved.revisionPlan.examDate, date);
+  assert.equal(saved.revisionPlan.chapterIds.length, 1);
+  report.calendarAndReload = true;
+
+  await page.evaluate(() => { window.oldCalendarBar = document.querySelector('[data-progress-key="revision-coverage"]'); });
+  await page.locator('.revision-editor > summary').click();
+  await page.locator('[name="minutesPerDay"]').fill('40');
+  await page.locator('#revision-plan-form [type="submit"]').click();
+  await page.waitForFunction(() => document.querySelector('.revision-overview').textContent.includes('每天 40 分钟'));
+  assert.equal(await page.evaluate(() => window.oldCalendarBar === document.querySelector('[data-progress-key="revision-coverage"]')), true);
+  await page.waitForFunction(() => !document.querySelector('#toast').classList.contains('show'));
+  await page.evaluate(() => { document.activeElement?.blur(); window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); });
+  await page.screenshot({ path: 'artifacts/revision-calendar-desktop.png', animations: 'disabled', fullPage: true });
+  await page.locator('[data-action="revision-practice"]').first().click();
+  await page.locator('.question-main').waitFor();
+  await page.locator('[data-action="question-learning"]').click();
+  await page.locator('#learning-panel .learning-card').waitFor();
+  assert.match(await page.locator('#learning-panel').innerText(), /复合函数求值/);
+  assert.equal(await page.locator('#learning-panel .katex-error').count(), 0);
+  assert.equal(await page.evaluate(async () => {
+    const { conceptCards } = await import('./question-learning.mjs');
+    const { renderRich } = await import('./rich-content.mjs');
+    const host = document.createElement('div');
+    for (const card of conceptCards) for (const field of ['formula', 'example', 'warning']) {
+      const content = document.createElement('div'); content.dataset.rich = card[field]; host.append(content);
+    }
+    document.body.append(host); renderRich(host);
+    const errors = host.querySelectorAll('.katex-error').length; host.remove(); return errors;
+  }), 0);
+  await page.locator('[data-action="close-learning"]').click();
+  await page.locator('#learning-panel').waitFor({state:'hidden'});
+  await page.evaluate(() => { window.oldNav = document.querySelector('.question-nav'); window.oldHeader = document.querySelector('.local-header'); window.oldProgress = document.querySelector('.question-nav .progress-bar'); });
+  await page.locator('[data-action="answer-option"][data-value="B"]').click();
+  await page.locator('[data-action="submit-answer"]').click();
+  await page.locator('.result-box').waitFor();
+  assert.equal(await page.locator('.related-learning').count(), 1);
+  await page.locator('.related-learning summary').click();
+  assert.equal(await page.locator('.related-learning .katex-error').count(), 0);
+  await page.locator('[data-action="next-question"]').click();
+  await page.waitForFunction(() => document.querySelector('.question-main') && document.querySelector('.question-main').dataset.questionId !== 's-6b82188494c1-q0001');
+  assert.equal(await page.evaluate(() => window.oldNav === document.querySelector('.question-nav') && window.oldHeader === document.querySelector('.local-header') && window.oldProgress === document.querySelector('.question-nav .progress-bar')), true);
+  assert.ok(Number(await page.locator('.question-nav .progress-bar').getAttribute('aria-valuenow')) > 0);
+  report.cardsAndStableQuestionNavigation = true;
+
+  await page.goto(baseURL + '/#/data');
+  await page.locator('[data-action="export-progress"]').waitFor();
+  const download = page.waitForEvent('download');
+  await page.locator('[data-action="export-progress"]').click();
+  const file = await download;
+  await file.saveAs('artifacts/calendar-progress-backup.json');
+  const backup = JSON.parse(await readFile('artifacts/calendar-progress-backup.json', 'utf8'));
+  assert.equal(backup.state.revisionPlan.minutesPerDay, 40);
+  await page.goto(baseURL + '/#/calendar');
+  await page.locator('.revision-overview').waitFor();
+  const covered = await page.locator('.revision-overview').innerText();
+  assert.match(covered, /今天已练 1 道不同题/);
+  await page.locator('.revision-editor > summary').click();
+  await page.locator('[data-action="revision-remove"]').click();
+  await page.locator('[data-action="confirm-dialog"]').click();
+  await page.locator('.revision-overview').waitFor({ state: 'detached' });
+  await page.locator('#revision-plan-form').waitFor();
+  assert.equal(await page.locator('.revision-overview').count(), 0);
+  await page.goto(baseURL + '/#/data');
+  await page.locator('[data-action="restore-backup"]').click();
+  await page.locator('#file-input').setInputFiles('artifacts/calendar-progress-backup.json');
+  await page.locator('[data-action="confirm-dialog"]').click();
+  await page.waitForFunction(async () => (await (await import('./storage.mjs')).readSavedState()).revisionPlan?.minutesPerDay === 40);
+  report.progressBackupRestore = true;
+
+  for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 568 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto(baseURL + '/#/calendar');
+    await page.locator('.revision-overview').waitFor();
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  }
+  await page.locator('.local-header-actions [data-action="display-settings"]').click();
+  await page.locator('#display-theme').selectOption('dark');
+  await page.locator('#display-motion').selectOption('reduced');
+  await page.locator('#dialog [data-action="close-dialog"]').first().click();
+  await page.waitForFunction(() => !document.querySelector('#toast').classList.contains('show'));
+  await page.evaluate(() => { document.activeElement?.blur(); window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); });
+  await page.screenshot({ path: 'artifacts/revision-calendar-mobile-dark.png', animations: 'disabled', fullPage: true });
+  await page.goto(baseURL + '/#/practice?session=1');
+  await page.locator('.question-main').waitFor();
+  const beforeNext = await page.locator('.question-main').getAttribute('data-question-id');
+  await page.locator('[data-action="next-question"]').click();
+  await page.waitForFunction(id => { const q = document.querySelector('.question-main'); return q && q.dataset.questionId !== id; }, beforeNext);
+  assert.equal(await page.locator('.question-main').evaluate(el => el.getAnimations({ subtree: true }).length), 0);
+  report.mobileDarkAndReducedMotion = true;
+  assert.deepEqual(errors, []);
+  await writeFile('artifacts/calendar-motion-report.json', JSON.stringify(report, null, 2));
+  console.log('Calendar and motion passed:', JSON.stringify(report));
+} finally { await browser.close(); }

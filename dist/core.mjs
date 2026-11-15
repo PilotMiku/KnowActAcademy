@@ -6,6 +6,7 @@ import { COMPACT_BACKUP_FORMAT, PROGRESS_BACKUP_FORMAT, expandBank } from "./bac
 import { getAttemptIndex } from "./attempt-index.mjs";
 import { normalizeQuestionFeedback, normalizeQuestionAnnotations } from './question-guidance.mjs';
 import { normalizeExamTemplates } from './exam-design.mjs';
+import { normalizeRevisionPlan } from './revision-planner.mjs';
 export const VERSION = 1;
 export const BANK_FORMAT = "local-neumathe.bank.v1";
 export const BACKUP_FORMAT = "local-neumathe.backup.v1";
@@ -97,6 +98,7 @@ export function emptyState() {
     questionAnnotations: {},
     knowledgeRecalled: [],
     dailyGoal: 20,
+    revisionPlan: null,
     knowledgeRead: [],
     knowledgeFavorites: [],
   };
@@ -637,6 +639,7 @@ export function validateBackup(input, installedBank = null) {
   state.questionFeedback = normalizeQuestionFeedback(data.questionFeedback, ids);
   state.questionAnnotations = normalizeQuestionAnnotations(data.questionAnnotations, ids);
   state.examTemplates = normalizeExamTemplates(data.examTemplates, bank);
+  state.revisionPlan = normalizeRevisionPlan(data.revisionPlan, bank);
   state.exams = state.exams.map((exam) => ({ ...exam, questionStartedAt: null }));
   for (const key of ["knowledgeRead", "knowledgeFavorites", "knowledgeRecalled"]) {
     if (

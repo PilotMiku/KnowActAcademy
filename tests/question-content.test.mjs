@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { normalizeBank, emptyState, validateBackup } from '../dist/core.mjs';
-import { loadQuestionContent, loadedQuestion, materializeBank } from '../dist/question-content.mjs';
+import { loadQuestionContent, loadedQuestion, materializeBank, prefetchNextQuestions } from '../dist/question-content.mjs';
 import { createBackup } from '../dist/backup-codec.mjs';
 import { fixture } from './fixture.mjs';
 
@@ -33,6 +33,32 @@ test('catalogs support planning and progress backups while full exports preserve
   const full = await materializeBank(bank, async () => raw);
   assert.deepEqual(full.questions[0].original, raw.questions[0]);
   assert.deepEqual(validateBackup(createBackup(full, emptyState())).bank.questions, full.questions);
+});
+
+test('next-question speculation reuses chunks, leaves source records intact and honors data saving', async () => {
+  const { raw, bank } = setup(), before=JSON.stringify(bank);
+  let calls=0;
+  const request=async () => { calls++; return {format:'zhixing.question-chunk.v1',revision:raw.revision,questions:raw.questions}; };
+  const session={index:0,questionIds:raw.questions.map(q=>q.id)};
+  await prefetchNextQuestions(bank,session,request,{saveData:true});
+  assert.equal(calls,0);
+  await prefetchNextQuestions(bank,session,request,{});
+  assert.equal(calls,1);
+  assert.equal(loadedQuestion(bank,session.questionIds[1]).stem,raw.questions[1].stem);
+  await loadQuestionContent(bank,[session.questionIds[1]],request);
+  assert.equal(calls,1);
+  assert.equal(JSON.stringify(bank),before);
+});
+
+test('prefetch cannot evict the displayed body when a long question history fills the cache', async () => {
+  const { raw, chunk } = setup();
+  raw.questions = Array.from({length:260},(_,i)=>({...raw.questions[0],id:'q'+i}));
+  const bank=normalizeBank({...raw,contentCatalog:{format:'zhixing.question-catalog.v1',revision:raw.revision},
+    questions:raw.questions.map(q=>({...q,stem:'placeholder',analysis:'',contentChunk:chunk}))},{allowCatalog:true});
+  const request=async()=>({format:'zhixing.question-chunk.v1',revision:raw.revision,questions:raw.questions});
+  await loadQuestionContent(bank,raw.questions.map(q=>q.id),request);
+  await prefetchNextQuestions(bank,{index:0,questionIds:raw.questions.map(q=>q.id)},request,{});
+  assert.equal(loadedQuestion(bank,'q0').stem,raw.questions[0].stem);
 });
 
 test('failed, mismatched and cancelled content loads cannot install partial or wrong answers', async () => {

@@ -4,6 +4,7 @@ import { emptyState, normalizeBank, recordAttempt, createPractice, createExam, f
 import { createPreparation } from "../dist/preparation.mjs";
 import { dailyTasks } from "../dist/dashboard-tasks.mjs";
 import { fixture } from "./fixture.mjs";
+import { dayKey } from '../dist/core.mjs';
 
 test("daily tasks retain both saved preparation and ordinary practice, count only valid work, and exclude expired exams", () => {
   const bank = normalizeBank(fixture), state = emptyState(), now = Date.now();
@@ -20,4 +21,18 @@ test("daily tasks retain both saved preparation and ordinary practice, count onl
   assert.equal(tasks.preparation.progress.total, 6);
   assert.equal(tasks.practice.progress.completed, 0);
   assert.equal(tasks.exam, null);
+});
+
+test('an active calendar supplies the only daily target and counts distinct in-scope questions', () => {
+  const bank = normalizeBank(fixture), state = emptyState(), now = Date.now();
+  const date = new Date(now); date.setDate(date.getDate()+3);
+  state.dailyGoal = 200;
+  state.revisionPlan = { title:'考试',subjectId:'math',chapterIds:['limits'],examDate:dayKey(date),minutesPerDay:10,createdAt:now,updatedAt:now };
+  recordAttempt(state,bank.questions[0],'B',true,{at:now});
+  recordAttempt(state,bank.questions[0],'B',true,{at:now+1});
+  const tasks = dailyTasks(bank,state,now+2);
+  assert.equal(tasks.completed,1);
+  assert.ok(tasks.goal <= 5);
+  assert.equal(tasks.remaining,tasks.calendar.days[0].questionIds.length);
+  assert.equal(tasks.goal,tasks.completed+tasks.remaining);
 });

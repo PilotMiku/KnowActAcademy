@@ -2,6 +2,7 @@ import { normalizeBank, getBankIndex } from './core.mjs';
 import { fetchJSON } from './resources.mjs';
 
 const caches = new WeakMap(), fullLoads = new WeakMap();
+const prefetches = new WeakMap();
 function cacheFor(bank) {
   if (!caches.has(bank)) caches.set(bank, { chunks: new Map(), questions: new Map() });
   return caches.get(bank);
@@ -9,7 +10,7 @@ function cacheFor(bank) {
 export function loadedQuestion(bank, id) {
   return bank.contentCatalog ? cacheFor(bank).questions.get(id) : getBankIndex(bank).questions.get(id);
 }
-export async function loadQuestionContent(bank, ids, request = fetchJSON, { signal } = {}) {
+export async function loadQuestionContent(bank, ids, request = fetchJSON, { signal, keepIds = [] } = {}) {
   if (!bank.contentCatalog) return;
   const cache = cacheFor(bank), index = getBankIndex(bank).questions;
   const chunks = new Set(ids.filter(id => !cache.questions.has(id)).map(id => {
@@ -44,8 +45,23 @@ export async function loadQuestionContent(bank, ids, request = fetchJSON, { sign
     if (!q) throw new Error('题目正文不完整，请重试');
     cache.questions.set(id, q);
   }
-  const wanted = new Set(ids);
+  const wanted = new Set([...ids, ...keepIds]);
   for (const id of cache.questions.keys()) if (cache.questions.size > Math.max(256, ids.length) && !wanted.has(id)) cache.questions.delete(id);
+}
+
+// Speculation never changes the displayed question or writes learning progress.
+export function prefetchNextQuestions(bank, session, request = fetchJSON, connection = globalThis.navigator?.connection) {
+  const previous = prefetches.get(bank);
+  const ids = session?.questionIds.slice(session.index + 1, session.index + 3) ?? [];
+  const current = session?.questionIds[session.index];
+  const key = JSON.stringify([current, ids]);
+  if (previous?.key === key) return previous.promise;
+  previous?.controller.abort();
+  if (!bank.contentCatalog || !ids.length || connection?.saveData || ['slow-2g','2g'].includes(connection?.effectiveType)) return Promise.resolve();
+  const controller = new AbortController();
+  const promise = loadQuestionContent(bank, ids, request, { signal:controller.signal, keepIds:current?[current]:[] }).catch(() => {});
+  prefetches.set(bank, { key, controller, promise });
+  return promise;
 }
 
 // Full exports preserve every original field; catalog placeholders are never exported.

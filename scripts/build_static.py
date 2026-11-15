@@ -15,6 +15,7 @@ from study_sources import verify_sources
 from source_archives import verify_source
 from pack_figures import pack_figures
 from pack_questions import pack_questions
+from offline_manifest import write_offline_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -128,6 +129,7 @@ def build(workers=4):
     for source in registry['sources']:
         shutil.copyfile(ROOT / source['path'], staging / 'knowledge-source' / f"{source['id']}.{source['type']}")
     (staging / '.nojekyll').touch()
+    write_offline_manifest(staging, bank, catalog)
     total = sum(p.stat().st_size for p in staging.rglob('*') if p.is_file())
     if total > 900 * 1024 * 1024:
         raise ValueError('静态网站超过 900 MiB，请拆分原始资料托管后再部署')

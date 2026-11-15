@@ -1,0 +1,75 @@
+import assert from 'node:assert/strict';
+import { writeFile } from 'node:fs/promises';
+import { chromium,browserOptions,baseURL } from './browser-helpers.mjs';
+const browser=await chromium.launch(browserOptions), errors=[], report={};
+try {
+  const context=await browser.newContext({viewport:{width:390,height:844}}), page=await context.newPage();
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(baseURL+'/#/offline');
+  await page.locator('#offline-chapter').waitFor();
+  const id='calculus:s-00ec8d743d0b';
+  await page.locator('#offline-chapter').selectOption(id);
+  let corrupted=false;
+  const corruptBody=async route=>{
+    const response=await route.fetch();corrupted=true;
+    await route.fulfill({response,body:(await response.text())+' '});
+  };
+  await context.route('**/question-content/*.json',corruptBody);
+  await page.locator('[data-action="offline-download"]').click();
+  await page.locator('#offline-status').filter({hasText:'资源版本发生变化'}).waitFor({timeout:30000});
+  assert.equal(corrupted,true);
+  assert.equal(await page.locator('.offline-package').count(),0);
+  await context.unroute('**/question-content/*.json',corruptBody);
+  await page.locator('[data-action="offline-download"]').click();
+  await page.locator('.offline-package').waitFor({timeout:60000});
+  assert.equal(await page.locator('.offline-package').count(),1);
+  await page.screenshot({path:'artifacts/offline-mobile.png',animations:'disabled',fullPage:true});
+  await page.evaluate(async()=>{ await caches.open('unrelated-cache'); });
+  const beforeCaches=await page.evaluate(async()=>{
+    const names=await caches.keys();const urls=[];
+    for(const name of names)for(const request of await(await caches.open(name)).keys())urls.push(request.url);
+    return urls;
+  });
+  assert.equal(beforeCaches.some(url=>url.endsWith('/data/bank.json')),false);
+  await context.setOffline(true);
+  await page.reload();
+  await page.locator('.offline-package').waitFor();
+  assert.equal(await page.locator('#offline-banner').isVisible(),true);
+  await page.locator('.offline-package a').click();
+  await page.locator('[data-action="start-practice"][data-mode="sequential"]').click();
+  await page.locator('.question-main').waitFor();
+  await page.locator('.option').first().click();
+  await page.locator('[data-action="submit-answer"]').click();
+  await page.locator('.result-box').waitFor();
+  await page.waitForFunction(()=>[...document.querySelectorAll('.question-main img')].every(img=>img.complete&&img.naturalWidth>0));
+  const saved=await page.evaluate(async()=>(await import('./storage.mjs')).readSavedState());
+  assert.equal(saved.attempts.length,1);
+  await page.reload();await page.locator('.result-box').waitFor();
+  report.offlineReloadPracticeAndFigures=true;
+  report.corruptDownloadRollbackAndRetry=true;
+  await context.setOffline(false);
+  await page.goto(baseURL+'/#/offline');await page.locator('.offline-package').waitFor();
+  // Simulate a new deployment with unchanged question bytes and a distinct shell version.
+  const nextVersion='b'.repeat(64);
+  await context.route('**/offline-manifest.json*',async route=>{
+    const response=await route.fetch();const data=await response.json();data.version=nextVersion;
+    await route.fulfill({response,json:data});
+  });
+  await page.locator('[data-action="offline-check"]').click();
+  await page.locator('[data-action="offline-update"]').waitFor();
+  await page.locator('[data-action="offline-update"]').click();
+  await page.waitForFunction(version=>navigator.serviceWorker.controller?.scriptURL.includes(version),nextVersion,{timeout:60000});
+  await page.locator('.offline-package').waitFor();
+  assert.match(await page.locator('.offline-overview').first().innerText(),/bbbbbbbbbbbb/);
+  assert.equal((await page.evaluate(async()=>(await import('./storage.mjs')).readSavedState())).attempts.length,1);
+  await page.locator('[data-action="offline-clean"]').click();
+  await page.waitForFunction(async()=>{const names=await caches.keys();return names.filter(name=>name.startsWith('zhixing-offline-v1:')).length===1;});
+  assert.equal(await page.evaluate(async()=>(await caches.keys()).includes('unrelated-cache')),true);
+  await page.locator('[data-action="offline-remove"]').click();
+  await page.locator('.offline-package').waitFor({state:'detached'});
+  assert.equal((await page.evaluate(async()=>(await import('./storage.mjs')).readSavedState())).attempts.length,1);
+  report.explicitVersionUpdateAndScopedRemoval=true;
+  assert.deepEqual(errors,[]);
+  await writeFile('artifacts/offline-report.json',JSON.stringify(report,null,2));
+  console.log('Offline chapters passed:',JSON.stringify(report));
+} finally { await browser.close(); }

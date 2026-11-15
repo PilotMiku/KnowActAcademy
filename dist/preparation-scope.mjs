@@ -30,9 +30,9 @@ export function preparationTreeHTML(bank, subjectId, selected) {
     return `<div class="preparation-scope-group">${row(c, true)}${children.length ? `<details ${children.some(ch => chosen.has(ch.id)) && !chosen.has(c.id) ? 'open' : ''}><summary>选择小节 <span>${children.length} 个</span></summary><div class="preparation-scope-children">${children.map(ch => row(ch)).join('')}</div></details>` : ''}</div>`;
   }).join('');
 }
-export function syncPreparationTree(container, chapters, selected) {
+export function syncPreparationTree(container, chapters, selected, attribute = 'data-prepare-chapter') {
   const chosen = new Set(selected), byId = new Map(chapters.map(c => [c.id, c]));
-  for (const input of container.querySelectorAll('[data-prepare-chapter]')) {
+  for (const input of container.querySelectorAll(`[${attribute}]`)) {
     let parent = byId.get(input.value)?.parentId, inherited = false;
     const visited = new Set();
     while (parent && !visited.has(parent)) {
