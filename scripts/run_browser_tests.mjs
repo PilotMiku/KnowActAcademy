@@ -7,6 +7,7 @@ const suites = ['welcome-browser', 'brand-theme-browser', 'local-bank-browser', 
 // Includes durable calendar, knowledge-aid and motion regressions.
 suites.push('calendar-motion-browser');
 suites.push('second-round-browser', 'offline-browser');
+suites.push('keyboard-navigation-browser');
 const requested = process.argv.slice(2);
 if (requested.some(name => !suites.includes(name))) throw new Error('Unknown browser suite');
 const python = process.env.PYTHON || 'python3';

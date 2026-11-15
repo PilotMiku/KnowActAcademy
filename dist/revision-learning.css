@@ -45,6 +45,7 @@
   .learning-panel { top:auto; bottom:calc(82px + env(safe-area-inset-bottom)); left:12px; right:12px; width:auto; max-height:40dvh; border-radius:18px; padding:16px; }
 }
 details { overflow-anchor:none; }
+.local-main[data-study-session] { overflow-anchor:none; }
 .hint-step { margin:14px 0; padding:12px; border-left:3px solid var(--blue); background:var(--side); line-height:1.9; }
 .hint-step[hidden] { display:none; }
 .offline-overview,.offline-download,.offline-package { padding:24px; margin:18px 0; }

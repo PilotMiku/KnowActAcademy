@@ -21,7 +21,7 @@ export function closeLearningPanel({ focus = true } = {}) {
     animation.finished.then(() => { if (closing === animation) { closing = null; finish(); } }).catch(() => {});
   }
 }
-export function openLearningPanel(question, bank, state) {
+export function openLearningPanel(question, bank, state, { reveal = true } = {}) {
   const panel = document.getElementById('learning-panel');
   if (panel.hidden) previousPosition = { hash:location.hash, questionId:question.id, y:scrollY };
   closing?.cancel(); closing = null;
@@ -31,8 +31,8 @@ export function openLearningPanel(question, bank, state) {
   renderRich(panel); panel.hidden = false; panel.scrollTop = 0;
   document.body.classList.add('learning-panel-open');
   if (!reducedMotion()) panel.animate([{ opacity:0, transform:'translateY(6px)' }, { opacity:1, transform:'translateY(0)' }], { duration:160 });
-  panel.querySelector('[data-action="close-learning"]')?.focus({ preventScroll:true });
-  if (matchMedia('(max-width:1099px)').matches) {
+  if (reveal) panel.querySelector('[data-action="close-learning"]')?.focus({ preventScroll:true });
+  if (reveal && matchMedia('(max-width:1099px)').matches) {
     const title = document.querySelector('.question-main > .question-title');
     if (title) window.scrollTo({ top:Math.max(0,scrollY + title.getBoundingClientRect().top - 90), behavior:reducedMotion()?'instant':'smooth' });
   }
@@ -48,7 +48,7 @@ export function syncLearningPanel(question, bank, state, active) {
   }
   if (panel.dataset.questionId !== question.id) {
     const focus = document.activeElement;
-    openLearningPanel(question, bank, state);
+    openLearningPanel(question, bank, state, { reveal:false });
     if (focus?.isConnected && !panel.contains(focus)) focus.focus({ preventScroll:true });
   }
 }

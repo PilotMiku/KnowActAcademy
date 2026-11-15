@@ -9,10 +9,16 @@ export function renderStudyLayout(root, html, scene = null) {
   const template = document.createElement('template');
   template.innerHTML = html;
   const sameSession = scene && previousScene?.key === scene.key;
+  const existingMain = root.querySelector('.local-main');
+  const position = sameSession && existingMain ? { x:scrollX, y:scrollY,
+    top:existingMain.getBoundingClientRect().top + scrollY } : null;
+  // Keep enough document height for this viewport when the next question is shorter.
+  if (position) existingMain.style.minHeight = `${Math.max(0, position.y + innerHeight - position.top)}px`;
   if (!sameSession) pendingFocus = null;
   const focused = document.activeElement;
   if (sameSession && root.contains(focused) && ['next-question', 'navigate-question'].includes(focused.dataset.action))
-    pendingFocus = { action: focused.dataset.action, index: focused.dataset.index };
+    pendingFocus = { action: focused.dataset.action, index: focused.dataset.index,
+      followCurrent: focused.matches('.index-btn'), inActions: !!focused.closest('.question-actions') };
   const bars = new Map([...root.querySelectorAll('[data-progress-key]')].map(bar => [bar.dataset.progressKey, bar]));
   // Move existing bars into the new view so updates interpolate from their actual width.
   for (const fresh of template.content.querySelectorAll('[data-progress-key]')) {
@@ -43,12 +49,13 @@ export function renderStudyLayout(root, html, scene = null) {
         // Keep header controls while refreshing dynamic badges and current-page labels.
         oldNav.replaceChildren(...newNav.childNodes);
       }
-      fresh.replaceWith(existing);
+      if (selector !== '.local-header') fresh.replaceWith(existing);
     }
     const main = root.querySelector('.local-main'), fresh = template.content.querySelector('.local-main');
-    if (main && fresh) { main.replaceChildren(...fresh.childNodes); fresh.replaceWith(main); }
+    if (main && fresh) main.replaceChildren(...fresh.childNodes);
   }
-  root.replaceChildren(template.content);
+  // Updating the connected main avoids detaching the focused/sticky page shell.
+  if (!sameSession || !existingMain) root.replaceChildren(template.content);
   const main = root.querySelector('.local-main');
   if (main) main.toggleAttribute('data-study-session', !!scene);
   if (scene && sameSession && scene.questionId && scene.questionId !== previousScene.questionId && !reducedMotion()) {
@@ -61,11 +68,15 @@ export function renderStudyLayout(root, html, scene = null) {
   }
   if (scene?.questionId && pendingFocus) {
     const candidates = [...root.querySelectorAll(`[data-action="${pendingFocus.action}"]`)];
-    candidates.find(el => !el.disabled && (pendingFocus.index === undefined || el.dataset.index === pendingFocus.index))?.focus({ preventScroll: true });
+    const target = pendingFocus.followCurrent ? root.querySelector('.question-nav .index-btn.current')
+      : pendingFocus.inActions ? root.querySelector(`.question-actions [data-action="${pendingFocus.action}"]:not(:disabled)`)
+        : candidates.find(el => !el.disabled && (pendingFocus.index === undefined || el.dataset.index === pendingFocus.index));
+    target?.focus({ preventScroll: true });
     pendingFocus = null;
   }
   // Keep the last visible question across a loading state, for direction and focus.
   previousScene = sameSession && !scene.questionId ? previousScene : scene;
+  return position ? () => window.scrollTo({ left:position.x, top:position.y, behavior:'instant' }) : null;
 }
 
 // Expand only the new feedback, keeping the statement and selected options fixed.

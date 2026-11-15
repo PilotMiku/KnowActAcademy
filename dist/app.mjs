@@ -609,7 +609,7 @@ function questionNavigation(p, exam = false) {
       return button(
         `${i + 1}<span class="nav-state" aria-hidden="true">${exam ? p.uncertainIds?.includes(id) ? "?" : "" : r?.correct === true ? "✓" : r?.correct === false ? "×" : r?.graded ? "?" : ""}</span>`,
         "navigate-question",
-        `data-index="${i}" aria-label="第 ${i + 1} 题"`,
+        `data-index="${i}" aria-label="第 ${i + 1} 题" ${i === p.index ? 'aria-current="step"' : ''}`,
         "index-btn " + cls + (i === p.index ? " current" : ""),
       );
     })
@@ -745,12 +745,13 @@ function draw() {
     (m) => !m.resolved,
   ).length;
   const markup = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/welcome" aria-label="知行学习 欢迎页">${brandIcon(document.documentElement.dataset.theme)}<strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}</div></div></header><main id="main" class="local-main" tabindex="-1">${contentNotice || (page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : page === "offline" ? offlinePage(offline, bank) : page === "calendar" ? revisionCalendarPage(bank, state, r.query) : page === "quality" ? qualityPage() : page === "data" ? dataPage() : page === "reference" ? referencePage(bank, r.query) : libraryPage())}<div class="save-indicator" data-failed="${saveFailed}"><span data-save-message role="status" aria-live="polite">${esc(saveMessage)}</span>${button("重试保存", "retry-save", saveFailed ? "" : "hidden", "btn small")}</div><footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><a href="#/data">数据与备份</a><a href="#/offline">离线题库</a><a href="#/quality">题目质量与纠错</a>${button("学习指南", "open-guide", "", "text-btn")}</footer></main></div>`;
-  renderStudyLayout(app, markup, activeSession ? { key: page + ':' + activeSession.id, questionId: contentPending ? null : activeSession.questionIds[activeSession.index], index: activeSession.index } : null);
+  const restoreQuestionPosition = renderStudyLayout(app, markup, activeSession ? { key: page + ':' + activeSession.id, questionId: contentPending ? null : activeSession.questionIds[activeSession.index], index: activeSession.index } : null);
   document.title = `${routes[page]} · 知行学习`;
   document.querySelector("#main").toggleAttribute("data-enter", entering);
   renderRich(app, page === "exam" && exam?.status === "submitted");
   if (activeSession && !contentPending) prefetchNextQuestions(bank, activeSession);
   syncLearningPanel(activeSession && !contentPending ? currentQuestion() : null, bank, state, !!practice);
+  restoreQuestionPosition?.();
   readingController.mount(app);
   if (page === 'calendar') updateRevisionScope();
   if (page === 'offline' && !offline.state.attempted) offline.ensure();
