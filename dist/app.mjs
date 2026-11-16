@@ -517,8 +517,18 @@ function updateExamProgress(exam) {
   updateSessionNavigation(app, exam, bank, true);
 }
 function updateMenu() {
-  toggleMenuMotion(app.querySelector(".local-nav"), mobileOpen);
-  app.querySelector('[data-action="toggle-menu"]')?.setAttribute("aria-expanded", String(mobileOpen));
+  const menu = app.querySelector('.local-nav');
+  if (menu) menu.inert = matchMedia('(max-width:1100px)').matches && !mobileOpen;
+  toggleMenuMotion(menu, mobileOpen);
+  const control = app.querySelector('[data-action="toggle-menu"]');
+  control?.setAttribute('aria-expanded', String(mobileOpen));
+  control?.setAttribute('aria-label', mobileOpen ? '收起导航' : '打开导航');
+}
+function closeMenu(restoreFocus = false) {
+  if (!mobileOpen) return;
+  mobileOpen = false;
+  updateMenu();
+  if (restoreFocus) app.querySelector('[data-action="toggle-menu"]')?.focus({ preventScroll:true });
 }
 function updateTheme() {
   const theme = applyPreferences(state);
@@ -654,7 +664,7 @@ const { dashboard, chapterCards, statsPage } = createOverviewPages({
   getGuideHTML: () => !entryPreferences().guideDismissed && !state.attempts.length && !state.practice && !state.preparation && !state.exams.length ? guideHTML({ dismissible: true }) : "",
   getBank: () => bank, getState: () => state, getKnowledge: () => knowledge, getFilters, subject, qById,
 });
-const { collectionRow, collectionPage, selectedCollection, selectCollection, selectCollectionPage } = createCollectionPages({
+const { collectionRow, collectionPage, selectedCollection, selectCollection, selectCollectionPage, updateCollectionSelection } = createCollectionPages({
   getBank: () => bank, getState: () => state, getFilters, route, subject, chapter, filtersHTML, names,
 });
 const { examsPage, examPage, timeRemaining } = createExamPages({
@@ -754,8 +764,9 @@ function draw() {
   const countWrong = Object.values(state.mistakes).filter(
     (m) => !m.resolved,
   ).length;
-  const markup = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/welcome" aria-label="知行学习 欢迎页">${brandIcon(document.documentElement.dataset.theme)}<strong>知行学习</strong><span>题库</span></a><nav class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="打开导航" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}</div></div></header><main id="main" class="local-main" tabindex="-1">${contentNotice || (page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : page === "offline" ? offlinePage(offline, bank) : page === "calendar" ? revisionCalendarPage(bank, state, r.query) : page === "quality" ? qualityPage() : page === "data" ? dataPage() : page === "reference" ? referencePage(bank, r.query) : libraryPage())}<div class="save-indicator" data-failed="${saveFailed}"><span data-save-message role="status" aria-live="polite">${esc(saveMessage)}</span>${button("重试保存", "retry-save", saveFailed ? "" : "hidden", "btn small")}</div><footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><a href="#/data">数据与备份</a><a href="#/offline">离线题库</a><a href="#/quality">题目质量与纠错</a>${button("学习指南", "open-guide", "", "text-btn")}</footer></main></div>`;
+  const markup = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/welcome" aria-label="知行学习 欢迎页">${brandIcon(document.documentElement.dataset.theme)}<strong>知行学习</strong><span>题库</span></a><nav id="primary-navigation" class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="${mobileOpen ? "收起导航" : "打开导航"}" aria-controls="primary-navigation" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}</div></div></header><main id="main" class="local-main" tabindex="-1">${contentNotice || (page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : page === "offline" ? offlinePage(offline, bank) : page === "calendar" ? revisionCalendarPage(bank, state, r.query) : page === "quality" ? qualityPage() : page === "data" ? dataPage() : page === "reference" ? referencePage(bank, r.query) : libraryPage())}<div class="save-indicator" data-failed="${saveFailed}"><span data-save-message role="status" aria-live="polite">${esc(saveMessage)}</span>${button("重试保存", "retry-save", saveFailed ? "" : "hidden", "btn small")}</div><footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><a href="#/data">数据与备份</a><a href="#/offline">离线题库</a><a href="#/quality">题目质量与纠错</a>${button("学习指南", "open-guide", "", "text-btn")}</footer></main></div>`;
   const restoreQuestionPosition = renderStudyLayout(app, markup, activeSession ? { key: page + ':' + activeSession.id, questionId: contentPending ? null : activeSession.questionIds[activeSession.index], index: activeSession.index } : null);
+  updateMenu();
   document.title = `${routes[page]} · 知行学习`;
   document.querySelector("#main").toggleAttribute("data-enter", entering);
   renderRich(app, page === "exam" && exam?.status === "submitted");
@@ -1145,7 +1156,8 @@ async function handleAction(action, el) {
     }
     case 'select-collection-page':
     case 'clear-collection-selection':
-      selectCollectionPage(el.dataset.mode, action === 'clear-collection-selection'); render(); break;
+      selectCollectionPage(el.dataset.mode, action === 'clear-collection-selection');
+      updateCollectionSelection(app, el.dataset.mode); break;
     case 'practice-selected': {
       const questions = selectedCollection(el.dataset.mode);
       if (questions.length) await startPractice(questions.map(q => q.id), el.dataset.mode);
@@ -1551,6 +1563,7 @@ async function handleAction(action, el) {
 }
 const IMPORT_GUIDE = `知行学习题库导入说明\n\n题目、答案与解析请使用实际原始数据。本说明不包含 NeuMathe 原题。\n\nJSON 结构：\n{\n "format":"local-neumathe.bank.v1",\n "source":{"name":"题库来源"},\n "subjects":[{"id":"math","name":"科目名称","chapters":[{"id":"chapter-1","name":"章节名称"}]}],\n "questions":[{\n  "id":"全局唯一ID", "subjectId":"math", "chapterId":"chapter-1",\n  "type":"single", "stem":"原题题干",\n  "options":[{"id":"A","text":"原选项A"},{"id":"B","text":"原选项B"}],\n  "answer":"A", "analysis":"原题解析", "difficulty":"medium", "tags":[], "concepts":["知识点名称"]\n }]\n}\n\n题型：single 单选，multiple 多选，boolean 判断，fill 填空，solution 解答。\n多选 answer 使用选项 ID 数组，例如 ["A","C"]。\n判断题默认选项 ID 为 true / false（字符串），也可提供自定义选项。\n填空 answer 为字符串或可接受答案数组；acceptedAnswers 可补充其他写法。\n填空只比较规范化文本，不提供符号代数等价判定。\n解答题保留原答案并由学习者对照自评。\n题干与解析支持常见 HTML 排版和 $…$、$$…$$、\\(…\\)、\\[…\\] LaTeX 公式。\n不执行 HTML 中的脚本、事件或其他主动内容。\n导入会替换题库并重置现有学习数据；导入前请先导出完整备份。\n学习数据只保存在本浏览器，完整备份可用于换设备。\n`;
 document.addEventListener("click", (event) => {
+  if (mobileOpen && !event.target.closest('.local-nav,[data-action="toggle-menu"]')) closeMenu();
   if (event.target.closest('[data-guide-destination]')) {
     rememberEntry({ guideDismissed: true });
     if (dialog.open) dialog.close();
@@ -1636,8 +1649,8 @@ document.addEventListener("change", (event) => {
   if (event.target.matches('[data-revision-chapter]')) { updateRevisionScope(event.target); return; }
   if (event.target.closest('#revision-plan-form') && ['examDate','minutesPerDay'].includes(event.target.name)) { updateRevisionScope(); return; }
   if (event.target.matches('[data-collection-selected]')) {
-    const y = scrollY;
-    selectCollection(event.target.dataset.mode, event.target.value, event.target.checked); render(); scrollTo(0,y); return;
+    selectCollection(event.target.dataset.mode, event.target.value, event.target.checked);
+    updateCollectionSelection(app, event.target.dataset.mode); return;
   }
   if (event.target.matches("[data-reading-section]")) {
     go(`/knowledge/${route().parts[1]}?chapter=${encodeURIComponent(event.target.value)}`);
@@ -1767,8 +1780,13 @@ dialog.addEventListener("click", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.isComposing || event.keyCode === 229) return;
+  if (event.key === 'Escape' && !dialog.open && mobileOpen) { event.preventDefault(); closeMenu(true); return; }
+  if (event.key === 'ArrowDown' && event.target.matches('[data-action="toggle-menu"]')) {
+    event.preventDefault(); mobileOpen = true; updateMenu();
+    app.querySelector('.local-nav a')?.focus({ preventScroll:true }); return;
+  }
   if (event.key === 'Escape' && !dialog.open && !document.getElementById('learning-panel').hidden) { event.preventDefault(); closeLearningPanel(); return; }
-  if (!event.repeat && !dialog.open && !storageConflicted() && !event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey &&
+  if (!event.repeat && !dialog.open && !mobileOpen && !storageConflicted() && !event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey &&
       !event.target.closest('input,textarea,select,[contenteditable],a,summary,[role="button"]') && document.body.dataset.studyActivity === 'question' && document.querySelector('.question-main')) {
     const q = currentQuestion(), session = currentExam() ?? state.practice;
     if (/^[a-d]$/i.test(event.key)) {
@@ -1806,9 +1824,18 @@ function updateKeyboardInset() {
 }
 window.visualViewport?.addEventListener('resize', updateKeyboardInset);
 window.visualViewport?.addEventListener('scroll', updateKeyboardInset);
+document.addEventListener('focusin', event => {
+  if (mobileOpen && !event.target.closest('.local-nav,[data-action="toggle-menu"]')) closeMenu();
+});
+matchMedia('(max-width:1100px)').addEventListener('change', event => {
+  const navigationFocused = !!document.activeElement?.closest('.local-nav');
+  mobileOpen = false; updateMenu();
+  if (event.matches && navigationFocused) app.querySelector('[data-action="toggle-menu"]')?.focus({ preventScroll:true });
+});
 document.addEventListener('focusin', updateKeyboardInset);
 document.addEventListener('focusout', () => requestAnimationFrame(updateKeyboardInset));
 window.addEventListener("hashchange", () => {
+  mobileOpen = false;
   if (route().page !== 'welcome') rememberEntry();
   restoreGuard.cancel();
   cancelWelcomeExit();

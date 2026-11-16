@@ -26,7 +26,7 @@ const menus = new WeakMap();
 export function toggleMenuMotion(menu, open) {
   if (!menu) return;
   menus.get(menu)?.cancel(); menus.delete(menu);
-  if (open || reducedMotion() || !menu.classList.contains('open') || !matchMedia('(max-width:1050px)').matches) { menu.classList.toggle('open', open); return; }
+  if (open || reducedMotion() || !menu.classList.contains('open') || !matchMedia('(max-width:1100px)').matches) { menu.classList.toggle('open', open); return; }
   const animation = menu.animate([{ opacity:1 }, { opacity:0 }], { duration:120 });
   menus.set(menu, animation);
   animation.finished.then(() => { if (menus.get(menu) === animation) { menu.classList.remove('open'); menus.delete(menu); } }).catch(() => {});
