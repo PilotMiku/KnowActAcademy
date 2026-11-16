@@ -54,10 +54,24 @@ const engines = [['chromium', chromium, browserOptions]];
 if (existsSync(webkit.executablePath())) engines.push(['webkit', webkit, {headless:true}]);
 for (const [name, engine, options] of engines) {
   const browser = await engine.launch(options);
+  let activePage, activeCase;
   try {
     for (const width of [390,320]) {
       const height = width === 320 ? 568 : 844;
       const page = await browser.newPage({viewport:{width,height}, isMobile:true, hasTouch:true, deviceScaleFactor:3});
+      activePage = page; activeCase = {engine:name,width};
+      await page.addInitScript(() => {
+        const events = window.mobileViewportEvents = [];
+        const record = event => {
+          events.push({type:event.type, time:Math.round(performance.now()), y:scrollY,
+            width:innerWidth, height:innerHeight, visualHeight:window.visualViewport?.height,
+            minHeight:document.querySelector('.local-main')?.style.minHeight});
+          if (events.length > 80) events.shift();
+        };
+        for (const type of ['scroll','resize','touchstart','pointerdown','keydown'])
+          window.addEventListener(type, record, {capture:true,passive:true});
+        window.visualViewport?.addEventListener('resize', record);
+      });
       page.on('pageerror', error => errors.push(`${name}: ${error.message}`));
       await page.goto(baseURL + '/#/practice?subject=calculus&chapter=s-6b82188494c1');
       await page.locator('[data-action="start-practice"][data-mode="sequential"]').tap();
@@ -78,6 +92,17 @@ for (const [name, engine, options] of engines) {
       // Toolbar changes can arrive after slow content/figure decoding or a pause
       // to read. They must not depend on a short wall-clock window after a tap.
       await page.waitForTimeout(1200);
+      // Reproduce Linux WebKit's ordering: the temporary clamp is reported as
+      // scrolling before the resize event has updated the viewport dimensions.
+      const orderedResize = await page.evaluate(async () => {
+        const before = scrollY;
+        scrollTo({top:before - 120,behavior:'instant'});
+        dispatchEvent(new Event('scroll'));
+        dispatchEvent(new Event('resize'));
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        return {before,after:scrollY};
+      });
+      assert.ok(Math.abs(orderedResize.before - orderedResize.after) < 3, `${name} ${width}px scroll-before-resize must retain reading position (${orderedResize.before} → ${orderedResize.after})`);
       await page.setViewportSize({width,height:height + 120});
       await page.waitForTimeout(150);
       const afterResize = await page.evaluate(() => scrollY);
@@ -172,10 +197,16 @@ for (const [name, engine, options] of engines) {
       await ready(page, 1);
       await swipe(page, name, '.question-main > .question-top', 150);
       await ready(page, 0);
-      report.push({engine:name,width,taps:true,viewportExpansion:true,delayedViewportExpansion:true,scrollTakeover:true,swipes:true,boundaries:true,nativeVerticalAndFormulaScroll:name === 'chromium',notesAndDialogs:true,exam:true});
+      report.push({engine:name,width,taps:true,viewportExpansion:true,delayedViewportExpansion:true,scrollBeforeResize:true,scrollTakeover:true,swipes:true,boundaries:true,nativeVerticalAndFormulaScroll:name === 'chromium',notesAndDialogs:true,exam:true});
       console.log('Mobile navigation passed:', JSON.stringify(report.at(-1)));
       await page.close();
     }
+  } catch (error) {
+    const viewport = await activePage?.evaluate(() => ({y:scrollY, width:innerWidth,height:innerHeight,
+      visualHeight:window.visualViewport?.height, active:document.activeElement?.outerHTML?.slice(0,300),
+      events:window.mobileViewportEvents?.slice(-30)})).catch(() => null);
+    console.error('Mobile navigation failure:', JSON.stringify({case:activeCase,viewport}));
+    throw error;
   } finally { await browser.close(); }
 }
 assert.deepEqual(errors, []);

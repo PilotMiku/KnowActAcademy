@@ -8,7 +8,8 @@ const suites = ['welcome-browser', 'brand-theme-browser', 'local-bank-browser', 
 suites.push('calendar-motion-browser');
 suites.push('second-round-browser', 'offline-browser');
 suites.push('keyboard-navigation-browser');
-suites.push('mobile-navigation-browser');
+// Surface cross-platform viewport failures at the start of the full run.
+suites.unshift('mobile-navigation-browser');
 suites.push('usability-review-browser');
 suites.push('collection-navigation-browser');
 const requested = process.argv.slice(2);
@@ -31,12 +32,22 @@ async function start(command, args) {
   return first;
 }
 async function run(file, env) {
-  const child = spawn(process.execPath, [file], { stdio: 'inherit', env: { ...process.env, ...env } });
+  const child = spawn(process.execPath, [file], { stdio: ['inherit', 'inherit', 'pipe'], env: { ...process.env, ...env } });
   processes.push(child);
-  const [code] = await once(child, 'exit');
+  let failure = '';
+  child.stderr.on('data', chunk => {
+    process.stderr.write(chunk);
+    failure = (failure + chunk).slice(-12000);
+  });
+  const [code] = await once(child, 'close');
   if (code !== 0) {
     for (const diagnostic of serviceDiagnostics) process.stderr.write(diagnostic());
-    throw new Error(`${file} failed (${code})`);
+    const detail = failure.replace(/\u001b\[[0-9;]*m/g, '').trim();
+    if (process.env.GITHUB_ACTIONS === 'true') {
+      const escaped = detail.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+      process.stdout.write(`::error title=${file} failed::${escaped || `Process exited with code ${code}`}\n`);
+    }
+    throw new Error(`${file} failed (${code})${detail ? '\n' + detail : ''}`);
   }
 }
 try {

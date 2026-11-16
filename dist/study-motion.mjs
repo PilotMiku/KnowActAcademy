@@ -48,8 +48,14 @@ window.visualViewport?.addEventListener('resize', restoreResizedViewport);
 // Ignore WebKit's temporary clamp while the viewport itself is changing.
 window.addEventListener('scroll', () => {
   const saved = viewportRestore;
-  if (saved && !saved.resize && saved.height === innerHeight && saved.visualHeight === window.visualViewport?.height &&
-      (Math.abs(scrollY - saved.position.y) > 2 || Math.abs(scrollX - saved.position.x) > 2)) viewportRestore = null;
+  if (!saved) return;
+  // Linux WebKit can dispatch the clamp's scroll event before updating either
+  // viewport height. Wait for the rendering cycle before treating it as a new
+  // reading position; real input still cancels synchronously above.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (viewportRestore === saved && !saved.resize && saved.height === innerHeight && saved.visualHeight === window.visualViewport?.height &&
+        (Math.abs(scrollY - saved.position.y) > 2 || Math.abs(scrollX - saved.position.x) > 2)) viewportRestore = null;
+  }));
 }, { passive:true });
 export function renderStudyLayout(root, html, scene = null) {
   const template = document.createElement('template');
