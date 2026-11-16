@@ -7,7 +7,7 @@ import { pauseExamQuestion, resumeExamQuestion } from "./exam-timing.mjs";
 import { pausePracticeQuestion } from "./practice-timing.mjs";
 import { button } from "./ui.mjs";
 
-const actions = new Set(["start-practice", "prepare-select-all", "prepare-select-none", "begin-preparation", "concept-details", "start-spaced", "spaced-one", "resume-preparation", "complete-preparation", "next-training", "start-collection", "practice-one", "resume-practice", "exit-practice", "answer-option", "submit-answer", "self-grade", "navigate-question", "next-question", "finish-practice"]);
+const actions = new Set(["start-practice", "prepare-select-all", "prepare-select-none", "begin-preparation", "concept-details", "start-spaced", "spaced-one", "resume-preparation", "complete-preparation", "finish-preparation", "next-training", "start-collection", "practice-one", "resume-practice", "exit-practice", "answer-option", "submit-answer", "self-grade", "navigate-question", "next-question", "finish-practice"]);
 
 // Own practice/preparation transitions; persistence and navigation stay explicit.
 export function createSessionActions({ getBank, getState, getFilters, route, subject,
@@ -170,10 +170,12 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
         render();
         break;
       }
+      case "finish-preparation":
       case "next-question": {
         const p = state.practice;
         if (!p) return true;
-        if (p.index < p.questionIds.length - 1) {
+        if (action === "finish-preparation" && (!isPreparationPractice(p) || !practiceProgress(p, bank).ready)) return true;
+        if (action !== "finish-preparation" && p.index < p.questionIds.length - 1) {
           pausePracticeQuestion(p);
           p.index++;
           p.questionStartedAt = null;

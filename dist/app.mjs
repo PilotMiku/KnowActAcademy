@@ -153,7 +153,7 @@ const DEFAULT_QUESTION_COUNT = 25;
 const sessionTransitions = new Set([
   "start-practice", "start-collection", "practice-one", "begin-preparation",
   "next-training", "resume-preparation", "start-spaced", "spaced-one",
-  "begin-exam", "navigate-question", "next-pending-question", "next-question", "complete-preparation",
+  "begin-exam", "navigate-question", "next-pending-question", "next-question", "complete-preparation", "finish-preparation",
   'practice-selected', 'practice-exam-weak', 'revision-practice',
 ]);
 const routes = {

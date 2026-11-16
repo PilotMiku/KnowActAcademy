@@ -43,6 +43,7 @@ try {
   await page.getByRole("button", { name: /随机 25 题/ }).click();
   await page.locator(".question-main").waitFor();
   assert.equal((await stateOf(page)).practice.questionIds.length, 25);
+  assert.equal(await page.locator('[data-action="finish-preparation"]').count(), 0);
   await page.goto(randomURL);
   await revealPracticeOptions(page);
   await page.locator("#random-count").selectOption("all");
@@ -83,6 +84,8 @@ try {
   const initial = await stateOf(page);
   assert.equal(initial.practice.questionIds.length, 20);
   assert.ok(initial.practice.questionIds.every((id) => pool.some((q) => q.id === id)));
+  const finishGroup = page.locator('.question-nav [data-action="finish-preparation"]');
+  assert.equal(await finishGroup.isVisible(), false);
   // Skip a question, finish the rest, then return to the unanswered item.
   await next(page);
   for (let i = 1; i < 20; i++) {
@@ -94,12 +97,16 @@ try {
   assert.equal(await page.locator('[data-action="next-training"]').count(), 0);
   await page.locator('[data-action="complete-preparation"]').click();
   await page.locator('.index-btn.current[data-index="0"]').waitFor();
+  assert.equal(await finishGroup.isVisible(), false);
+  await page.locator('.question-nav').evaluate(el => { window.originalQuestionNav = el; });
   await answerCurrent(page, bank.questions, false);
+  await finishGroup.waitFor({ state: "visible" });
+  assert.equal(await page.locator('.question-nav').evaluate(el => el === window.originalQuestionNav), true);
+  assert.equal((await stateOf(page)).practice.index, 0);
   await page.reload();
   await page.locator(".result-box").waitFor();
   assert.equal((await stateOf(page)).attempts.filter((a) => a.preparationId === initial.preparation.id).length, 20);
-  await page.locator('[data-action="navigate-question"][data-index="19"]').first().click();
-  await next(page);
+  await finishGroup.click();
   await page.locator(".preparation-summary").waitFor();
   assert.match(await page.locator(".preparation-summary").innerText(), /已完成 20 题/);
   await page.screenshot({ path: "artifacts/preparation-summary-desktop.png", fullPage: true, animations: "disabled" });
@@ -171,28 +178,43 @@ try {
   await page.locator(".question-main").waitFor();
   const small = await stateOf(page);
   assert.equal(small.practice.questionIds.length, fixture.questions.length);
-  for (const [i, id] of small.practice.questionIds.entries()) {
+  // Leave the solution question until last, so revealing its answer alone cannot finish the group.
+  const answerOrder = small.practice.questionIds.filter(id => id !== "qa-solution").concat("qa-solution");
+  for (const [i, id] of answerOrder.entries()) {
+    await page.locator(`.question-nav .index-btn[data-index="${small.practice.questionIds.indexOf(id)}"]`).click();
     const q = fixture.questions.find((q) => q.id === id);
     if (q.type === "solution") {
       await page.locator('[data-action="submit-answer"]').click();
       const pending = await stateOf(page);
       assert.equal(pending.attempts.length, i);
       assert.match(await page.locator(".question-nav .card-head .muted").innerText(), new RegExp(`^${i}/`));
+      assert.equal(await finishGroup.isVisible(), false);
       await page.locator('[data-action="self-grade"][data-correct="false"]').click();
     } else await answerCurrent(page, fixture.questions, true);
-    await next(page);
   }
+  await finishGroup.click();
   await page.locator(".preparation-summary").waitFor();
   assert.match(await page.locator(".preparation-summary").innerText(), /已完成 6 题，答对 5 题/);
   await page.locator('[data-action="next-training"]').click();
   await page.getByRole("heading", { name: "加权训练 · 第 1 组", exact: true }).waitFor();
   assert.equal((await stateOf(page)).practice.questionIds.length, 6);
+  assert.equal(await finishGroup.isVisible(), false);
+  for (let i = 0; i < 6; i++) {
+    await answerCurrent(page, fixture.questions, true);
+    if (i < 5) await next(page);
+  }
+  await finishGroup.waitFor({ state: "visible" });
   await noOverflow(page);
+  await page.screenshot({ path: "artifacts/preparation-finish-mobile.png", fullPage: true, animations: "disabled" });
+  await finishGroup.click();
+  await page.locator(".preparation-summary").waitFor();
+  assert.match(await page.locator(".preparation-summary").innerText(), /已完成 6 题，答对 6 题/);
   assert.deepEqual(errors, []);
   await writeFile("artifacts/preparation-browser-report.json", JSON.stringify({ passed: true, pageErrors: errors, scenarios: [
     "25/all random within filters, pagination and reload", "multi-chapter diagnosis, empty scope and skipped answers",
     "20-question adaptive training, positive weights and round completion guard", "refresh and backup restore retain plan and active training",
     "small custom banks, all question types and manual self-assessment", "390px mobile layout and dark theme",
+    "sidebar finish after out-of-order completion, self-assessment and reload in diagnosis and training",
   ] }, null, 2));
   console.log("Random question counts and adaptive preparation browser checks passed.");
 } finally { await browser.close(); }
