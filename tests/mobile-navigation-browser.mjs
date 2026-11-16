@@ -75,9 +75,19 @@ for (const [name, engine, options] of engines) {
       const beforeResize = await page.evaluate(() => scrollY);
       await page.locator('[data-action="next-question"]').tap();
       await ready(page, 4);
+      // Toolbar changes can arrive after slow content/figure decoding or a pause
+      // to read. They must not depend on a short wall-clock window after a tap.
+      await page.waitForTimeout(1200);
       await page.setViewportSize({width,height:height + 120});
       await page.waitForTimeout(150);
-      assert.ok(Math.abs(await page.evaluate(() => scrollY) - beforeResize) < 3, 'toolbar/keyboard viewport expansion must not lift the question');
+      const afterResize = await page.evaluate(() => scrollY);
+      assert.ok(Math.abs(afterResize - beforeResize) < 3, `${name} ${width}px toolbar/keyboard viewport expansion must not lift the question (${beforeResize} → ${afterResize})`);
+      await page.evaluate(() => window.scrollTo({top:scrollY - 240,behavior:'instant'}));
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      const scrolledPosition = await page.evaluate(() => scrollY);
+      await page.setViewportSize({width,height:height + 160});
+      await page.waitForTimeout(150);
+      assert.ok(Math.abs(await page.evaluate(() => scrollY) - scrolledPosition) < 3, 'a new reading position must not snap back on resize');
       await page.setViewportSize({width,height});
       await page.locator('.index-btn[data-index="0"]').evaluate(el => el.click());
       await ready(page, 0);
@@ -162,7 +172,7 @@ for (const [name, engine, options] of engines) {
       await ready(page, 1);
       await swipe(page, name, '.question-main > .question-top', 150);
       await ready(page, 0);
-      report.push({engine:name,width,taps:true,viewportExpansion:true,swipes:true,boundaries:true,nativeVerticalAndFormulaScroll:name === 'chromium',notesAndDialogs:true,exam:true});
+      report.push({engine:name,width,taps:true,viewportExpansion:true,delayedViewportExpansion:true,scrollTakeover:true,swipes:true,boundaries:true,nativeVerticalAndFormulaScroll:name === 'chromium',notesAndDialogs:true,exam:true});
       console.log('Mobile navigation passed:', JSON.stringify(report.at(-1)));
       await page.close();
     }

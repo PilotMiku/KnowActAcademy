@@ -11,21 +11,46 @@ function reserveViewport(main, position) {
   main.style.minHeight = `max(0px, calc(${viewport} + ${position.y - position.top}px))`;
 }
 // WebKit may clamp scroll before applying the new viewport-unit height.
-// Only finish the recent navigation; a new user gesture immediately takes over.
+// Keep the reading position until the next interaction, including when toolbar
+// resizing arrives after slow content/figure decoding. User input takes over.
 for (const type of ['touchstart', 'pointerdown', 'wheel', 'keydown'])
   window.addEventListener(type, () => { viewportRestore = null; }, { capture:true, passive:true });
 function restoreResizedViewport() {
   const saved = viewportRestore;
-  const valid = () => viewportRestore === saved && saved?.main.isConnected &&
-    saved.width === innerWidth && performance.now() < saved.until &&
+  if (!saved) return;
+  if (!saved.main.isConnected || saved.width !== innerWidth ||
+      document.activeElement?.matches('input,textarea,select,[contenteditable]')) {
+    viewportRestore = null; return;
+  }
+  const resize = {};
+  saved.resize = resize;
+  const valid = () => viewportRestore === saved && saved.resize === resize &&
+    saved.main.isConnected && saved.width === innerWidth &&
     !document.activeElement?.matches('input,textarea,select,[contenteditable]');
-  if (!valid()) return;
   reserveViewport(saved.main, saved.position);
   const restore = () => { if (valid()) window.scrollTo({ left:saved.position.x, top:saved.position.y, behavior:'instant' }); };
-  restore(); requestAnimationFrame(restore);
+  restore();
+  requestAnimationFrame(() => {
+    restore();
+    requestAnimationFrame(() => {
+      restore();
+      if (valid()) {
+        saved.height = innerHeight;
+        saved.visualHeight = window.visualViewport?.height;
+        saved.resize = null;
+      }
+    });
+  });
 }
 window.addEventListener('resize', restoreResizedViewport);
 window.visualViewport?.addEventListener('resize', restoreResizedViewport);
+// Programmatic scrolling and focus scrolling also establish a new position.
+// Ignore WebKit's temporary clamp while the viewport itself is changing.
+window.addEventListener('scroll', () => {
+  const saved = viewportRestore;
+  if (saved && !saved.resize && saved.height === innerHeight && saved.visualHeight === window.visualViewport?.height &&
+      (Math.abs(scrollY - saved.position.y) > 2 || Math.abs(scrollX - saved.position.x) > 2)) viewportRestore = null;
+}, { passive:true });
 export function renderStudyLayout(root, html, scene = null) {
   const template = document.createElement('template');
   template.innerHTML = html;
@@ -106,7 +131,7 @@ export function renderStudyLayout(root, html, scene = null) {
   previousScene = sameSession && !scene.questionId ? previousScene : scene;
   return position ? () => {
     window.scrollTo({ left:position.x, top:position.y, behavior:'instant' });
-    viewportRestore = { main:existingMain, position, width:innerWidth, until:performance.now() + 900 };
+    viewportRestore = { main:existingMain, position, width:innerWidth, height:innerHeight, visualHeight:window.visualViewport?.height, resize:null };
   } : null;
 }
 
