@@ -7,8 +7,12 @@ let pendingFocus = null;
 let viewportRestore = null;
 const updates = new WeakMap();
 function reserveViewport(main, position) {
-  const viewport = CSS.supports('height', '100lvh') ? '100lvh' : `${innerHeight}px`;
-  main.style.minHeight = `max(0px, calc(${viewport} + ${position.y - position.top}px))`;
+  const offset = position.y - position.top;
+  // A large viewport unit may lag behind a resized WebKit layout viewport.
+  // The measured pixel floor guarantees enough scroll range in that frame.
+  const minimum = `${Math.max(0, innerHeight + offset)}px`;
+  main.style.minHeight = CSS.supports('height', '100lvh')
+    ? `max(${minimum}, calc(100lvh + ${offset}px))` : minimum;
 }
 // WebKit may clamp scroll before applying the new viewport-unit height.
 // Keep the reading position until the next interaction, including when toolbar

@@ -49,6 +49,31 @@ async function unchanged(page, index) {
   await page.waitForTimeout(250);
   assert.equal(await page.locator('.index-btn.current').getAttribute('data-index'), String(index));
 }
+async function frozenViewportUnit(browser, name) {
+  const width = 390, height = 844;
+  const page = await browser.newPage({viewport:{width,height},isMobile:true,hasTouch:true,deviceScaleFactor:3});
+  try {
+    // Emulate a viewport unit that remains at its old value after resize.
+    // Native viewport events and innerHeight still come from the browser.
+    await page.route('**/study-motion.mjs', async route => {
+      const response = await route.fetch();
+      await route.fulfill({response,body:(await response.text()).replaceAll('100lvh', `${height}px`)});
+    });
+    await page.goto(baseURL + '/#/practice?subject=calculus&chapter=s-6b82188494c1');
+    await page.locator('[data-action="start-practice"][data-mode="sequential"]').tap();
+    await ready(page,0);
+    await page.evaluate(() => scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}));
+    const before = await page.evaluate(() => scrollY);
+    await page.locator('[data-action="next-question"]').tap();
+    await ready(page,1);
+    await page.waitForTimeout(1200);
+    await page.setViewportSize({width,height:height + 120});
+    await page.waitForTimeout(150);
+    const after = await page.evaluate(() => scrollY);
+    assert.ok(Math.abs(after - before) < 3, `${name} stale viewport unit must retain reading position (${before} → ${after})`);
+    console.log('Frozen viewport unit passed:',name);
+  } finally { await page.close(); }
+}
 const report = [], errors = [];
 const engines = [['chromium', chromium, browserOptions]];
 if (existsSync(webkit.executablePath())) engines.push(['webkit', webkit, {headless:true}]);
@@ -56,6 +81,7 @@ for (const [name, engine, options] of engines) {
   const browser = await engine.launch(options);
   let activePage, activeCase;
   try {
+    await frozenViewportUnit(browser,name);
     for (const width of [390,320]) {
       const height = width === 320 ? 568 : 844;
       const page = await browser.newPage({viewport:{width,height}, isMobile:true, hasTouch:true, deviceScaleFactor:3});
@@ -204,6 +230,7 @@ for (const [name, engine, options] of engines) {
   } catch (error) {
     const viewport = await activePage?.evaluate(() => ({y:scrollY, width:innerWidth,height:innerHeight,
       visualHeight:window.visualViewport?.height, active:document.activeElement?.outerHTML?.slice(0,300),
+      scrollHeight:document.documentElement.scrollHeight, computedMinHeight:getComputedStyle(document.querySelector('.local-main')).minHeight,
       events:window.mobileViewportEvents?.slice(-30)})).catch(() => null);
     console.error('Mobile navigation failure:', JSON.stringify({case:activeCase,viewport}));
     throw error;
