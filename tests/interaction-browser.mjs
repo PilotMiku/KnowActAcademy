@@ -74,12 +74,17 @@ try {
   assert.ok(await page.locator("body").evaluate((el) => el.classList.contains("dark")));
   await assertQuestionRetained(page);
   await page.setViewportSize({ width: 390, height: 844 });
-  const menu = page.getByRole("button", { name: "打开导航" });
+  // Playwright resolves role locators again for every action; the accessible
+  // name changes while expanded, so match both states of the same control.
+  const menu = page.getByRole("button", { name: /^(打开|收起)导航$/ });
+  assert.equal(await menu.getAttribute("aria-label"), "打开导航");
   await menu.click();
   assert.equal(await menu.getAttribute("aria-expanded"), "true");
+  assert.equal(await menu.getAttribute("aria-label"), "收起导航");
   await assertQuestionRetained(page);
   await menu.click();
   assert.equal(await menu.getAttribute("aria-expanded"), "false");
+  assert.equal(await menu.getAttribute("aria-label"), "打开导航");
   await page.reload();
   await page.locator('.option[data-value="B"][aria-pressed="true"]').waitFor();
   assert.ok(await page.locator("body").evaluate((el) => el.classList.contains("dark")));

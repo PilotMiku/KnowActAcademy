@@ -334,3 +334,9 @@ IndexedDB 从版本 2 升至版本 3。作答与考试分别使用有序记录�
 验证：113 项 JavaScript 测试、41 项 Python 测试、题库来源核对、静态构建和完整资源校验通过。浏览器回归覆盖连续空格勾选、DOM 与焦点保留、跨页选择和筛选、所选题练习、300px 矮屏、外部点击、焦点离开、Esc、尺寸切换，以及打印导出、真实后端同步、键盘切题、知识面板、离线下载、学习体验和 Chrome/WebKit 手机触摸。全部 8,425 条题目与原题 SHA-256 保持不变。
 
 新增回归：`tests/collection-navigation-browser.mjs`，已加入 CI 浏览器测试入口。报告：`artifacts/collection-navigation-report.json`；截图：`artifacts/mobile-navigation-menu.png`。发布状态以 Git 提交和 GitHub Pages 工作流为准。
+
+## 2026-11-16 修复导航名称变化导致的 CI 测试超时
+
+本地复现 `interaction-browser` 在打开手机导航后读取 `aria-expanded` 超时。Playwright 每次操作都会重新解析角色定位器；导航展开后，可访问名称已从“打开导航”变为“收起导航”，旧定位器因此无法再次找到按钮。定位器现在匹配这两个明确状态，并分别断言打开前、展开后和收起后的名称及 `aria-expanded`，保留原有题目 DOM、图片和焦点检查。
+
+验证：修改前稳定复现同一定位超时；修改后执行完整 `node scripts/run_browser_tests.mjs`，根路径检查及全部 31 组浏览器回归通过，包含真实后端同步与 Chromium/WebKit 手机场景。测试断言得到补充，网站代码和题库内容未修改。
