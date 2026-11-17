@@ -18,7 +18,7 @@ function setup(count = 6) {
 function attempt(state, q, correct, i, extra = {}) {
   recordAttempt(state, q, correct ? 'B' : 'A', correct, { id:`practice:g${i}:${q.id}`, practiceId:`g${i}`, mode:'prepare-diagnostic', preparationId:state.preparation.id, at:1000+i, ...extra });
 }
-test('adaptive small pools leave room to repeat mistakes; fixed policy retains all questions', () => {
+test('small pools reinforce mistakes and reserve limited spaced checks instead of filling with successes', () => {
   const {bank, state} = setup();
   bank.questions.forEach((q, i) => attempt(state, q, i !== 0, i));
   assert.equal(trainingCount(bank, state.preparation), 4);
@@ -26,12 +26,13 @@ test('adaptive small pools leave room to repeat mistakes; fixed policy retains a
   const rng = () => ((seed = (Math.imul(seed,1664525)+1013904223)>>>0) / 2**32);
   for(let i=0;i<200;i++) {
     const p = createTraining(bank, state, rng);
-    assert.equal(new Set(p.questionIds).size, 4);
+    assert.equal(new Set(p.questionIds).size, 2);
+    assert.equal(p.auditQuestionIds.length, 1);
     wrong += p.questionIds.includes('q0'); other += p.questionIds.includes('q1');
   }
   assert.ok(wrong > other);
   state.preparation.roundPolicy='fixed';
-  assert.equal(createTraining(bank,state).questionIds.length,6);
+  assert.equal(createTraining(bank,state).questionIds.length,2);
 });
 test('training reserves a quarter for unseen questions while reinforcing mistakes', () => {
   const {bank, state} = setup(60);
@@ -44,7 +45,7 @@ test('training reserves a quarter for unseen questions while reinforcing mistake
 });
 test('uncertain success resets confident mastery and review interval; a later-day success confirms retention', () => {
   const {bank,state}=setup(1), q=bank.questions[0];
-  attempt(state,q,true,0); attempt(state,q,true,1);
+  attempt(state,q,true,0); attempt(state,q,true,1,{mode:"prepare-training",round:2});
   assert.equal(preparationMastery(bank,state).mastered,1);
   assert.equal(preparationMastery(bank,state).stableMastered,0);
   attempt(state,q,true,2,{uncertain:true});

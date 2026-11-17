@@ -173,11 +173,11 @@ test("saved preparation sessions survive switching to ordinary practice; damaged
     assert.equal(validateBackup({ format: BACKUP_FORMAT, bank, state: { ...emptyState(), preparation } }).state.preparation, null);
 });
 
-test("mastery needs two consecutive independent trials, resets on a new mistake and excludes other plans", () => {
+test("confirmation needs delayed independent trials, resets on a new mistake and excludes other plans", () => {
   const bank = makeBank(), state = makeState(bank), q = bank.questions[0];
-  const grade = (correct, session, at) => recordAttempt(state, q, correct ? "B" : "A", correct, {
+  const grade = (correct, session, at, round = 1) => recordAttempt(state, q, correct ? "B" : "A", correct, {
     id: `${session}:${at}`, at, mode: "prepare-training", preparationId: state.preparation.id,
-    practiceId: session, round: 1, sessionSize: 20,
+    practiceId: session, round, sessionSize: 20,
   });
   grade(false, "first", 1000);
   grade(true, "second", 2000);
@@ -187,7 +187,10 @@ test("mastery needs two consecutive independent trials, resets on a new mistake 
   assert.equal(preparationMastery(bank, state).mastered, 0);
   recordAttempt(state, q, "B", true, { id: "other", at: 2200, mode: "prepare-training", preparationId: "old-plan" });
   assert.equal(preparationMastery(bank, state).mastered, 0);
-  grade(true, "third", 3000);
+  grade(true, "adjacent", 2500, 2);
+  assert.equal(preparationMastery(bank, state).mastered, 0);
+  assert.equal(preparationMastery(bank, state).halfConfirmed, 1);
+  grade(true, "third", 3000, 4);
   assert.equal(syncPreparationMistakes(bank, state).mastered, 1);
   assert.equal(state.mistakes[q.id].resolved, true);
   grade(false, "fourth", 4000);
@@ -196,7 +199,7 @@ test("mastery needs two consecutive independent trials, resets on a new mistake 
   assert.equal(preparationMastery(bank, state).questions.get(q.id).correctStreak, 0);
 });
 
-test("unmastered mistakes stay strongly weighted after one correction and lose the boost only after two", () => {
+test("corrected mistakes leave the ordinary queue while retaining a delayed confirmation", () => {
   const bank = makeBank(), state = makeState(bank), q = bank.questions[0], untouched = bank.questions[35];
   state.practice = null;
   const grade = (correct, id) => recordAttempt(state, q, correct ? "B" : "A", correct, {
@@ -207,15 +210,16 @@ test("unmastered mistakes stay strongly weighted after one correction and lose t
   assert.ok(wrong.weights.get(q.id) > 6 * wrong.weights.get(untouched.id));
   grade(true, "one-correction");
   const once = preparationProfile(bank, state);
-  assert.ok(once.weights.get(q.id) > 4 * once.weights.get(untouched.id));
-  assert.equal(preparationMastery(bank, state).pendingMistakes, 1);
+  assert.ok(once.weights.get(q.id) < wrong.weights.get(q.id));
+  assert.equal(preparationMastery(bank, state).pendingMistakes, 0);
+  assert.equal(preparationMastery(bank, state).halfConfirmed, 1);
   grade(true, "two-corrections");
   const twice = preparationProfile(bank, state);
   assert.ok(twice.weights.get(q.id) < once.weights.get(q.id));
   assert.equal(preparationMastery(bank, state).pendingMistakes, 0);
 });
 
-test("live estimates and mastery progress use the selected plan; previous mistakes need two corrections", () => {
+test("pass coverage includes tentative successes while estimates retain conservative correction credit", () => {
   const raw = structuredClone(fixture);
   raw.questions = [raw.questions[0]];
   const bank = normalizeBank(raw), state = { ...emptyState(), ...createPreparation(bank, { subjectId: "math", chapterIds: ["limits"] }) };
@@ -225,13 +229,15 @@ test("live estimates and mastery progress use the selected plan; previous mistak
   for (const [i, correct] of [false, true, true].entries()) {
     recordAttempt(state, q, correct ? "B" : "A", correct, {
       id: `practice:group-${i}:${q.id}`, mode: i ? "prepare-training" : "prepare-diagnostic", preparationId: state.preparation.id,
+      practiceId: `group-${i}`, round: [0,1,3][i], sessionSize: 1,
     });
     const result = preparationMetrics(bank, state);
     assert.equal(result.trainingScore, [0, 50, 100][i]);
     assert.equal(result.estimatedScore, [null, 50, 100][i]);
-    assert.equal(result.progress, [0, 0, 100][i]);
+    assert.equal(result.progress, [0, 100, 100][i]);
+    assert.equal(result.halfConfirmed, [0, 1, 0][i]);
     assert.equal(result.covered, 1);
-    assert.equal(result.pendingMistakes, i < 2 ? 1 : 0);
+    assert.equal(result.pendingMistakes, i === 0 ? 1 : 0);
   }
   const restored = validateBackup(JSON.parse(JSON.stringify({ format: BACKUP_FORMAT, bank, state })));
   assert.equal(preparationMetrics(restored.bank, restored.state).estimatedScore, 100);
@@ -245,7 +251,9 @@ test("predictions weigh selected section/type sizes, keep unseen topics neutral 
   assert.ok(first.trainingScore > 50 && first.trainingScore < 75);
   assert.equal(first.estimatedScore, null);
   assert.equal(first.evidence, "样本不足");
-  assert.ok(first.progress < first.coverage);
+  assert.equal(first.progress, first.coverage);
+  assert.equal(first.halfConfirmed, 1);
+  assert.equal(first.mastered, 0);
   assert.equal(first.total, 61);
   assert.equal(first.covered, 1);
   for (const q of bank.questions.filter((q) => q.subjectId === "math"))
@@ -263,6 +271,7 @@ test("pending self-assessment does not change live metrics; a later ordinary err
   assert.equal(preparationMetrics(bank, state).covered, 0);
   for (const [i, correct] of [false, true, true].entries()) recordAttempt(state, q, "", correct, {
     id: `manual-${i}`, at: 2000 + i, mode: "prepare-training", preparationId: state.preparation.id, manual: true,
+    practiceId: `manual-${i}`, round: [1,2,4][i], sessionSize: 1,
   });
   assert.equal(syncPreparationMistakes(bank, state).mastered, 1);
   assert.equal(state.mistakes[q.id].resolved, true);

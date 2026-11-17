@@ -2,8 +2,11 @@ import { createPractice, getBankIndex, hasResponse, isScorable, shuffle, uid } f
 import { getConceptIndex } from "./concepts.mjs";
 import { spacedReview, reviewWeight } from "./study.mjs";
 import { readinessForecast } from "./forecast.mjs";
+import { questionGuidance } from "./question-guidance.mjs";
 
 export const PREPARATION_COUNT = 20;
+export const PREPARATION_CHECK_LIMIT = 3;
+const DAY_MS = 86400000;
 const skillKey = (q) => JSON.stringify([q.subjectId, q.chapterId, q.type]);
 const chapterKey = (q) => JSON.stringify([q.subjectId, q.chapterId]);
 
@@ -77,17 +80,27 @@ export function preparationMastery(bank, state) {
     ["prepare-diagnostic", "prepare-training"].includes(a.mode) &&
     typeof a.correct === "boolean" && Number.isFinite(a.at) && scope.has(a.questionId))
     .sort((a, b) => a.at - b.at);
+  const rounds = new Map();
+  let legacyRound = 0;
   for (const a of attempts) {
     const q = scope.get(a.questionId);
     if (q.type !== "solution" && !hasResponse(q, a.answer)) continue;
     // A replayed submission or revisiting the same graded session is one trial.
     const sessionId = a.practiceId ?? (typeof a.id === "string" && a.id.startsWith("practice:")
       ? a.id.slice(9).split(":")[0] : a.id ?? `${a.mode}:${a.at}`);
+    if (!rounds.has(sessionId)) rounds.set(sessionId, a.mode === "prepare-diagnostic" ? 0
+      : Number.isInteger(a.round) ? a.round : ++legacyRound);
+    const round = rounds.get(sessionId);
+    legacyRound = Math.max(legacyRound, round);
     const key = JSON.stringify([q.id, sessionId]);
     if (trials.has(key)) continue;
     trials.add(key);
     const result = questions.get(q.id) ?? { questionId: q.id, correctStreak: 0, wrongCount: 0, mastered: false, trialCount: 0 };
     const confident = a.correct && !a.uncertain;
+    const spaced = result.lastSuccessAt !== undefined &&
+      (round - result.lastSuccessRound >= 2 || a.at - result.lastSuccessAt >= DAY_MS);
+    const confirmed = confident && (result.mastered || spaced);
+    const stable = confirmed && (result.stableMastered || a.at - result.lastSuccessAt >= DAY_MS);
     if (!confident) result.streakStartedAt = null;
     else if (!result.correctStreak) result.streakStartedAt = a.at;
     result.correctStreak = confident ? Math.min(2, result.correctStreak + 1) : 0;
@@ -96,15 +109,26 @@ export function preparationMastery(bank, state) {
     result.latestCorrect = a.correct;
     result.uncertain = !!a.uncertain;
     result.lastAt = a.at;
-    result.mastered = result.correctStreak === 2;
-    result.stableMastered = result.mastered && a.at - result.streakStartedAt >= 86400000;
+    result.lastRound = round;
+    result.mastered = !!confirmed;
+    result.halfConfirmed = a.correct && !result.mastered;
+    result.stableMastered = !!stable;
+    if (confident) {
+      result.lastSuccessAt = a.at;
+      result.lastSuccessRound = round;
+    } else {
+      delete result.lastSuccessAt;
+      delete result.lastSuccessRound;
+    }
     questions.set(q.id, result);
   }
   const mastered = [...questions.values()].filter((q) => q.mastered).length;
-  const pendingMistakes = [...questions.values()].filter((q) => q.wrongCount > 0 && !q.mastered).length;
+  const pendingMistakes = [...questions.values()].filter((q) => q.wrongCount > 0 && (!q.latestCorrect || q.uncertain)).length;
   const stableMastered = [...questions.values()].filter((q) => q.stableMastered).length;
-  return { pool, questions, total: pool.length, covered: questions.size, mastered, stableMastered, pendingMistakes,
-    progress: pool.length ? Math.round(mastered / pool.length * 10000) / 100 : 0,
+  const halfConfirmed = [...questions.values()].filter((q) => q.halfConfirmed).length;
+  const passed = mastered + halfConfirmed;
+  return { pool, questions, total: pool.length, covered: questions.size, mastered, halfConfirmed, passed, stableMastered, pendingMistakes,
+    progress: pool.length ? Math.round(passed / pool.length * 10000) / 100 : 0,
     coverage: pool.length ? Math.round(questions.size / pool.length * 10000) / 100 : 0 };
 }
 
@@ -112,7 +136,7 @@ export function syncPreparationMistakes(bank, state) {
   const mastery = preparationMastery(bank, state);
   for (const [id, q] of mastery.questions)
     if (q.wrongCount && state.mistakes[id] && state.mistakes[id].lastAt <= q.lastAt)
-      state.mistakes[id].resolved = q.mastered;
+      state.mistakes[id].resolved = q.latestCorrect && !q.uncertain;
   return mastery;
 }
 
@@ -171,8 +195,8 @@ export function preparationProfile(bank, state, now = Date.now()) {
     const names = conceptIndex.questions.get(q.id) ?? [];
     const associated = names.length ? names.reduce((sum, name) => sum + (conceptNeeds.get(name)?.need ?? 1), 0) / names.length : base;
     const result = mastery.questions.get(q.id);
-    const pending = result?.wrongCount > 0 && !result.mastered;
-    const reinforcement = pending ? result.correctStreak === 0 ? 6 : 4 : result?.uncertain ? 2 : result?.mastered ? 0.5 : 1;
+    const pending = result?.wrongCount > 0 && !result.latestCorrect;
+    const reinforcement = pending ? 6 : result?.uncertain ? 2 : result?.mastered ? 0.5 : result?.halfConfirmed ? 0.75 : 1;
     return [q.id, (0.75 * base + 0.25 * associated) * reviewWeight(schedule.get(q.id), now) *
       reinforcement * (recent.has(q.id) && !pending ? 0.7 : 1)];
   }));
@@ -195,29 +219,90 @@ export function weightedSample(questions, weights, count = PREPARATION_COUNT, ra
   })).sort((a, b) => a.score - b.score).slice(0, count).map(({ q }) => q);
 }
 
-export function trainingCount(bank, preparation) {
+function roundSize(bank, preparation) {
   const total = preparationQuestions(bank, preparation).length;
   return preparation?.roundPolicy !== "fixed" && total > 1 && total <= PREPARATION_COUNT
     ? Math.min(total - 1, Math.ceil(total * 0.6)) : Math.min(PREPARATION_COUNT, total);
 }
 
-export function createTraining(bank, state, random = Math.random) {
-  if (!diagnosticProgress(state, bank).ready) throw new Error("请先完成本次测评的所有题目；解答题需完成自评");
-  const { questions, weights } = preparationProfile(bank, state);
+// Successful questions leave the ordinary queue. A small delayed sample checks
+// retention; elapsed time also permits the next day when a small scope runs out.
+export function preparationTrainingPool(bank, state, now = Date.now()) {
   const mastery = preparationMastery(bank, state);
-  const count = trainingCount(bank, state.preparation);
+  if (!state.preparation) return { mastery, fresh: [], checks: [], checkLimit: 0, round: 0, count: 0 };
+  const lastRound = [...mastery.questions.values()].reduce((last, item) => Math.max(last, item.lastRound), state.preparation.round);
+  const round = lastRound + 1;
+  const size = roundSize(bank, state.preparation);
+  const { schedule } = spacedReview(bank, state, now);
+  const fresh = [], checks = [];
+  for (const q of mastery.pool) {
+    const item = mastery.questions.get(q.id);
+    if (!item?.latestCorrect) { fresh.push(q); continue; }
+    const spaced = round - item.lastRound >= 2 || now - item.lastAt >= DAY_MS;
+    if (spaced && (!item.mastered || (schedule.get(q.id)?.dueAt ?? Infinity) <= now)) checks.push(q);
+  }
+  const checkLimit = Math.min(PREPARATION_CHECK_LIMIT, Math.max(1, Math.ceil(size * 0.15)));
+  return { mastery, fresh, checks, checkLimit, round,
+    count: Math.min(size, fresh.length + Math.min(checks.length, checkLimit)) };
+}
+
+export function trainingCount(bank, preparation, state = null, now = Date.now()) {
+  return state ? preparationTrainingPool(bank, state, now).count : roundSize(bank, preparation);
+}
+
+function sampleChecks(bank, state, candidates, count, mastery, random, now) {
+  if (!count) return [];
+  const weights = new Map(candidates.map(q => {
+    const item = mastery.questions.get(q.id), stars = questionGuidance(q, state.questionAnnotations).stars ?? 3;
+    const age = Math.min(7, Math.max(0, (now - item.lastAt) / DAY_MS));
+    return [q.id, stars + Math.min(3, item.wrongCount) + (item.uncertain ? 3 : 0) + age];
+  }));
+  const ranked = [...candidates].sort((a, b) => weights.get(b.id) - weights.get(a.id));
+  const hard = ranked.slice(0, Math.max(6, count * 3));
+  const selected = weightedSample(hard, weights, count > 1 ? count - 1 : count, random);
+  // Reserve one broadly random check, so easier or untagged items are not ignored.
+  if (count > 1) {
+    const ids = new Set(selected.map(q => q.id));
+    selected.push(...shuffle(candidates.filter(q => !ids.has(q.id)), random).slice(0, 1));
+  }
+  return selected;
+}
+
+function mixedSample(questions, weights, count, selected, random) {
+  const chosen = [], topics = new Map();
+  for (const q of selected) topics.set(q.chapterId, (topics.get(q.chapterId) ?? 0) + 1);
+  let remaining = [...questions];
+  while (chosen.length < count && remaining.length) {
+    const balanced = new Map(remaining.map(q => [q.id, (weights.get(q.id) ?? 1) / (1 + (topics.get(q.chapterId) ?? 0))]));
+    const [q] = weightedSample(remaining, balanced, 1, random);
+    chosen.push(q); topics.set(q.chapterId, (topics.get(q.chapterId) ?? 0) + 1);
+    remaining = remaining.filter(item => item.id !== q.id);
+  }
+  return chosen;
+}
+
+export function createTraining(bank, state, random = Math.random, now = Date.now()) {
+  if (!diagnosticProgress(state, bank).ready) throw new Error("请先完成本次测评的所有题目；解答题需完成自评");
+  const { weights } = preparationProfile(bank, state, now);
+  const { mastery, fresh: questions, checks, checkLimit, count, round } = preparationTrainingPool(bank, state, now);
+  if (!count) throw new Error("当前范围的题目已通过，本场暂不重复；完成其他范围后再抽查，或次日回来复习。");
   const unseen = questions.filter((q) => !mastery.questions.has(q.id));
-  const pending = questions.filter((q) => { const item = mastery.questions.get(q.id); return item?.wrongCount && !item.mastered; });
+  const pending = questions.filter((q) => mastery.questions.get(q.id)?.wrongCount);
   const selected = weightedSample(unseen, weights, Math.min(unseen.length, Math.max(1, Math.floor(count / 4))), random);
   const selectedIds = new Set(selected.map((q) => q.id));
   for (const q of weightedSample(pending, weights, Math.min(Math.ceil(count / 2), count - selected.length), random)) {
     selected.push(q); selectedIds.add(q.id);
   }
-  selected.push(...weightedSample(questions.filter((q) => !selectedIds.has(q.id)), weights, count - selected.length, random));
+  const checkCount = Math.min(checkLimit, checks.length, count - selected.length);
+  const audits = sampleChecks(bank, state, checks, checkCount, mastery, random, now);
+  selected.push(...audits);
+  for (const q of audits) selectedIds.add(q.id);
+  selected.push(...mixedSample(questions.filter((q) => !selectedIds.has(q.id)), weights, count - selected.length, selected, random));
   const practice = createPractice(shuffle(selected, random).map((q) => q.id), "prepare-training");
   if (!practice.questionIds.length) throw new Error("备考范围内已没有可用题目，请重新选择章节");
   practice.preparationId = state.preparation.id;
-  practice.round = state.preparation.round + 1;
+  practice.round = round;
+  practice.auditQuestionIds = audits.map(q => q.id);
   return practice;
 }
 

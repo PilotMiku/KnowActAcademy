@@ -197,18 +197,15 @@ try {
   assert.match(await page.locator(".preparation-summary").innerText(), /已完成 6 题，答对 5 题/);
   await page.locator('[data-action="next-training"]').click();
   await page.getByRole("heading", { name: "加权训练 · 第 1 组", exact: true }).waitFor();
-  assert.equal((await stateOf(page)).practice.questionIds.length, 6);
+  assert.deepEqual((await stateOf(page)).practice.questionIds, ["qa-solution"]);
   assert.equal(await finishGroup.isVisible(), false);
-  for (let i = 0; i < 6; i++) {
-    await answerCurrent(page, fixture.questions, true);
-    if (i < 5) await next(page);
-  }
+  await answerCurrent(page, fixture.questions, true);
   await finishGroup.waitFor({ state: "visible" });
   await noOverflow(page);
   await page.screenshot({ path: "artifacts/preparation-finish-mobile.png", fullPage: true, animations: "disabled" });
   await finishGroup.click();
   await page.locator(".preparation-summary").waitFor();
-  assert.match(await page.locator(".preparation-summary").innerText(), /已完成 6 题，答对 6 题/);
+  assert.match(await page.locator(".preparation-summary").innerText(), /已完成 1 题，答对 1 题/);
   assert.deepEqual(errors, []);
   await writeFile("artifacts/preparation-browser-report.json", JSON.stringify({ passed: true, pageErrors: errors, scenarios: [
     "25/all random within filters, pagination and reload", "multi-chapter diagnosis, empty scope and skipped answers",

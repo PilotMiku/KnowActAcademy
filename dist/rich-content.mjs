@@ -145,6 +145,7 @@ function safeContent(value, lazyImages = false) {
           const formula = document.createElement('span');
           formula.className = 'readable-formula';
           formula.dataset.originalFigure = figureID;
+          formula.dataset.figureVersion = nativeFigureChunk(rawSource);
           formula.textContent = String.fromCharCode(92) + '(' + checked + String.fromCharCode(92) + ')';
           parent.append(formula);
           return;

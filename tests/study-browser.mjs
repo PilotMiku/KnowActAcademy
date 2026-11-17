@@ -71,7 +71,7 @@ try {
   assert.match(await page.locator("#preparation-trends").innerText(), /\+17 个百分点/);
   await page.screenshot({ path: "artifacts/study-trend-desktop.png", fullPage: true, animations: "disabled" });
   const completed = await stateOf(page);
-  assert.equal(completed.attempts.length, 12);
+  assert.equal(completed.attempts.length, 7);
 
   await page.goto(`${baseURL}/#/prepare`);
   await revealPreparationOptions(page);

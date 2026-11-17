@@ -16,7 +16,7 @@ import { learningCardsHTML, questionHintsHTML } from './question-learning.mjs';
 import { renderStudyLayout, reducedMotion, animateFeedback } from './study-motion.mjs';
 import { installQuestionGestures } from './question-gestures.mjs';
 import { sessionNavigationHTML, updateSessionNavigation, pendingQuestionIndices, nextPendingIndex } from './session-navigation.mjs';
-import { imageViewerHTML, updateImageZoom } from './question-images.mjs';
+import { imageViewerHTML, updateImageZoom, selectQuestionImage, toggleFormulaOriginal } from './question-images.mjs';
 import { supplementalAnalysis } from './supplemental-analysis.mjs';
 import { sectionKnowledgeCard } from './section-knowledge.mjs';
 import { referencePage } from './math-reference.mjs';
@@ -333,7 +333,7 @@ function filtersHTML(filters, search = true, mode = "all") {
 }
 function practiceControls() {
   const query = route().query;
-  return `<div class="practice-extra-controls"><div class="field"><label for="practice-status">练习范围</label><select id="practice-status" data-filter="status"><option value="">全部题目</option><option value="unseen" ${query.get("status") === "unseen" ? "selected" : ""}>只练未做题</option><option value="unmastered" ${query.get("status") === "unmastered" ? "selected" : ""}>只练未掌握题</option></select></div><div class="field"><label for="random-distribution">随机抽题方式</label><select id="random-distribution" data-filter="distribution"><option value="random">题目均匀随机</option><option value="balanced" ${query.get("distribution") === "balanced" ? "selected" : ""}>按大章节均衡抽题</option></select></div><div class="field"><label for="practice-difficulty">五星难度</label><select id="practice-difficulty" data-filter="difficulty"><option value="">全部难度</option>${Object.entries(starLabels).map(([id,label])=>`<option value="${id}" ${query.get('difficulty')===id?'selected':''}>${'★'.repeat(Number(id))}${'☆'.repeat(5-Number(id))} · ${label}</option>`).join('')}<option value="unrated" ${query.get('difficulty')==='unrated'?'selected':''}>待标注</option></select></div><div class="field"><label for="practice-concept">逐题知识点</label><input class="input" id="practice-concept" data-filter="concept" value="${attr(query.get('concept') || '')}" placeholder="例如：函数奇偶性"></div><p class="format-note">难度采用 1～5 星建议，个人标注优先于编辑标注与自动初评。自动初评按知识点、题型及可识别解题要点估计，尚未经实测校准，可在学习标注中调整。未掌握题按连续两次确定答对判断，备考范围使用当前计划的掌握状态。</p></div>`;
+  return `<div class="practice-extra-controls"><div class="field"><label for="practice-status">练习范围</label><select id="practice-status" data-filter="status"><option value="">全部题目</option><option value="unseen" ${query.get("status") === "unseen" ? "selected" : ""}>只练未做题</option><option value="unmastered" ${query.get("status") === "unmastered" ? "selected" : ""}>只练未掌握题</option></select></div><div class="field"><label for="random-distribution">随机抽题方式</label><select id="random-distribution" data-filter="distribution"><option value="random">题目均匀随机</option><option value="balanced" ${query.get("distribution") === "balanced" ? "selected" : ""}>按大章节均衡抽题</option></select></div><div class="field"><label for="practice-difficulty">五星难度</label><select id="practice-difficulty" data-filter="difficulty"><option value="">全部难度</option>${Object.entries(starLabels).map(([id,label])=>`<option value="${id}" ${query.get('difficulty')===id?'selected':''}>${'★'.repeat(Number(id))}${'☆'.repeat(5-Number(id))} · ${label}</option>`).join('')}<option value="unrated" ${query.get('difficulty')==='unrated'?'selected':''}>待标注</option></select></div><div class="field"><label for="practice-concept">逐题知识点</label><input class="input" id="practice-concept" data-filter="concept" value="${attr(query.get('concept') || '')}" placeholder="例如：函数奇偶性"></div><p class="format-note">难度采用 1～5 星建议，个人标注优先于编辑标注与自动初评。自动初评按知识点、题型及可识别解题要点估计，尚未经实测校准，可在学习标注中调整。备考范围的题答对后进入半确认，移出普通重刷队列，后续少量间隔抽查；其他范围按连续两次确定答对筛选。</p></div>`;
 }
 function questionToolbar() {
   const q = currentQuestion(), exam = currentExam(), p = state.practice;
@@ -401,7 +401,7 @@ function updateRevisionScope(input) {
 function preparationTopics() {
   const profile = preparationProfile(bank, state);
   const topics = profile.topics;
-  return `<section class="card preparation-topics"><h2>复习重点</h2><p class="subtitle">按本次备考的小节与题型调整出题频率。答错后增加，答对后逐步减少；每组结束后重新抽题。</p>${topics.length ? `<div class="preparation-topic-list">${topics.slice(0, 8).map((t) => `<div class="preparation-topic"><div><strong>${esc(getBankIndex(bank).chapters.get(t.subjectId)?.get(t.chapterId)?.name)}</strong><small>${names[t.type]} · 已答 ${t.answered} 次 · 答对 ${t.correct} 次</small></div><span class="pill ${t.priority > 1.15 ? "blue" : t.priority < 0.85 ? "green" : ""}">${t.priority > 1.15 ? "加强训练" : t.priority < 0.85 ? "减少频率" : "常规巩固"}</span></div>`).join("")}</div>` : `<p class="muted">完成测评后，这里会显示你的复习重点。</p>`}<p class="format-note">其他知识点仍有机会抽中，同组题目不重复；上一组题目适当降低频率，兼顾新题和复习。</p></section>${conceptPanel(profile.concepts, { esc, attr, button })}`;
+  return `<section class="card preparation-topics"><h2>复习重点</h2><p class="subtitle">按本次备考的小节与题型调整出题频率。答错后增加，答对后逐步减少；每组结束后重新抽题；已答对的题转入少量间隔抽查。</p>${topics.length ? `<div class="preparation-topic-list">${topics.slice(0, 8).map((t) => `<div class="preparation-topic"><div><strong>${esc(getBankIndex(bank).chapters.get(t.subjectId)?.get(t.chapterId)?.name)}</strong><small>${names[t.type]} · 已答 ${t.answered} 次 · 答对 ${t.correct} 次</small></div><span class="pill ${t.priority > 1.15 ? "blue" : t.priority < 0.85 ? "green" : ""}">${t.priority > 1.15 ? "加强训练" : t.priority < 0.85 ? "减少频率" : "常规巩固"}</span></div>`).join("")}</div>` : `<p class="muted">完成测评后，这里会显示你的复习重点。</p>`}<p class="format-note">其他知识点仍有机会抽中，同组题目不重复；已答对的题至少隔一组或隔日再抽查，兼顾新题、错题与不同小节。</p></section>${conceptPanel(profile.concepts, { esc, attr, button })}`;
 }
 function preparationPage() {
   if (route().query.has("session") && state.practice?.preparationId === state.preparation?.id && state.preparation)
@@ -412,8 +412,9 @@ function preparationPage() {
   const diagnostic = diagnosticProgress(state, bank);
   const active = currentPreparationPractice(state);
   const unfinished = active && !practiceProgress(active, bank).ready;
+  const nextCount = prep ? trainingCount(bank, prep, state) : 0;
   const scope = prep ? prep.chapterIds.map((id) => getBankIndex(bank).chapters.get(prep.subjectId)?.get(id)?.name).filter(Boolean).join("、") : "";
-  return `${head("备考模式", "先随机测评，再围绕薄弱知识点加权刷题。掌握得越好，相关题目出现得越少。")}${prep ? `${preparationStatus()}<section class="card preparation-current"><div><span class="pill blue">当前备考 · ${esc(subject(prep.subjectId)?.name)}</span><h2>${diagnostic.ready ? "测评完成，开始专项巩固" : `测评进度 ${diagnostic.completed} / ${diagnostic.total}`}</h2><p>${esc(scope)}</p><p class="muted">${diagnostic.ready ? `已开启 ${prep.round} 组加权训练` : "请完成全部测评题，解答题对照答案自评后计入。"}</p></div><div class="flex">${unfinished || !diagnostic.ready ? button("继续备考", "resume-preparation", "", "btn primary") : button(`开始加权训练 · ${trainingCount(bank, prep)} 题`, "next-training", "", "btn primary")}${active && !unfinished ? button("查看本组结果", "resume-preparation") : ""}</div></section>${preparationReviewCard()}${preparationTopics()}` : ""}${prep || state.preparationHistory.length ? trendPanel(bank, state, route().query.get("plan"), { esc, attr }) : ""}<section class="card preparation-setup"><h2>${prep ? "重新选择备考范围" : "选择备考范围"}</h2><p class="subtitle">一次选择一个科目，可勾选多个大章或小节。大章包含下属全部小节。</p><div class="field"><label for="prepare-subject">备考科目</label><select id="prepare-subject">${bank.subjects.map((s) => `<option value="${attr(s.id)}" ${s.id === selection.subjectId ? "selected" : ""}>${esc(s.name)}</option>`).join("")}</select></div><div class="preparation-launch"><p id="prepare-availability" aria-live="polite">${preparationAvailability(available)}</p>${button(`开始 ${PREPARATION_COUNT} 题测评`, "begin-preparation", available ? "" : "disabled", "btn primary")}</div><fieldset class="exam-chapters preparation-chapters" aria-describedby="prepare-availability"><legend>章节范围（可多选）</legend><div class="flex">${button("全选大章", "prepare-select-all", "", "btn small")}${button("清空选择", "prepare-select-none", "", "btn small")}</div><p class="scope-help">勾选大章包含全部小节。取消整章后，可展开选择小节。下列数量为可评分题量。</p><div class="preparation-chapter-options">${preparationTreeHTML(bank, selection.subjectId, selection.chapterIds)}</div></fieldset><details class="preparation-progress"><summary>查看所选范围的学习进度</summary><div id="prepare-learning-progress">${learningProgressCard(learningProgress(preparationQuestions(bank, selection), state))}</div></details><details class="preparation-options"><summary>训练题量与测评说明</summary><div class="field"><label for="prepare-round-policy">后续训练题量</label><select id="prepare-round-policy"><option value="adaptive" ${selection.roundPolicy === "adaptive" ? "selected" : ""}>自动强化：小题库使用短组</option><option value="fixed" ${selection.roundPolicy === "fixed" ? "selected" : ""}>固定 20 题，不足则全部</option></select></div><p class="format-note">${prep ? "重新测评会建立新的备考计划，已有答题记录保留。" : "首组均匀随机抽题，不受历史成绩影响。"}选择、判断、填空题自动判分，解答题需自评。</p></details></section>`;
+  return `${head("备考模式", "先随机测评，再围绕薄弱知识点加权刷题。掌握得越好，相关题目出现得越少。")}${prep ? `${preparationStatus()}<section class="card preparation-current"><div><span class="pill blue">当前备考 · ${esc(subject(prep.subjectId)?.name)}</span><h2>${diagnostic.ready ? "测评完成，开始专项巩固" : `测评进度 ${diagnostic.completed} / ${diagnostic.total}`}</h2><p>${esc(scope)}</p><p class="muted">${diagnostic.ready ? `已开启 ${prep.round} 组加权训练。${!nextCount && !unfinished ? "当前范围已通过，先学习其他范围或次日再抽查。" : "每场少量抽查，首次答对后不再逐题重刷。"}` : "请完成全部测评题，解答题对照答案自评后计入。"}</p></div><div class="flex">${unfinished || !diagnostic.ready ? button("继续备考", "resume-preparation", "", "btn primary") : button(nextCount ? `开始加权训练 · ${nextCount} 题` : "本场暂无待练题", "next-training", nextCount ? "" : "disabled", "btn primary")}${active && !unfinished ? button("查看本组结果", "resume-preparation") : ""}</div></section>${preparationReviewCard()}${preparationTopics()}` : ""}${prep || state.preparationHistory.length ? trendPanel(bank, state, route().query.get("plan"), { esc, attr }) : ""}<section class="card preparation-setup"><h2>${prep ? "重新选择备考范围" : "选择备考范围"}</h2><p class="subtitle">一次选择一个科目，可勾选多个大章或小节。大章包含下属全部小节。</p><div class="field"><label for="prepare-subject">备考科目</label><select id="prepare-subject">${bank.subjects.map((s) => `<option value="${attr(s.id)}" ${s.id === selection.subjectId ? "selected" : ""}>${esc(s.name)}</option>`).join("")}</select></div><div class="preparation-launch"><p id="prepare-availability" aria-live="polite">${preparationAvailability(available)}</p>${button(`开始 ${PREPARATION_COUNT} 题测评`, "begin-preparation", available ? "" : "disabled", "btn primary")}</div><fieldset class="exam-chapters preparation-chapters" aria-describedby="prepare-availability"><legend>章节范围（可多选）</legend><div class="flex">${button("全选大章", "prepare-select-all", "", "btn small")}${button("清空选择", "prepare-select-none", "", "btn small")}</div><p class="scope-help">勾选大章包含全部小节。取消整章后，可展开选择小节。下列数量为可评分题量。</p><div class="preparation-chapter-options">${preparationTreeHTML(bank, selection.subjectId, selection.chapterIds)}</div></fieldset><details class="preparation-progress"><summary>查看所选范围的学习进度</summary><div id="prepare-learning-progress">${learningProgressCard(learningProgress(preparationQuestions(bank, selection), state))}</div></details><details class="preparation-options"><summary>训练题量与测评说明</summary><div class="field"><label for="prepare-round-policy">后续训练题量</label><select id="prepare-round-policy"><option value="adaptive" ${selection.roundPolicy === "adaptive" ? "selected" : ""}>自动强化：小题库使用短组</option><option value="fixed" ${selection.roundPolicy === "fixed" ? "selected" : ""}>每组最多 20 题，不为凑数重刷</option></select></div><p class="format-note">${prep ? "重新测评会建立新的备考计划，已有答题记录保留。" : "首组均匀随机抽题，不受历史成绩影响。"}选择、判断、填空题自动判分，解答题需自评。</p></details></section>`;
 }
 function preparationAvailability(count) {
   return count ? `所选范围共 ${count} 道题，本次测评 ${Math.min(PREPARATION_COUNT, count)} 道${count < PREPARATION_COUNT ? "（不足 20 题，使用全部题目）" : ""}。`
@@ -483,13 +484,17 @@ function preparationStatus() {
 function preparationQuestionStatus(id) {
   if (!isScorable(qById(id))) return '<p class="preparation-question-status">仅供查阅 · 不计掌握度</p>';
   const result = currentPreparationMetrics().questions.get(id);
-  const streak = result?.correctStreak ?? 0;
-  return `<p class="preparation-question-status"><span class="pill ${result?.mastered ? "green" : "blue"}" data-preparation-question-status>${result?.mastered ? "已掌握" : result?.wrongCount ? "错题巩固中" : "掌握确认中"} · 连续答对 ${streak} / 2 次</span>${result?.wrongCount && !result.mastered ? "<small>已提高后续抽中频率</small>" : ""}</p>`;
+  const audit = state.practice?.auditQuestionIds?.includes(id);
+  const label = result?.mastered ? "已确认" : result?.halfConfirmed ? "半确认" : result?.wrongCount ? "待巩固" : "尚未通过";
+  const hint = result?.halfConfirmed ? result.uncertain ? "答对但不确定，后续优先抽查" : "先学习其他题，隔场或次日抽查"
+    : result?.mastered ? result.stableMastered ? "已通过隔日复习" : "已通过间隔抽查" : "答对后进入半确认";
+  return `<p class="preparation-question-status"><span class="pill ${result?.mastered ? "green" : "blue"}" data-preparation-question-status>${audit ? "随机抽查 · " : ""}${label}</span><small>${hint}</small></p>`;
 }
 function preparationRoundSummary() {
   const p = state.practice;
   const progress = practiceProgress(p, bank);
-  return `<section class="card preparation-summary"><span class="pill blue">${p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : `加权训练 · 第 ${p.round} 组`}</span><h2>${progress.ready ? "本组已完成" : "还有题目待完成"}</h2><p>共 ${progress.total} 题，已完成 ${progress.completed} 题，答对 ${progress.correct} 题${progress.completed ? `，正确率 ${Math.round(progress.correct / progress.completed * 100)}%` : ""}。</p><p class="muted">${progress.ready ? "已根据本组表现更新复习重点，可开始下一组加权训练。" : "跳过的题目不会按错题计入。请先补完；解答题需选择自评结果。"}</p><div class="flex">${progress.ready ? button("下一组加权训练", "next-training", "", "btn primary") : button("继续完成本组", "complete-preparation", "", "btn primary")}<a href="#/prepare" class="btn">查看备考计划</a></div></section>${preparationStatus()}${preparationTopics()}${trendPanel(bank, state, state.preparation?.id, { esc, attr })}`;
+  const nextCount = state.preparation ? trainingCount(bank, state.preparation, state) : 0;
+  return `<section class="card preparation-summary"><span class="pill blue">${p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : `加权训练 · 第 ${p.round} 组`}</span><h2>${progress.ready ? "本组已完成" : "还有题目待完成"}</h2><p>共 ${progress.total} 题，已完成 ${progress.completed} 题，答对 ${progress.correct} 题${progress.completed ? `，正确率 ${Math.round(progress.correct / progress.completed * 100)}%` : ""}。</p><p class="muted">${progress.ready ? nextCount ? "已更新复习重点，下一组优先新题和待巩固题，穿插少量间隔抽查。" : "本场没有需要立即重刷的题，先学习其他范围或次日再抽查。" : "跳过的题目不会按错题计入。请先补完；解答题需选择自评结果。"}</p><div class="flex">${progress.ready ? button(nextCount ? "下一组加权训练" : "本场暂无待练题", "next-training", nextCount ? "" : "disabled", "btn primary") : button("继续完成本组", "complete-preparation", "", "btn primary")}<a href="#/prepare" class="btn">查看备考计划</a></div></section>${preparationStatus()}${preparationTopics()}${trendPanel(bank, state, state.preparation?.id, { esc, attr })}`;
 }
 
 function optionHTML(q, response, graded = false, correct = null) {
@@ -1278,25 +1283,20 @@ async function handleAction(action, el) {
       openDialog("查看题图", imageViewerHTML([el]), button("关闭", "close-dialog"));
       break;
     case "view-question-images": {
-      const images = [...app.querySelectorAll('.question-main .rich img')];
-      if (!images.length || images.some(image => image.dataset.figureLoading || !image.naturalWidth)) {
+      const images = [...app.querySelectorAll('.question-main .rich img, .question-main .readable-formula')];
+      if (!images.length || images.some(image => image.matches('img') && (image.dataset.figureLoading || !image.naturalWidth))) {
         toast("题图尚未加载完成，请稍后重试"); break;
       }
       openDialog("题图与公式", imageViewerHTML(images), button("关闭", "close-dialog"));
       break;
     }
     case "select-question-image": {
-      const image = dialog.querySelector('#zoomed-image');
-      image.src = el.dataset.src;
-      image.alt = el.dataset.alt;
-      image.style.width = `min(100%,${Number(el.dataset.width)}px)`;
-      for (const item of dialog.querySelectorAll('[data-action="select-question-image"]'))
-        item.setAttribute('aria-pressed', String(item === el));
-      dialog.querySelector('#image-zoom').value = '100';
-      dialog.querySelector('#image-zoom-value').textContent = '100%';
-      dialog.querySelector('.image-zoom-viewport').scrollTo(0, 0);
+      selectQuestionImage(dialog, el);
       break;
     }
+    case "toggle-formula-original":
+      await toggleFormulaOriginal(dialog, el);
+      break;
     case "reset-image-zoom":
       document.querySelector("#image-zoom").value = "100";
       document.querySelector("#image-zoom").dispatchEvent(new Event("input", { bubbles: true }));
@@ -1570,8 +1570,8 @@ async function handleAction(action, el) {
       if (!isScorable(qById(el.dataset.id))) { toast("此题待核实，不计掌握度"); return; }
       if (state.preparation) {
         const metrics = currentPreparationMetrics();
-        if (metrics.pool.some((q) => q.id === el.dataset.id) && !metrics.questions.get(el.dataset.id)?.mastered) {
-          toast("当前备考范围的题目需在不同组中连续答对两次，才能标记已掌握");
+        if (metrics.pool.some((q) => q.id === el.dataset.id) && (!metrics.questions.get(el.dataset.id)?.latestCorrect || metrics.questions.get(el.dataset.id)?.uncertain)) {
+          toast("请先独立答对这道题；答对后进入半确认，再安排间隔抽查");
           return;
         }
       }

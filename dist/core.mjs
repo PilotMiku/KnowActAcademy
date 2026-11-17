@@ -705,6 +705,8 @@ export function validateBackup(input, installedBank = null) {
     index.chapterQuestions.get(state.preparation.subjectId).get(id).map((q) => q.id)) ?? []);
   const eligibleDiagnosticIds = state.preparation?.diagnosticIds.filter((id) => isScorable(index.questions.get(id))) ?? [];
   const validPreparationPractice = (p) => validPractice(p) && state.preparation &&
+    (p.auditQuestionIds === undefined || Array.isArray(p.auditQuestionIds) && p.auditQuestionIds.length <= 3 &&
+      new Set(p.auditQuestionIds).size === p.auditQuestionIds.length && p.auditQuestionIds.every(id => p.questionIds.includes(id))) &&
     typeof p.id === "string" && p.preparationId === state.preparation.id && p.questionIds.length <= 20 &&
     p.questionIds.every((id) => scopeIds.has(id)) &&
     (p.mode === "prepare-diagnostic" ? p.id === state.preparation.diagnosticPracticeId &&

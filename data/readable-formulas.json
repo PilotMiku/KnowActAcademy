@@ -360,6 +360,1461 @@
       "version": "4ea151cf2b829745",
       "latex": "\\begin{cases}\\lambda x_1+x_2+x_3=0\\\\x_1+\\mu x_2+x_3=0\\\\x_1+2\\mu x_2+x_3=0\\end{cases}",
       "review": "visually-checked-original"
+    },
+    "07965f7778c53961d05719de": {
+      "version": "9a2cde70630a4d1d",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "769fa505bf862edb8a514091": {
+      "version": "fe86b15543239409",
+      "latex": "l_1",
+      "review": "visually-checked-original"
+    },
+    "5313bb1c69f14b9de23e53a7": {
+      "version": "9f0176b4c4c53a1b",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "e8b1d584b83342c41dd46792": {
+      "version": "4dd7c3a9600878da",
+      "latex": "l_1",
+      "review": "visually-checked-original"
+    },
+    "bc5d4737c6accf3d70135189": {
+      "version": "36055f5d68289684",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "4b7705c5440c2f519ab27030": {
+      "version": "df204b30c98977e5",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "ddf1fd03113630358323f115": {
+      "version": "a18ad627f4c30e13",
+      "latex": "f(x)",
+      "review": "visually-checked-original"
+    },
+    "fc92528ef0953e246034e15f": {
+      "version": "6e53e34be3618eb6",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "378519ba52db0f8f6cb18eaa": {
+      "version": "31655e8549d31360",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "2332ca23339cbd355e1c0280": {
+      "version": "764e821d7d0b1c50",
+      "latex": "\\Omega",
+      "review": "visually-checked-original"
+    },
+    "80c8d05940d651afef5df5c4": {
+      "version": "95d3dfeb620e2ddc",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "455dd5264091144d2d2daac0": {
+      "version": "bf771494b10d7028",
+      "latex": "\\Sigma",
+      "review": "visually-checked-original"
+    },
+    "e044767331c8ce52a1c0df51": {
+      "version": "ae53e98a6a97a28b",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "fe3e271aac16f0589ed55a5d": {
+      "version": "6981d5fdee2aec9e",
+      "latex": "(-\\infty,0)",
+      "review": "visually-checked-original"
+    },
+    "573090a0335884bacdf4d4aa": {
+      "version": "4495dc9c4993d3eb",
+      "latex": "l_1",
+      "review": "visually-checked-original"
+    },
+    "8d24740d602d673add0773b4": {
+      "version": "a8bf124829300d66",
+      "latex": "l_1",
+      "review": "visually-checked-original"
+    },
+    "36ff1b46220fc16e1fccb4cb": {
+      "version": "c23d9fd27f62213a",
+      "latex": "l_2",
+      "review": "visually-checked-original"
+    },
+    "409c67913c04a44b3ed14ff2": {
+      "version": "586232625ca85b66",
+      "latex": "l_1",
+      "review": "visually-checked-original"
+    },
+    "526c32fa8a64121b10e11796": {
+      "version": "6c7b9afb26016a7d",
+      "latex": "\\Omega",
+      "review": "visually-checked-original"
+    },
+    "5ad3375586f38b8e43a92ddd": {
+      "version": "1da511302347f832",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "4312d06f560125b4c1246afa": {
+      "version": "5024e484738c00ee",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "a98e9feab49f8686c30f9465": {
+      "version": "900ba795b23dcba0",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "19be6fc916ef9f580246c143": {
+      "version": "78713f9313835e24",
+      "latex": "T_3",
+      "review": "visually-checked-original"
+    },
+    "3c6ed4f76f79aa4d8b47f231": {
+      "version": "d1b5063cf0de8824",
+      "latex": "B",
+      "review": "visually-checked-original"
+    },
+    "33740323ce75c1fac89d0f64": {
+      "version": "1aca6eff367d52dd",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "d6b0c07545886346c9ff03eb": {
+      "version": "d08e132aa8b1e30c",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "4cc704520312f2e676e27978": {
+      "version": "c9d3de45d74a69d3",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "41845c5374699016468f18b4": {
+      "version": "ddca9dd595e9d41c",
+      "latex": "x\\to0",
+      "review": "visually-checked-original"
+    },
+    "2ecf0693c645f1f2a54957ca": {
+      "version": "a3d9245712e4d05d",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "b157a3580d0295fa488842ab": {
+      "version": "2e086b93b692d519",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "0891d0ce6e7418d1a886cac7": {
+      "version": "2320427cb5b59f05",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "6e32e35365930b2f9379690d": {
+      "version": "ea669b9147b61ca8",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "bbc734c81470bfa27ccf46af": {
+      "version": "d31243f3b79b9106",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "7311a1ed83395588e1f7e1b5": {
+      "version": "8d5e7c79087af477",
+      "latex": "t",
+      "review": "visually-checked-original"
+    },
+    "fd2cef75eb6fea38c1bdbc6c": {
+      "version": "0a47c3ab250c2657",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "2970948671d43a587adbef0f": {
+      "version": "708fecac478fa5ce",
+      "latex": "f(0)",
+      "review": "visually-checked-original"
+    },
+    "64a7ae7c541220de1c31449d": {
+      "version": "ad6ce9f7acdef12d",
+      "latex": "f^{\\prime\\prime}(x)>0",
+      "review": "visually-checked-original"
+    },
+    "aa7677abe4657aea662b3a2f": {
+      "version": "433af200a3a2d402",
+      "latex": "\\displaystyle\\sum_{n=1}^{\\infty}u_n",
+      "review": "visually-checked-original"
+    },
+    "7bacfc3f37f302f1a0d1ddcb": {
+      "version": "c8ef629a3c29719f",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "4f917a47698ecf5f32ad314b": {
+      "version": "7af49b67b0574d1d",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "42fd0cdc7235094742181845": {
+      "version": "79c332a94c4e37fb",
+      "latex": "2\\pi",
+      "review": "visually-checked-original"
+    },
+    "175790833f52ed492814a8ad": {
+      "version": "4ed0faa15e9b39e0",
+      "latex": "l",
+      "review": "visually-checked-original"
+    },
+    "4d0e538388b4e13a19a17558": {
+      "version": "bf5ad85f1a683094",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "a4876355ecfb4542f9b12f01": {
+      "version": "a4d855a6c9e83d2d",
+      "latex": "y",
+      "review": "visually-checked-original"
+    },
+    "b5567f40fdcbd041a0934105": {
+      "version": "62cc291675a537b4",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "24ca87688248fdd914fd3f6e": {
+      "version": "0af476193f7356d6",
+      "latex": "z=z(x,y)",
+      "review": "visually-checked-original"
+    },
+    "82ff104eddc7f5aae50ca6b9": {
+      "version": "c31a2e9b7cab3388",
+      "latex": "D",
+      "review": "visually-checked-original"
+    },
+    "2cb5e424af475ea513542133": {
+      "version": "67a0c41c9754e35a",
+      "latex": "\\Omega",
+      "review": "visually-checked-original"
+    },
+    "04c525a7f0e49547ba1cf382": {
+      "version": "a9b4b60bddbaef8b",
+      "latex": "\\Omega",
+      "review": "visually-checked-original"
+    },
+    "3de981b826f1a51792e18f9b": {
+      "version": "88d0869f3766803e",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "773dc29d5c6e5dce7776b023": {
+      "version": "90bed6ecf09f74a9",
+      "latex": "xoy",
+      "review": "visually-checked-original"
+    },
+    "ce984e2baaca3c72eeb4a1c1": {
+      "version": "b312484e7a741d77",
+      "latex": "x^2+y^2+z^2=1",
+      "review": "visually-checked-original"
+    },
+    "9a888db839fa44d4bcf014b2": {
+      "version": "b3f5a8a7a0dd189f",
+      "latex": "\\Sigma",
+      "review": "visually-checked-original"
+    },
+    "1dc30a592b7bf5950517e693": {
+      "version": "7a66ab486f882c29",
+      "latex": "\\Sigma",
+      "review": "visually-checked-original"
+    },
+    "118e769d7dc70142cbe82bfe": {
+      "version": "deff838f6be62016",
+      "latex": "\\Sigma",
+      "review": "visually-checked-original"
+    },
+    "ef1cea40b11e1f45d85dff7c": {
+      "version": "2f2281bc417989c5",
+      "latex": "D",
+      "review": "visually-checked-original"
+    },
+    "c643ef3fc827ddad75fe7f68": {
+      "version": "1f59fca00b011b28",
+      "latex": "Oz",
+      "review": "visually-checked-original"
+    },
+    "fac751fbba039be10ef812b4": {
+      "version": "c2a4745b103a8c0c",
+      "latex": "A,B",
+      "review": "visually-checked-original"
+    },
+    "1b04e18ca304151a278784a1": {
+      "version": "037f7fcd94206572",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "ca094f0a9fbfb89ad74089fc": {
+      "version": "a4b17fb4eb5f6fa7",
+      "latex": "f",
+      "review": "visually-checked-original"
+    },
+    "85edb7fd3e366da26dbb6c27": {
+      "version": "164ee3ed954aae2c",
+      "latex": "A^TA",
+      "review": "visually-checked-original"
+    },
+    "b8922e5e5264ce28301136ce": {
+      "version": "a9bd10a499446302",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "0eeb9a9afc00ea12826b9447": {
+      "version": "de53bb4d85223124",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "e0a6fb775b3849be2305b24e": {
+      "version": "ae53e98a6a97a28b",
+      "latex": "A^*",
+      "review": "visually-checked-original"
+    },
+    "f6d2a483815fe73b74c82459": {
+      "version": "808eaa7306a9a1c0",
+      "latex": "AX=B",
+      "review": "visually-checked-original"
+    },
+    "b74a612954a63f85a92b5af1": {
+      "version": "f518f0b965376f53",
+      "latex": "\\alpha_1,\\alpha_2,\\alpha_3",
+      "review": "visually-checked-original"
+    },
+    "8e030ac6a3b8dc51c083df7c": {
+      "version": "4cf680c8d65b3317",
+      "latex": "\\gamma",
+      "review": "visually-checked-original"
+    },
+    "02dce1263ea419e8ee00facf": {
+      "version": "77f6571994edd788",
+      "latex": "R^3",
+      "review": "visually-checked-original"
+    },
+    "94fabc91df0bbae7a7a9d9c7": {
+      "version": "bfea29f1d98e3dbc",
+      "latex": "k",
+      "review": "visually-checked-original"
+    },
+    "e359e3b53879ab3361eb7b9e": {
+      "version": "74100a06565bc05f",
+      "latex": "\\alpha_1,\\alpha_2,\\alpha_3",
+      "review": "visually-checked-original"
+    },
+    "5c9ea525c5509510c34855fe": {
+      "version": "3c56156d3b8727ae",
+      "latex": "R^3",
+      "review": "visually-checked-original"
+    },
+    "54ac021e5e2aaa5fa5f2e660": {
+      "version": "fd802011cbb3bba9",
+      "latex": "\\alpha_1,\\alpha_2,\\alpha_3",
+      "review": "visually-checked-original"
+    },
+    "c1653101a532b2f64aa53ab1": {
+      "version": "ce4f9ba9279e91d7",
+      "latex": "\\gamma=6\\alpha_1-\\alpha_2-\\alpha_3",
+      "review": "visually-checked-original"
+    },
+    "b74de0cd9567fb0dae5374a5": {
+      "version": "f518f0b965376f53",
+      "latex": "AX=0",
+      "review": "visually-checked-original"
+    },
+    "1b405d8c9e50c5ede1529794": {
+      "version": "037f7fcd94206572",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "98d3bfe5a3925070c780ab25": {
+      "version": "fbd2bb2961e4e5b7",
+      "latex": "\\xi",
+      "review": "visually-checked-original"
+    },
+    "258f5431189cab9c0db9b86e": {
+      "version": "21bfbca658ae0ea1",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "ec938a6bb075fadb72d14e34": {
+      "version": "1b11a55ce53d3f42",
+      "latex": "AX=0",
+      "review": "visually-checked-original"
+    },
+    "ba64dbb32b6002cc139def34": {
+      "version": "1e444fb8c1ed976b",
+      "latex": "AX=0",
+      "review": "visually-checked-original"
+    },
+    "0ee028d21189b9cb872c8014": {
+      "version": "de53bb4d85223124",
+      "latex": "AX=0",
+      "review": "visually-checked-original"
+    },
+    "3331070394493dab8e3a23e9": {
+      "version": "1aca6eff367d52dd",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "6589d4b120637a7638c581ee": {
+      "version": "4dec91a9cd137117",
+      "latex": "AX=0",
+      "review": "visually-checked-original"
+    },
+    "c528bc9758d45f5bce15dc42": {
+      "version": "d00a3e765058b237",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "53e73ac19d00ac127b501074": {
+      "version": "9f0176b4c4c53a1b",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "7bd52dbbabd51630ab14ebb3": {
+      "version": "c8ef629a3c29719f",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "f0137f0cea4bcb0b77efc2a1": {
+      "version": "77b6bce3349e04f7",
+      "latex": "B",
+      "review": "visually-checked-original"
+    },
+    "ffac21bf597e20f4d18cedb5": {
+      "version": "98e7bbae603af2a5",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "3a32192b8b0104ec4fe6cf95": {
+      "version": "403f353414a58801",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "4933cfd7c86a9e5b2fd2a2dc": {
+      "version": "435955bc2507ae1c",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "b2b2eed42297285f67cc1a5d": {
+      "version": "b9f4b84684aaa6a0",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "d3f93bae9e9a2fab10113351": {
+      "version": "d619dc2ed48821f3",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "819fa9f441b3296f05e7e19c": {
+      "version": "0a19af868fbddefa",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "31dfbc07d2b96b4df8b4bc38": {
+      "version": "4a4f6e355eaa0920",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "a2dc1bb7ba8f77c1b304a60f": {
+      "version": "6346038ea7aff608",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "ab6e53cbc84ef947bccbd25a": {
+      "version": "b661d64affa3ca4a",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "10ec979906cf7dd72177faec": {
+      "version": "165c15cda5170055",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "8cf0136f192de0c153152888": {
+      "version": "ebde2105f180885a",
+      "latex": "R[x]_3",
+      "review": "visually-checked-original"
+    },
+    "87629dcb4d07820837b35f99": {
+      "version": "16081b270e4e3321",
+      "latex": "T_1",
+      "review": "visually-checked-original"
+    },
+    "69dd82a7a6b4159d0c0bce7e": {
+      "version": "7b464649a96dbb89",
+      "latex": "T",
+      "review": "visually-checked-original"
+    },
+    "a7490a039349eb750bd8d3a0": {
+      "version": "9730da3e3a5a65c1",
+      "latex": "\\forall p_1,p_2\\in R[x]_3",
+      "review": "visually-checked-original"
+    },
+    "883bb475f060ab13ee604d93": {
+      "version": "b550c04f6198eef3",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "9972aaaa64196f588a29323d": {
+      "version": "371e4af5d5ab129c",
+      "latex": "T_3",
+      "review": "visually-checked-original"
+    },
+    "23571f6a3582adb80776fcce": {
+      "version": "764e821d7d0b1c50",
+      "latex": "B=C^{-1}AC",
+      "review": "visually-checked-original"
+    },
+    "a79b4941f694f2a9a2466a6f": {
+      "version": "9730da3e3a5a65c1",
+      "latex": "C",
+      "review": "visually-checked-original"
+    },
+    "552f00238b9afdd93e01a386": {
+      "version": "33de7a588771b889",
+      "latex": "\\alpha_1,\\alpha_2,\\ldots,\\alpha_n",
+      "review": "visually-checked-original"
+    },
+    "af29080e3f693941d26c529b": {
+      "version": "9a92946c8ad1e994",
+      "latex": "\\beta_1,\\beta_2,\\ldots,\\beta_n",
+      "review": "visually-checked-original"
+    },
+    "7bf684a643ef6e80a4719ec3": {
+      "version": "c8ef629a3c29719f",
+      "latex": "\\beta_1,\\beta_2,\\beta_3",
+      "review": "visually-checked-original"
+    },
+    "e329424902f9065bdb48b265": {
+      "version": "74100a06565bc05f",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "b22f94fcb383140e4b66a24d": {
+      "version": "b9f4b84684aaa6a0",
+      "latex": "\\gamma",
+      "review": "visually-checked-original"
+    },
+    "d3238eab63abd42224d7317a": {
+      "version": "d619dc2ed48821f3",
+      "latex": "\\beta",
+      "review": "visually-checked-original"
+    },
+    "60f01cb9910fe192e0fcac36": {
+      "version": "d5b28b03edf6987f",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "4a18e7b5d325f09b827adcda": {
+      "version": "0f3889c92c75067e",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "6ea5b27569f3e1a0bf56e1ce": {
+      "version": "ea669b9147b61ca8",
+      "latex": "x_0",
+      "review": "visually-checked-original"
+    },
+    "10b2d69e15a27b0411bc783f": {
+      "version": "165c15cda5170055",
+      "latex": "\\xi\\in[0,1)",
+      "review": "visually-checked-original"
+    },
+    "dd4e29a03912239b16c011be": {
+      "version": "a18ad627f4c30e13",
+      "latex": "(a,b)",
+      "review": "visually-checked-original"
+    },
+    "5b51bf4df65762ead437e2a2": {
+      "version": "e293f25c4acc75ac",
+      "latex": "x\\to\\infty",
+      "review": "visually-checked-original"
+    },
+    "50fdfdece72919d7f52c8864": {
+      "version": "3188e2c7ed6cacbd",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "6e71ac2c53bfb52dd16124c2": {
+      "version": "ea669b9147b61ca8",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "a3c241bd6e17341b8bb3f19b": {
+      "version": "8979b7701ec63fbf",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "b3773bf35f2a24e5ae301f5b": {
+      "version": "9cc20875620b196b",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "bf42798cfaf2c2152e3ed9d6": {
+      "version": "4ea151cf2b829745",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "f3a5e759de8a03c83d34cb71": {
+      "version": "872099d36d21e741",
+      "latex": "C_1",
+      "review": "visually-checked-original"
+    },
+    "0c1dfe2c83791f38590126eb": {
+      "version": "cc97f19171e4e993",
+      "latex": "y\\big|_{x=0}=0,y^{\\prime}\\big|_{x=0}=1",
+      "review": "visually-checked-original"
+    },
+    "d15b4e717fa160eb73ef8050": {
+      "version": "7ba15489d053527a",
+      "latex": "Y-y=y^{\\prime}(X-x)",
+      "review": "visually-checked-original"
+    },
+    "c525257e6d766d6147b8e300": {
+      "version": "d00a3e765058b237",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "5c4e5064bd97861b02e148be": {
+      "version": "3c56156d3b8727ae",
+      "latex": "Y-y=y^{\\prime}(X-x)",
+      "review": "visually-checked-original"
+    },
+    "47c4daee86f7794ef9539f9e": {
+      "version": "b49f970c5cfc2d5d",
+      "latex": "M(x,y)",
+      "review": "visually-checked-original"
+    },
+    "02c07445d2e97f45f2838e83": {
+      "version": "77f6571994edd788",
+      "latex": "y^{\\prime}=[\\qquad]",
+      "review": "visually-checked-original"
+    },
+    "91610375179a9d8334aeffd8": {
+      "version": "cfb49c9c6c0e731c",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "4894e78feb041bad2c47176c": {
+      "version": "fb962d1015b6aa6f",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "084116b1d2a4002027d965f7": {
+      "version": "2320427cb5b59f05",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "d9c22e4a96f0f3b41f1b7e5c": {
+      "version": "da4182531fc3614f",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "4cb0ee2463206ed54928d71f": {
+      "version": "c9d3de45d74a69d3",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "4ee5855348552e1c6f615278": {
+      "version": "39c8f171b57140cb",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "64c849c2dd3f394018c119e9": {
+      "version": "ad6ce9f7acdef12d",
+      "latex": "t",
+      "review": "visually-checked-original"
+    },
+    "11939b9ce1aea80c5b895fdf": {
+      "version": "deff838f6be62016",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "a83550b157ea16ae14d5201c": {
+      "version": "6471d67dfa3b0c10",
+      "latex": "[a,b]",
+      "review": "visually-checked-original"
+    },
+    "26c4af9e79cffd2f02551cfe": {
+      "version": "da60bf5f982b9824",
+      "latex": "(-\\infty,0)",
+      "review": "visually-checked-original"
+    },
+    "9f8c2214767f26d633849de9": {
+      "version": "07c64427750c73fc",
+      "latex": "(0,+\\infty)",
+      "review": "visually-checked-original"
+    },
+    "014564160c64e4a7933edf7a": {
+      "version": "a8d55880ce1f2548",
+      "latex": "(1,+\\infty)",
+      "review": "visually-checked-original"
+    },
+    "4831ed9cb3ab994c65dd1a46": {
+      "version": "fb962d1015b6aa6f",
+      "latex": "(-\\infty,1)",
+      "review": "visually-checked-original"
+    },
+    "809229c2b2d8820fde24097a": {
+      "version": "95d3dfeb620e2ddc",
+      "latex": "(1,+\\infty)",
+      "review": "visually-checked-original"
+    },
+    "8acf3703ad593f9aecd24e85": {
+      "version": "53701df2f7e5ca25",
+      "latex": "f(x)",
+      "review": "visually-checked-original"
+    },
+    "a9c27dd7e9f1ef6c945fc2e3": {
+      "version": "900ba795b23dcba0",
+      "latex": "f(x)",
+      "review": "visually-checked-original"
+    },
+    "5c03f5509bc8d32703241a26": {
+      "version": "3c56156d3b8727ae",
+      "latex": "x>0",
+      "review": "visually-checked-original"
+    },
+    "f242159083ba009a8a2dcf47": {
+      "version": "a57e6dd269b13069",
+      "latex": "x=-1",
+      "review": "visually-checked-original"
+    },
+    "2d31cd57ce225720d3f76746": {
+      "version": "2fee11a81f40b525",
+      "latex": "x_0",
+      "review": "visually-checked-original"
+    },
+    "1df6a33ef1140404108e364d": {
+      "version": "7a66ab486f882c29",
+      "latex": "f(x)",
+      "review": "visually-checked-original"
+    },
+    "75f3bee110a5812a45ecea85": {
+      "version": "2eaf8f6cdea79161",
+      "latex": "[a,b]",
+      "review": "visually-checked-original"
+    },
+    "8747cc7b845890b26cc3ee14": {
+      "version": "16081b270e4e3321",
+      "latex": "[a,b]",
+      "review": "visually-checked-original"
+    },
+    "3dfbb897a4c59794240bca8c": {
+      "version": "88d0869f3766803e",
+      "latex": "\\dfrac12",
+      "review": "visually-checked-original"
+    },
+    "191f5ffc04f220b1a7492f26": {
+      "version": "78713f9313835e24",
+      "latex": "0",
+      "review": "visually-checked-original"
+    },
+    "9c94f8d830a015aba6821ffa": {
+      "version": "e778fd82ccb6f3a8",
+      "latex": "x_0=0",
+      "review": "visually-checked-original"
+    },
+    "bf60911e9f4d3527caba6f57": {
+      "version": "4ea151cf2b829745",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "3810a18d41c3a2d8a07c252a": {
+      "version": "478f4cc97560c252",
+      "latex": "y",
+      "review": "visually-checked-original"
+    },
+    "425f2068930ada40a31db30e": {
+      "version": "79c332a94c4e37fb",
+      "latex": "y",
+      "review": "visually-checked-original"
+    },
+    "428f7766c2b03134da652651": {
+      "version": "79c332a94c4e37fb",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "b86ba5487cfe726c4d68ed01": {
+      "version": "a9bd10a499446302",
+      "latex": "\\displaystyle\\sum_{n=1}^{\\infty}u_n",
+      "review": "visually-checked-original"
+    },
+    "32e261d46bf44f1dede011fd": {
+      "version": "695cb83dad7bda4c",
+      "latex": "\\displaystyle\\sum_{n=1}^{\\infty}v_n",
+      "review": "visually-checked-original"
+    },
+    "60a94d072623d6b9e6b8a7f7": {
+      "version": "d5b28b03edf6987f",
+      "latex": "\\displaystyle\\sum_{n=1}^{\\infty}a_n",
+      "review": "visually-checked-original"
+    },
+    "c99de32cd4e57d18d043e19d": {
+      "version": "10524c7d50c050d7",
+      "latex": "a",
+      "review": "visually-checked-original"
+    },
+    "afe84c03bb54eb0ff53041ae": {
+      "version": "9a92946c8ad1e994",
+      "latex": "a",
+      "review": "visually-checked-original"
+    },
+    "a5a10e61a19d4d2298cb4832": {
+      "version": "5d17dd972fa3442f",
+      "latex": "a<3",
+      "review": "visually-checked-original"
+    },
+    "f7e93a5415a78c950d71853f": {
+      "version": "f4d57ca4b9ad9660",
+      "latex": "\\displaystyle\\sum_{n=1}^{\\infty}\\frac{\\ln n}{n}",
+      "review": "visually-checked-original"
+    },
+    "e7e042d0541ec94306361bdf": {
+      "version": "adb6c5975466c048",
+      "latex": "(0,2\\pi)",
+      "review": "visually-checked-original"
+    },
+    "b267c2ecee6dfa0f3d14703a": {
+      "version": "b9f4b84684aaa6a0",
+      "latex": "z",
+      "review": "visually-checked-original"
+    },
+    "bc420e9a66b1c2303aaa3dab": {
+      "version": "36055f5d68289684",
+      "latex": "y",
+      "review": "visually-checked-original"
+    },
+    "38ada62aa3e41322599472fb": {
+      "version": "478f4cc97560c252",
+      "latex": "OM",
+      "review": "visually-checked-original"
+    },
+    "ea1210a25d5030d7e6ca405f": {
+      "version": "e2eac7a1a723bf98",
+      "latex": "M(5,2,-1)",
+      "review": "visually-checked-original"
+    },
+    "999ab3abb9e8fa0dcfa33836": {
+      "version": "371e4af5d5ab129c",
+      "latex": "x=4",
+      "review": "visually-checked-original"
+    },
+    "37fcfbaca03c16b39857aab9": {
+      "version": "31655e8549d31360",
+      "latex": "\\triangle ABC",
+      "review": "visually-checked-original"
+    },
+    "afb1afd08b1206402db13354": {
+      "version": "9a92946c8ad1e994",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "c95c55a57c2fb1b5382f481e": {
+      "version": "10524c7d50c050d7",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "c19a383ea3257d0fa216992f": {
+      "version": "ce4f9ba9279e91d7",
+      "latex": "\\Pi_3",
+      "review": "visually-checked-original"
+    },
+    "0fb90215ab6a6164fe59e783": {
+      "version": "604a7cd436fb7eed",
+      "latex": "l_1",
+      "review": "visually-checked-original"
+    },
+    "bc92a37d950fb37d309a886b": {
+      "version": "36055f5d68289684",
+      "latex": "l_2",
+      "review": "visually-checked-original"
+    },
+    "1f736ce45eecd8a5cd6f5f74": {
+      "version": "1142712481d00eac",
+      "latex": "z",
+      "review": "visually-checked-original"
+    },
+    "dca664810cac7ae4c6b15912": {
+      "version": "4e99ce0e6f27edf7",
+      "latex": "z_x(x_0,y_0)=0",
+      "review": "visually-checked-original"
+    },
+    "9f7473bc1580d56f4b9d4c59": {
+      "version": "07c64427750c73fc",
+      "latex": "z=z(x,y)",
+      "review": "visually-checked-original"
+    },
+    "bd5e82a0ff1c8edf6da6db30": {
+      "version": "3d08c0290bf4685c",
+      "latex": "x+y=2,y=x",
+      "review": "visually-checked-original"
+    },
+    "4022b3db1c5520a03b7b2c29": {
+      "version": "586232625ca85b66",
+      "latex": "xoy",
+      "review": "visually-checked-original"
+    },
+    "9bb5e7177c21ea57a54b6812": {
+      "version": "13156eecf5be55bc",
+      "latex": "\\Omega",
+      "review": "visually-checked-original"
+    },
+    "f7e65471762d8623e79fd2b2": {
+      "version": "f4d57ca4b9ad9660",
+      "latex": "x+y=2,y=x",
+      "review": "visually-checked-original"
+    },
+    "10230345ad61467e5a229fbb": {
+      "version": "165c15cda5170055",
+      "latex": "\\mu(x,y)=x^2+y^2",
+      "review": "visually-checked-original"
+    },
+    "6fbc6b33a85b5d6df8bd942d": {
+      "version": "eb9286ddae7862d5",
+      "latex": "\\Omega",
+      "review": "visually-checked-original"
+    },
+    "c5a696a573c554a6c1e45d0c": {
+      "version": "d00a3e765058b237",
+      "latex": "x^2+z^2\\le y\\le1",
+      "review": "visually-checked-original"
+    },
+    "99828dcacb8ac8b7235c3978": {
+      "version": "371e4af5d5ab129c",
+      "latex": "(x,y,z)",
+      "review": "visually-checked-original"
+    },
+    "ab3d84f80b8acfdf1ea9a5e2": {
+      "version": "b661d64affa3ca4a",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "be2a579a16d0a752fd6589dc": {
+      "version": "d67723683e30f445",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "96b9880e9c4a4fa9224213e8": {
+      "version": "7570aa074ac70eb0",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "8efb82b79536bce948a25b73": {
+      "version": "4cf680c8d65b3317",
+      "latex": "x^2+y^2+z^2=a^2",
+      "review": "visually-checked-original"
+    },
+    "ecfb8ad91ceed4b78583d2ad": {
+      "version": "1b11a55ce53d3f42",
+      "latex": "\\Sigma",
+      "review": "visually-checked-original"
+    },
+    "e5496ba330274d930def88fb": {
+      "version": "01ed09b0ba170af7",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "ef034be1aa45e90dc0935b2d": {
+      "version": "2f2281bc417989c5",
+      "latex": "D",
+      "review": "visually-checked-original"
+    },
+    "bb29d4eb9551b965d303397d": {
+      "version": "d31243f3b79b9106",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "886f4ec64499e262cdac2ca1": {
+      "version": "b550c04f6198eef3",
+      "latex": "D",
+      "review": "visually-checked-original"
+    },
+    "2f12e25a5142d852da79db10": {
+      "version": "34ddcb2ab48eb39d",
+      "latex": "\\sum",
+      "review": "visually-checked-original"
+    },
+    "019d0d3cb96ab723351fc6dc": {
+      "version": "a8d55880ce1f2548",
+      "latex": "\\Gamma",
+      "review": "visually-checked-original"
+    },
+    "8e4f422104673b8223df2cdd": {
+      "version": "4cf680c8d65b3317",
+      "latex": "\\mu=0",
+      "review": "visually-checked-original"
+    },
+    "4db14c93cfb029c584a0b089": {
+      "version": "bf5ad85f1a683094",
+      "latex": "\\lambda=1",
+      "review": "visually-checked-original"
+    },
+    "2a1bb12021617e0a432643ab": {
+      "version": "ab1dec0836a403bd",
+      "latex": "B",
+      "review": "visually-checked-original"
+    },
+    "c307bd096bd9c425d129cc17": {
+      "version": "fefc3699c3d8d85c",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "13212a54a540632571d0f8d1": {
+      "version": "44807843d229d4e4",
+      "latex": "x=Qy",
+      "review": "visually-checked-original"
+    },
+    "4e485d5b2be4ae9153282ae9": {
+      "version": "39c8f171b57140cb",
+      "latex": "f",
+      "review": "visually-checked-original"
+    },
+    "474cb1f7e497d76646527dd6": {
+      "version": "b49f970c5cfc2d5d",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "824eefa560626ced59b0cfd1": {
+      "version": "c31a2e9b7cab3388",
+      "latex": "A^TA",
+      "review": "visually-checked-original"
+    },
+    "59ff16d0790596a95b597ff5": {
+      "version": "185c8f560eb2646e",
+      "latex": "A^TA",
+      "review": "visually-checked-original"
+    },
+    "db890d886997851e60dacd72": {
+      "version": "9cbe91d28ff057d9",
+      "latex": "f",
+      "review": "visually-checked-original"
+    },
+    "35813f1751b99e7a52e40632": {
+      "version": "cee8ea71a1f4c3f8",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "5da99795c299f0d6d677fcf8": {
+      "version": "e28343d45b1c13a2",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "10905e4523835a1f21124980": {
+      "version": "165c15cda5170055",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "dea0be73a8df6b4220b0bda4": {
+      "version": "a15fb7f1e7f91686",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "a5a208ff87df7d0ab104ec07": {
+      "version": "5d17dd972fa3442f",
+      "latex": "X",
+      "review": "visually-checked-original"
+    },
+    "6787cd46146c8e2233000d14": {
+      "version": "b651fa0986e6a576",
+      "latex": "\\lvert A\\rvert=2,\\lvert B\\rvert=3",
+      "review": "visually-checked-original"
+    },
+    "60d9520fc185860d77b285b1": {
+      "version": "d5b28b03edf6987f",
+      "latex": "b",
+      "review": "visually-checked-original"
+    },
+    "3b46202fb431fb7be5ccfe13": {
+      "version": "8153ab35f6d07003",
+      "latex": "n+1",
+      "review": "visually-checked-original"
+    },
+    "0e3ce77a5b0b69423ac9f8dd": {
+      "version": "de53bb4d85223124",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "786bb5e6ba5dbfe3ef5da951": {
+      "version": "0842c86abb478529",
+      "latex": "n+1",
+      "review": "visually-checked-original"
+    },
+    "c0a47d056cd6f0d0d9b57e1d": {
+      "version": "d226609a2ad1f931",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "ddf9309b19d9f6c5e76364fc": {
+      "version": "a18ad627f4c30e13",
+      "latex": "n=s_1\\times s_2=\\begin{vmatrix}i&j&k\\\\0&1&1\\\\1&2&1\\end{vmatrix}=(-1,1,-1)",
+      "review": "visually-checked-original"
+    },
+    "83579a65083253bf4598b231": {
+      "version": "38fb6cb6bc82046b",
+      "latex": "s_1=\\begin{vmatrix}i&j&k\\\\1&2&-1\\\\1&-1&1\\end{vmatrix}=(1,-2,-3)",
+      "review": "visually-checked-original"
+    },
+    "b47bf1ab6758f633a9948766": {
+      "version": "5578cfb797af6a17",
+      "latex": "=\\frac\\pi8-\\frac12\\left.(t-\\arctan t)\\right|_0^1=\\frac\\pi4-\\frac12.",
+      "review": "visually-checked-original"
+    },
+    "d44512fa57e5f09783f06dff": {
+      "version": "7d2db3e72165b5d6",
+      "latex": "\\frac{\\partial Q}{\\partial x}=\\frac{y^2-x^2}{(x^2+y^2)^2}=\\frac{\\partial P}{\\partial y}",
+      "review": "visually-checked-original"
+    },
+    "a2f3b76fef7aa1f769cc63cb": {
+      "version": "6346038ea7aff608",
+      "latex": "\\begin{cases}x=7t+\\frac25\\\\y=-t+\\frac{14}5\\\\z=5t\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "28ff3d0b0df7999b0a7ff401": {
+      "version": "e89ba7983dac7091",
+      "latex": "\\begin{cases}x=4t-\\frac53\\\\y=-t+\\frac23\\\\z=3t\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "b1fc154b407459f07d61a06e": {
+      "version": "2e086b93b692d519",
+      "latex": "\\begin{cases}x=4t-\\frac53\\\\y=-t+\\frac23\\\\z=-3t\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "da6dd0e887762bbcf8903895": {
+      "version": "046302fde663cfe9",
+      "latex": "\\begin{cases}x=7t+\\frac25\\\\y=-t+\\frac{14}5\\\\z=-5t\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "56344dea2be4ad0518ce0681": {
+      "version": "3284fc95f10e7976",
+      "latex": "\\begin{cases}x=-4t-\\frac53\\\\y=-t+\\frac23\\\\z=-3t\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "28d9bbe15eb90f2a56f17ffb": {
+      "version": "e89ba7983dac7091",
+      "latex": "\\begin{cases}x=\\frac{a}{\\sqrt2}\\cos t\\\\y=\\frac{a}{\\sqrt2}\\cos t,\\\\z=a\\sin t\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "aa9e72e152a5a2073f04102d": {
+      "version": "433af200a3a2d402",
+      "latex": "\\begin{cases}x=7t+\\frac25\\\\y=-t+\\frac{14}5\\\\z=5t\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "b66179ae2931e7023eba77a7": {
+      "version": "a51df5fcd2736455",
+      "latex": "\\begin{cases}0\\le\\theta\\le2\\pi\\\\0\\le\\varphi\\le\\frac\\pi3\\\\\\frac1{\\cos\\varphi}\\le r\\le2\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "c41d4b9e5ff741b469fd3c8c": {
+      "version": "5e79c5afd381c6f3",
+      "latex": "\\begin{cases}0\\le\\theta\\le2\\pi\\\\\\frac\\pi4\\le\\varphi\\le\\frac\\pi2\\\\0\\le r\\le\\frac{\\cos\\varphi}{\\sin^2\\varphi}\\end{cases},",
+      "review": "visually-checked-original"
+    },
+    "7a831ac79cbb5fc8a61cea29": {
+      "version": "4666c6417f547326",
+      "latex": "\\begin{cases}0\\le\\theta\\le2\\pi\\\\\\frac\\pi4\\le\\varphi\\le\\frac\\pi2\\\\0\\le r\\le\\frac{\\cos\\varphi}{\\sin^2\\varphi}\\end{cases},",
+      "review": "visually-checked-original"
+    },
+    "63883368824556f9a734a7f8": {
+      "version": "0b75f0cc34192788",
+      "latex": "\\begin{cases}x=t\\\\y=\\frac12t^2,t\\in[0,1]\\\\z=\\frac13t^3\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "b1bcf48dd9271ad1435b9d8f": {
+      "version": "2e086b93b692d519",
+      "latex": "\\begin{cases}2x-2\\lambda x+\\mu=0,\\\\2y-2\\lambda y+\\mu=0,\\\\2z+\\lambda+\\mu=0,\\\\z=x^2+y^2,\\\\x+y+z=1,\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "5c153f352c37b9a8be6f8e37": {
+      "version": "3c56156d3b8727ae",
+      "latex": "\\begin{cases}5x_1+6x_2=1\\\\x_1+5x_2+6x_3=0\\\\x_2+5x_3+6x_4=0\\\\x_3+5x_4+6x_5=0\\\\x_4+5x_5=1\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "79ea806a901043bd61419480": {
+      "version": "7517b88bed7451a9",
+      "latex": "\\begin{cases}x_1=y_1+y_2+\\frac12y_3,\\\\x_2=y_1-y_2+\\frac12y_3,\\\\x_3=y_3\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "14f618085385a61a64664578": {
+      "version": "3f981261854c79aa",
+      "latex": "y=\\begin{cases}\\sin\\pi x, & |x|<\\frac12,\\\\\\frac12,&x=\\frac12,\\\\-\\frac12,&x=-\\frac12,\\\\0,&|x|>\\frac12,\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "7f0fd0bae80ceb9e92ba0bcd": {
+      "version": "7a67122cfe3890fb",
+      "latex": "\\Omega\\text{即}\\begin{cases}0\\le\\theta\\le2\\pi\\\\0\\le\\varphi\\le\\frac\\pi4\\\\\\frac1{\\cos\\varphi}\\le r\\le\\sqrt2\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "7b7039ac4570e6de93375eb4": {
+      "version": "c8ef629a3c29719f",
+      "latex": "\\begin{aligned}I&=\\iint_D[2(x+y)-4y]dxdy\\\\&=\\iint_D(2x-2y)dxdy\\\\&=2\\int_1^2 dx\\int_x^{4-x}(x-y)dy\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "1c4d7e78b502fde4e168fdf4": {
+      "version": "1b9223c7f4e351d1",
+      "latex": "\\text{得方程组}\\begin{cases}8yz+\\lambda\\frac{2x}{a^2}=0,\\\\8xz+\\lambda\\frac{2y}{b^2}=0,\\\\8xy+\\lambda\\frac{2z}{c^2}=0,\\\\\\frac{x^2}{a^2}+\\frac{y^2}{b^2}+\\frac{z^2}{c^2}-1=0,\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "443f87ceef381afd2ea9ab76": {
+      "version": "b681e0094409f471",
+      "latex": "\\begin{aligned}\\text{原式}&=\\iint_D dxdy\\int_{x^2+z^2}^1 y\\,dy\\\\&=\\int_0^{2\\pi}d\\theta\\int_0^1r\\,dr\\int_{r^2}^1dy\\\\&=\\frac\\pi3\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "d86bcfeffff87bbb442fff21": {
+      "version": "bae679c2770ff7f4",
+      "latex": "\\begin{cases}y-x\\ge0\\\\x>0\\\\1-x^2-y^2>0\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "46c06b23da64e03f406df7f5": {
+      "version": "9726f60f4142e212",
+      "latex": "y=\\begin{cases}x,&|x-k\\pi|<\\frac\\pi6,\\\\\\frac x2,&x=k\\pi\\pm\\frac\\pi6,\\\\0,&\\frac\\pi6<|x-k\\pi|<\\frac{5\\pi}6,\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "88113e5528b082f957aa19be": {
+      "version": "b550c04f6198eef3",
+      "latex": "\\begin{vmatrix}\\frac{\\partial x}{\\partial r}&\\frac{\\partial x}{\\partial\\theta}\\\\\\frac{\\partial y}{\\partial r}&\\frac{\\partial y}{\\partial\\theta}\\end{vmatrix}=(\\quad).",
+      "review": "visually-checked-original"
+    },
+    "11f5d28099f6108c95ace17e": {
+      "version": "deff838f6be62016",
+      "latex": "\\begin{aligned}\\text{原式}&=\\int_0^{2\\pi}d\\theta\\int_0^1r\\,dr\\int_{-1}^{-r}zr\\,dz\\\\&=2\\pi\\int_0^1r^2\\frac{r^2-1}{2}dr\\\\&=-\\frac2{15}\\pi\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "7cc97cddc33218b413b5513e": {
+      "version": "8cd51f6da962da14",
+      "latex": "f(x)=\\begin{cases}x,&0\\le x<\\frac\\pi2\\\\\\pi,&\\frac\\pi2\\le x<\\frac{3\\pi}2\\\\\\frac{5\\pi}2-x,&\\frac{3\\pi}2\\le x<2\\pi\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "d9e086dfdd7b55b1c5fcee45": {
+      "version": "da4182531fc3614f",
+      "latex": "f(x)=\\begin{cases}\\frac{\\cos(\\frac\\pi2x)}{x-1},&x>1\\\\(2x-1)\\frac\\pi2,&0\\le x\\le1,\\\\\\frac{\\sin x}{x},&x<0\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "0d92ac8d41a1ace9b438c234": {
+      "version": "2e79311150dc5c43",
+      "latex": "\\begin{aligned}\\text{原式}&=\\int_0^{2\\pi}d\\theta\\int_0^1r\\,dr\\int_0^{\\sqrt{1-r^2}}r^2\\,dz\\\\&=2\\pi\\int_0^1r^3\\sqrt{1-r^2}dr\\\\&=2\\pi\\int_0^{\\pi/2}\\sin^3t\\cos^2t\\,dt\\\\&=\\frac4{15}\\pi\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "830fe8199dd089a2629bc6de": {
+      "version": "38fb6cb6bc82046b",
+      "latex": "\\begin{aligned}\\text{原式}&=\\iint_D(x^2+z^2)dxdz\\int_{x^2+z^2}^1dy\\\\&=\\int_0^{2\\pi}d\\theta\\int_0^1r^2r\\,dr\\int_{r^2}^1dy\\\\&=\\frac\\pi6\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "92e603bd8357f39fa8a18fe5": {
+      "version": "7502963d3971dc59",
+      "latex": "\\begin{aligned}\\text{原式}&=\\int_{-1}^1dx\\int_{x^2}^1dy\\int_0^y xz\\,dz\\\\&=\\int_{-1}^1dx\\int_{x^2}^1\\frac12xy^2\\,dy\\\\&=\\frac16\\int_{-1}^1x(1-x^6)dx\\\\&=0\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "1a861f3a635c6c9d930919b0": {
+      "version": "d5affb9f3cae360f",
+      "latex": "\\begin{cases}1-a-b=0,\\\\\\frac a6+\\frac{2b}3=0,\\\\\\frac a{120}+\\frac{2b}{15}\\ne0.\\end{cases}\\quad a=\\frac43,\\ b=-\\frac13.",
+      "review": "visually-checked-original"
+    },
+    "f56bdea76493adcda46859a7": {
+      "version": "85ceecb0ef7ea194",
+      "latex": "\\begin{aligned}&=\\iiint_\\Omega x\\,dv+\\iiint_\\Omega y\\,dv+\\iiint_\\Omega z\\,dv\\\\&=\\int_0^a bc x\\,dx+\\int_0^b ac y\\,dy+\\int_0^c ab z\\,dz\\\\&=\\frac12abc(a+b+c)\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "a151a380bc636e1db92bbf35": {
+      "version": "99c20735995d9f24",
+      "latex": "\\begin{aligned}\\text{原式}&=\\int_0^{2\\pi}d\\theta\\int_0^{\\sqrt3}dr\\int_{\\frac13r^2}^{\\sqrt{4-r^2}}zr\\,dz\\\\&=2\\pi\\int_0^{\\sqrt3}\\frac r2\\left(4-r^2-\\frac{r^4}9\\right)dr\\\\&=\\frac{13}4\\pi\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "e378f7caa121cb2c0b7994cd": {
+      "version": "74100a06565bc05f",
+      "latex": "\\begin{aligned}\\text{原式}&=\\int_0^{2\\pi}d\\theta\\int_0^{\\sqrt3}dr\\int_{\\frac13r^2}^{\\sqrt{4-r^2}}zr\\,dz\\\\&=2\\pi\\int_0^{\\sqrt3}\\frac r2\\left(4-r^2-\\frac{r^4}9\\right)dr\\\\&=\\frac{13}4\\pi\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "b3bf74fc95d979ba5b23c3bb": {
+      "version": "9cc20875620b196b",
+      "latex": "D_5=\\begin{vmatrix}4&3&0&0&0\\\\1&4&3&0&0\\\\0&1&4&3&0\\\\0&0&1&4&3\\\\0&0&0&1&4\\end{vmatrix}=(\\qquad).",
+      "review": "visually-checked-original"
+    },
+    "0421991bad06ebc67b028bc4": {
+      "version": "a9b4b60bddbaef8b",
+      "latex": "\\begin{cases}ax_1+ax_2+ax_3+ax_4+bx_5=0\\\\ax_1+ax_2+ax_3+bx_4+ax_5=0\\\\ax_1+ax_2+bx_3+ax_4+ax_5=0\\\\ax_1+bx_2+ax_3+ax_4+ax_5=0\\\\bx_1+ax_2+ax_3+ax_4+ax_5=0\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "85691e674c204158c9ada2d9": {
+      "version": "164ee3ed954aae2c",
+      "latex": "y=\\begin{cases}\\frac\\pi2x,&k\\pi<x<k\\pi+\\frac\\pi2,\\\\0,&x=k\\pi+\\frac\\pi2,\\\\-\\frac\\pi2x,&k\\pi+\\frac\\pi2<x<k\\pi+\\pi,\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "8d5a5ad6e851107fd0d353fd": {
+      "version": "a8bf124829300d66",
+      "latex": "D=\\begin{vmatrix}0&0&0&1&0\\\\0&0&2&0&0\\\\0&3&8&0&0\\\\4&0&0&7&0\\\\6&0&0&0&5\\end{vmatrix}\\text{等于}(\\qquad).",
+      "review": "visually-checked-original"
+    },
+    "1adf3c601069422feb62a97f": {
+      "version": "d5affb9f3cae360f",
+      "latex": "\\begin{aligned}\\frac{d^3x}{dy^3}&=\\frac d{dy}\\left(\\frac{d^2x}{dy^2}\\right)=\\frac d{dx}\\left(-\\frac{y^{\\prime\\prime}}{(y^{\\prime})^3}\\right)\\frac{dx}{dy}\\\\&=-\\frac{y^{\\prime\\prime\\prime}(y^{\\prime})^3-y^{\\prime\\prime}\\cdot3(y^{\\prime})^2\\cdot y^{\\prime\\prime}}{(y^{\\prime})^6}\\cdot\\frac1{y^{\\prime}}\\\\&=\\frac{3(y^{\\prime\\prime})^2-y^{\\prime}y^{\\prime\\prime\\prime}}{(y^{\\prime})^5},\\end{aligned}",
+      "review": "visually-checked-original"
+    },
+    "317e7a031b07086a4f1d0bf8": {
+      "version": "4a4f6e355eaa0920",
+      "latex": "a,b",
+      "review": "visually-checked-original"
+    },
+    "e1cf169c7dd68034ce646751": {
+      "version": "78932eb5e10c3667",
+      "latex": "a=b",
+      "review": "visually-checked-original"
+    },
+    "6df9a577be4b46f142cc4326": {
+      "version": "fd4d92a4b7305d38",
+      "latex": "a\\ne-\\frac b4",
+      "review": "visually-checked-original"
+    },
+    "7e233cf787eb87558df10139": {
+      "version": "73d0b5ed4b637198",
+      "latex": "a\\ne b",
+      "review": "visually-checked-original"
+    },
+    "d1643cf4e703cee9513b9f25": {
+      "version": "7ba15489d053527a",
+      "latex": "a\\ne-\\frac b4",
+      "review": "visually-checked-original"
+    },
+    "c1a5fc3907575d84e9bce8ed": {
+      "version": "ce4f9ba9279e91d7",
+      "latex": "a\\ne b",
+      "review": "visually-checked-original"
+    },
+    "f102daf82f53e04785579636": {
+      "version": "2ff1fc2a4430ba8a",
+      "latex": "a=-\\frac b4",
+      "review": "visually-checked-original"
+    },
+    "c56db2e197daa791b7bcbd17": {
+      "version": "d00a3e765058b237",
+      "latex": "a=b\\text{或}a=-\\frac b4",
+      "review": "visually-checked-original"
+    },
+    "f9d41c964df9dc7e591fccf3": {
+      "version": "2905f772119606c6",
+      "latex": "364",
+      "review": "visually-checked-original"
+    },
+    "353f1c1582c1d4e061ea147a": {
+      "version": "cee8ea71a1f4c3f8",
+      "latex": "369",
+      "review": "visually-checked-original"
+    },
+    "f0ee2b337492d5cda4bd0ce4": {
+      "version": "77b6bce3349e04f7",
+      "latex": "366",
+      "review": "visually-checked-original"
+    },
+    "0cafeea582ba0a8d22e269b7": {
+      "version": "cc97f19171e4e993",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "d3c0e6516b53736affc76285": {
+      "version": "d619dc2ed48821f3",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "f02544d6c0fbb9859164dbca": {
+      "version": "77b6bce3349e04f7",
+      "latex": "x=0,x=1",
+      "review": "visually-checked-original"
+    },
+    "3857271979ebcb2c7bb97988": {
+      "version": "478f4cc97560c252",
+      "latex": "x=0,x=1",
+      "review": "visually-checked-original"
+    },
+    "c8112aa99e28f734edc11673": {
+      "version": "3e5218b4c1ff6ef5",
+      "latex": "2\\pi",
+      "review": "visually-checked-original"
+    },
+    "44ff8554e2bca72797d125a1": {
+      "version": "b681e0094409f471",
+      "latex": "(1)\\ S\\left(-\\frac\\pi2\\right)=\\frac{3\\pi}4",
+      "review": "visually-checked-original"
+    },
+    "a3fbd902b417c0f1d18bbd19": {
+      "version": "8979b7701ec63fbf",
+      "latex": "(2)\\ S(4\\pi)=\\frac\\pi4",
+      "review": "visually-checked-original"
+    },
+    "f356fea28505b9dfeaf02e15": {
+      "version": "872099d36d21e741",
+      "latex": "(3)\\ S\\left(-\\frac\\pi4\\right)=\\frac{3\\pi}4",
+      "review": "visually-checked-original"
+    },
+    "9583ad5d5ffee2323d768831": {
+      "version": "07e0b0cbd30bc719",
+      "latex": "3",
+      "review": "visually-checked-original"
+    },
+    "4add27112b04e45ec307a8b7": {
+      "version": "0f3889c92c75067e",
+      "latex": "1",
+      "review": "visually-checked-original"
+    },
+    "ea817450d02159544cac9e74": {
+      "version": "e2eac7a1a723bf98",
+      "latex": "0",
+      "review": "visually-checked-original"
+    },
+    "1001dc23f881fee638c212ee": {
+      "version": "165c15cda5170055",
+      "latex": "2",
+      "review": "visually-checked-original"
+    },
+    "5df897beb21e090ba9c8c8fb": {
+      "version": "e28343d45b1c13a2",
+      "latex": "\\text{设 }x=r\\cos\\theta,\\quad y=r\\sin\\theta,\\text{ 则行列式 }\\begin{vmatrix}\\frac{\\partial x}{\\partial r}&\\frac{\\partial x}{\\partial\\theta}\\\\\\frac{\\partial y}{\\partial r}&\\frac{\\partial y}{\\partial\\theta}\\end{vmatrix}=(\\quad).",
+      "review": "visually-checked-original"
+    },
+    "715153cd8cc186edb6612feb": {
+      "version": "ac58275fbf751782",
+      "latex": "x=r\\cos\\theta,\\quad y=r\\sin\\theta",
+      "review": "visually-checked-original"
+    },
+    "19f12a36209f8b63b95dcbef": {
+      "version": "78713f9313835e24",
+      "latex": "x=r\\cos\\theta",
+      "review": "visually-checked-original"
+    },
+    "51167621a4e165c392f0b156": {
+      "version": "4ad708bb6db8ad2a",
+      "latex": "y=r\\sin\\theta",
+      "review": "visually-checked-original"
+    },
+    "0a4696c7b8066217054351d1": {
+      "version": "1bd667358e0026e3",
+      "latex": "r^2",
+      "review": "visually-checked-original"
+    },
+    "6e57192a974e39ba817c994f": {
+      "version": "ea669b9147b61ca8",
+      "latex": "r+1",
+      "review": "visually-checked-original"
+    },
+    "595f08816e9171833ee61dd3": {
+      "version": "185c8f560eb2646e",
+      "latex": "r",
+      "review": "visually-checked-original"
+    },
+    "cf21fde8bfffc039043c3b36": {
+      "version": "33981e99d5b9e830",
+      "latex": "\\frac1r",
+      "review": "visually-checked-original"
     }
   }
 }

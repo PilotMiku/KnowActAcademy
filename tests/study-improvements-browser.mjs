@@ -75,8 +75,11 @@ try {
   await page.locator(`.index-btn[data-index="${last-1}"]`).click();
   await page.locator('[data-action="next-question"]').click();
   await page.locator('.preparation-summary').waitFor();
+  assert.equal(await page.locator('[data-action="next-training"]').isDisabled(),true);
+  await page.clock.setFixedTime(new Date(Date.now()+86400000+60000));
+  await page.reload();await page.locator('.preparation-summary').waitFor();
   await page.locator('[data-action="next-training"]').click();
-  await page.waitForFunction(()=>document.querySelectorAll('.question-index .index-btn').length===3);
+  await page.waitForFunction(()=>document.querySelectorAll('.question-index .index-btn').length===1);
   await page.screenshot({path:'artifacts/improved-study-desktop.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
