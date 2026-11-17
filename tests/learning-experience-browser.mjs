@@ -133,20 +133,41 @@ try {
   report.saveRetryPreservesProgress = true;
 
   await page.goto(baseURL + '/#/practice?subject=linear&chapter=linear-chapter-1&view=questions');
-  await page.locator('[data-action="practice-one"]').nth(10).scrollIntoViewIfNeeded();
-  const scrollBefore = await page.evaluate(() => scrollY);
-  await page.locator('[data-action="practice-one"]').nth(10).click();
+  const practiceButton = page.locator('[data-action="practice-one"]').nth(10);
+  await practiceButton.scrollIntoViewIfNeeded();
+  const questionId = await practiceButton.getAttribute('data-id');
+  // Playwright may scroll again while waiting for an entrance animation before
+  // clicking. Match the app's departure point, after that actionability scroll.
+  await page.evaluate(() => {
+    window.addEventListener('click', event => {
+      const button = event.target.closest('[data-action="practice-one"]');
+      window.practiceListDeparture = button ? { hash:location.hash, y:scrollY, questionId:button.dataset.id } : null;
+    }, { capture:true, once:true });
+  });
+  await practiceButton.click();
+  const departure = await page.evaluate(() => window.practiceListDeparture);
+  assert.equal(departure?.questionId, questionId);
   await page.locator('.question-main').waitFor();
   await page.locator('[data-action="exit-practice"]').click();
   await page.locator('.practice-start').waitFor();
-  try { await page.waitForFunction(y => Math.abs(scrollY - y) < 4, scrollBefore); }
+  try {
+    await page.waitForFunction(y => Math.abs(scrollY - y) < 4, departure.y);
+    await page.evaluate(async () => {
+      await Promise.allSettled([document.fonts.ready, ...document.querySelector('.local-main').getAnimations({subtree:true})
+        .filter(animation => animation.effect?.getComputedTiming().iterations !== Infinity).map(animation => animation.finished)]);
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    });
+    assert.ok(await page.evaluate(y => Math.abs(scrollY - y) < 4, departure.y), 'the returned list stays at the departure point after layout settles');
+  }
   catch(error) {
-    console.log('Return scroll diagnostics:',JSON.stringify(await page.evaluate(before=>({before,current:scrollY,max:document.documentElement.scrollHeight-innerHeight,hash:location.hash,fonts:document.fonts.status,animations:document.querySelector('.local-main').getAnimations({subtree:true}).map(a=>({state:a.playState,timing:a.effect.getComputedTiming()}))}),scrollBefore)));
+    console.log('Return scroll diagnostics:',JSON.stringify(await page.evaluate(departure=>({departure,current:scrollY,max:document.documentElement.scrollHeight-innerHeight,hash:location.hash,fonts:document.fonts.status,animations:document.querySelector('.local-main').getAnimations({subtree:true}).map(a=>({state:a.playState,timing:a.effect.getComputedTiming()}))}),departure)));
     await page.screenshot({path:'artifacts/return-scroll-failure.png',fullPage:true});
     throw error;
   }
   assert.equal(await page.locator('#subject-filter').inputValue(), 'linear');
   assert.equal(await page.locator('#chapter-filter').inputValue(), 'linear-chapter-1');
+  assert.equal(await page.evaluate(() => location.hash), departure.hash);
+  report.returnScroll = { departure:departure.y, restored:await page.evaluate(() => scrollY) };
   report.returnContext = true;
   for (const viewport of [{ width: 320, height: 568 }, { width: 1440, height: 1000 }]) {
     await page.setViewportSize(viewport);
