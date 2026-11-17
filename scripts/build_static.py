@@ -18,6 +18,8 @@ from pack_questions import pack_questions
 from offline_manifest import write_offline_manifest
 from supplemental_analysis import publish as verify_supplemental_analysis
 from section_knowledge import publish as verify_section_knowledge
+from question_difficulty import publish as verify_question_difficulty
+from readable_formulas import publish as verify_readable_formulas
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -58,6 +60,8 @@ def render_document(job):
 def build(workers=4):
     verify_supplemental_analysis(check=True)
     verify_section_knowledge(check=True)
+    verify_question_difficulty(check=True)
+    verify_readable_formulas(check=True)
     verify_sources(ROOT)
     destination, previous = ROOT / '_site', ROOT / '.previous-site'
     # Recover the last working site if a previous run was interrupted during promotion.

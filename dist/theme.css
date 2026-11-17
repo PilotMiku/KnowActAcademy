@@ -84,3 +84,35 @@ html[data-motion="reduced"] .btn:active,html[data-motion="reduced"] .icon-btn:ac
   .question-editorial { gap:4px 6px; }
   .question-editorial .text-btn { min-height:40px; }
 }
+
+/* The filled state remains visible without animation or color perception. */
+.favorite-button { position:relative; display:inline-flex; width:auto; min-width:40px; gap:6px; padding:9px 11px; border:1px solid var(--line); border-radius:12px; overflow:visible; }
+.favorite-label { font-size:12px; white-space:nowrap; }
+.favorite-button svg { fill:none; flex-shrink:0; }
+.favorite-button.is-favorite { color:#9a5b00; background:#fff4d9; border-color:#e8c67b; }
+.favorite-button.is-favorite svg { fill:currentColor; }
+html[data-theme="dark"] .favorite-button.is-favorite { color:#ffd36b; background:#49391d; border-color:#806131; }
+.difficulty-badge { display:inline-flex; align-items:center; gap:7px; padding:5px 9px; border:1px solid var(--line); border-radius:9px; background:var(--surface); }
+.difficulty-stars { display:inline-flex; gap:2px; color:var(--line); font-size:15px; line-height:1; }
+.difficulty-stars .filled { color:#a56406; }
+.difficulty-caption { font-size:11px; color:var(--muted); white-space:nowrap; }
+html[data-theme="dark"] .difficulty-stars .filled { color:#ffd36b; }
+[data-source-format="html"] .rich { line-height:var(--study-line-height); }
+[data-source-format="html"] .question-title,[data-source-format="html"] .option > .rich,[data-source-format="html"] .analysis > .rich { font-size:max(18px,var(--question-font-size)); overflow-x:auto; }
+[data-source-format="html"] .rich img { border-radius:0; }
+[data-source-format="html"] .rich img.native-formula-image { filter:grayscale(1); }
+[data-source-format="html"] .rich img:not(.native-formula-image) { max-width:none; vertical-align:middle; }
+html[data-theme="dark"] [data-source-format="html"] .rich img.native-formula-image { filter:grayscale(1) invert(1); mix-blend-mode:screen; }
+.readable-formula { display:inline; }
+@media (prefers-reduced-motion:no-preference) {
+  .favorite-button { transition:background-color 160ms,color 160ms,border-color 160ms; }
+  .favorite-added svg { animation:favorite-light 480ms cubic-bezier(.2,.8,.3,1); }
+  .favorite-added::after { content:""; position:absolute; inset:1px; border:2px solid #e0ab3c; border-radius:inherit; pointer-events:none; animation:favorite-ring 480ms ease-out both; }
+}
+@keyframes favorite-light { 0% { transform:scale(.65) rotate(-18deg); } 50% { transform:scale(1.3) rotate(9deg); } 75% { transform:scale(.95) rotate(-4deg); } 100% { transform:scale(1) rotate(0); } }
+@keyframes favorite-ring { from { transform:scale(.85); opacity:.8; } to { transform:scale(1.35); opacity:0; } }
+.collection-meta { flex-wrap:wrap; align-items:center; min-width:0; }
+.collection-meta > span { max-width:100%; overflow-wrap:anywhere; }
+.collection-meta .difficulty-badge { flex-wrap:wrap; row-gap:4px; }
+html[data-motion="reduced"] .favorite-added svg,html[data-motion="reduced"] .favorite-added::after { animation:none; }
+.question-preview-content[data-source-format="html"] .rich { min-width:0; max-width:100%; overflow-x:auto; font-size:max(18px,var(--question-font-size)); }

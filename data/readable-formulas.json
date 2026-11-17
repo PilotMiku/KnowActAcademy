@@ -1,0 +1,365 @@
+{
+  "format": "zhixing.readable-formulas.v1",
+  "records": {
+    "70cfeaab49d801225f37a249": {
+      "version": "e4b7e95892a20da5",
+      "latex": "\\beta_1,\\beta_2,\\beta_3",
+      "review": "visually-checked-original"
+    },
+    "b28075f9f2a5bec89f41e595": {
+      "version": "b9f4b84684aaa6a0",
+      "latex": "x",
+      "review": "visually-checked-original"
+    },
+    "d3070021a8657745ff10d76e": {
+      "version": "d619dc2ed48821f3",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "aaea9ee7d637c99e18d6193f": {
+      "version": "433af200a3a2d402",
+      "latex": "y''>0",
+      "review": "visually-checked-original"
+    },
+    "207c006f45bd9b76d1cd7ba1": {
+      "version": "5e91b717514bd290",
+      "latex": "\\beta_1,\\beta_2,\\beta_3",
+      "review": "visually-checked-original"
+    },
+    "06081379f255909ff71c8e20": {
+      "version": "843b718ff29a7b27",
+      "latex": "2\\pi",
+      "review": "visually-checked-original"
+    },
+    "e8512b507b815804934ee113": {
+      "version": "4dd7c3a9600878da",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "632542cbdd7f37f24b155fb4": {
+      "version": "0b75f0cc34192788",
+      "latex": "y''<0",
+      "review": "visually-checked-original"
+    },
+    "95a16826d01ea50c728f2f78": {
+      "version": "07e0b0cbd30bc719",
+      "latex": "y=f(x)",
+      "review": "visually-checked-original"
+    },
+    "30b51b09131df832260beae4": {
+      "version": "12bbd600a57d76b9",
+      "latex": "I_1<I_2",
+      "review": "visually-checked-original"
+    },
+    "ff63beb19efb8b92bd4e9126": {
+      "version": "98e7bbae603af2a5",
+      "latex": "I_1>I_2",
+      "review": "visually-checked-original"
+    },
+    "0d3dd5fd55807ff5e3b5c2f5": {
+      "version": "2e79311150dc5c43",
+      "latex": "I_1=I_2",
+      "review": "visually-checked-original"
+    },
+    "751aa2be13f792d23ee39b4e": {
+      "version": "2eaf8f6cdea79161",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "ca380ad11ec3dc26f1d783ae": {
+      "version": "a4b17fb4eb5f6fa7",
+      "latex": "B",
+      "review": "visually-checked-original"
+    },
+    "bc9bfd972bce8cd2cb6c629e": {
+      "version": "36055f5d68289684",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "017ccc13d220f7abb39e07cb": {
+      "version": "a8d55880ce1f2548",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "206c5d05e4036bbf5812bd89": {
+      "version": "5e91b717514bd290",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "65fd1057a6b6e6a50fbfbb1a": {
+      "version": "4dec91a9cd137117",
+      "latex": "a>1",
+      "review": "visually-checked-original"
+    },
+    "4ee9abfce61776739a271beb": {
+      "version": "39c8f171b57140cb",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "0f7f62826061cf3649f28a2b": {
+      "version": "604a7cd436fb7eed",
+      "latex": "\\alpha_1,\\alpha_2,\\alpha_3",
+      "review": "visually-checked-original"
+    },
+    "2989c4e5c634fbe40a84f0b2": {
+      "version": "708fecac478fa5ce",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "8c77bebe1497097d042b20ab": {
+      "version": "ebde2105f180885a",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "a8b0503e78d39e82df3b11c3": {
+      "version": "6471d67dfa3b0c10",
+      "latex": "f",
+      "review": "visually-checked-original"
+    },
+    "f929af0c9118fa9feb570b3d": {
+      "version": "2905f772119606c6",
+      "latex": "a<1",
+      "review": "visually-checked-original"
+    },
+    "2db09779033f0b022bc6b3e9": {
+      "version": "2fee11a81f40b525",
+      "latex": "l",
+      "review": "visually-checked-original"
+    },
+    "3601f3b9c6883533b5b4c57f": {
+      "version": "c23d9fd27f62213a",
+      "latex": "\\mathrm{L}",
+      "review": "visually-checked-original"
+    },
+    "f0584e06fc326651a0713965": {
+      "version": "77b6bce3349e04f7",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "cc4ff0fc29367f4a0b67683a": {
+      "version": "80720d18fbf47d89",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "315ef46b4f0601bcf280bf0d": {
+      "version": "4a4f6e355eaa0920",
+      "latex": "R^3",
+      "review": "visually-checked-original"
+    },
+    "9f215e0c761c0f2a4448f5b2": {
+      "version": "07c64427750c73fc",
+      "latex": "B",
+      "review": "visually-checked-original"
+    },
+    "96398eafdd20050bf2421356": {
+      "version": "7570aa074ac70eb0",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "97fa721d63b881a80d6005f9": {
+      "version": "251577339106fae4",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "642726374e8de73ef074c82e": {
+      "version": "ad6ce9f7acdef12d",
+      "latex": "L",
+      "review": "visually-checked-original"
+    },
+    "7733846542830dcaf2c5361d": {
+      "version": "90bed6ecf09f74a9",
+      "latex": "\\beta_1,\\beta_2,\\beta_3",
+      "review": "visually-checked-original"
+    },
+    "01e2dfcb3349e9a295604be8": {
+      "version": "a8d55880ce1f2548",
+      "latex": "\\alpha_1,\\alpha_2,\\alpha_3",
+      "review": "visually-checked-original"
+    },
+    "617e30280e77e62a0932213e": {
+      "version": "a70673634b3d0b4e",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "1ef8c71bd9148823a2f735f5": {
+      "version": "9f6b004c0ae9c3c4",
+      "latex": "\\mathrm{A}",
+      "review": "visually-checked-original"
+    },
+    "6dfe32bd31f2c2ba2d6ff36e": {
+      "version": "fd4d92a4b7305d38",
+      "latex": "B",
+      "review": "visually-checked-original"
+    },
+    "04418b516085c4c9dc92dd2a": {
+      "version": "a9b4b60bddbaef8b",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "2522c0ba5c9d5df1942ca56c": {
+      "version": "21bfbca658ae0ea1",
+      "latex": "R[x]_3",
+      "review": "visually-checked-original"
+    },
+    "9e14148e007b6d5d5656231f": {
+      "version": "b06439d24160963d",
+      "latex": "V",
+      "review": "visually-checked-original"
+    },
+    "cac7830870da503b0c172d44": {
+      "version": "a4b17fb4eb5f6fa7",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "9dd9070bdc5980e283dc00d7": {
+      "version": "19705142680d35a2",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "126c5a885ae9ea2cba13a66b": {
+      "version": "f937f4da86462c8c",
+      "latex": "x=0",
+      "review": "visually-checked-original"
+    },
+    "88245eb1cef337125960b40a": {
+      "version": "b550c04f6198eef3",
+      "latex": "r_1=-2,r_2=-3",
+      "review": "visually-checked-original"
+    },
+    "7aef3641a2d518b26c29b281": {
+      "version": "4666c6417f547326",
+      "latex": "y=C_1e^{-2x}+C_2e^{-3x}",
+      "review": "visually-checked-original"
+    },
+    "9d1e2bce415b079ea50a43d4": {
+      "version": "19705142680d35a2",
+      "latex": "y=y(x)",
+      "review": "visually-checked-original"
+    },
+    "d975088c3e1a0b547459b950": {
+      "version": "da4182531fc3614f",
+      "latex": "0",
+      "review": "visually-checked-original"
+    },
+    "7c34f3f6b44602d8160be316": {
+      "version": "8cd51f6da962da14",
+      "latex": "0",
+      "review": "visually-checked-original"
+    },
+    "e8d247609c60541ebeef2b73": {
+      "version": "4dd7c3a9600878da",
+      "latex": "\\sum_{n=1}^{\\infty}u_n",
+      "review": "visually-checked-original"
+    },
+    "26ef392ad457eb3afce3e78d": {
+      "version": "da60bf5f982b9824",
+      "latex": "b_n=0\\ (n=1,2,\\ldots)",
+      "review": "visually-checked-original"
+    },
+    "9c41d0a341794f4354bdce83": {
+      "version": "e778fd82ccb6f3a8",
+      "latex": "\\Pi",
+      "review": "visually-checked-original"
+    },
+    "1208bcda5ff91dcdc6c0875e": {
+      "version": "f937f4da86462c8c",
+      "latex": "\\Omega",
+      "review": "visually-checked-original"
+    },
+    "7f61260c7dde90e3b198abb7": {
+      "version": "7a67122cfe3890fb",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "3fa663fbaf2366ea0f78e138": {
+      "version": "13a5c306f7461fad",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "4945c4608497e2662ef610a9": {
+      "version": "435955bc2507ae1c",
+      "latex": "f",
+      "review": "visually-checked-original"
+    },
+    "347ffb9b8be385b019ff7b79": {
+      "version": "e7554a1c25e9b217",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "29a53b80ee1e20299f0b11d9": {
+      "version": "708fecac478fa5ce",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "259e28a41a003ecabac31dc2": {
+      "version": "21bfbca658ae0ea1",
+      "latex": "\\alpha_1,\\alpha_2,\\alpha_3",
+      "review": "visually-checked-original"
+    },
+    "e33dd6b846b4a91bb75027fa": {
+      "version": "74100a06565bc05f",
+      "latex": "R^3",
+      "review": "visually-checked-original"
+    },
+    "77def871476604e5138dc195": {
+      "version": "90bed6ecf09f74a9",
+      "latex": "\\gamma",
+      "review": "visually-checked-original"
+    },
+    "f492a85a739cea1a8bcafb2d": {
+      "version": "c25e44caa7815ce8",
+      "latex": "AX=0",
+      "review": "visually-checked-original"
+    },
+    "257229a18064f39929615a02": {
+      "version": "21bfbca658ae0ea1",
+      "latex": "m\\times n",
+      "review": "visually-checked-original"
+    },
+    "dba605d0694c4da59f9e6ac6": {
+      "version": "9cbe91d28ff057d9",
+      "latex": "AX=0",
+      "review": "visually-checked-original"
+    },
+    "0f2ead449d1d97149d0be7f6": {
+      "version": "604a7cd436fb7eed",
+      "latex": "f",
+      "review": "visually-checked-original"
+    },
+    "ae72dbf4f3ed371f92280ef8": {
+      "version": "63a2edb6bc620764",
+      "latex": "\\mathrm{A}",
+      "review": "visually-checked-original"
+    },
+    "d291c3a06339f582e8ccff67": {
+      "version": "2e17dd8783cdf4f8",
+      "latex": "n",
+      "review": "visually-checked-original"
+    },
+    "dfd4c157a6f3f9d6077d83db": {
+      "version": "1773c970aeed046a",
+      "latex": "A",
+      "review": "visually-checked-original"
+    },
+    "4b18cd263cd92687d3082b7d": {
+      "version": "df204b30c98977e5",
+      "latex": "\\begin{cases}x+y-2z=-3\\\\5x-2y+7z=22\\\\2x-5y+4z=4\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "dadb48764dcf0d0559de2b41": {
+      "version": "046302fde663cfe9",
+      "latex": "\\begin{cases}x+y+kz=0\\\\x-y+kz=0\\\\2x+y+kz=0\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "a9d53ff8652932d0de6c5dfb": {
+      "version": "900ba795b23dcba0",
+      "latex": "\\begin{cases}\\lambda x_1+x_2+2x_3=0\\\\x_1+\\lambda x_2-x_3=0\\\\\\lambda x_3=0\\end{cases}",
+      "review": "visually-checked-original"
+    },
+    "bf4178d1655a28b1698d1efe": {
+      "version": "4ea151cf2b829745",
+      "latex": "\\begin{cases}\\lambda x_1+x_2+x_3=0\\\\x_1+\\mu x_2+x_3=0\\\\x_1+2\\mu x_2+x_3=0\\end{cases}",
+      "review": "visually-checked-original"
+    }
+  }
+}

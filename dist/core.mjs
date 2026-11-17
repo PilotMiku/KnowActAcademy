@@ -4,7 +4,7 @@ import { normalizeQuestionNotes } from "./question-notes.mjs";
 import { normalizeReadingPositions } from "./knowledge-reading.mjs";
 import { COMPACT_BACKUP_FORMAT, PROGRESS_BACKUP_FORMAT, expandBank } from "./backup-codec.mjs";
 import { getAttemptIndex } from "./attempt-index.mjs";
-import { normalizeQuestionFeedback, normalizeQuestionAnnotations } from './question-guidance.mjs';
+import { normalizeQuestionFeedback, normalizeQuestionAnnotations, questionGuidance, matchesDifficulty } from './question-guidance.mjs';
 import { normalizeExamTemplates } from './exam-design.mjs';
 import { normalizeRevisionPlan } from './revision-planner.mjs';
 import { analysisReview } from './supplemental-analysis.mjs';
@@ -443,7 +443,7 @@ export function filterQuestions(bank, filter = {}, state = emptyState()) {
       (!selected.size || selected.has(q.chapterId)) &&
       (!chapterIds.size || chapterIds.has(q.chapterId)) &&
       (!filter.type || q.type === filter.type) &&
-      (!filter.difficulty || q.difficulty === filter.difficulty) &&
+      (!filter.difficulty || matchesDifficulty(questionGuidance(q, state.questionAnnotations), filter.difficulty)) &&
       (!needle || searchableText(q).includes(needle)) &&
       (!filter.favorites || state.favorites.includes(q.id)) &&
       (!filter.mistakes ||

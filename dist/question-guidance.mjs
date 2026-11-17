@@ -1,3 +1,5 @@
+import { estimatedDifficulty } from './question-difficulty.mjs';
+import { esc } from './ui.mjs';
 // Editorial annotations are an overlay. They never replace source records or answers.
 // Difficulty is an editor's practice suggestion, not a calibrated exam rating.
 export const editorialGuidance = Object.freeze({
@@ -25,13 +27,28 @@ export const editorialGuidance = Object.freeze({
   's-95526ab77b54-q0003': { difficulty: 'medium', concepts: ['行列式列变换', '线性相关'], method: '将各列相加得到常数列，观察该列与原常数列的线性相关关系。', evidence: '已对照行和条件和原解析核对。' },
 });
 export const difficultyLabels = { easy: '基础', medium: '进阶', hard: '挑战', unrated: '待标注' };
+export const starLabels = { 1:'入门', 2:'基础', 3:'进阶', 4:'较难', 5:'挑战' };
+export const difficultyCategory = stars => stars <= 2 ? 'easy' : stars === 3 ? 'medium' : 'hard';
+const legacyStars = { easy:2, medium:3, hard:4 };
 export function questionGuidance(question, annotations = {}) {
-  const personal = annotations[question.id];
-  const editorial = editorialGuidance[question.id];
-  if (personal) return { ...personal, origin: '个人标注' };
-  if (editorial) return { ...editorial, origin: '编辑标注' };
-  if (!question.source && !question.contentChunk) return { difficulty: question.difficulty || 'unrated', concepts: question.concepts || [], method: '', origin: '导入标注' };
-  return { difficulty: 'unrated', concepts: question.concepts || [], method: '', origin: '待标注' };
+  const personal = Object.hasOwn(annotations, question.id) ? annotations[question.id] : null;
+  const editorial = Object.hasOwn(editorialGuidance, question.id) ? editorialGuidance[question.id] : null;
+  if (personal) return { ...personal, stars:personal.stars ?? legacyStars[personal.difficulty] ?? null, origin:'个人标注' };
+  if (editorial) return { ...editorial, stars:legacyStars[editorial.difficulty], origin:'编辑标注' };
+  const estimate = estimatedDifficulty(question);
+  if (estimate) return { ...estimate, difficulty:difficultyCategory(estimate.stars), concepts:question.concepts || [], method:'' };
+  if (!question.source && !question.contentChunk) return { difficulty:question.difficulty || 'unrated', stars:legacyStars[question.difficulty] ?? null, concepts:question.concepts || [], method:'', origin:'导入标注' };
+  return { difficulty:'unrated', stars:null, concepts:question.concepts || [], method:'', origin:'待标注' };
+}
+export function matchesDifficulty(guide, filter) {
+  return !filter || (/^[1-5]$/.test(filter) ? guide.stars === Number(filter) : guide.difficulty === filter);
+}
+export function difficultyBadge(question, annotations = {}) {
+  const guide = questionGuidance(question, annotations), stars = guide.stars;
+  if (!stars) return `<span class="pill">待标注</span>`;
+  const description = `${stars}/5 星 · ${starLabels[stars]} · ${guide.origin}`;
+  const note = guide.reason || guide.evidence || '个人可在学习标注中调整难度';
+  return `<span class="difficulty-badge" data-difficulty-stars="${stars}" role="img" aria-label="${esc(description)}" title="${esc(description + '。' + note)}"><span class="difficulty-stars" aria-hidden="true">${Array.from({length:5},(_,i)=>`<span class="${i<stars?'filled':''}">★</span>`).join('')}</span><span class="difficulty-caption" aria-hidden="true">${stars}/5 · ${esc(guide.origin)}</span></span>`;
 }
 
 export const feedbackKinds = { formula: '公式或文字', answer: '答案疑问', analysis: '解析问题', image: '图片问题', other: '其他问题' };
@@ -46,9 +63,9 @@ export function normalizeQuestionFeedback(value = {}, ids) {
 }
 export function normalizeQuestionAnnotations(value = {}, ids) {
   if (!object(value) || Object.entries(value).some(([id, row]) => !safeId(id) || !ids.has(id) || !object(row) ||
-    !Object.hasOwn(difficultyLabels, row.difficulty) || !Array.isArray(row.concepts) || row.concepts.length > 12 ||
+    !Object.hasOwn(difficultyLabels, row.difficulty) || (row.stars !== undefined && (!Number.isInteger(row.stars) || row.stars < 1 || row.stars > 5 || difficultyCategory(row.stars) !== row.difficulty)) || !Array.isArray(row.concepts) || row.concepts.length > 12 ||
     row.concepts.some(c => typeof c !== 'string' || !c.trim() || c.length > 60) ||
     typeof row.method !== 'string' || row.method.length > 1000 || !Number.isFinite(row.updatedAt)))
     throw new Error('备份中的题目学习标注格式错误');
-  return Object.fromEntries(Object.entries(value).map(([id, row]) => [id, { difficulty: row.difficulty, concepts: [...new Set(row.concepts)], method: row.method, updatedAt: row.updatedAt }]));
+  return Object.fromEntries(Object.entries(value).map(([id, row]) => [id, { difficulty: row.difficulty, ...(row.stars !== undefined ? {stars:row.stars} : {}), concepts: [...new Set(row.concepts)], method: row.method, updatedAt: row.updatedAt }]));
 }

@@ -1,3 +1,4 @@
+import { readableFormula } from './readable-formulas.mjs';
 import { questionImageURL, nativeFigureID, nativeFigureChunk, loadNativeFigure } from "./assets.mjs";
 import { loadImageWhenVisible, pruneLazyImages } from "./lazy-images.mjs";
 
@@ -139,6 +140,15 @@ function safeContent(value, lazyImages = false) {
         const rawSource = node.getAttribute("src");
         if (!rawSource) return;
         const figureID = nativeFigureID(rawSource);
+        const checked = figureID && readableFormula(figureID, nativeFigureChunk(rawSource));
+        if (checked && window.renderMathInElement) {
+          const formula = document.createElement('span');
+          formula.className = 'readable-formula';
+          formula.dataset.originalFigure = figureID;
+          formula.textContent = String.fromCharCode(92) + '(' + checked + String.fromCharCode(92) + ')';
+          parent.append(formula);
+          return;
+        }
         const url = new URL(figureID ? location.href : questionImageURL(rawSource));
         if (url.protocol !== "https:" && url.protocol !== "http:") return;
         if (figureID) {
