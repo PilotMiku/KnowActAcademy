@@ -139,7 +139,12 @@ try {
   await page.locator('.question-main').waitFor();
   await page.locator('[data-action="exit-practice"]').click();
   await page.locator('.practice-start').waitFor();
-  await page.waitForFunction(y => Math.abs(scrollY - y) < 4, scrollBefore);
+  try { await page.waitForFunction(y => Math.abs(scrollY - y) < 4, scrollBefore); }
+  catch(error) {
+    console.log('Return scroll diagnostics:',JSON.stringify(await page.evaluate(before=>({before,current:scrollY,max:document.documentElement.scrollHeight-innerHeight,hash:location.hash,fonts:document.fonts.status,animations:document.querySelector('.local-main').getAnimations({subtree:true}).map(a=>({state:a.playState,timing:a.effect.getComputedTiming()}))}),scrollBefore)));
+    await page.screenshot({path:'artifacts/return-scroll-failure.png',fullPage:true});
+    throw error;
+  }
   assert.equal(await page.locator('#subject-filter').inputValue(), 'linear');
   assert.equal(await page.locator('#chapter-filter').inputValue(), 'linear-chapter-1');
   report.returnContext = true;

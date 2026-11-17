@@ -1,4 +1,5 @@
 import { favoriteButton, animateFavorite } from './favorite-button.mjs';
+import { restoreListPosition } from './list-position.mjs';
 import { createOfflineManager } from './offline-client.mjs';
 import { offlinePage, formatBytes, offlineProgressDisplay } from './offline-view.mjs';
 import { openLearningPanel, closeLearningPanel, syncLearningPanel } from './learning-panel.mjs';
@@ -800,8 +801,8 @@ function draw() {
     syncPreparationTree(app, subject(selection.subjectId).chapters, selection.chapterIds);
   }
   if (pendingPracticeScroll?.hash === location.hash) {
-    const y = pendingPracticeScroll.y; pendingPracticeScroll = null;
-    requestAnimationFrame(() => scrollTo(0, y));
+    const position = pendingPracticeScroll; pendingPracticeScroll = null;
+    restoreListPosition(app.querySelector('.local-main'), position);
   }
   watchActiveExams();
 }
