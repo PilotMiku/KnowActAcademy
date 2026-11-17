@@ -1,21 +1,28 @@
 import { feedbackKinds, questionGuidance, difficultyLabels, editorialGuidance } from './question-guidance.mjs';
 import { questionPreviewHTML, paginationHTML } from './question-discovery.mjs';
 import { esc, attr, button, head } from './ui.mjs';
+import { supplementalAnalysis, analysisReview } from './supplemental-analysis.mjs';
 
 export function createQualityPages({ getBank, getState, route }) {
   function qualityPage() {
     const bank = getBank(), state = getState(), query = route().query;
     const issue = query.get('issue') || 'all';
     const feedback = state.questionFeedback || {};
+    const needsAnalysis = q => q.analysisMissing && !['verified', 'review'].includes(supplementalAnalysis(q)?.status);
+    const needsReview = q => q.answerVerified === false || q.sourceIncomplete || analysisReview(q);
     const flagged = q => q.answerVerified === false || q.sourceIncomplete || q.analysisMissing || feedback[q.id];
     const questions = bank.questions.filter(q => flagged(q) && (issue === 'all' ||
-      issue === 'answer' && (q.answerVerified === false || q.sourceIncomplete) || issue === 'analysis' && q.analysisMissing ||
+      issue === 'answer' && needsReview(q) || issue === 'analysis' && needsAnalysis(q) ||
+      issue === 'supplemented' && ['verified', 'review'].includes(supplementalAnalysis(q)?.status) ||
       issue === 'open' && feedback[q.id]?.status === 'open' || issue === 'reviewed' && feedback[q.id]?.status === 'reviewed'));
     const requested = Number(query.get('page'));
     const page = Math.max(1, Math.min(Math.max(1, Math.ceil(questions.length / 20)), Number.isSafeInteger(requested) ? requested : 1));
-    const counts = [ ['答案待核实 / 原件缺损', bank.questions.filter(q => q.answerVerified === false || q.sourceIncomplete).length],
-      ['缺少解析', bank.questions.filter(q => q.analysisMissing).length], ['个人待核对', Object.values(feedback).filter(f => f.status === 'open').length] ];
-    return `${head('题目质量与纠错', '按题保留疑问、来源和核对记录。个人核对不会修改原题答案或评分资格。', button('导出纠错清单', 'export-feedback', '', 'btn'))}<div class="stat-cards">${counts.map(([label, count]) => `<section class="card big-stat"><p>${label}</p><b>${count}</b></section>`).join('')}</div><section class="card quality-help"><p>发现问题时，可从题目页或下面的列表记录公式、答案、解析和图片疑问。所有记录保存在你的学习数据中，可随备份导出。</p><p class="format-note">编辑学习标注已覆盖 ${bank.questions.filter(q => editorialGuidance[q.id]).length} 题；其余题目可添加个人难度、知识点和方法标注。难度仅为练习建议。</p></section><div class="field quality-filter"><label for="quality-issue">查看问题</label><select id="quality-issue" data-filter="issue">${[['all','全部问题记录'],['answer','答案待核实 / 原件缺损'],['analysis','缺少解析'],['open','个人待核对'],['reviewed','个人已核对']].map(([id,label]) => `<option value="${id}" ${issue===id?'selected':''}>${label}</option>`).join('')}</select></div><section class="card">${questions.length ? questions.slice((page-1)*20,page*20).map(q => `<article class="collection-item"><div class="grow"><strong>${esc(q.sourceLabel || q.id)}</strong>${questionPreviewHTML(q)}<p class="collection-meta">${q.analysisMissing?'缺少解析 · ':''}${q.answerVerified===false || q.sourceIncomplete?'仅供查阅 · ':''}${feedback[q.id]?`${esc(feedbackKinds[feedback[q.id].kind])} · ${feedback[q.id].status==='open'?'个人待核对':'个人已核对'}`:''}</p></div><div class="collection-actions">${button('预览', 'show-question-preview', `data-id="${attr(q.id)}"`, 'btn small')}${button('记录与核对', 'question-feedback', `data-id="${attr(q.id)}"`, 'btn small')}</div></article>`).join('') + paginationHTML(page,questions.length,query,'quality') : '<div class="study-empty">当前没有这类记录。</div>'}</section>`;
+    const counts = [ ['答案待核实 / 原件缺损', bank.questions.filter(needsReview).length],
+      ['解析待补全', bank.questions.filter(needsAnalysis).length], ['个人待核对', Object.values(feedback).filter(f => f.status === 'open').length] ];
+    const partial = bank.questions.filter(q => supplementalAnalysis(q)?.status === 'partial').length;
+    const unresolved = bank.questions.filter(q => supplementalAnalysis(q)?.status === 'unresolved').length;
+    const supplemented = bank.questions.filter(q => ['verified','review'].includes(supplementalAnalysis(q)?.status)).length;
+    return `${head('题目质量与纠错', '按题保留疑问、来源和核对记录。个人核对不会修改原题答案或评分资格。', button('导出纠错清单', 'export-feedback', '', 'btn'))}<div class="stat-cards">${counts.map(([label, count]) => `<section class="card big-stat"><p>${label}</p><b>${count}</b></section>`).join('')}</div><section class="card quality-help">${supplemented || partial || unresolved ? `<p>原资料缺少主解析的题目中，${supplemented} 题已有完整的本站补充推导；另有 ${partial} 题只补充了现存题干，${unresolved} 题因原题缺损无法可靠补全。补充解析与原文分开保存，题目疑点仍保留核对标记。</p>` : ''}<p>发现问题时，可从题目页或下面的列表记录公式、答案、解析和图片疑问。所有记录保存在你的学习数据中，可随备份导出。</p><p class="format-note">编辑学习标注已覆盖 ${bank.questions.filter(q => editorialGuidance[q.id]).length} 题；其余题目可添加个人难度、知识点和方法标注。难度仅为练习建议。</p></section><div class="field quality-filter"><label for="quality-issue">查看问题</label><select id="quality-issue" data-filter="issue">${[['all','全部问题记录'],['answer','答案待核实 / 原件缺损'],['analysis','解析待补全'],['supplemented','已有本站补充解析'],['open','个人待核对'],['reviewed','个人已核对']].map(([id,label]) => `<option value="${id}" ${issue===id?'selected':''}>${label}</option>`).join('')}</select></div><section class="card">${questions.length ? questions.slice((page-1)*20,page*20).map(q => `<article class="collection-item"><div class="grow"><strong>${esc(q.sourceLabel || q.id)}</strong>${questionPreviewHTML(q)}<p class="collection-meta">${q.analysisMissing ? ['verified','review'].includes(supplementalAnalysis(q)?.status) ? '已有本站补充解析 · ' : supplementalAnalysis(q)?.status === 'partial' ? '解析部分补充 · ' : '解析待补全 · ' : ''}${needsReview(q)?'仅供查阅 · ':''}${feedback[q.id]?`${esc(feedbackKinds[feedback[q.id].kind])} · ${feedback[q.id].status==='open'?'个人待核对':'个人已核对'}`:''}</p></div><div class="collection-actions">${button('预览', 'show-question-preview', `data-id="${attr(q.id)}"`, 'btn small')}${button('记录与核对', 'question-feedback', `data-id="${attr(q.id)}"`, 'btn small')}</div></article>`).join('') + paginationHTML(page,questions.length,query,'quality') : '<div class="study-empty">当前没有这类记录。</div>'}</section>`;
   }
   function feedbackForm(q) {
     const row = getState().questionFeedback[q.id];

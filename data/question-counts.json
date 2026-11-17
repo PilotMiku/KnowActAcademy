@@ -7,7 +7,7 @@
     "pdf": 3716,
     "supplement": 4709,
     "other": 0,
-    "scorable": 8406
+    "scorable": 8404
   },
   "subjects": [
     {
@@ -751,7 +751,7 @@
             "pdf": 519,
             "supplement": 366,
             "other": 0,
-            "scorable": 883
+            "scorable": 882
           },
           "directCount": 0
         },
@@ -842,7 +842,7 @@
             "pdf": 11,
             "supplement": 12,
             "other": 0,
-            "scorable": 23
+            "scorable": 22
           },
           "directCount": 23
         },
@@ -1869,7 +1869,7 @@
             "pdf": 0,
             "supplement": 460,
             "other": 0,
-            "scorable": 458
+            "scorable": 457
           },
           "directCount": 0
         },
@@ -1921,7 +1921,7 @@
             "pdf": 0,
             "supplement": 75,
             "other": 0,
-            "scorable": 75
+            "scorable": 74
           },
           "directCount": 75
         },
@@ -2295,7 +2295,7 @@
         "pdf": 3010,
         "supplement": 3975,
         "other": 0,
-        "scorable": 6966
+        "scorable": 6964
       }
     },
     {

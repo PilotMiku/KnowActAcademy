@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 import hashlib
 import json
 from pathlib import Path
+from supplemental_analysis import review_required, entries
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -11,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def count_records(questions):
     formats = Counter(q.get('source', {}).get('format') for q in questions)
     excluded = sum(bool(q.get('sourceIncomplete') or q.get('original', {}).get('sourceIncomplete'))
-                   or q.get('answerVerified') is False for q in questions)
+                   or q.get('answerVerified') is False or review_required(q, entries()) for q in questions)
     return dict(total=len(questions), pdf=formats['pdf'], supplement=formats['html'],
                 other=len(questions)-formats['pdf']-formats['html'], scorable=len(questions)-excluded)
 

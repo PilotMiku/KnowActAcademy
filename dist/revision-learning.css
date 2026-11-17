@@ -66,6 +66,62 @@ details { overflow-anchor:none; }
 .learning-card h4 { margin:15px 0 5px; font-size:13px; }
 .learning-card .rich { overflow-x:auto; }
 .learning-card > a { display:inline-block; margin-top:14px; }
+.learning-card .text-btn { display:flex; white-space:normal; }
+.learning-card > p { color:var(--muted); }
+.reference-view-tabs { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 22px; border-bottom:1px solid var(--line); }
+.reference-view-tabs a { display:flex; align-items:center; gap:8px; padding:13px 16px; min-height:46px; border-bottom:2px solid transparent; color:var(--muted); }
+.reference-view-tabs a[aria-current] { color:var(--blue); border-color:var(--blue); font-weight:600; }
+.reference-view-tabs a span { padding:2px 7px; border-radius:6px; background:var(--side); font-size:12px; font-variant-numeric:tabular-nums; }
+.section-reference-filters { display:grid; grid-template-columns:minmax(140px,1fr) minmax(180px,1.3fr) minmax(190px,1.7fr) auto; align-items:end; gap:14px; padding:22px; }
+.section-reference-filters .field { min-width:0; }
+.section-reference-filters select,.section-reference-filters .input { width:100%; min-width:0; }
+.section-reference-count { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin:18px 0; font-size:13px; }
+.section-reference-count .muted { margin-left:auto; }
+.section-reference-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; gap:18px; }
+.section-knowledge-card { min-width:0; padding:0; }
+.section-knowledge-card > summary { list-style:none; padding:22px; cursor:pointer; }
+.section-knowledge-card > summary::-webkit-details-marker { display:none; }
+.section-card-meta { display:flex; align-items:center; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:12px; }
+.section-card-meta .pill { flex:none; }
+.section-knowledge-card h2 { margin:14px 0 10px; font-size:18px; line-height:1.6; overflow-wrap:anywhere; }
+.section-knowledge-card > summary > p { color:var(--muted); font-size:13px; line-height:1.9; }
+.section-card-expand { display:flex; align-items:center; justify-content:space-between; margin-top:16px; color:var(--blue); font-size:13px; }
+.section-knowledge-card[open] > summary { border-bottom:1px solid var(--line); }
+.section-knowledge-card[open] .section-card-expand svg { transform:rotate(90deg); }
+.section-card-body { padding:4px 22px 22px; font-size:15px; line-height:1.95; min-width:0; }
+.section-card-body h3 { font-size:13px; color:var(--muted); margin:20px 0 8px; }
+.section-card-body .rich { max-width:100%; overflow-x:auto; padding:3px 0; }
+.section-card-body > p { margin:0; }
+.section-card-body .section-card-warning { background:var(--side); padding:12px 14px; border-radius:10px; border-left:3px solid var(--blue); }
+.section-card-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+.section-card-actions .btn { white-space:normal; }
+.section-card-detail { padding:26px; max-width:900px; margin:0 auto; }
+.section-card-detail h2 { font-size:24px; }
+.section-card-detail .section-card-body { padding:0; font-size:var(--question-font-size); line-height:var(--study-line-height); }
+.section-card-location { display:flex; justify-content:space-between; gap:12px; margin:0 auto 18px; max-width:900px; color:var(--muted); font-size:13px; }
+.section-card-location > a { display:inline-flex; align-items:center; gap:6px; color:var(--blue); }
+.section-card-pagination { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:14px; margin:24px 0; font-size:13px; color:var(--muted); }
+.practice-primary-actions { flex-wrap:wrap; }
+.practice-knowledge-link { color:var(--blue); }
+.reference-card > .text-btn { display:flex; margin-top:12px; }
+@media(hover:hover) and (pointer:fine) { .section-knowledge-card > summary:hover { background:var(--blue-light); border-radius:var(--radius); } }
+@media(max-width:900px) {
+  .section-reference-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:600px) {
+  .section-reference-grid { grid-template-columns:minmax(0,1fr); gap:12px; }
+  .section-reference-filters { padding:16px; gap:12px; }
+  .section-reference-search { grid-column:1/-1; }
+  .section-reference-filters > button { grid-column:1/-1; }
+  .section-reference-count .muted { margin-left:0; flex-basis:100%; }
+  .section-knowledge-card > summary { padding:18px; }
+  .section-card-body { padding:0 18px 18px; }
+  .section-card-detail { padding:18px; }
+  .section-card-detail h2 { font-size:20px; }
+  .section-card-actions > a { flex:1; text-align:center; }
+  .practice-primary-actions .practice-knowledge-link { flex-basis:100%; }
+  .reference-view-tabs a { padding:12px 10px; font-size:13px; }
+}
 .related-learning { border-top:1px solid var(--line); margin-top:18px; padding-top:14px; }
 .related-learning summary { font-size:14px; }
 .question-placeholder { min-height:340px; }
@@ -105,3 +161,19 @@ details { overflow-anchor:none; }
   .daily-complete > span { animation:study-select 220ms ease-out; }
 }
 @keyframes question-loading-pulse { 0%,100% { opacity:.5; } 50% { opacity:1; } }
+
+/* The original bitmap stays sharp at rest, with explicit access to option images. */
+dialog:has(.image-zoom-viewport) { width:min(900px,calc(100vw - 32px)); }
+.image-gallery { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.image-gallery [aria-pressed="true"] { background:var(--blue-light); color:var(--blue); border-color:var(--blue); }
+.image-zoom-controls { gap:10px; }
+.image-zoom-controls input { min-width:90px; accent-color:var(--blue); }
+.image-zoom-controls output { min-width:4ch; color:var(--blue); font-variant-numeric:tabular-nums; }
+.image-viewer-note { margin:0 0 14px; color:var(--muted); font-size:12px; line-height:1.7; }
+.image-zoom-viewport { padding:16px; border:1px solid var(--line); border-radius:12px; max-height:55dvh; overscroll-behavior:contain; }
+.image-zoom-viewport img { margin:0 auto; border-radius:0; }
+@media(max-width:600px) {
+  .image-gallery { gap:6px; margin-bottom:14px; }
+  .image-gallery .btn { padding:8px 10px; }
+  .image-zoom-controls .btn { padding:8px 10px; }
+}

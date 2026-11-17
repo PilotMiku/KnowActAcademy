@@ -11,9 +11,12 @@ import { collectionQueue, collectionPageSlice } from './study-planning.mjs';
 import { normalizeRevisionPlan, revisionSchedule, dateNumber } from './revision-planner.mjs';
 import { revisionCalendarPage, revisionScopeHTML } from './revision-planner-view.mjs';
 import { learningCardsHTML, questionHintsHTML } from './question-learning.mjs';
-import { renderStudyLayout, reducedMotion } from './study-motion.mjs';
+import { renderStudyLayout, reducedMotion, animateFeedback } from './study-motion.mjs';
 import { installQuestionGestures } from './question-gestures.mjs';
 import { sessionNavigationHTML, updateSessionNavigation, pendingQuestionIndices, nextPendingIndex } from './session-navigation.mjs';
+import { imageViewerHTML, updateImageZoom } from './question-images.mjs';
+import { supplementalAnalysis } from './supplemental-analysis.mjs';
+import { sectionKnowledgeCard } from './section-knowledge.mjs';
 import { referencePage } from './math-reference.mjs';
 import { drawExam, normalizeExamTemplates } from './exam-design.mjs';
 import { preparationTreeHTML, syncPreparationTree, changeScope } from "./preparation-scope.mjs";
@@ -352,11 +355,15 @@ function practicePage() {
   const href = (view) => { const next = new URLSearchParams(query); next.set("view", view); return "#/practice?" + next; };
   const chapterName = getBankIndex(bank).chapters.get(filters.subjectId)?.get(filters.chapterId)?.name
     ?? bank.subjects.flatMap(s => s.chapters).find(c => c.id === filters.chapterId)?.name;
+  const scopeSubject = filters.subjectId || bank.subjects.find(s => s.chapters.some(c => c.id === filters.chapterId))?.id || '';
+  const card = sectionKnowledgeCard(scopeSubject, filters.chapterId);
+  const knowledgeURL = card ? `#/reference?subject=${encodeURIComponent(scopeSubject)}&section=${encodeURIComponent(card.sectionId)}`
+    : '#/reference?' + new URLSearchParams([...(scopeSubject ? [['subject',scopeSubject]] : []),...(filters.chapterId ? [['chapter',filters.chapterId]] : [])]);
   return `${head("章节练习", "选好科目与章节，就可以开始。", state.practice ? button(`继续上次练习 ${icon("arrow", 14)}`, "resume-practice", "", "btn soft") : "")}
     <section class="card practice-start practice-setup" aria-label="选择练习范围">
       ${filtersHTML(filters, true, "basic")}
       <div class="practice-scope-summary"><strong>${esc(chapterName ?? subject(filters.subjectId)?.name ?? "全部题目")}</strong><span>共 ${questions.length.toLocaleString()} 条 · 可评分 ${questionCounts(questions).scorable.toLocaleString()} 题</span></div>
-      <div class="practice-primary-actions">${button(`${icon("book", 17)} 顺序练习`, "start-practice", `data-mode="sequential" ${questions.length ? "" : "disabled"}`, "btn primary")}${button(`${icon("refresh", 17)} ${randomCount === "all" ? "随机所有题目" : `随机 ${DEFAULT_QUESTION_COUNT} 题`}`, "start-practice", `data-mode="random" ${questions.length ? "" : "disabled"}`, "btn")}</div>
+      <div class="practice-primary-actions">${button(`${icon("book", 17)} 顺序练习`, "start-practice", `data-mode="sequential" ${questions.length ? "" : "disabled"}`, "btn primary")}${button(`${icon("refresh", 17)} ${randomCount === "all" ? "随机所有题目" : `随机 ${DEFAULT_QUESTION_COUNT} 题`}`, "start-practice", `data-mode="random" ${questions.length ? "" : "disabled"}`, "btn")}<a class="btn practice-knowledge-link" href="${attr(knowledgeURL)}">${icon("book",16)} ${card ? "本小节知识卡" : "查看知识卡"}</a></div>
       <details class="practice-options" ${advanced || practiceOptionsOpen ? "open" : ""}><summary>筛选与练习设置${advanced ? " · 已启用" : ""}</summary><div class="practice-options-body">${filtersHTML(filters, true, "advanced")}${practiceControls()}<div class="field"><label for="random-count">随机题量</label><select id="random-count" data-filter="count"><option value="25" ${randomCount === "25" ? "selected" : ""}>25 题</option><option value="all" ${randomCount === "all" ? "selected" : ""}>所有题目（${questions.length} 题）</option></select></div><p class="format-note question-count-note">${esc(questionCountDescription(questions))}</p></div></details>
     </section>
     <details class="practice-progress" ${practiceProgressOpen ? "open" : ""}><summary><span>${icon("chevron", 13)} 学习进度</span><span>已完成 ${progress.completed} / ${progress.total} 题 · ${progress.completion}%</span></summary>${learningProgressCard(progress)}</details>
@@ -564,7 +571,14 @@ function currentResponse() {
 function sourceInfo(q) {
   const notice = isScorable(q) ? "" : '<p class="notice" role="note">此题原件缺损或答案待核实，仅供查阅，不计分、不计掌握度，也不安排复习。</p>';
   const guide = questionGuidance(q, state.questionAnnotations);
-  const extras = `${q.analysisMissing ? '<p class="format-note">原资料未提供解析，已列入题目质量清单。</p>' : ''}<div class="question-editorial"><span class="pill">${esc(difficultyLabels[guide.difficulty])} · ${esc(guide.origin)}</span>${guide.concepts.map(name => `<a class="pill" href="#/practice?concept=${encodeURIComponent(name)}">${esc(name)}</a>`).join('')}${currentExam()?.status !== 'active' && learningCardsHTML(q, bank, state) ? button('知识卡片', 'question-learning', `data-id="${attr(q.id)}"`, 'text-btn') : ''}${button('学习标注', 'question-annotation', `data-id="${attr(q.id)}"`, 'text-btn')}${button(state.questionFeedback[q.id] ? '纠错记录' : '题目纠错', 'question-feedback', `data-id="${attr(q.id)}"`, 'text-btn')}</div>${currentExam()?.status !== "active" ? questionHintsHTML(q, state) : ""}`;
+  const supplement = supplementalAnalysis(q);
+  const analysisNote = supplement?.status === 'verified' ? '原资料未附解析，已补充解题说明。'
+    : supplement?.status === 'review' ? '已补充推导；原题或选项有疑点，本题仅供查阅。'
+      : supplement?.status === 'partial' ? '已补充现存题干的推导；选项缺损，仍待核对。'
+        : '原资料未提供可用解析，已列入题目质量清单。';
+  const imageTools = /<img\b/i.test(q.stem + q.options.map(option => option.text).join(''))
+    ? button(`${icon('search', 14)} 放大题图`, 'view-question-images', '', 'text-btn') : '';
+  const extras = `${q.analysisMissing ? `<p class="format-note">${analysisNote}</p>` : ''}<div class="question-editorial"><span class="pill">${esc(difficultyLabels[guide.difficulty])} · ${esc(guide.origin)}</span>${guide.concepts.map(name => `<a class="pill" href="#/practice?concept=${encodeURIComponent(name)}">${esc(name)}</a>`).join('')}${currentExam()?.status !== 'active' && learningCardsHTML(q, bank, state) ? button('知识卡片', 'question-learning', `data-id="${attr(q.id)}"`, 'text-btn') : ''}${button('学习标注', 'question-annotation', `data-id="${attr(q.id)}"`, 'text-btn')}${imageTools}${button(state.questionFeedback[q.id] ? '纠错记录' : '题目纠错', 'question-feedback', `data-id="${attr(q.id)}"`, 'text-btn')}</div>${currentExam()?.status !== "active" ? questionHintsHTML(q, state) : ""}`;
   if (!q.source?.documentId) return notice + extras;
   let href = `./source-pdf/${encodeURIComponent(q.source.documentId)}.pdf#page=${Number(q.source.page) || 1}`;
   if (q.source.url) {
@@ -590,7 +604,10 @@ function refreshGradedPractice(p, q) {
     questionStatus: isPreparationPractice(p) ? preparationQuestionStatus(q.id) : "", progress: practiceProgress(p, bank), renderRich })) {
     if (currentQuestion()?.id === q.id && route().query.has("session")) render();
   }
+  const finishGroup = app.querySelector('[data-action="finish-preparation"]');
+  const wasHidden = finishGroup?.hidden;
   updateSessionNavigation(app, p, bank);
+  if (wasHidden && !finishGroup.hidden) animateFeedback(finishGroup);
   requestAnimationFrame(() => {
     if (currentQuestion()?.id !== q.id || !route().query.has("session")) return;
     const result = app.querySelector('.result-box');
@@ -1255,8 +1272,28 @@ async function handleAction(action, el) {
       break;
     case "zoom-image":
       if (el.dataset.figureLoading || !el.naturalWidth) break;
-      openDialog("查看题图", `<div class="image-zoom-controls"><label for="image-zoom">缩放</label><input id="image-zoom" type="range" min="50" max="200" value="100"><output id="image-zoom-value">100%</output>${button("还原", "reset-image-zoom", "", "btn small")}</div><div class="image-zoom-viewport"><img id="zoomed-image" src="${attr(el.src)}" alt="${attr(el.alt)}"></div>`, button("关闭", "close-dialog"));
+      openDialog("查看题图", imageViewerHTML([el]), button("关闭", "close-dialog"));
       break;
+    case "view-question-images": {
+      const images = [...app.querySelectorAll('.question-main .rich img')];
+      if (!images.length || images.some(image => image.dataset.figureLoading || !image.naturalWidth)) {
+        toast("题图尚未加载完成，请稍后重试"); break;
+      }
+      openDialog("题图与公式", imageViewerHTML(images), button("关闭", "close-dialog"));
+      break;
+    }
+    case "select-question-image": {
+      const image = dialog.querySelector('#zoomed-image');
+      image.src = el.dataset.src;
+      image.alt = el.dataset.alt;
+      image.style.width = `min(100%,${Number(el.dataset.width)}px)`;
+      for (const item of dialog.querySelectorAll('[data-action="select-question-image"]'))
+        item.setAttribute('aria-pressed', String(item === el));
+      dialog.querySelector('#image-zoom').value = '100';
+      dialog.querySelector('#image-zoom-value').textContent = '100%';
+      dialog.querySelector('.image-zoom-viewport').scrollTo(0, 0);
+      break;
+    }
     case "reset-image-zoom":
       document.querySelector("#image-zoom").value = "100";
       document.querySelector("#image-zoom").dispatchEvent(new Event("input", { bubbles: true }));
@@ -1598,6 +1635,16 @@ document.addEventListener("toggle", (event) => {
   if (event.target.matches('.practice-progress')) practiceProgressOpen = event.target.open;
 }, true);
 document.addEventListener('submit', async event => {
+  if (event.target.matches('[data-reference-filter]')) {
+    event.preventDefault();
+    const fields = new FormData(event.target), query = new URLSearchParams();
+    for (const key of ['subject','chapter','q']) {
+      const value = String(fields.get(key) || '').trim();
+      if (value) query.set(key,value);
+    }
+    go('/reference' + (query.size ? '?' + query : ''));
+    return;
+  }
   if (event.target.matches('[data-question-jump]')) {
     event.preventDefault();
     const form = event.target, session = currentExam() ?? state.practice;
@@ -1633,6 +1680,12 @@ document.addEventListener('submit', async event => {
   }
 });
 document.addEventListener("change", (event) => {
+  if (event.target.matches('[data-reference-subject],[data-reference-chapter]')) {
+    const form = event.target.form;
+    if (event.target.matches('[data-reference-subject]')) form.elements.chapter.value = '';
+    form.requestSubmit();
+    return;
+  }
   if (event.target.id === 'offline-subject') {
     offline.state.selectedSubject = event.target.value;
     const rows = offline.state.manifest.chapters.filter(c => c.subjectId === event.target.value);
@@ -1721,9 +1774,7 @@ document.addEventListener("change", (event) => {
 });
 document.addEventListener("input", (event) => {
   if (event.target.id === "image-zoom") {
-    const percent = Number(event.target.value);
-    document.querySelector("#zoomed-image").style.width = `${percent}%`;
-    document.querySelector("#image-zoom-value").textContent = `${percent}%`;
+    updateImageZoom(dialog, Number(event.target.value));
     return;
   }
   if (event.target.matches("[data-recall-text]")) {

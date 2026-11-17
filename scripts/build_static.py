@@ -16,6 +16,8 @@ from source_archives import verify_source
 from pack_figures import pack_figures
 from pack_questions import pack_questions
 from offline_manifest import write_offline_manifest
+from supplemental_analysis import publish as verify_supplemental_analysis
+from section_knowledge import publish as verify_section_knowledge
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -54,6 +56,8 @@ def render_document(job):
 
 
 def build(workers=4):
+    verify_supplemental_analysis(check=True)
+    verify_section_knowledge(check=True)
     verify_sources(ROOT)
     destination, previous = ROOT / '_site', ROOT / '.previous-site'
     # Recover the last working site if a previous run was interrupted during promotion.

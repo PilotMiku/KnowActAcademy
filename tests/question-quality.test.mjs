@@ -63,9 +63,9 @@ test('resuming an older diagnostic skips ineligible questions and survives a bac
   assert.deepEqual(validateBackup({ format: BACKUP_FORMAT, bank, state }).state.practice, state.practice);
 });
 
-test('all 19 incomplete bundled questions stay available but outside assessment pools', () => {
+test('19 incomplete and 2 editorially disputed questions stay outside assessment pools', () => {
   const raw = JSON.parse(readFileSync(new URL('../dist/data/bank.json', import.meta.url)));
   const bank = normalizeBank(raw);
-  assert.equal(bank.questions.filter(q => !isScorable(q)).length, 19);
-  assert.equal(examQuestions(bank).length, raw.questions.length - 19);
+  assert.equal(bank.questions.filter(q => !isScorable(q)).length, 21);
+  assert.equal(examQuestions(bank).length, raw.questions.length - 21);
 });

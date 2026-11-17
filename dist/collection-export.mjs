@@ -1,6 +1,7 @@
 import { esc, attr } from './ui.mjs';
 import { renderRich } from './rich-content.mjs';
 import { loadQuestionContent, loadedQuestion } from './question-content.mjs';
+import { supplementalAnalysis } from './supplemental-analysis.mjs';
 
 let fontCSS;
 async function resource(url) {
@@ -30,7 +31,8 @@ export async function printableCollection(bank, state, selected) {
   const root = document.createElement('main');
   root.innerHTML = selected.map((entry, i) => {
     const q = loadedQuestion(bank, entry.id), note = state.questionNotes?.[q.id];
-    return `<section><h2>${i+1}. ${esc(q.sourceLabel || q.id)}</h2><div class="rich" data-rich="${attr(q.stem)}"></div>${q.options.map(o=>`<div class="print-option"><b>${esc(o.id)}</b><div class="rich" data-rich="${attr(o.text)}"></div></div>`).join('')}<details open><summary>参考答案与解析</summary><p>${esc(Array.isArray(q.answer)?q.answer.join('、'):q.answer)}</p><div class="rich" data-rich="${attr(q.analysis)}"></div></details>${note?.text?`<h3>我的笔记</h3><p class="personal-note">${esc(note.text)}</p>`:''}</section>`;
+    const supplement = supplementalAnalysis(q);
+    return `<section><h2>${i+1}. ${esc(q.sourceLabel || q.id)}</h2><div class="rich" data-rich="${attr(q.stem)}"></div>${q.options.map(o=>`<div class="print-option"><b>${esc(o.id)}</b><div class="rich" data-rich="${attr(o.text)}"></div></div>`).join('')}<details open><summary>参考答案与解析</summary><p>${esc(Array.isArray(q.answer)?q.answer.join('、'):q.answer)}</p>${supplement ? `<p>本站${supplement.status === 'unresolved' ? '核对说明' : '补充解析'}</p>` : ''}<div class="rich" data-rich="${attr(supplement?.body || q.analysis)}"></div></details>${note?.text?`<h3>我的笔记</h3><p class="personal-note">${esc(note.text)}</p>`:''}</section>`;
   }).join('');
   renderRich(root);
   const start = Date.now();

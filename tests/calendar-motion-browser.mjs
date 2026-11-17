@@ -42,7 +42,7 @@ try {
   await page.locator('[data-action="revision-practice"]').first().click();
   await page.locator('.question-main').waitFor();
   await page.locator('[data-action="question-learning"]').click();
-  await page.locator('#learning-panel .learning-card').waitFor();
+  await page.locator('#learning-panel .learning-card').first().waitFor();
   assert.match(await page.locator('#learning-panel').innerText(), /复合函数求值/);
   assert.equal(await page.locator('#learning-panel .katex-error').count(), 0);
   assert.equal(await page.evaluate(async () => {

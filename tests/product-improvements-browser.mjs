@@ -96,7 +96,7 @@ try {
   await page.locator('.reading-resume a').click();await page.locator('.reading-paper').waitFor();
   await page.setViewportSize({width:390,height:844});await page.reload();
   await page.locator('.reading-toc').waitFor();assert.equal(await page.locator('.reading-toc details').evaluate(el=>el.open),false);
-  await page.goto(baseURL+'/#/reference');await page.locator('.reference-card').first().waitFor();
+  await page.goto(baseURL+'/#/reference?view=chapters');await page.locator('.reference-card').first().waitFor();
   assert.equal(await page.locator('.reference-card').count(),17);
   assert.equal(await page.locator('.katex-error').count(),0);
   report.readingAndReferences=true;

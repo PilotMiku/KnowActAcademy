@@ -1,6 +1,7 @@
 import { getBankIndex } from './core.mjs';
 import { questionGuidance } from './question-guidance.mjs';
 import { mathReferences } from './math-reference.mjs';
+import { sectionKnowledgeCard } from './section-knowledge.mjs';
 import { esc, attr } from './ui.mjs';
 
 // Authored aids are overlays: original statements, answers and solutions stay intact.
@@ -59,8 +60,13 @@ export function questionHintsHTML(question, state) {
 export function questionLearningCards(question, bank, state) {
   const guidance = questionGuidance(question, state.questionAnnotations);
   const exact = conceptCards.filter(card => card.concepts.some(name => guidance.concepts.includes(name)));
-  if (exact.length) return exact.map(card => ({ ...card, association: `知识点关联 · ${guidance.origin}` }));
   const chapters = getBankIndex(bank).chapters.get(question.subjectId);
+  const cards = exact.map(card => ({ ...card, association: `知识点关联 · ${guidance.origin}` }));
+  const section = sectionKnowledgeCard(question.subjectId, question.chapterId);
+  const current = chapters?.get(question.chapterId);
+  if (section && current?.name === section.sourceTitle && current.parentId === section.chapterId)
+    cards.unshift({...section, id:'section-' + section.sectionId, association:'小节关联 · 本站整理'});
+  if (cards.length) return cards;
   let id = question.chapterId;
   const seen = new Set();
   while (chapters?.get(id)?.parentId && !seen.has(id)) { seen.add(id); id = chapters.get(id).parentId; }
@@ -71,6 +77,12 @@ export function questionLearningCards(question, bank, state) {
 export function learningCardsHTML(question, bank, state, { expanded = false } = {}) {
   const cards = questionLearningCards(question, bank, state);
   if (!cards.length) return '';
-  const content = cards.map(card => `<article class="learning-card"><span class="pill">${esc(card.association)}</span><h3>${esc(card.title)}</h3><div class="rich" data-rich="${attr(card.formula)}"></div>${card.condition ? `<p>${esc(card.condition)}</p>` : ''}<h4>小例子</h4><div class="rich" data-rich="${attr(card.example)}"></div><h4>易错提醒</h4><div class="rich" data-rich="${attr(card.warning)}"></div>${card.concepts ? `<a class="text-btn" href="#/practice?subject=${encodeURIComponent(question.subjectId)}&concept=${encodeURIComponent(card.concepts[0])}">练习同一知识点 →</a>` : `<a class="text-btn" href="#/reference?subject=${encodeURIComponent(question.subjectId)}&chapter=${encodeURIComponent(card.chapterId)}">查看本章速查 →</a>`}</article>`).join('');
+  const content = cards.map(card => {
+    const link = card.sectionId
+      ? `<a class="text-btn" href="#/reference?subject=${encodeURIComponent(card.subjectId)}&section=${encodeURIComponent(card.sectionId)}">查看本小节完整知识卡 →</a>`
+      : card.concepts ? `<a class="text-btn" href="#/practice?subject=${encodeURIComponent(question.subjectId)}&concept=${encodeURIComponent(card.concepts[0])}">练习同一知识点 →</a>`
+        : `<a class="text-btn" href="#/reference?view=chapters&subject=${encodeURIComponent(question.subjectId)}&chapter=${encodeURIComponent(card.chapterId)}">查看本章速查 →</a>`;
+    return `<article class="learning-card" ${card.sectionId ? `data-section-id="${attr(card.sectionId)}"` : ''}><span class="pill">${esc(card.association)}</span><h3>${esc(card.title)}</h3>${card.overview ? `<p>${esc(card.overview)}</p><h4>关键公式</h4>` : ''}<div class="rich" data-rich="${attr(card.formula)}"></div>${card.condition ? `<h4>适用条件</h4><div class="rich" data-rich="${attr(card.condition)}"></div>` : ''}<h4>小例子</h4><div class="rich" data-rich="${attr(card.example)}"></div><h4>易错提醒</h4><div class="rich" data-rich="${attr(card.warning)}"></div>${link}</article>`;
+  }).join('');
   return expanded ? `<div class="learning-cards">${content}</div>` : `<details class="related-learning"><summary>相关知识卡片 · ${cards.length} 张</summary><div class="learning-cards">${content}</div></details>`;
 }

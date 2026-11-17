@@ -7,6 +7,7 @@ import { getAttemptIndex } from "./attempt-index.mjs";
 import { normalizeQuestionFeedback, normalizeQuestionAnnotations } from './question-guidance.mjs';
 import { normalizeExamTemplates } from './exam-design.mjs';
 import { normalizeRevisionPlan } from './revision-planner.mjs';
+import { analysisReview } from './supplemental-analysis.mjs';
 export const VERSION = 1;
 export const BANK_FORMAT = "local-neumathe.bank.v1";
 export const BACKUP_FORMAT = "local-neumathe.backup.v1";
@@ -330,7 +331,7 @@ function normalizeFill(a) {
   return String(a).normalize("NFKC").replace(/\s+/g, "").replace(/[−–]/g, "-");
 }
 export function isScorable(question) {
-  return !!question && question.answerVerified !== false && !question.sourceIncomplete && !question.original?.sourceIncomplete;
+  return !!question && question.answerVerified !== false && !question.sourceIncomplete && !question.original?.sourceIncomplete && !analysisReview(question);
 }
 export function judge(question, response) {
   if (!isScorable(question) || question.type === "solution") return null;

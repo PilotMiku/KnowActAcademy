@@ -1,7 +1,7 @@
 import { chromium, browserOptions, baseURL } from "./browser-helpers.mjs";
 import { readFile } from "node:fs/promises";
 import assert from "node:assert/strict";
-import { normalizeBank, filterQuestions, examQuestions, validateBackup, BACKUP_FORMAT } from "../dist/core.mjs";
+import { normalizeBank, filterQuestions, examQuestions, isScorable, validateBackup, BACKUP_FORMAT } from "../dist/core.mjs";
 import { PROGRESS_BACKUP_FORMAT } from '../dist/backup-codec.mjs';
 import { fixture } from "./fixture.mjs";
 
@@ -27,7 +27,7 @@ try {
     for (const chapter of subject.chapters.filter((c) => !c.parentId)) {
       await page.locator("#exam-subject").selectOption(subject.id);
       await chapterInput(page, subject.id, chapter.id).check();
-      const expected = filterQuestions(bank, { subjectId: subject.id, chapterId: chapter.id }).filter(q => q.answerVerified !== false && !q.sourceIncomplete && q.type !== "solution").length;
+      const expected = filterQuestions(bank, { subjectId: subject.id, chapterId: chapter.id }).filter(q => isScorable(q) && q.type !== "solution").length;
       assert.match(await page.locator("#exam-availability").innerText(), new RegExp(`共 ${expected} 道`));
     }
   }
@@ -37,7 +37,7 @@ try {
   await page.locator("#exam-subject").selectOption("");
   await chapterInput(page, "linear", "linear-chapter-1").check();
   assert.equal(await page.locator("#exam-subject").inputValue(), "");
-  const available = filterQuestions(bank, {subjectId:'linear', chapterId:'linear-chapter-1'}).filter(q => q.answerVerified !== false && !q.sourceIncomplete && q.type !== 'solution').length;
+  const available = filterQuestions(bank, {subjectId:'linear', chapterId:'linear-chapter-1'}).filter(q => isScorable(q) && q.type !== 'solution').length;
   await page.locator("#exam-count").fill(String(available + 1));
   await page.getByRole("button", { name: "开始考试" }).click();
   assert.match(await page.locator("#exam-error").innerText(), new RegExp(String(available)));

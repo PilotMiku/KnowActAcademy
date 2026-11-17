@@ -120,7 +120,7 @@ try {
   await page.locator('[data-action="answer-option"][data-value="C"]').click();
   await page.getByRole("button", { name: "确认答案", exact: true }).click();
   const originalMissing=bank.questions.find(q=>q.id==='s-6b82188494c1-q0027');
-  if(originalMissing.analysisMissing) await page.getByText(bank.contentMode==='native'?'原始资料未提供可用解析。':'这道题的原 PDF 未附解析，请查看原 PDF 核对。',{exact:true}).waitFor();
+  if(originalMissing.analysisMissing) { await page.getByText('补充解析 · 本站整理',{exact:true}).waitFor(); assert.match(await page.locator('.analysis').innerText(), /正切函数要求分母不为零/); }
   else {await page.locator('.analysis').waitFor();await waitImages();assert.ok((await page.locator('.analysis').innerHTML()).length>20);}
   assert.equal(
     await page.locator(".option.correct .option-key").innerText(),

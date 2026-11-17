@@ -45,6 +45,15 @@ try {
   const saved=await page.evaluate(async()=>(await import('./storage.mjs')).readSavedState());
   assert.equal(saved.attempts.length,1);
   await page.reload();await page.locator('.result-box').waitFor();
+  await page.locator('[data-action="question-learning"]').click();
+  await page.locator('#learning-panel [data-section-id="s-00ec8d743d0b"]').waitFor();
+  await page.getByRole('link',{name:'查看本小节完整知识卡 →',exact:true}).click();
+  await page.locator('.section-card-detail[data-section-id="s-00ec8d743d0b"]').waitFor();
+  await page.reload();
+  await page.locator('.section-card-detail[data-section-id="s-00ec8d743d0b"]').waitFor();
+  assert.equal(await page.locator('.section-card-detail .katex-error').count(),0);
+  assert.equal((await page.evaluate(async()=>(await import('./storage.mjs')).readSavedState())).attempts.length,1);
+  report.offlineSectionCards=true;
   report.offlineReloadPracticeAndFigures=true;
   report.corruptDownloadRollbackAndRetry=true;
   await context.setOffline(false);
