@@ -37,7 +37,7 @@ try {
   await page.goto(baseURL + '/#/quality?issue=analysis');
   await page.locator('#quality-issue').waitFor();
   assert.equal(await page.locator('.collection-item').count(),3);
-  assert.deepEqual(await page.locator('.big-stat b').allTextContents(),['21','3','0']);
+  assert.deepEqual(await page.locator('.big-stat b').allTextContents(),['45','3','0']);
   await page.locator('#quality-issue').selectOption('supplemented');
   await page.locator('.collection-item').first().waitFor();
   assert.match(await page.locator('.quality-help').innerText(),/57 题已有完整/);

@@ -17,6 +17,7 @@ suites.push('supplemental-analysis-browser');
 suites.push('section-knowledge-browser');
 suites.push('difficulty-favorite-browser');
 suites.push('list-position-browser');
+suites.push('question-audit-browser');
 const requested = process.argv.slice(2);
 if (requested.some(name => !suites.includes(name))) throw new Error('Unknown browser suite');
 const python = process.env.PYTHON || 'python3';

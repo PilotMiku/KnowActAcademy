@@ -18,6 +18,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 from assemble import ROOT, read
 from latex_normalization import normalize
+from question_reviews import apply_draft_reviews
 
 OUT=ROOT/'artifacts/题库Markdown'
 TRACKED=ROOT/'question-bank-markdown'
@@ -31,6 +32,7 @@ def clean_markdown(text):
 def main():
     bank=read(ROOT/'artifacts/pdf-transcription/unified-native-draft.json')
     review=read(ROOT/'artifacts/pdf-transcription/unified-review.json')['questions']
+    apply_draft_reviews(bank, review)
     site=read(ROOT/'dist/data/bank.json');sources={q['id']:q['source']['url'] for q in site['questions']}
     assert {q['id'] for q in bank['questions']}==set(sources)
     expressions=set()

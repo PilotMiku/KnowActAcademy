@@ -24,6 +24,7 @@ import numpy as np
 from PIL import Image,ImageDraw
 from assemble import ROOT,CACHE,SUPPLEMENT,Resolver,ordered_lines,jsonl,read
 from source_archives import load_archives, source_url
+from question_reviews import apply_reviews
 
 OUT=ROOT/'artifacts/pdf-transcription'
 CHECKED={'source-contours-checked','independent-reading-checked','source-raster-brackets-checked','manually-reviewed'}
@@ -207,6 +208,7 @@ class SiteBank:
             original_source['url']=source_url(ROOT,original_source['file'],original_source.get('page',1) if original_source['format']=='pdf' else None,self.archives)
             q['searchText']=re.sub(r'<[^>]+>',' ',q['sourceLabel']+' '+q['stem'])
             self.question_report[q['id']]={key:value-before[key] for key,value in self.counts.items() if value!=before[key]}
+        apply_reviews(bank)
         bank['contentMode']='native';bank['transcriptionDraft']=False;bank['managedBundle']=True
         bank['source']={'name':'知行学习统一题库','note':'原版与 NEU 小站补充版统一；无法可靠确认的公式保留原始图像。'}
         bank['revision']='pdf-'+hashlib.sha256(json.dumps(bank['questions'],ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:16]

@@ -91,7 +91,11 @@ r'''已知 \(\overrightarrow{OA}=\vec a\)、\(\overrightarrow{OB}=\vec b\)，\(D
 def main():
     source=json.loads((ROOT/'.cache/supplement-transcription/original-raster-parts.json').read_text())['parts']
     assert len(source)==len(TEXTS)==29
-    rows={}
+    output=Path(__file__).with_name('manual-parts.json')
+    # Keep later visual reviews of supplement images when refreshing PDF parts.
+    existing=json.loads(output.read_text()) if output.exists() else {}
+    original_images={part['imageId'] for part in source}
+    rows={key:value for key,value in existing.items() if key not in original_images}
     for number,(part,text) in enumerate(zip(source,TEXTS),1):
         image=ROOT/'.cache/supplement-transcription/images'/(part['imageId']+'.png')
         rows[part['imageId']]={'text':text,'status':'manually-reviewed',
@@ -101,9 +105,8 @@ def main():
                               'diagramConditionsExpressedInText':True}
         if number in {2,5,12}:rows[part['imageId']]['sourceErratum']=True
         if number==2:rows[part['imageId']]['answerRequiresCorrection']=True
-    output=Path(__file__).with_name('manual-parts.json')
     output.write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n')
-    print(json.dumps({'visuallyReviewedEmbeddedParts':len(rows),'sourceErrata':3}))
+    print(json.dumps({'visuallyReviewedEmbeddedParts':len(rows),'sourceErrata':sum(bool(row.get('sourceErratum')) for row in rows.values())}))
 
 
 if __name__=='__main__':main()

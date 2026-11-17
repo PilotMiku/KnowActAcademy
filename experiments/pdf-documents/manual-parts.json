@@ -263,5 +263,55 @@
     "sourceImageSha256": "8557f4efe18b4205fb0f968412f5658842ebc870bb3d97f4a78bf0ca29eeeabe",
     "reviewMethod": "visual-source-comparison-and-mathematical-check",
     "diagramConditionsExpressedInText": true
+  },
+  "5f25e0a521582484a7d9c316": {
+    "text": "函数 \\(f(x)=x^4-8x^2+2\\) 在 \\([-1,3]\\) 上的最大值与最小值分别为［　］。",
+    "status": "manually-reviewed",
+    "sourceQuestionId": "sup-ff62a1ea9c49-q0023",
+    "sourcePart": "stem",
+    "sourceImageSha256": "4c29cb9613aec02b7d07fd528f7e5304403e04346f34c7c037689217b5d6f705",
+    "reviewMethod": "visual-source-comparison-and-endpoint-stationary-value-check"
+  },
+  "d3e1683e1e385f32ce5f5dcf": {
+    "text": "\\(11;\\,-14\\)",
+    "status": "manually-reviewed",
+    "sourceQuestionId": "sup-ff62a1ea9c49-q0023",
+    "sourcePart": "option-A",
+    "sourceImageSha256": "b050657b73efdb18383be2ebdc55362a12a5794ba021e3dbf2770e5a949fb3b8",
+    "reviewMethod": "visual-source-comparison-and-endpoint-stationary-value-check"
+  },
+  "a9f5bbdf3e680c491f914e2a": {
+    "text": "\\(14;\\,-2\\)",
+    "status": "manually-reviewed",
+    "sourceQuestionId": "sup-ff62a1ea9c49-q0023",
+    "sourcePart": "option-B",
+    "sourceImageSha256": "8fd7bfcbe9deeca3fd7c2a32766a6bcff3c8b3d9e5a4b2580a267e3794c63b45",
+    "reviewMethod": "visual-source-comparison-and-endpoint-stationary-value-check"
+  },
+  "00b5f4967a4da98611a44d56": {
+    "text": "\\(14;\\,-11\\)",
+    "status": "manually-reviewed",
+    "sourceQuestionId": "sup-ff62a1ea9c49-q0023",
+    "sourcePart": "option-C",
+    "sourceImageSha256": "4bd87b257002ae8120fd8d17cb1b5a2a80b9163713c01feb80287d7aaa7da742",
+    "reviewMethod": "visual-source-comparison-and-endpoint-stationary-value-check"
+  },
+  "403cc17e97e2cd54c474fcd6": {
+    "text": "\\(11;\\,-2\\)",
+    "status": "manually-reviewed",
+    "sourceQuestionId": "sup-ff62a1ea9c49-q0023",
+    "sourcePart": "option-D",
+    "sourceImageSha256": "c04bedf5c41d226736af6f85e9bd6cc694f1fdb8248d6e313cce0a5a0d28d63d",
+    "reviewMethod": "visual-source-comparison-and-endpoint-stationary-value-check"
+  },
+  "ec9e17dd6f1e8646078e61ad": {
+    "text": "令 \\(f'(x)=4x^3-16x=4x(x^2-4)=0\\)，得 \\(x=-2,0,2\\)，其中位于区间 \\([-1,3]\\) 内的驻点为 \\(0,2\\)。\n比较端点和驻点的函数值：\\(f(-1)=-5\\)，\\(f(0)=2\\)，\\(f(2)=-14\\)，\\(f(3)=11\\)。\n因此最大值为 \\(11\\)，最小值为 \\(-14\\)，选 A。\n原资料解析将 \\(f(-1)\\) 误写为 \\(11\\)，结论中的最大值又误写为“142”，此处已更正。",
+    "status": "manually-reviewed",
+    "sourceQuestionId": "sup-ff62a1ea9c49-q0023",
+    "sourcePart": "analysis",
+    "sourceImageSha256": "dce13a731b2966e0b87198c365d240ede40101105970ea13a29b8fab941a77e7",
+    "reviewMethod": "visual-source-comparison-and-endpoint-stationary-value-check",
+    "sourceErratum": true,
+    "editorial": true
   }
 }

@@ -20,6 +20,7 @@ from supplemental_analysis import publish as verify_supplemental_analysis
 from section_knowledge import publish as verify_section_knowledge
 from question_difficulty import publish as verify_question_difficulty
 from readable_formulas import publish as verify_readable_formulas
+from question_reviews import publish as verify_question_reviews
 
 ROOT = Path(__file__).resolve().parents[1]
 SCALE = 2.5
@@ -58,6 +59,7 @@ def render_document(job):
 
 
 def build(workers=4):
+    verify_question_reviews(check=True)
     verify_supplemental_analysis(check=True)
     verify_section_knowledge(check=True)
     verify_question_difficulty(check=True)

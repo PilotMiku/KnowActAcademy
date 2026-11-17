@@ -1,0 +1,1681 @@
+{
+  "format": "zhixing.question-reviews.v1",
+  "updated": "2026-11-17",
+  "entries": {
+    "u-calculus-388c410778ef21fd": {
+      "sourceLabel": "3.1.1 Roll定理 · 补充第 22 题",
+      "sourceSha256": "d535ed3a8c814cbc6c10bbdd96124f69e39fa3fab2b1c105eb8d39b7285cd508",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "restored-stem",
+      "reason": "原图中的区间或所求内容在空白括号修复时被截掉，已按原图恢复。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "下列函数 \\(f(x)\\) 在区间 \\([-1,1]\\) 上满足罗尔中值定理条件的是［　］。"
+      }
+    },
+    "u-calculus-8bae75db8096b5a1": {
+      "sourceLabel": "3.1.3 Cauchy定理 · 补充第 5 题",
+      "sourceSha256": "223166ce8d864b30e758b2c9f52f25ca8180d1fee10b96ed5e5af1e064175214",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "restored-stem",
+      "reason": "原图中的区间或所求内容在空白括号修复时被截掉，已按原图恢复。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "函数 \\(f(x)=x^3\\)、\\(F(x)=x^2\\) 在区间 \\([1,2]\\) 上应用柯西中值定理，对应的 \\(\\xi\\) 值为［　］。"
+      }
+    },
+    "u-calculus-c3a0c221ffbf26a2": {
+      "sourceLabel": "3.5 函数的最值 · 补充第 18 题",
+      "sourceSha256": "3c4c90f8acd76c13a50b3c4801b6f338f63b8542fb96590df68adc59b95d0e69",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "restored-stem",
+      "reason": "原图中的区间或所求内容在空白括号修复时被截掉，已按原图恢复。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "函数 \\(f(x)=\\arctan\\frac{1-x}{1+x}\\) 在 \\([0,1]\\) 上的最大值为［　］。"
+      }
+    },
+    "u-calculus-9319169f3dcf8408": {
+      "sourceLabel": "3.6.1函数曲线的凹凸性 · 补充第 25 题",
+      "sourceSha256": "7cab6def3e16fc1ad4e7382319bbae2632a272abdd5f846506acc8fa04d702d0",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "restored-stem",
+      "reason": "原图中的区间或所求内容在空白括号修复时被截掉，已按原图恢复。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "曲线 \\(y=x^3-6x-5\\) 在区间 \\([0,1]\\) 上的特性是［　］。"
+      }
+    },
+    "u-calculus-aacbf4b187952243": {
+      "sourceLabel": "3.6.1函数曲线的凹凸性 · 补充第 34 题",
+      "sourceSha256": "7cab6def3e16fc1ad4e7382319bbae2632a272abdd5f846506acc8fa04d702d0",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "restored-stem",
+      "reason": "原图中的区间或所求内容在空白括号修复时被截掉，已按原图恢复。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "曲线 \\(y=x^5-3x^3-x^2-2\\) 在 \\([0,1]\\) 上的凹凸性为［　］。"
+      }
+    },
+    "u-calculus-076601839f3b4be5": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 23 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "restored-stem",
+      "reason": "原图中的区间或所求内容在空白括号修复时被截掉，已按原图恢复。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "对于汽车以速度 \\(v=v(t)\\) 在时间区间 \\([0,t]\\) 内作直线运动经过的路程 \\(S\\)，下列叙述正确的是［　］。"
+      }
+    },
+    "u-calculus-9bd92fd43040d6ff": {
+      "sourceLabel": "10.5.2  y”= f (x，y’)型 · 补充第 1 题",
+      "sourceSha256": "3c9488efdd3a4efe3158ed7896aabc789f71816f31d5a96c450172f9372cdc88",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "在 \\(y\\ne0\\) 的区间内，\\((y^{\\prime}/y)^{\\prime}=(yy^{\\prime\\prime}-(y^{\\prime})^2)/y^2=0\\)，故 \\(y^{\\prime}/y=C\\)，积分得 \\(y=C_1e^{Cx}\\)。零解也包含在 \\(C_1=0\\) 的情形中。对应当前选项 A。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-7091ebf8366203e6": {
+      "sourceLabel": "10.5.3  y”=f(y，y’)型 · 补充第 19 题",
+      "sourceSha256": "6b834c5a9d49fadea5f02adcedc8c48e196e7d01457b6439e35677e618ba131a",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "原方程可写为 \\((xx^{\\prime})^{\\prime}=0\\)，所以 \\(xx^{\\prime}=C\\)，再积分得 \\(x^2=C_1t+C_2\\)，对应当前选项 D。只写正平方根不能表示完整的解族。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-c360632af46700f8": {
+      "sourceLabel": "10.6.1 二阶线性微分方程的结构 · 补充第 4 题",
+      "sourceSha256": "d4a3a18a08370539048605d4768382f71f6bec75f7044ce4d9f5c388cbd9e513",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "为使 \\(xe^x\\) 为解，特征根 \\(1\\) 至少为二重根；为使 \\(\\sin2x\\) 为解，还须有根 \\(\\pm2i\\)。最低阶特征多项式为 \\((\\lambda-1)^2(\\lambda^2+4)=\\lambda^4-2\\lambda^3+5\\lambda^2-8\\lambda+4\\)。故选 C。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-f8d8fafb1a95748c": {
+      "sourceLabel": "10.6.1 二阶线性微分方程的结构 · 补充第 8 题",
+      "sourceSha256": "d4a3a18a08370539048605d4768382f71f6bec75f7044ce4d9f5c388cbd9e513",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "齐次方程的特征根为 \\(1\\pm i\\)，其通解为 \\(e^x(C_1\\cos x+C_2\\sin x)\\)。加上题设的特解，得到 \\(y=e^x(C_1\\cos x+C_2\\sin x)+\\frac12(x+1)^2\\)，选 C。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-dd6ad14fac35ff49": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 4 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\(\\lambda^2+2\\lambda+5=0\\) 的根为 \\(-1\\pm2i\\)，所以 \\(y=e^{-x}(C_1\\cos2x+C_2\\sin2x)\\)，选 C。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-224a7d7bab755b77": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 7 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程为 \\((\\lambda-3)(\\lambda-4)=0\\)，所以通解为 \\(y=C_1e^{3x}+C_2e^{4x}\\)，选 B。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-4f569997134ca2dd": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 14 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\(\\lambda^2-4\\lambda+13=0\\) 的根为 \\(2\\pm3i\\)，所以通解为 \\(y=e^{2x}(C_1\\cos3x+C_2\\sin3x)\\)，选 C。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-fd2a8b312c49f755": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 16 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "通解为 \\(y=C_1\\cos5x+C_2\\sin5x\\)。由题干 \\(y(0)=2\\)、\\(y^{\\prime}(0)=5\\)，得到 \\(C_1=2\\)、\\(5C_2=5\\)，故 \\(y=2\\cos5x+\\sin5x\\)，选 D。原解析抄入的初值 \\(1,-1\\) 与题干不符，已按题干更正。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-d08ab6230bf2d0a3": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 17 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程为 \\((\\lambda-1)(\\lambda-3)=0\\)，故通解为 \\(y=C_1e^x+C_2e^{3x}\\)，选 B。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-d8060e18ef126477": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 18 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\(\\lambda^2+16=0\\) 的根为 \\(\\pm4i\\)，故通解为 \\(y=C_1\\cos4x+C_2\\sin4x\\)，选 A。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-593cc910981344e5": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 28 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\(4\\lambda^2+4\\lambda+1=(2\\lambda+1)^2=0\\) 有二重根 \\(-\\frac12\\)，故通解为 \\(y=(C_1+C_2x)e^{-x/2}\\)，选 B。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-88d1122a2ad2fd99": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 29 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程为 \\((\\lambda+1)(\\lambda-3)=0\\)，故通解为 \\(y=C_1e^{-x}+C_2e^{3x}\\)，选 D。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-c11788cb299e520f": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 35 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "当 \\(a>0\\) 时，解为 \\(C_1\\cos(\\sqrt a\\,x)+C_2\\sin(\\sqrt a\\,x)\\)。使 \\(2\\pi\\) 为所有解的周期，需要 \\(\\sqrt a\\) 为正整数；在给定的 \\(0,3,1,2\\) 四个选项中只有 \\(a=1\\) 符合，故选 C。若要求非零解的基本周期恰为 \\(2\\pi\\)，同样得到 \\(a=1\\)。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-ec682aae65c671fb": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 38 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\((\\lambda-2)^2=0\\) 有二重根 \\(2\\)，故通解为 \\(y=(C_1+C_2x)e^{2x}\\)，选 D。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-9883bc26c2bbc4de": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 45 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\((\\lambda+1)^2=0\\) 有二重根 \\(-1\\)，故通解为 \\(y=(C_1+C_2x)e^{-x}\\)，选 C。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-1b9b4bd21f7a30c0": {
+      "sourceLabel": "3.4.1 函数的单调性 · 补充第 1 题",
+      "sourceSha256": "9fc972cfc6ce3f0091c144dbda324f31ba0030995681c6c7729190ad9a9c190e",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "由原题图 \\(f^{\\prime}(x)=e^{-x^2/2}>0\\) 对所有实数成立，故 \\(f(x)\\) 在 \\((-\\infty,+\\infty)\\) 上严格单调增加，选 D。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。",
+        "stem": "已知 \\(f^{\\prime}(x)=e^{-x^2/2}\\)，且 \\(f(0)=0\\)，则 \\(f(x)\\) 的单调性为［　］。"
+      }
+    },
+    "u-calculus-62bc8490f0a3d7e5": {
+      "sourceLabel": "5.3.2 绝对收敛与条件收敛 · 补充第 13 题",
+      "sourceSha256": "ce66aef7b3074d9b3a7ff7618715a0fe5a2a5135cf6b6bb83fdcbeaff67d3ff1",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "当 \\(0<a<1\\) 时，通项绝对值 \\(1/(na^n)\\) 不趋于零，级数发散；当 \\(a>1\\) 时，绝对值级数的比值极限为 \\(1/a<1\\)，故绝对收敛；当 \\(a=1\\) 时是交错调和级数，条件收敛。符合当前选项 D。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-edc83284afca1fa6": {
+      "sourceLabel": "8.2.2 三重积分在直角坐标系下的计算 · 补充第 9 题",
+      "sourceSha256": "b6642cba2a0aa5b709e684ce8f07f134b897823a50883141fe929a093a019ec5",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "区域为第一卦限中的单纯形 \\(x+y+z\\le1\\)。由对称性，三个坐标的积分相同，且 \\(\\iiint_\\Omega x\\,dV=\\frac12\\int_0^1x(1-x)^2\\,dx=\\frac1{24}\\)。所以原积分为 \\((1+2+3)/24=1/4\\)，选 A。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-4cea1f14156ea4f2": {
+      "sourceLabel": "8.2.4 用球面坐标计算三重积分 · 补充第 27 题",
+      "sourceSha256": "eb7684cf4f5b7b0fe1722a4849bc2695c31ebcd480d953d6a2568c77cd05cf78",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "球体 \\(x^2+y^2+z^2\\le1\\) 关于 \\(z=0\\) 对称；被积函数的分母和对数因子对 \\(z\\) 为偶函数，整个被积函数对 \\(z\\) 为奇函数。因此积分为 \\(0\\)，选 C。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "u-calculus-c1faba1cb12d0ced": {
+      "sourceLabel": "9.2.2 第一类曲面积分的计算 · 补充第 36 题",
+      "sourceSha256": "a3c2c276a5bea799c7b7fd6ddf0c82d73c54d35cb764dbcd97cbe31daa051a5b",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "analysis-letter",
+      "reason": "原解析沿用了选项重排前的答案字母；已按原图和当前选项重新推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "在半径为 \\(2\\) 的球面上，三个坐标平方的面积积分相同，故 \\(\\iint_\\Sigma x^2\\,dS=\\frac13\\iint_\\Sigma(x^2+y^2+z^2)\\,dS=\\frac43\\cdot16\\pi=\\frac{64\\pi}{3}\\)，选 C。\n原解析末尾字母与当前选项顺序不一致，此处按选项内容更正。"
+      }
+    },
+    "s-85dbedd0155c-q0007": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 第 7 题",
+      "sourceSha256": "a642edb47bb0550f80282c51be8e7f1cc1270a39ac5c6517d4ceed165a23580f",
+      "referenceAnswer": "C",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "对 \\(F(x)=xf(x)+x^2\\) 求导并用 \\(F^{\\prime}=f\\)，得 \\(xf^{\\prime}(x)+2x=0\\)，结合 \\(f(0)=1\\) 可得 \\(f(x)=-2x+1\\)。原图的 A、C 都是这个表达式，单选题没有唯一答案。"
+      }
+    },
+    "s-6dbdf44fd58a-q0022": {
+      "sourceLabel": "4.1.2 第一类换元法（凑微分） · 第 22 题",
+      "sourceSha256": "578f2ed7b9502b9fe1351f855c6e3e146b6f0ed9bcf2e944af0441fbed03dc49",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "令 \\(u=2x+3\\)，得 \\(\\int(2x+3)^5dx=\\frac1{12}(2x+3)^6+C\\)。原图的 B、C 完全相同，均正确，不能按单选题评分。"
+      }
+    },
+    "s-6dbdf44fd58a-q0023": {
+      "sourceLabel": "4.1.2 第一类换元法（凑微分） · 第 23 题",
+      "sourceSha256": "578f2ed7b9502b9fe1351f855c6e3e146b6f0ed9bcf2e944af0441fbed03dc49",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "令 \\(u=x^2\\)，得 \\(\\int xe^{x^2}dx=\\frac12e^{x^2}+C\\)。原图的 B、C 完全相同，均正确，不能按单选题评分。"
+      }
+    },
+    "u-calculus-a43245867d0f68fe": {
+      "sourceLabel": "10.5.1  y”=f(x)型 · 补充第 12 题",
+      "sourceSha256": "c5b6d44f657b216270599859219bc03fb7fc671c66adaa1b5466116d18211b3d",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "incorrect-reference-answer",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "对 \\(y^{\\prime\\prime\\prime}=e^{2x}+\\cos x\\) 连续积分三次，得 \\(y=\\frac18e^{2x}-\\sin x+C_1x^2+C_2x+C_3\\)。这对应当前选项 C。原参考为 D，但 D 中指数项系数为 \\(1\\)，三次求导会得到 \\(8e^{2x}\\)，不满足方程。原字母保留作来源记录，本题暂不评分。"
+      }
+    },
+    "u-calculus-387c017398d761cf": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 10 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "C",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\(\\lambda(\\lambda-3)=0\\)，通解为 \\(y=C_1+C_2e^{3x}\\)。原图 B、C 均为此式，单选答案不唯一。"
+      }
+    },
+    "u-calculus-f6bf6a9019e65ba6": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 41 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "no-correct-option",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\(3\\lambda^2-2\\lambda-1=(\\lambda-1)(3\\lambda+1)=0\\)，所以通解应为 \\(y=C_1e^x+C_2e^{-x/3}\\)。原图四个选项至少有一个指数项被额外乘以 \\(x\\)，均不是完整通解；其中 B、D 还重复。原解析又漏掉第二个指数中的负号。现有题目没有正确选项，保留原参考 B，仅供查阅。"
+      }
+    },
+    "u-calculus-ba5ac59c37862738": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 51 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\((\\lambda-1)(\\lambda-3)=0\\)，通解为 \\(y=C_1e^x+C_2e^{3x}\\)。原图 A、D 均为此式，单选答案不唯一。"
+      }
+    },
+    "u-calculus-685e1fcc2f709f01": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 53 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "特征方程 \\(3\\lambda^2+12\\lambda-15=3(\\lambda-1)(\\lambda+5)=0\\)，通解为 \\(y=C_1e^x+C_2e^{-5x}\\)。原图 B、D 均为此式，单选答案不唯一。"
+      }
+    },
+    "u-calculus-7be7d2e5a0499546": {
+      "sourceLabel": "10.6.3 二阶常系数线性非齐次微分方程 · 补充第 19 题",
+      "sourceSha256": "d9a168b292ab70d43999784c6a6e27ad6329add2a07735cc2594496d80f05f6c",
+      "referenceAnswer": "C",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "齐次方程 \\(x^{\\prime\\prime\\prime}-x=0\\) 的特征根为 \\(1,(-1\\pm\\sqrt3\\,i)/2\\)，特解可取 \\(-\\frac12(\\cos t+\\sin t)\\)。原图 B、C 都给出了相同的齐次通解加这个特解，单选答案不唯一。"
+      }
+    },
+    "u-calculus-f6e3fed8ed718b3a": {
+      "sourceLabel": "8.2.2 三重积分在直角坐标系下的计算 · 补充第 15 题",
+      "sourceSha256": "b6642cba2a0aa5b709e684ce8f07f134b897823a50883141fe929a093a019ec5",
+      "referenceAnswer": "C",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "在第一卦限的单纯形 \\(x+y+z\\le1\\) 上，\\(\\iiint_\\Omega x\\,dV=\\frac12\\int_0^1x(1-x)^2dx=\\frac1{24}\\)。原图 A、C 均为 \\(1/24\\)，单选答案不唯一。"
+      }
+    },
+    "u-calculus-86a89b8aa0c46593": {
+      "sourceLabel": "8.2.2 三重积分在直角坐标系下的计算 · 补充第 24 题",
+      "sourceSha256": "b6642cba2a0aa5b709e684ce8f07f134b897823a50883141fe929a093a019ec5",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "no-correct-option",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "记 \\(I=\\iiint_{[0,1]^3}f\\,dV\\)。对题设积分得 \\(I=1/8+I/3\\)，故 \\(I=3/16\\)，从而 \\(f(x,y,z)=xyz+\\frac3{16}y^2\\)。四个原选项中没有这个表达式；A、D 还同时漏掉 \\(xyz\\)。保留原参考 A，仅供查阅。"
+      }
+    },
+    "u-calculus-016dd25a7679a467": {
+      "sourceLabel": "8.2.3 利用柱面坐标计算三重积分 · 补充第 11 题",
+      "sourceSha256": "1e61b6fa829a2ef5e34b38b1308b68855bf4e06eb63cb7775e732ec52ea365bd",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "用柱坐标，\\(0\\le z\\le5\\)、\\(0\\le r\\le2z/5\\)。积分为 \\(2\\pi\\int_0^5\\int_0^{2z/5}r^3dr\\,dz=8\\pi\\)。原图 A、D 同为 \\(8\\pi\\)，单选答案不唯一。"
+      }
+    },
+    "u-calculus-e90498d275d7bce8": {
+      "sourceLabel": "8.2.3 利用柱面坐标计算三重积分 · 补充第 25 题",
+      "sourceSha256": "1e61b6fa829a2ef5e34b38b1308b68855bf4e06eb63cb7775e732ec52ea365bd",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "duplicate-reference-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "原图 C、D 都写成 \\(512\\pi/3\\)，而原参考指定 D。因此当前单选题无法区分这两个完全相同的选项。题干边界条件仍须进一步核验，暂不据参考值认定积分数值正确；本题仅供查阅。"
+      }
+    },
+    "u-calculus-41b4f55a8916b6e7": {
+      "sourceLabel": "9.2.2 第一类曲面积分的计算 · 补充第 12 题",
+      "sourceSha256": "a3c2c276a5bea799c7b7fd6ddf0c82d73c54d35cb764dbcd97cbe31daa051a5b",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "记球心向量 \\(c=(a,b,c)\\)、半径 \\(R=\\sqrt{a^2+b^2+c^2}\\)。球壳上三个轴的转动惯量之和为 \\(2\\iint |r|^2dS=2\\cdot8\\pi R^4=16\\pi(a^2+b^2+c^2)^2\\)。原图 A、B 均为此式，单选答案不唯一。"
+      }
+    },
+    "u-calculus-37b44a80b8a0cdc3": {
+      "sourceLabel": "9.3.2 第二类曲线的计算 · 补充第 27 题",
+      "sourceSha256": "f9783cefa8029256e9ea524339e4a1c92667a2a1c61e554c4a5c766654f6c00f",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "按 \\(x\\) 从 \\(0\\) 到 \\(2\\) 的参数方向，分 \\([0,1]\\) 上 \\(y=x\\) 与 \\([1,2]\\) 上 \\(y=2-x\\) 两段计算，积分分别为 \\(2/3\\) 和 \\(2/3\\)，合计 \\(4/3\\)。原图 B、D 同为 \\(4/3\\)，单选答案不唯一。"
+      }
+    },
+    "u-calculus-e8566906ec7c7f85": {
+      "sourceLabel": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 13 题",
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "no-correct-option",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "将 \\(y=e^{2x}+e^x\\) 代入方程，得到 \\((4+2\\alpha+\\beta)e^{2x}+(1+\\alpha+\\beta)e^x=0\\)。由线性无关性，\\(4+2\\alpha+\\beta=0\\)、\\(1+\\alpha+\\beta=0\\)，解得 \\(\\alpha=-3,\\beta=2\\)。原解析把第二个常数 \\(1\\) 误写成 \\(3\\)，导致错误的 \\((-1,-2)\\)。四个现有选项均不符合，保留原参考 B，仅供查阅。"
+      }
+    },
+    "u-calculus-5b0df02a0f88a9f6": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 补充第 8 题",
+      "sourceSha256": "f7cf1e6fb1afed64b93d2d11dc315f51249af358b8384c8174429700c0bdf8e1",
+      "referenceAnswer": "C",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "对 \\(F(x)=xf(x)+x^2\\) 求导并用 \\(F^{\\prime}=f\\)，得 \\(xf^{\\prime}(x)+2x=0\\)，结合 \\(f(0)=1\\) 可得 \\(f(x)=-2x+1\\)。原图的 A、C 都是这个表达式，单选题没有唯一答案。"
+      }
+    },
+    "u-calculus-085ff2a74a608059": {
+      "sourceLabel": "4.1.2 第一类换元法（凑微分） · 补充第 3 题",
+      "sourceSha256": "50ed4866430bd527bb4c5422380cc87fbe89801415c8a566359adb295d8de608",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "令 \\(u=x^2\\)，得 \\(\\int xe^{x^2}dx=\\frac12e^{x^2}+C\\)。原图的 B、C 完全相同，均正确，不能按单选题评分。"
+      }
+    },
+    "u-calculus-9aaa093c69a9ed94": {
+      "sourceLabel": "4.1.2 第一类换元法（凑微分） · 补充第 10 题",
+      "sourceSha256": "50ed4866430bd527bb4c5422380cc87fbe89801415c8a566359adb295d8de608",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "duplicate-correct-options",
+      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "令 \\(u=2x+3\\)，得 \\(\\int(2x+3)^5dx=\\frac1{12}(2x+3)^6+C\\)。原图的 B、C 完全相同，均正确，不能按单选题评分。"
+      }
+    },
+    "u-calculus-cb9b4ad5c9479e2b": {
+      "sourceLabel": "3.5 函数的最值 · 补充第 23 题",
+      "sourceSha256": "3c4c90f8acd76c13a50b3c4801b6f338f63b8542fb96590df68adc59b95d0e69",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "restored-stem-and-analysis",
+      "reason": "按原题图恢复区间及最值问题，核算端点和驻点；纠正原解析的两处笔误。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "函数 \\(f(x)=x^4-8x^2+2\\) 在 \\([-1,3]\\) 上的最大值与最小值分别为［　］。",
+        "analysis": "令 \\(f'(x)=4x^3-16x=4x(x^2-4)=0\\)，得 \\(x=-2,0,2\\)，其中位于区间 \\([-1,3]\\) 内的驻点为 \\(0,2\\)。\n比较端点和驻点的函数值：\\(f(-1)=-5\\)，\\(f(0)=2\\)，\\(f(2)=-14\\)，\\(f(3)=11\\)。\n因此最大值为 \\(11\\)，最小值为 \\(-14\\)，选 A。\n原资料解析将 \\(f(-1)\\) 误写为 \\(11\\)，结论中的最大值又误写为“142”，此处已更正。"
+      }
+    },
+    "s-d85d9256d2a1-q0018": {
+      "sourceLabel": "3.4.1 函数的单调性 · 第 18 题",
+      "sourceSha256": "a960181532b946f5a48955d23b75af6f4aaf56b39a1c9636bfb8a98d30aea05a",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "multiple-correct-options",
+      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "令 \\(h(x)=xf^{\\prime}(x)-f(x)\\)，则 \\(h^{\\prime}(x)=xf^{\\prime\\prime}(x)<0\\)，且 \\(h(1)=0\\)，所以 \\(g^{\\prime}(x)=h(x)/x^2<0\\)（\\(x>1\\)），A 成立。但原选项 B、D 要求 \\(f^{\\prime}(\\xi)=0\\)、C 要求 \\(f(\\xi)=0\\)，其区间都包含端点 \\(1\\)，而题设已给出 \\(f^{\\prime}(1)=f(1)=0\\)，取 \\(\\xi=1\\) 即全部成立。因此原单选题不唯一，暂不评分。"
+      }
+    },
+    "u-calculus-330c4845cd3ffaa5": {
+      "sourceLabel": "3.4.1 函数的单调性 · 补充第 18 题",
+      "sourceSha256": "9fc972cfc6ce3f0091c144dbda324f31ba0030995681c6c7729190ad9a9c190e",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "multiple-correct-options",
+      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "令 \\(h(x)=xf^{\\prime}(x)-f(x)\\)，则 \\(h^{\\prime}(x)=xf^{\\prime\\prime}(x)<0\\)，且 \\(h(1)=0\\)，所以 \\(g^{\\prime}(x)=h(x)/x^2<0\\)（\\(x>1\\)），A 成立。但原选项 B、D 要求 \\(f^{\\prime}(\\xi)=0\\)、C 要求 \\(f(\\xi)=0\\)，其区间都包含端点 \\(1\\)，而题设已给出 \\(f^{\\prime}(1)=f(1)=0\\)，取 \\(\\xi=1\\) 即全部成立。因此原单选题不唯一，暂不评分。"
+      }
+    },
+    "s-eb441e50ea1d-q0017": {
+      "sourceLabel": "3.6.1函数曲线的凹凸性 · 第 17 题",
+      "sourceSha256": "e4704cfd8fac6ea8233b8b29351c1feee64bb9cbf0dbc0cf5c4e4109fea5be6f",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "multiple-correct-options",
+      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "对 \\(y=x^3\\)，有 \\(y^{\\prime\\prime}=6x\\)。按本题使用的凹凸命名，\\(x<0\\) 时为凸，\\(x>0\\) 时为凹，所以原选项 B、D 都成立。原参考仅指定 B，单选题不唯一，暂不评分。"
+      }
+    },
+    "u-calculus-641a207ea997f60e": {
+      "sourceLabel": "3.6.1函数曲线的凹凸性 · 补充第 3 题",
+      "sourceSha256": "7cab6def3e16fc1ad4e7382319bbae2632a272abdd5f846506acc8fa04d702d0",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "multiple-correct-options",
+      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "对 \\(y=x^3\\)，有 \\(y^{\\prime\\prime}=6x\\)。按本题使用的凹凸命名，\\(x<0\\) 时为凸，\\(x>0\\) 时为凹，所以原选项 B、D 都成立。原参考仅指定 B，单选题不唯一，暂不评分。"
+      }
+    },
+    "u-calculus-29b24c06de8aaa65": {
+      "sourceLabel": "8.2.1 三重积分的概念及性质 · 补充第 23 题",
+      "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "incorrect-reference-answer",
+      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "原图实际写成 \\(\\iiint_\\Omega F\\,dV=\\iiint_\\Omega f_1\\,dV=\\iiint_\\Omega f_2\\,dV\\)，三个积分连等。即使 \\(f_1\\) 也可积，该等式也未必成立：例如在单位立方体内令 \\(f_1=f_2=1\\)，则 \\(F=2\\)，三个积分分别为 \\(2,1,1\\)。所以按现存题干应选 D，原参考 A 不正确。通常的线性公式应是两个积分相加，但不能把原图的等号默默当成加号。保留原题及原字母，仅供查阅。"
+      }
+    },
+    "u-calculus-881a59e0264d7bc9": {
+      "assessment": "verified",
+      "kind": "restored-stem-and-analysis",
+      "reason": "逐题源文字对照发现雪堆题有汉字误识别及遗漏；原图 A 为 6，文字候选误读为 5，按原图恢复并独立复算。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "一个半球状的雪堆，其体积融化的速率与半球面面积 \\(S\\) 成正比，比例系数 \\(k>0\\)。假设在融化过程中雪堆始终保持半球状，已知半径为 \\(r_0\\) 的雪堆在开始融化的 \\(3\\) 小时内融化了其体积的 \\(7/8\\)，问雪堆全部融化需要多少小时？",
+        "option-A": "\\(6\\)",
+        "analysis": "由 \\(V=\\frac23\\pi r^3\\)、\\(S=2\\pi r^2\\)，体积随融化减少，故 \\(dV/dt=-kS\\)，从而 \\(dr/dt=-k\\)。三小时后体积剩下 \\(1/8\\)，半径剩下 \\(r_0/2\\)，所以 \\(3k=r_0/2\\)。全部融化所需总时间为 \\(r_0/k=6\\) 小时，选 A。原解析把 \\(dV/dt\\) 写成正号，与其自身下一步矛盾，此处已更正。"
+      },
+      "sourceLabel": "10.7 微分方程的应用 · 补充第 27 题",
+      "sourceSha256": "6a092f35682f413359e02c27e8a977c98d243c0bf0c6694d64d9e17e21a14acf",
+      "referenceAnswer": "A"
+    }
+  },
+  "duplicateOptionScreening": {
+    "s-73cc3a94d49a-q0023": {
+      "sourceSha256": "30fe4651c8ea86dd5a1b81cc5146d392129c042a4ec4b3056dd485413cc2341c",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-97ffb125d370-q0013": {
+      "sourceSha256": "f0fd391ea30efa21b6aced2b32c4720bdef91160fb72a5270a56a62b100ca59c",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-748a0b9cef9b-q0015": {
+      "sourceSha256": "db24c29a33a97486530bdce8c0e45154a3516797e735ed6ab3e9b2f579f4e2f1",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-fab784464155-q0004": {
+      "sourceSha256": "1ef83f494d9b11ac9bc16c29bb6095120c5181c224b7c8b1be989ae95799bab6",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-fab784464155-q0031": {
+      "sourceSha256": "1ef83f494d9b11ac9bc16c29bb6095120c5181c224b7c8b1be989ae95799bab6",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-d85d9256d2a1-q0018": {
+      "sourceSha256": "a960181532b946f5a48955d23b75af6f4aaf56b39a1c9636bfb8a98d30aea05a",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-eb441e50ea1d-q0017": {
+      "sourceSha256": "e4704cfd8fac6ea8233b8b29351c1feee64bb9cbf0dbc0cf5c4e4109fea5be6f",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-21cdb8662606-q0023": {
+      "sourceSha256": "16efa71e76ede15770611c3ab9cab90d6903f52869582a7e4653a60fe59f7f10",
+      "candidateGroups": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-85dbedd0155c-q0007": {
+      "sourceSha256": "a642edb47bb0550f80282c51be8e7f1cc1270a39ac5c6517d4ceed165a23580f",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-6dbdf44fd58a-q0022": {
+      "sourceSha256": "578f2ed7b9502b9fe1351f855c6e3e146b6f0ed9bcf2e944af0441fbed03dc49",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-6dbdf44fd58a-q0023": {
+      "sourceSha256": "578f2ed7b9502b9fe1351f855c6e3e146b6f0ed9bcf2e944af0441fbed03dc49",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-5cc65edb6428-q0039": {
+      "sourceSha256": "ec55d97494dcdf83163cba9cd892ebb4b91aefceb7dd03fd4cf9e8d0be7f6a8f",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-f566de7e7dcf-q0021": {
+      "sourceSha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-6b7d90a83a1e-q0039": {
+      "sourceSha256": "4892d07ac61b8e5887b782c333232998bda7974c62c4a318cbde51e1391d1acd",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-6b7d90a83a1e-q0052": {
+      "sourceSha256": "4892d07ac61b8e5887b782c333232998bda7974c62c4a318cbde51e1391d1acd",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-ec2fb00b2cfd-q0012": {
+      "sourceSha256": "0f0ac74c7df16f3984d366991f2f0345ab6974e105a3a9b16cd15d0a0fb063ce",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-8ffd6b840240-q0029": {
+      "sourceSha256": "dc2f2632ad96311feec1c29931c8910e43691c1fce25faac643c2cc29c6e6f7b",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-290e78b42279-q0023": {
+      "sourceSha256": "2ccf6c7be4494454a8dc7658bafa0178e9b0c0d5557e2a9cad8cbac34761f02d",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-290e78b42279-q0051": {
+      "sourceSha256": "2ccf6c7be4494454a8dc7658bafa0178e9b0c0d5557e2a9cad8cbac34761f02d",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-b95f0205c67d-q0015": {
+      "sourceSha256": "f06c8071de800a0194af436220555f9548ab73043f5860d179b5effe1bca7a0b",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "s-b95f0205c67d-q0020": {
+      "sourceSha256": "f06c8071de800a0194af436220555f9548ab73043f5860d179b5effe1bca7a0b",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-linear-494f3ba37e784927": {
+      "sourceSha256": "b2bf9f41691c44fec6328eb7679a491623e2db6ec8fc27c5a2bcd32264311b66",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-linear-cea0a3f682d832a0": {
+      "sourceSha256": "c30c6dc2a025eac644da043839cfc1e3986b147ee2037ac1ab4aa8e4e84371d5",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-linear-42e2b72442dc0bf1": {
+      "sourceSha256": "c30c6dc2a025eac644da043839cfc1e3986b147ee2037ac1ab4aa8e4e84371d5",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-linear-a84c5eaa7a22b43e": {
+      "sourceSha256": "1f89d124e3853cd724f4c547943c583c748a8c578223c02c2778dba13cf4cbee",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-linear-40754fb99a37f0a9": {
+      "sourceSha256": "2d2acd7eb419c6f1ad5fff61a05e9a0016ab6755c3d0d92dee4c0b4c178f41b1",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-linear-9a8337a1b86dade8": {
+      "sourceSha256": "2d2acd7eb419c6f1ad5fff61a05e9a0016ab6755c3d0d92dee4c0b4c178f41b1",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-linear-29a0471673e6cc6e": {
+      "sourceSha256": "1c68eb7790edd3c6920e9e264c08f2be585dc7b723f787875b5a9c5d60f3a692",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-739b263c53d52db5": {
+      "sourceSha256": "b74181f9ae60d7eb6ab76355c99878346ce8bf94fb9778af51f9cfd5a8e21f04",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-fc88c39af898dd5c": {
+      "sourceSha256": "109b06a65171356d9b2d2e9149b3bc23f36aa41b4cfc6c9bfac4c76872fe36fb",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-c6086f9c74069c7c": {
+      "sourceSha256": "109b06a65171356d9b2d2e9149b3bc23f36aa41b4cfc6c9bfac4c76872fe36fb",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-e821abca1dd4f6e6": {
+      "sourceSha256": "fec315617eb50ae50d5f89e36d0f4fc659f0a0a9dc05a4aba8f727454fb8cc38",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-17a177e67d7e8794": {
+      "sourceSha256": "77b65e0ce1dd22bd21ce04bcd6d4a2e62d3922ae1294406406d1a0078742c055",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-a43245867d0f68fe": {
+      "sourceSha256": "c5b6d44f657b216270599859219bc03fb7fc671c66adaa1b5466116d18211b3d",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-b427026985b9f4a7": {
+      "sourceSha256": "3c9488efdd3a4efe3158ed7896aabc789f71816f31d5a96c450172f9372cdc88",
+      "candidateGroups": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-bce343505d855c97": {
+      "sourceSha256": "3c9488efdd3a4efe3158ed7896aabc789f71816f31d5a96c450172f9372cdc88",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-fd4b407edc9cdd7a": {
+      "sourceSha256": "d4a3a18a08370539048605d4768382f71f6bec75f7044ce4d9f5c388cbd9e513",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-387c017398d761cf": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-fa2e701bf40f34dd": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-804ed9362af83c0a": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-74281adbffc89ccc": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-f6bf6a9019e65ba6": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-ba5ac59c37862738": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-685e1fcc2f709f01": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-e8300c67e54a3c4e": {
+      "sourceSha256": "f94c48a626374a15e9f68f1e97628ec6899f9bf0fb2bee8e1fa84fc64d58916b",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-5ee6456fcf98e494": {
+      "sourceSha256": "d9a168b292ab70d43999784c6a6e27ad6329add2a07735cc2594496d80f05f6c",
+      "candidateGroups": [
+        [
+          "A",
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-7be7d2e5a0499546": {
+      "sourceSha256": "d9a168b292ab70d43999784c6a6e27ad6329add2a07735cc2594496d80f05f6c",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-580934cece060cc9": {
+      "sourceSha256": "0c74ad654cbba8dda04f76308613200789476c3914224a4f21b1c9a39a35cd38",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-e0a2480c58088820": {
+      "sourceSha256": "ed4174db6344a0c3e80fa1d14027c0881c98771f5e1bca982a11b59b317990c9",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-f5f834cbc30c71d6": {
+      "sourceSha256": "ebd508438cf42f24d2be5ad7dd512caad497bbd1bd8c1d3fc1b317dc284dd024",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-4387555145e12b1a": {
+      "sourceSha256": "ddffac3257b942d838d7009efdf816188bc24868fac095e910a0a6a05358377f",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-f348a6de0568b488": {
+      "sourceSha256": "ddffac3257b942d838d7009efdf816188bc24868fac095e910a0a6a05358377f",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-1a51470c6e05679b": {
+      "sourceSha256": "ddffac3257b942d838d7009efdf816188bc24868fac095e910a0a6a05358377f",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-ac6cec1c2efbf6ca": {
+      "sourceSha256": "59011ba569b536b39a828e556b53259433ac997adb8377685782c4b2f3a38997",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-65c9f5d52c0d17e4": {
+      "sourceSha256": "3ff1a840b58f45b28e41ac38727863bef00ce8dbf7bd01097e7be40070d06cf1",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-330c4845cd3ffaa5": {
+      "sourceSha256": "9fc972cfc6ce3f0091c144dbda324f31ba0030995681c6c7729190ad9a9c190e",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-641a207ea997f60e": {
+      "sourceSha256": "7cab6def3e16fc1ad4e7382319bbae2632a272abdd5f846506acc8fa04d702d0",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-467b22568cb55c7a": {
+      "sourceSha256": "51cf583c318d63925c437115dc7131b724c337ba9aea1edaff0854dbe25bfb4a",
+      "candidateGroups": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-5b0df02a0f88a9f6": {
+      "sourceSha256": "f7cf1e6fb1afed64b93d2d11dc315f51249af358b8384c8174429700c0bdf8e1",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-085ff2a74a608059": {
+      "sourceSha256": "50ed4866430bd527bb4c5422380cc87fbe89801415c8a566359adb295d8de608",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-9aaa093c69a9ed94": {
+      "sourceSha256": "50ed4866430bd527bb4c5422380cc87fbe89801415c8a566359adb295d8de608",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-f05a798e15a1cb9d": {
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-fae4941d497dc2bb": {
+      "sourceSha256": "8755957b0af9c6573dfd8a3843950e80e02566d226d63d8f07670cfd71fec88f",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-dab854da28567d45": {
+      "sourceSha256": "ad1f8842f74c6c3fd0232d6e5e85e002a6da0d7a171a13e9c8b36577b5bb7c66",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-70715a8374b0acdb": {
+      "sourceSha256": "25c9a3e3ddcd9bf3162e042884215a073d2f92fe144d81ced06c45475263ef33",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-84c9f180397ad809": {
+      "sourceSha256": "e960bdfa077d2f6ad60d83365fcdcda9430aa156e4bcb8100bb1970b9475b2d4",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-6991f2f307e6457c": {
+      "sourceSha256": "e960bdfa077d2f6ad60d83365fcdcda9430aa156e4bcb8100bb1970b9475b2d4",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-a7b04fd9416c0e10": {
+      "sourceSha256": "40aa6df6e066df9f13e000f63b0aef8fdbe3d225e12311f2b5daa56a791be5a7",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-29e0d55296685613": {
+      "sourceSha256": "1cb81e95dc60a3835b5a3e78ad585dcd6633c432ce42401a5bbc9a04bd8cb389",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-ad9eaaf32c76d426": {
+      "sourceSha256": "55926c38ca90378a222b2c281b7c42dc18d0dd22f27d4a3c317cd10b97af30cd",
+      "candidateGroups": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-8e539d73a1bd6e56": {
+      "sourceSha256": "a73379fa6194d9d34465f33ef0caf7f6d9a2fa739ccf1668a2eeb5651ae7f2d6",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-1619059f570d0919": {
+      "sourceSha256": "783f647d05e05ea9e59c5b76d1d460fbac4efaea37c212c8726757114b9123a7",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-e980bc6ed6fafd5f": {
+      "sourceSha256": "9bd9325bbf428b354524f425157b488064e149d73da804c34b075dd65ba0df16",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-29b24c06de8aaa65": {
+      "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-f6e3fed8ed718b3a": {
+      "sourceSha256": "b6642cba2a0aa5b709e684ce8f07f134b897823a50883141fe929a093a019ec5",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-86a89b8aa0c46593": {
+      "sourceSha256": "b6642cba2a0aa5b709e684ce8f07f134b897823a50883141fe929a093a019ec5",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-016dd25a7679a467": {
+      "sourceSha256": "1e61b6fa829a2ef5e34b38b1308b68855bf4e06eb63cb7775e732ec52ea365bd",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-e90498d275d7bce8": {
+      "sourceSha256": "1e61b6fa829a2ef5e34b38b1308b68855bf4e06eb63cb7775e732ec52ea365bd",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-f63b0031ff10b22b": {
+      "sourceSha256": "eb7684cf4f5b7b0fe1722a4849bc2695c31ebcd480d953d6a2568c77cd05cf78",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-41b4f55a8916b6e7": {
+      "sourceSha256": "a3c2c276a5bea799c7b7fd6ddf0c82d73c54d35cb764dbcd97cbe31daa051a5b",
+      "candidateGroups": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-37b44a80b8a0cdc3": {
+      "sourceSha256": "f9783cefa8029256e9ea524339e4a1c92667a2a1c61e554c4a5c766654f6c00f",
+      "candidateGroups": [
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "status": "confirmed-source-defect",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-ad152e71099442a6": {
+      "sourceSha256": "f9783cefa8029256e9ea524339e4a1c92667a2a1c61e554c4a5c766654f6c00f",
+      "candidateGroups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-41335d08964b3f10": {
+      "sourceSha256": "35ded65696d43550ecc14e0beef342dbe2868ab0181123b74e8eba9d05d96f0f",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-d7b6d7ba68d44a9a": {
+      "sourceSha256": "7e6ec0e004eb814b7cafb4e435e9d956d283c0c32e88725904e66811575e3582",
+      "candidateGroups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-9068e7e70de877c3": {
+      "sourceSha256": "7e6ec0e004eb814b7cafb4e435e9d956d283c0c32e88725904e66811575e3582",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-43306347693e6ac1": {
+      "sourceSha256": "6e0b1b65fde7446f3c1ed7e65c95d6a8c63b4ae8005a413ab761529e8af99afc",
+      "candidateGroups": [
+        [
+          "A",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    },
+    "u-calculus-30e43050a92c37d9": {
+      "sourceSha256": "6e0b1b65fde7446f3c1ed7e65c95d6a8c63b4ae8005a413ab761529e8af99afc",
+      "candidateGroups": [
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "status": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "method": "visual-comparison-of-stem-and-all-four-original-options",
+      "note": "已确认的评分问题见 entries；其他候选中有 OCR 丢失负号、根号或括号，也有重复干扰项。本标记仅关闭这次重复项预警，不代表已独立证明整道题。"
+    }
+  }
+}

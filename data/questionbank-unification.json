@@ -1,6 +1,6 @@
 {
   "format": "zhixing.questionbank-unification.v1",
-  "revision": "pdf-e064b1d81609b469",
+  "revision": "pdf-769450a150ae378c",
   "summary": {
     "originalQuestions": 3716,
     "supplementQuestions": 5346,
@@ -8,7 +8,7 @@
     "originalIdsPreserved": true,
     "newQuestions": 4709,
     "mergedSupplementQuestions": 637,
-    "fullySourceCheckedQuestions": 2770,
+    "fullySourceCheckedQuestions": 2771,
     "analysisMissing": 60,
     "sourceAnswerErrors": 0,
     "answerConflicts": 0,
@@ -95,6 +95,22 @@
       "part": "analysis",
       "before": "\n在区间 \\([e,\\pi]\\) 上对 \\(f(x)=\\sqrt[3]{x-1}\\) 使用拉格朗日中值定理。记 \\(m=(\\sqrt[3]{\\pi-1}-\\sqrt[3]{e-1})/(\\pi-e)>0\\)，则存在 \\(\\xi\\in(e,\\pi)\\)，使 \\(m=f'(\\xi)=1/(3\\sqrt[3]{(\\xi-1)^2})\\)。\n因此 \\(\\xi=1+1/\\sqrt{27m^3}\\)，从而 \\(e-1<1/\\sqrt{27m^3}<\\pi-1\\)。原图将解写成 \\(1\\pm\\sqrt{m^3}\\)，漏掉了倒数及系数，后文区间还误写为 \\([2,1]\\)。原选项也须核对，不能据该解析认定原答案正确。",
       "after": "记 \\(m=\\dfrac{\\sqrt[3]{\\pi-1}-\\sqrt[3]{e-1}}{\\pi-e}>0\\)。由拉格朗日中值定理，存在 \\(\\xi\\in(e,\\pi)\\)，使 \\(m=f^{\\prime}(\\xi)=1/[3(\\xi-1)^{2/3}]\\)。解得 \\(\\xi=1+1/\\sqrt{27m^3}\\)，所以 \\(e-1<1/\\sqrt{27m^3}<\\pi-1\\)，选 A。原解析及选项漏掉倒数和系数，统一稿已更正。"
+    },
+    {
+      "questionId": "u-calculus-cb9b4ad5c9479e2b",
+      "action": "restored-source-transcription",
+      "part": "stem",
+      "before": "<p>函数<img src=\"/api/question-figure/44853c798f74d4fa/e2f9eb1f06c30267dbf26509\" alt=\"原题公式\" data-kind=\"formula\" data-height=\"1.4749\">在\\([\\quad]\\)</p>",
+      "after": "<p>函数 \\(f(x)=x^4-8x^2+2\\) 在 \\([-1,3]\\) 上的最大值与最小值分别为［　］。</p>",
+      "reason": "按原始题图恢复区间与最值问题；核算端点及驻点函数值，纠正原解析 f(-1)=11 和最大值142的笔误。"
+    },
+    {
+      "questionId": "u-calculus-cb9b4ad5c9479e2b",
+      "action": "corrected-source-mathematical-error",
+      "part": "analysis",
+      "before": "<p>解答：令<img src=\"/api/question-figure/fdc519b8d058e793/6bb79f8efa9091f7ffa192f3\" alt=\"原题公式\" data-kind=\"formula\" data-height=\"1.6916\">，得\\(x = 0 \\ , \\ \\ x = 2\\)<br>因<img src=\"/api/question-figure/d1b5063cf0de8824/3c7ef0ac01583651169dcf9f\" alt=\"原题公式\" data-kind=\"formula\" data-height=\"1.5788\"><img src=\"/api/question-figure/5df6b5257011e98e/900a27ca99695a8fa36f7817\" alt=\"原题公式\" data-kind=\"formula\" data-height=\"1.6916\">，所以最大值与最小值分别为142与<br>-14.</p>",
+      "after": "<p>令 \\(f&#x27;(x)=4x^3-16x=4x(x^2-4)=0\\)，得 \\(x=-2,0,2\\)，其中位于区间 \\([-1,3]\\) 内的驻点为 \\(0,2\\)。<br>比较端点和驻点的函数值：\\(f(-1)=-5\\)，\\(f(0)=2\\)，\\(f(2)=-14\\)，\\(f(3)=11\\)。<br>因此最大值为 \\(11\\)，最小值为 \\(-14\\)，选 A。<br>原资料解析将 \\(f(-1)\\) 误写为 \\(11\\)，结论中的最大值又误写为“142”，此处已更正。</p>",
+      "reason": "按原始题图恢复区间与最值问题；核算端点及驻点函数值，纠正原解析 f(-1)=11 和最大值142的笔误。"
     }
   ],
   "sourceErrata": [
