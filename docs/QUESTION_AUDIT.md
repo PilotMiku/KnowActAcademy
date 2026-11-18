@@ -1,6 +1,6 @@
 # 题库逐题扫描报告
 
-扫描日期：2026-11-17。题库版本：`pdf-769450a150ae378c`。
+审计记录更新于 2026-11-18。题库版本 `pdf-793e119a71f157ca`。
 
 已扫描全部 **8,425 道题**，逐题结果保存在 `data/question-audit.json`。
 
@@ -10,11 +10,12 @@
 | --- | ---: |
 | 逐条扫描的题号 | 8425 |
 | 与原记录的主来源参考字母一致 | 8425 |
-| 恢复缺失区间 / 所求内容的题干（含最初的 3.5 第 23 题） | 8 |
+| 恢复缺失区间 / 所求内容的题干（含最初的 3.5 第 23 题） | 7 |
 | 按当前选项重新推导并纠正解析字母 | 20 |
-| 本轮新确认有评分问题，改为仅供查阅 | 24 |
-| 全站仅供查阅（含此前已标记） | 45 |
-| 当前可评分 | 8380 |
+| 补写简略解析或替换解析中的公式错误信息 | 80 |
+| 本轮新确认有评分问题，改为仅供查阅 | 37 |
+| 全站仅供查阅（含此前已标记） | 56 |
+| 当前可评分 | 8369 |
 | 已逐项查看原图的重复选项候选 | 87 |
 | 源文字对照后仍待处理的题干中文遗漏预警 | 0 |
 
@@ -24,6 +25,7 @@
 
 | 题目 | 原参考 | 问题 |
 | --- | --- | --- |
+| 4.2.1 定积分的概念 · 补充第 23 题（`u-calculus-076601839f3b4be5`） | B | 没有正确选项 |
 | 4.1.1 原函数与不定积分的概念 · 第 7 题（`s-85dbedd0155c-q0007`） | C | 两个相同的正确选项 |
 | 4.1.2 第一类换元法（凑微分） · 第 22 题（`s-6dbdf44fd58a-q0022`） | B | 两个相同的正确选项 |
 | 4.1.2 第一类换元法（凑微分） · 第 23 题（`s-6dbdf44fd58a-q0023`） | B | 两个相同的正确选项 |
@@ -48,17 +50,29 @@
 | 3.6.1函数曲线的凹凸性 · 第 17 题（`s-eb441e50ea1d-q0017`） | B | 多个正确选项 |
 | 3.6.1函数曲线的凹凸性 · 补充第 3 题（`u-calculus-641a207ea997f60e`） | B | 多个正确选项 |
 | 8.2.1 三重积分的概念及性质 · 补充第 23 题（`u-calculus-29b24c06de8aaa65`） | A | 参考答案与现存题干不符 |
+| 1.1 函数 · 第 16 题（`s-6b82188494c1-q0016`） | D | 多个正确选项 |
+| 4.2.1 定积分的概念 · 第 23 题（`s-3ccdff3355c4-q0023`） | D | 多个正确选项 |
+| 矩阵及其运算、分块矩阵 · 第 21 题（`s-8df004948022-q0021`） | B | inconsistent-premise |
+| 矩阵及其运算、分块矩阵 · 第 91 题（`s-8df004948022-q0091`） | A | 参考答案与现存题干不符 |
+| 矩阵及其运算、分块矩阵 · 补充第 56 题（`u-linear-6d0f28073a6df01e`） | A | 参考答案与现存题干不符 |
+| 1.9 函数间断点及其判断 · 补充第 2 题（`u-calculus-552b2ca604e3de3b`） | C | 多个正确选项 |
+| 1.9 函数间断点及其判断 · 补充第 3 题（`u-calculus-7a465b46861ebd46`） | D | missing-hypothesis |
+| 8.2.1 三重积分的概念及性质 · 补充第 48 题（`u-calculus-c70ea16f37e1ab9e`） | A | 参考答案与现存题干不符 |
+| 8.2.1 三重积分的概念及性质 · 补充第 59 题（`u-calculus-19f4abbf711c98d1`） | A | unclear-source-notation |
+| 1.4 极限的运算法则 · 第 51 题（`s-3b18eecdd531-q0051`） | C | damaged-source-formula |
+| 4.6.1 直角坐标系下平面图形的面积 · 第 21 题（`s-f566de7e7dcf-q0021`） | D | damaged-source-formula |
+| 5.1.1 常数项系数的概念 · 第 29 题（`s-447e052c5a79-q0029`） | A | damaged-source-formula |
 
 ## 独立数学证据的覆盖
 
 | 证据状态 | 题量 |
 | --- | ---: |
-| `not-independently-recomputed` | 8256 |
-| `previous-authored-derivation` | 55 |
+| `not-independently-recomputed` | 8140 |
+| `independently-reviewed-derivation` | 125 |
+| `confirmed-source-defect` | 37 |
+| `previous-authored-derivation` | 57 |
 | `symbolic-result-matches-draft` | 47 |
-| `confirmed-source-defect` | 24 |
-| `prior-review-only` | 21 |
-| `independently-reviewed-derivation` | 22 |
+| `prior-review-only` | 19 |
 
 其中 `symbolic-result-matches-draft` 只表示受限符号计算与文字候选一致，仍可能需要核对原图。`previous-authored-derivation` 指此前保存的补充推导，和本轮重新求解分开统计。
 

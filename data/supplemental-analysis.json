@@ -119,8 +119,8 @@
     "u-calculus-67154e9abf199a16": {
       "referenceAnswer": "B",
       "sourceSha256": "73e3a378f0bcea60694c35a752b9b4a3e5bd8c390d7836e7d559568cb8066474",
-      "status": "review",
-      "body": "<p>设 \\(a&lt;b\\)。曲线在 \\(x\\) 轴下方，面积应为\\[S=-\\int_a^bf(x)\\,dx=\\int_b^af(x)\\,dx=\\int_a^b|f(x)|\\,dx=\\left|\\int_a^bf(x)\\,dx\\right|.\\]</p><p>因此原参考 B 的表达式正确，但原 A、B、C 三个选项在题设下完全等价，不能作为只有一个正确答案的单选题。保留原参考字母，不据此判定 A、C 错误；本题改为仅供查阅，待修订选项。</p>"
+      "status": "verified",
+      "body": "<p>设 \\(a&lt;b\\)。曲线在 \\(x\\) 轴下方，面积应为\\[S=-\\int_a^bf(x)\\,dx=\\int_b^af(x)\\,dx=\\int_a^b|f(x)|\\,dx=\\left|\\int_a^bf(x)\\,dx\\right|.\\]</p><p>原题 A、B、C 在题设下等价。本站修订了 A 和 C。新版 A 是积分后再平方，C 是先平方再积分，两者一般都不等于面积，例如取常值函数 \\(f=-2\\) 并令 \\(b-a=1\\)，两项都得 4，而面积是 2。新版唯一选 B。</p>"
     },
     "u-calculus-f299b852bd5366db": {
       "referenceAnswer": "A",
@@ -222,7 +222,7 @@
       "referenceAnswer": "B",
       "sourceSha256": "8755957b0af9c6573dfd8a3843950e80e02566d226d63d8f07670cfd71fec88f",
       "status": "verified",
-      "body": "<p>对 \\(x&gt;0\\)，\\[f'(x)=2x\\ln(1+x^2)&gt;0,\\qquad f''(x)=2\\ln(1+x^2)+\\frac{4x^2}{1+x^2}&gt;0.\\]所以函数严格递增，图像向上弯曲。按本题“二阶导数大于零称凹弧”的用语，选 B。</p>"
+      "body": "<p>对 \\(x&gt;0\\)，\\[f'(x)=2x\\ln(1+x^2)&gt;0,\\qquad f''(x)=2\\ln(1+x^2)+\\frac{4x^2}{1+x^2}&gt;0.\\]所以函数严格递增，图像向上弯曲。按本题“二阶导数大于零称凹弧”的用语，选 B。</p><p>原件有两个相同的干扰项，本站改写了其中一个。</p>"
     },
     "u-calculus-5fca796adcd5dca5": {
       "referenceAnswer": "C",
@@ -353,8 +353,8 @@
     "u-calculus-14122fde4a7eb48c": {
       "referenceAnswer": "C",
       "sourceSha256": "a3c2c276a5bea799c7b7fd6ddf0c82d73c54d35cb764dbcd97cbe31daa051a5b",
-      "status": "review",
-      "body": "<p>按现存题干，曲面为 \\(x^2/2+y^2/4+z^2/4=1\\)。在 \\((1,1,1)\\) 的法向量为 \\((1,1/2,1/2)\\)，故切平面为 \\(2x+y+z=4\\)。令 \\(z=4-2x-y\\)，在 \\(xy\\) 面的投影为 \\(D=\\{x\\ge0,y\\ge0,2x+y\\le4\\}\\)，且 \\(dS=\\sqrt6\\,dx\\,dy\\)。因此\\[\\iint_\\Sigma z\\,dS=\\sqrt6\\int_0^2\\int_0^{4-2x}(4-2x-y)\\,dy\\,dx=\\frac{16\\sqrt6}{3}.\\]</p><p>也可用投影三角形面积 4、线性函数 \\(z\\) 的顶点平均值 \\(4/3\\) 核验：积分为 \\(4\\cdot(4/3)\\sqrt6\\)。原参考 C 是 \\(4\\sqrt6/3\\)，与题干不符，且四个选项均无正确值。本题保留原文和原参考，改为仅供查阅，等待核对题干或选项。</p>"
+      "status": "verified",
+      "body": "<p>按现存题干，曲面为 \\(x^2/2+y^2/4+z^2/4=1\\)。在 \\((1,1,1)\\) 的法向量为 \\((1,1/2,1/2)\\)，故切平面为 \\(2x+y+z=4\\)。令 \\(z=4-2x-y\\)，在 \\(xy\\) 面的投影为 \\(D=\\{x\\ge0,y\\ge0,2x+y\\le4\\}\\)，且 \\(dS=\\sqrt6\\,dx\\,dy\\)。因此\\[\\iint_\\Sigma z\\,dS=\\sqrt6\\int_0^2\\int_0^{4-2x}(4-2x-y)\\,dy\\,dx=\\frac{16\\sqrt6}{3}.\\]</p><p>用投影三角形面积 4 乘以线性函数 \\(z\\) 的顶点平均值 \\(4/3\\)，再乘面积伸缩系数 \\(\\sqrt6\\)，也得到同一结果。原 C 为 \\(4\\sqrt6/3\\)。本站将 C 改为复算所得值，并将题干中的“平面”更正为“椭球面”。新版唯一选 C。</p>"
     },
     "u-calculus-add949aae77719ff": {
       "referenceAnswer": "C",

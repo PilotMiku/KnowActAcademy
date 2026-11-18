@@ -66,6 +66,6 @@ test('resuming an older diagnostic skips ineligible questions and survives a bac
 test('incomplete and editorially disputed questions stay outside assessment pools', () => {
   const raw = JSON.parse(readFileSync(new URL('../dist/data/bank.json', import.meta.url)));
   const bank = normalizeBank(raw);
-  assert.equal(bank.questions.filter(q => !isScorable(q)).length, 45);
-  assert.equal(examQuestions(bank).length, raw.questions.length - 45);
+  assert.equal(bank.questions.filter(q => !isScorable(q)).length, 56);
+  assert.equal(examQuestions(bank).length, raw.questions.length - 56);
 });

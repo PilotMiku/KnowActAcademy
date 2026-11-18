@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import {supplementalAnalyses, supplementalAnalysis, analysisReview} from '../dist/supplemental-analysis.mjs';
+import {supplementalAnalyses, supplementalAnalysis} from '../dist/supplemental-analysis.mjs';
 import {normalizeBank, isScorable, judge, examQuestions} from '../dist/core.mjs';
 import {preparationQuestions} from '../dist/preparation.mjs';
 
@@ -23,27 +23,26 @@ test('all source-missing explanations are accounted for, with unresolved materia
     // Authoring does not rewrite any source explanation or answer.
     assert.equal(question.analysis,raw.questions.find(q => q.id === question.id).analysis);
   }
-  assert.deepEqual(statuses,{verified:55,partial:1,unresolved:2,review:2});
+  assert.deepEqual(statuses,{verified:57,partial:1,unresolved:2});
 });
-test('explanations and grading exclusions follow the exact source through catalog hydration', () => {
+test('revised explanations follow the exact source through catalog hydration', () => {
   const review = bank.questions.find(q => q.id === 'u-calculus-14122fde4a7eb48c');
-  assert.ok(analysisReview(review));
   const catalog = {...review,stem:'catalog',analysis:'',source:{format:'html'},contentChunk:'1234567890abcdef'};
   assert.deepEqual(supplementalAnalysis(catalog),supplementalAnalysis(review));
-  assert.equal(isScorable(catalog),false);
+  assert.equal(isScorable(catalog),true);
   assert.equal(supplementalAnalysis({...review,source:{format:'html'}}),null);
   assert.equal(supplementalAnalysis({...review,source:{...review.source,sha256:'different'}}),null);
   assert.equal(supplementalAnalysis({...review,analysisMissing:false}),null);
   assert.equal(supplementalAnalysis({...review,answer:'A'}),null);
 });
-test('equivalent-option and inconsistent-answer source questions cannot penalize a learner', () => {
-  const ids = ['u-calculus-67154e9abf199a16','u-calculus-14122fde4a7eb48c'];
-  for (const id of ids) {
+test('revised area and surface integral options restore a unique graded choice', () => {
+  const answerKeys = {'u-calculus-67154e9abf199a16':'B','u-calculus-14122fde4a7eb48c':'C'};
+  for (const [id, answer] of Object.entries(answerKeys)) {
     const q = bank.questions.find(q => q.id === id);
-    assert.equal(isScorable(q),false);
-    for (const option of q.options) assert.equal(judge(q,option.id),null);
-    assert.ok(!examQuestions(bank).some(q => q.id === id));
-    assert.ok(!preparationQuestions(bank,{subjectId:q.subjectId,chapterIds:[q.chapterId]}).some(q => q.id === id));
+    assert.equal(isScorable(q),true);
+    for (const option of q.options) assert.equal(judge(q,option.id),option.id === answer);
+    assert.ok(examQuestions(bank).some(q => q.id === id));
+    assert.ok(preparationQuestions(bank,{subjectId:q.subjectId,chapterIds:[q.chapterId]}).some(q => q.id === id));
   }
 });
 test('every authored formula parses with the shipped math renderer', () => {

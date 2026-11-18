@@ -1,8 +1,8 @@
 {
   "format": "zhixing.question-audit.v1",
-  "updated": "2026-11-17",
-  "revision": "pdf-769450a150ae378c",
-  "bankSha256": "08a87578a3d231a855b400eb4d0120c6d5d38589c01483a7545ae1465fc12804",
+  "updated": "2026-11-18",
+  "revision": "pdf-793e119a71f157ca",
+  "bankSha256": "33d6e38e2106c6143dfed5cc3973f3c07cbc3c53d32afbf9b756f2daff560486",
   "scope": "All question IDs scanned for stem/option structure, recorded primary-source answer keys, source prose loss, answer/analysis letter conflicts and draft duplicate options; supported scalar limits/integrals additionally recomputed.",
   "limitations": [
     "A matching historical key is not proof of mathematical correctness.",
@@ -15,18 +15,18 @@
     "primarySourceKeysMatched": 8425,
     "emptyStems": 0,
     "emptyOptions": 0,
-    "newEditorialReviews": 52,
-    "restoredStems": 8,
-    "newReviewOnly": 24,
-    "totalReviewOnly": 45,
-    "scorable": 8380,
+    "newEditorialReviews": 170,
+    "restoredStems": 7,
+    "newReviewOnly": 37,
+    "totalReviewOnly": 56,
+    "scorable": 8369,
     "mathematicalEvidence": {
-      "not-independently-recomputed": 8256,
-      "previous-authored-derivation": 55,
+      "not-independently-recomputed": 8140,
+      "independently-reviewed-derivation": 125,
+      "confirmed-source-defect": 37,
+      "previous-authored-derivation": 57,
       "symbolic-result-matches-draft": 47,
-      "confirmed-source-defect": 24,
-      "prior-review-only": 21,
-      "independently-reviewed-derivation": 22
+      "prior-review-only": 19
     },
     "duplicateOptionCandidatesVisuallyReviewed": 87,
     "remainingProseLossCandidates": 0
@@ -148,7 +148,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -220,9 +220,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "multiple-correct-options"
+      ]
     },
     {
       "questionId": "s-6b82188494c1-q0017",
@@ -736,7 +738,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -1532,7 +1534,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -1676,7 +1678,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -2144,7 +2146,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -2509,11 +2511,13 @@
       "scanned": true,
       "referenceAnswer": "C",
       "sourceKey": "matches-primary-source",
-      "stemProse": "pdf-native-prose-or-reviewed-correction",
+      "stemProse": "visually-restored",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "damaged-source-formula"
+      ]
     },
     {
       "questionId": "s-3b18eecdd531-q0052",
@@ -4075,7 +4079,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "symbolicScreening": {
@@ -4137,20 +4141,10 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
-      "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates",
-      "symbolicScreening": {
-        "questionId": "s-73cc3a94d49a-q0023",
-        "status": "incomplete-option-parse",
-        "expression": "\\lim  _{x \\to  0} ( \\cos  x ) ^{\\frac{1}{x}}",
-        "result": "1",
-        "parsedOptions": [
-          "B",
-          "D"
-        ]
-      }
+      "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
     },
     {
       "questionId": "s-73cc3a94d49a-q0024",
@@ -4696,7 +4690,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -4911,7 +4905,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -4935,7 +4929,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -6373,7 +6367,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -6497,7 +6491,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -7497,7 +7491,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -8026,7 +8020,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -9647,7 +9641,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -10066,8 +10060,8 @@
       "referenceAnswer": "D",
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -10391,8 +10385,8 @@
       "referenceAnswer": "D",
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -11749,7 +11743,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -15875,7 +15869,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -16536,7 +16530,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -16548,7 +16542,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -16560,7 +16554,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -17493,7 +17487,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -17541,7 +17535,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -17565,7 +17559,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -17577,7 +17571,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -17661,7 +17655,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -17697,7 +17691,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -17733,9 +17727,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "multiple-correct-options"
+      ]
     },
     {
       "questionId": "s-3ccdff3355c4-q0024",
@@ -18270,7 +18266,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -18941,7 +18937,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -19098,7 +19094,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -21031,9 +21027,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": [],
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "damaged-source-formula"
+      ],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
     },
     {
@@ -21308,7 +21306,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -21356,7 +21354,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -21632,7 +21630,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -21800,7 +21798,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -22280,7 +22278,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -23252,9 +23250,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "damaged-source-formula"
+      ]
     },
     {
       "questionId": "s-447e052c5a79-q0030",
@@ -26628,7 +26628,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -27263,8 +27263,8 @@
       "referenceAnswer": "C",
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -27804,7 +27804,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -27961,7 +27961,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -29366,7 +29366,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -34490,8 +34490,8 @@
       "referenceAnswer": "A",
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -36652,7 +36652,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -38524,9 +38524,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "inconsistent-premise"
+      ]
     },
     {
       "questionId": "s-8df004948022-q0022",
@@ -38800,7 +38802,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -39364,9 +39366,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "incorrect-reference-answer"
+      ]
     },
     {
       "questionId": "s-290e78b42279-q0001",
@@ -39472,7 +39476,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -39640,7 +39644,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -39977,7 +39981,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -41082,7 +41086,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -44948,7 +44952,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -45308,7 +45312,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -46462,7 +46466,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -46895,7 +46899,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -47459,7 +47463,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -47471,7 +47475,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -49476,7 +49480,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -49908,9 +49912,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "incorrect-reference-answer"
+      ]
     },
     {
       "questionId": "u-linear-045553ce738faf70",
@@ -55179,7 +55185,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -55215,7 +55221,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -56712,7 +56718,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -58122,7 +58128,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -59047,7 +59053,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -59071,7 +59077,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -59121,7 +59127,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -59217,7 +59223,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -59289,9 +59295,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "multiple-correct-options"
+      ]
     },
     {
       "questionId": "u-calculus-7a465b46861ebd46",
@@ -59301,9 +59309,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "missing-hypothesis"
+      ]
     },
     {
       "questionId": "u-calculus-fc88c39af898dd5c",
@@ -59798,7 +59808,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -60255,7 +60265,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60279,7 +60289,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60327,7 +60337,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60339,7 +60349,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60351,7 +60361,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60387,7 +60397,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60423,7 +60433,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60435,7 +60445,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -60447,7 +60457,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -65181,9 +65191,9 @@
       "scanned": true,
       "referenceAnswer": "C",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -65253,9 +65263,9 @@
       "scanned": true,
       "referenceAnswer": "C",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -65517,9 +65527,9 @@
       "scanned": true,
       "referenceAnswer": "C",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -66491,7 +66501,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -68609,7 +68619,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -68874,7 +68884,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -69102,9 +69112,9 @@
       "scanned": true,
       "referenceAnswer": "D",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
+      "stemProse": "visually-restored",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -73813,9 +73823,9 @@
       "scanned": true,
       "referenceAnswer": "D",
       "sourceKey": "matches-primary-source",
-      "stemProse": "original-whole-part-image-retained",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -74211,7 +74221,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -74247,7 +74257,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -74259,7 +74269,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -74286,7 +74296,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75097,7 +75107,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75109,7 +75119,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75267,7 +75277,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75279,7 +75289,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75303,7 +75313,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75315,9 +75325,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "visually-restored",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "no-correct-option"
+      ]
     },
     {
       "questionId": "u-calculus-ea40d4608b707355",
@@ -75363,7 +75375,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75387,7 +75399,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75423,8 +75435,8 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "prior-review-only",
-      "scorable": false,
+      "mathematics": "previous-authored-derivation",
+      "scorable": true,
       "issues": []
     },
     {
@@ -75723,7 +75735,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75891,7 +75903,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -81113,7 +81125,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
@@ -91820,7 +91832,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -92325,7 +92337,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -92398,7 +92410,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "original-whole-part-image-retained",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -92506,7 +92518,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -92530,7 +92542,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -94513,7 +94525,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -94780,7 +94792,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -94900,7 +94912,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -95056,9 +95068,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "incorrect-reference-answer"
+      ]
     },
     {
       "questionId": "u-calculus-a0537116a71de06e",
@@ -95188,9 +95202,11 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "no-dropped-chinese-prose-detected",
       "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
-      "scorable": true,
-      "issues": []
+      "mathematics": "confirmed-source-defect",
+      "scorable": false,
+      "issues": [
+        "unclear-source-notation"
+      ]
     },
     {
       "questionId": "u-calculus-77b0af42c1f537fa",
@@ -97818,10 +97834,10 @@
       "scanned": true,
       "referenceAnswer": "C",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
+      "stemProse": "visually-restored",
       "sourceTranscription": "review-required",
-      "mathematics": "prior-review-only",
-      "scorable": false,
+      "mathematics": "previous-authored-derivation",
+      "scorable": true,
       "issues": []
     },
     {

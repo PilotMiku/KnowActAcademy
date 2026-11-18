@@ -1,12 +1,12 @@
 {
-  "revision": "pdf-769450a150ae378c",
-  "formulaOccurrences": 89929,
+  "revision": "pdf-793e119a71f157ca",
+  "formulaOccurrences": 90441,
   "truncatedFormulas": 105,
-  "sourceCheckedFormulas": 41009,
+  "sourceCheckedFormulas": 40936,
   "questions": 8425,
-  "questionsWithCompleteRenderableText": 7615,
-  "questionsSourceChecked": 2771,
-  "unrenderableFormulas": 868,
+  "questionsWithCompleteRenderableText": 7617,
+  "questionsSourceChecked": 2779,
+  "unrenderableFormulas": 865,
   "missingParts": 93,
   "alternativeAnalyses": 24,
   "normalizedFormulas": 16,
@@ -115,7 +115,7 @@
     }
   ],
   "syntaxErrorKinds": {
-    "Undefined control sequence": 472,
+    "Undefined control sequence": 471,
     "Unexpected character": 15,
     "Double superscript at position 44": 1,
     "Double superscript at position 25": 1,

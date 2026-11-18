@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
 import {chromium,browserOptions,baseURL} from './browser-helpers.mjs';
 const reviews=JSON.parse(await readFile('data/question-reviews.json','utf8')).entries;
+const bank=JSON.parse(await readFile('dist/data/bank.json','utf8'));
+const byId=new Map(bank.questions.map(q=>[q.id,q]));
 const ids=Object.keys(reviews),browser=await chromium.launch(browserOptions);
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'}),errors=[];
@@ -21,7 +23,12 @@ try{
   else await page.locator(`.option[data-value="${row.referenceAnswer}"]`).click();
   await page.locator('[data-action="submit-answer"]').click();await page.locator('.analysis').waitFor();
   assert.equal(await page.locator('.question-main .katex-error').count(),0,id);
-  if(row.parts.stem) assert.match(await page.locator('.question-main').innerText(),/最大值|中值定理|凹凸性|特性|路程|雪堆|单调性/,id);
+  if(row.parts.stem) {
+   const prose=byId.get(id).stem.match(/[\u3400-\u9fff]{2,}/gu) ?? [];
+   const rendered=await page.locator('.question-title').innerText();
+   assert.ok(rendered.trim(),id);
+   for(const phrase of prose) assert.ok(rendered.includes(phrase),id+' '+phrase);
+  }
  }
  const attempts=await page.evaluate(async()=> (await(await import('./storage.mjs')).readSavedState()).attempts);
  const eligible=ids.filter(id=>reviews[id].assessment!=='review-only');
@@ -32,7 +39,7 @@ try{
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
  await page.screenshot({path:'artifacts/question-audit-mobile.png',fullPage:true,animations:'disabled'});
  await page.goto(baseURL+'/#/quality?issue=answer');await page.locator('#quality-issue').waitFor();
- assert.equal((await page.locator('.big-stat b').allTextContents())[0],'45');
+ assert.equal((await page.locator('.big-stat b').allTextContents())[0],'56');
  assert.deepEqual(errors,[]);
  await writeFile('artifacts/question-audit-browser-report.json',JSON.stringify({rendered:ids.length,eligible:eligible.length,excluded:ids.length-eligible.length,pageErrors:errors},null,2));
  console.log(`All ${ids.length} editorial reviews render; ${eligible.length} eligible and ${ids.length-eligible.length} excluded answers verified.`);

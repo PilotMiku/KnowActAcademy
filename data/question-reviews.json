@@ -1,6 +1,6 @@
 {
   "format": "zhixing.question-reviews.v1",
-  "updated": "2026-11-17",
+  "updated": "2026-11-18",
   "entries": {
     "u-calculus-388c410778ef21fd": {
       "sourceLabel": "3.1.1 Roll定理 · 补充第 22 题",
@@ -66,12 +66,13 @@
       "sourceLabel": "4.2.1 定积分的概念 · 补充第 23 题",
       "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
       "referenceAnswer": "B",
-      "assessment": "verified",
-      "kind": "restored-stem",
-      "reason": "原图中的区间或所求内容在空白括号修复时被截掉，已按原图恢复。",
-      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "assessment": "review-only",
+      "kind": "no-correct-option",
+      "reason": "等分数增加时误差不保证单调缩小，现有选项没有严谨的黎曼和收敛表述。",
+      "method": "independent-mathematical-check-of-published-question",
       "parts": {
-        "stem": "对于汽车以速度 \\(v=v(t)\\) 在时间区间 \\([0,t]\\) 内作直线运动经过的路程 \\(S\\)，下列叙述正确的是［　］。"
+        "stem": "对于汽车以速度 \\(v=v(t)\\) 在时间区间 \\([0,t]\\) 内作直线运动经过的路程 \\(S\\)，下列叙述正确的是［　］。",
+        "analysis": "用速率 \\(|v|\\) 的黎曼和逼近路程，分割的最大区间长度趋于零时，黎曼和趋于 \\(\\int_0^t|v(s)|\\,ds\\)。逼近误差不保证随等分数逐次缩小。例如在 \\([0,1]\\) 取速率 \\(\\cos^2(3\\pi s)\\)，2 等分左端点和为 \\(1/2\\)，3 等分左端点和为 \\(1\\)，误差反而变大。左端点或右端点近似的偏向取决于速率的变化，有限等分也不保证精确。原参考 B 若理解为数值越分越精确，并非题设能保证。"
       }
     },
     "u-calculus-9bd92fd43040d6ff": {
@@ -629,6 +630,1469 @@
       "sourceLabel": "10.7 微分方程的应用 · 补充第 27 题",
       "sourceSha256": "6a092f35682f413359e02c27e8a977c98d243c0bf0c6694d64d9e17e21a14acf",
       "referenceAnswer": "A"
+    },
+    "s-6b82188494c1-q0010": {
+      "sourceLabel": "1.1 函数 · 第 10 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "正弦函数的最小正周期是 \\(2\\pi\\)。横坐标每增加 \\(T\\)，相位增加 \\(\\pi T\\)，所以最小的正 \\(T\\) 满足 \\(\\pi T=2\\pi\\)，即 \\(T=2\\)。加上的常数 \\(1\\) 只改变函数值的高度。故选 C。"
+      }
+    },
+    "s-0cda94732a27-q0008": {
+      "sourceLabel": "1.2.1 数列极限的定义 · 第 8 题",
+      "sourceSha256": "ef764f10ef186385306ff5a6b1b589a84b9c8166e970e84d5a53484104ecc3c2",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "取前 \\(n\\) 位小数，得到 \\(0.\\underbrace{99\\ldots9}_{n\\text{ 位}}=1-10^{-n}\\)。无限循环小数是这些有限小数的极限。因为 \\(10^{-n}\\to0\\)，极限恰为 \\(1\\)，故选 D。"
+      }
+    },
+    "s-73cc3a94d49a-q0019": {
+      "sourceLabel": "1.6.2 重要极限Ⅱ · 第 19 题",
+      "sourceSha256": "30fe4651c8ea86dd5a1b81cc5146d392129c042a4ec4b3056dd485413cc2341c",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "原解析显示 LaTeX 错误信息，依据现行题干独立重写推导。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "令 \\(u=2xe^x\\)，则 \\(u\\to0\\)，且在零点附近 \\(1+u>0\\)。对原式取对数，有 \\(\\frac{\\ln(1+2xe^x)}{x}=\\frac{\\ln(1+u)}{u}\\cdot 2e^x\\to 2\\)。由指数函数的连续性，原极限为 \\(e^2\\)，故选 A。"
+      }
+    },
+    "s-d59696bc112d-q0009": {
+      "sourceLabel": "1.8.1 函数在某一点的连续性 · 第 9 题",
+      "sourceSha256": "d8b689d2cdab5baeb31da548e2b1e4fdcbbce9159997f142a8be78068fc933eb",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若 \\(f\\) 在 \\(x_0\\) 连续，则 \\(\\lim_{x\\to x_0}f(x)=f(x_0)\\)，所以极限存在。反过来，令 \\(f(0)=1\\)，且在 \\(x\\ne0\\) 时 \\(f(x)=0\\)。此函数在 \\(0\\) 处的极限为 \\(0\\)，但函数值为 \\(1\\)，因此不连续。连续是极限存在的充分条件，故选 C。"
+      }
+    },
+    "s-f76bc88ff42f-q0014": {
+      "sourceLabel": "1.10 连续的运算及应用 · 第 14 题",
+      "sourceSha256": "a66d8f9f986c0b0b161c781e8ff393ba25e01743b81527265c3bcd56f9eee499",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若 \\(\\varphi/f\\) 在 \\(\\varphi\\) 的间断点连续，则由 \\(f\\) 连续可知 \\(f(\\varphi/f)=\\varphi\\) 也在那里连续，与题设矛盾，故选 B。其余三项可同时用反例排除：取 \\(f(x)=1\\)，令 \\(\\varphi(x)=-1\\)（\\(x<0\\)）、\\(\\varphi(x)=1\\)（\\(x\\ge0\\)）。此时 \\(f\\circ\\varphi\\)、\\(\\varphi^2\\) 和 \\(\\varphi\\circ f\\) 都是常函数。"
+      }
+    },
+    "s-0915ea130df1-q0004": {
+      "sourceLabel": "2.4.1 微分的概念 · 第 4 题",
+      "sourceSha256": "b214ca34d4808e63be220741dcaa7bb338dd3b2a8fce2bd1ebc278d57909a0be",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "设自变量增量为 \\(\\Delta x\\)。可微要求 \\(\\Delta y=a\\Delta x+o(\\Delta x)\\)，其中 \\(a\\) 与 \\(\\Delta x\\) 无关，且将余项除以 \\(\\Delta x\\) 后趋于零。这个条件给出 \\(\\Delta y/\\Delta x\\to a\\)，并说明 \\(a\\Delta x\\) 是一阶线性部分。故选 B。"
+      }
+    },
+    "s-3ccdff3355c4-q0003": {
+      "sourceLabel": "4.2.1 定积分的概念 · 第 3 题",
+      "sourceSha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对可积函数，定积分是黎曼和 \\(\\sum_i f(\\xi_i)\\Delta x_i\\) 在分割的最大子区间长度趋于零时的极限。只要每个 \\(\\xi_i\\) 取自对应子区间，不同取样方式都得到同一极限。因此定积分由 \\(f\\) 和积分区间决定，故选 D。"
+      }
+    },
+    "s-3ccdff3355c4-q0007": {
+      "sourceLabel": "4.2.1 定积分的概念 · 第 7 题",
+      "sourceSha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "闭区间上的连续函数必黎曼可积，黎曼可积函数必有界，所以 (1)、(3) 正确。反例 \\(f(x)=|x|\\) 在 \\([-1,1]\\) 上连续、可积，但在 \\(0\\) 处不可导，且在整个区间上不单调，所以 (2)、(4) 错误。共有两条正确，故选 B。"
+      }
+    },
+    "s-3ccdff3355c4-q0010": {
+      "sourceLabel": "4.2.1 定积分的概念 · 第 10 题",
+      "sourceSha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "(1)、(3)、(4) 分别是黎曼积分的连续函数可积定理、有界性必要条件和单调函数可积定理。(2) 的反例是 \\([-1,1]\\) 上的 \\(f(x)=|x|\\)，它在 \\(0\\) 处不可导。(5) 的反例是 \\([-1,1]\\) 上的阶跃函数 \\(f(x)=0\\)（\\(x<0\\)）、\\(f(x)=1\\)（\\(x\\ge0\\)），它在 \\(0\\) 处间断，但作为有界单调函数仍可积。错误的共有两条，故选 A。"
+      }
+    },
+    "s-cb71d4d9fbf8-q0038": {
+      "sourceLabel": "1.7 无穷小的比较 · 第 38 题",
+      "sourceSha256": "159f10316216d7c9fda16cff328c3a468234ceaac3261ede27fff479dfc09fae",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "原解析含 LaTeX 错误信息，依据现行题干独立重写推导。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "令 \\(u=x^2e^x\\)。对原式取对数后得到 \\(\\frac{\\ln(1+u)}{u}\\cdot\\frac{x^2}{1-\\cos x}\\cdot e^x\\)。当 \\(x\\to0\\) 时，三个因子分别趋于 \\(1,2,1\\)，其中 \\(1-\\cos x=2\\sin^2(x/2)\\)。因此原极限为 \\(e^2\\)，故选 A。"
+      }
+    },
+    "s-7f0c2b8999dd-q0021": {
+      "sourceLabel": "4.7.2 旋转体的体积 · 第 21 题",
+      "sourceSha256": "75e0cef241434ae07f902ad50938aa0fcd8574ea1116b9b05d66b8fe5629fba3",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "原解析含 LaTeX 错误信息，依据现行题干独立重写推导。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在 \\(x\\in[-a,a]\\) 处，垂直于 \\(x\\) 轴的截面是半径 \\(b\\sqrt{1-x^2/a^2}\\) 的圆盘。用截面积积分得 \\(V=\\pi b^2\\int_{-a}^{a}(1-x^2/a^2)\\,dx=\\frac{4}{3}\\pi ab^2\\)，故选 B。"
+      }
+    },
+    "s-e4ae0a44a89e-q0032": {
+      "sourceLabel": "5.4.1 幂级数及收敛域 · 第 32 题",
+      "sourceSha256": "e2b9d314ec44a18086a68574c6a2e1b45d72fef02c2372f069898988af6fc401",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "原解析含 LaTeX 错误信息，依据现行题干独立重写推导。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "当 \\(x\\ne0\\) 时，相邻项绝对值的比为 \\(\\frac{|x|}{n+1}\\)，对每个固定实数 \\(x\\) 都趋于零。按比值判别法，级数绝对收敛。\\(x=0\\) 时只有常数项，亦收敛。因此收敛域为 \\(\\mathbb R\\)，故选 B。"
+      }
+    },
+    "s-09493b6798b0-q0021": {
+      "sourceLabel": "5.4.2 幂级数的运算 · 第 21 题",
+      "sourceSha256": "2e3b6067b5beb3d0b9bd3b26d6dce7b31cf8ff0c419e31877c7c9679cd38cdf0",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "原解析含 LaTeX 错误信息，依据现行题干独立重写推导。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "令 \\(S(x)=\\sum_{n=1}^{\\infty}x^n/[n(n+1)]\\)。在 \\(|x|<1\\) 内，对 \\(xS(x)\\) 逐项求导得到 \\(\\sum_{n=1}^{\\infty}x^n/n=-\\ln(1-x)\\)。从 \\(0\\) 积分到 \\(x\\) 得 \\(xS(x)=x+(1-x)\\ln(1-x)\\)。因此 \\(x\\ne0\\) 时除以 \\(x\\)，在 \\(x=0\\) 时由原级数得 \\(S(0)=0\\)，对应选项 C。两个端点也绝对收敛，完整收敛域为 \\([-1,1]\\)。由绝对一致收敛取端点极限，得 \\(S(1)=1\\)、\\(S(-1)=1-2\\ln 2\\)。"
+      }
+    },
+    "s-6b82188494c1-q0016": {
+      "sourceLabel": "1.1 函数 · 第 16 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "multiple-correct-options",
+      "reason": "题干未限定最小正周期，四个选项均为周期。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "\\(\\tan u\\) 的最小正周期为 \\(\\pi\\)，因此 \\(\\tan(3x)\\) 的最小正周期为 \\(\\pi/3\\)。题干只问“周期”，任意正整数倍的 \\(\\pi/3\\) 也都是周期，所以 A、B、C、D 都满足字面题意。按“最小正周期”才唯一选 D。"
+      }
+    },
+    "s-5ab605e621bb-q0008": {
+      "sourceLabel": "1.3.3 无穷小与无穷大的概念、关系 · 第 8 题",
+      "sourceSha256": "cb02ed1779d29cdf65e8214c3c1f4f1233ca61d7d29dd217c6d30bb6ab329c9b",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "无穷小量描述的是一个极限过程：当自变量按题设方式变化时，函数值趋于 \\(0\\)。例如 \\(x\\to0\\) 时 \\(x\\) 是无穷小量，函数值不必处处等于零。零函数是一个特例。故选 A。"
+      }
+    },
+    "s-5ab605e621bb-q0020": {
+      "sourceLabel": "1.3.3 无穷小与无穷大的概念、关系 · 第 20 题",
+      "sourceSha256": "cb02ed1779d29cdf65e8214c3c1f4f1233ca61d7d29dd217c6d30bb6ab329c9b",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "无穷小量的倒数要成为无穷大量，须先保证倒数在相应的去心邻域内有定义，再由 \\(|f(x)|\\to0\\) 得 \\(|1/f(x)|\\to\\infty\\)。零函数也是无穷小量，却没有倒数，因此 B 的无条件表述不成立。其余三项分别由乘积、夹逼和倒数的极限性质得到。"
+      }
+    },
+    "s-3b18eecdd531-q0025": {
+      "sourceLabel": "1.4 极限的运算法则 · 第 25 题",
+      "sourceSha256": "d59e83eb0be77687b44622acc5cf923366d5b8c7119141e4b209b6ab7303d6a1",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对固定正整数 \\(t\\)，乘积极限法则可用于 \\(t\\) 个因子，得到 \\(a_n^t\\to A^t\\)，故选 A。B 中 \\(n\\) 随 \\(n\\to\\infty\\) 变化，不能当作常数提出，例如 \\(a_n=1/n\\)。C 的乘积收敛不能保证各因子收敛，例如 \\(a_n=b_n=(-1)^n\\)。D 缺少 \\(B\\ne0\\)。"
+      }
+    },
+    "s-d59696bc112d-q0007": {
+      "sourceLabel": "1.8.1 函数在某一点的连续性 · 第 7 题",
+      "sourceSha256": "d8b689d2cdab5baeb31da548e2b1e4fdcbbce9159997f142a8be78068fc933eb",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对数要求 \\(x>1\\)，分母不为零又要求 \\(x\\ne2\\)。在定义域的两个最大连续区间 \\((1,2)\\)、\\((2,\\infty)\\) 上，所给函数都是连续函数，按题目列举区间的写法选 D。C 写的是同一定义域的并集，在这个集合上函数也连续，但该并集本身不是一个区间。"
+      }
+    },
+    "s-f76bc88ff42f-q0023": {
+      "sourceLabel": "1.10 连续的运算及应用 · 第 23 题",
+      "sourceSha256": "a66d8f9f986c0b0b161c781e8ff393ba25e01743b81527265c3bcd56f9eee499",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "当 \\(x\\to0\\) 时，根号内的多项式 \\(2x^2-5x+6\\to6>0\\)。它在零点附近为正，平方根在 \\(6\\) 处连续，因此可以直接代入得到 \\(\\sqrt6\\)，故选 A。"
+      }
+    },
+    "s-6d7a175c5f89-q0004": {
+      "sourceLabel": "3.1.2 Lagrange定理 · 第 4 题",
+      "sourceSha256": "eda7f624db46ca7019511f775d97586ebf30eadb9daa2930ef306697a0c81610",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "拉格朗日中值定理要求在闭区间连续、开区间可导。多项式、\\(\\ln(1+x^2)\\) 和 \\(2x/(1+x^2)\\) 在各自给定区间内满足要求。C 的 \\(f(x)=|x|\\) 在区间内部的 \\(0\\) 点左右导数分别为 \\(-1\\) 与 \\(1\\)，故选 C。"
+      }
+    },
+    "s-85dbedd0155c-q0002": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 第 2 题",
+      "sourceSha256": "a642edb47bb0550f80282c51be8e7f1cc1270a39ac5c6517d4ceed165a23580f",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "已知 \\(F'=f\\)，所以 \\(F\\) 是 \\(f\\) 的一个原函数。同一区间上任意两个原函数的差的导数为零，因此都可写成 \\(F+C\\)，故选 A。B 另需 \\(f'\\) 存在，题设只保证 \\(F'\\) 存在。"
+      }
+    },
+    "s-85dbedd0155c-q0003": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 第 3 题",
+      "sourceSha256": "a642edb47bb0550f80282c51be8e7f1cc1270a39ac5c6517d4ceed165a23580f",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "表达式 \\(\\log_a e\\) 有定义隐含 \\(a>0\\) 且 \\(a\\ne1\\)。用换底公式得 \\(\\Phi(x)=a^x/\\ln a\\)，求导得 \\(\\Phi'(x)=a^x=f(x)\\)，故选 B。\\(\\Phi\\) 是其中一个原函数，完整的不定积分写作 \\(\\Phi+C\\)。"
+      }
+    },
+    "s-85dbedd0155c-q0004": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 第 4 题",
+      "sourceSha256": "a642edb47bb0550f80282c51be8e7f1cc1270a39ac5c6517d4ceed165a23580f",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在所考虑的同一区间上，\\((F-G)'=f-f=0\\)，由中值定理，\\(F-G\\) 为常数。因此 \\(F=G+C\\)，故选 D。"
+      }
+    },
+    "s-3ccdff3355c4-q0009": {
+      "sourceLabel": "4.2.1 定积分的概念 · 第 9 题",
+      "sourceSha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "设 \\(a<b\\)。连续函数 \\(f\\) 在 \\([a,b]\\) 上取得最小值 \\(m\\) 和最大值 \\(M\\)，故 \\(m\\le\\frac1{b-a}\\int_a^b f(x)\\,dx\\le M\\)。若 \\(f\\) 非常数，两边严格不等，介值定理保证某个 \\(\\xi\\in(a,b)\\) 取到该平均值。若 \\(f\\) 是常数，任取内点即可。故选 A。"
+      }
+    },
+    "s-3ccdff3355c4-q0017": {
+      "sourceLabel": "4.2.1 定积分的概念 · 第 17 题",
+      "sourceSha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在通常的黎曼积分定义下，被积函数必须在闭区间上有界，故选 D。连续或可导都不是必要条件：阶跃函数 \\(f(x)=0\\)（\\(x<0\\)）、\\(f(x)=1\\)（\\(x\\ge0\\)）在 \\([-1,1]\\) 上可积，但在零点间断。"
+      }
+    },
+    "s-3ccdff3355c4-q0020": {
+      "sourceLabel": "4.2.1 定积分的概念 · 第 20 题",
+      "sourceSha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在 \\(\\int_{-a}^{0} f(x)\\,dx\\) 中令 \\(x=-t\\)，得 \\(\\int_0^a f(-t)\\,dt\\)。由偶性 \\(f(-t)=f(t)\\)，左右两半的积分相同，故总积分为 \\(2\\times4=8\\)，选 D。"
+      }
+    },
+    "s-3ccdff3355c4-q0023": {
+      "sourceLabel": "4.2.1 定积分的概念 · 第 23 题",
+      "sourceSha256": "f624e97379f344e97f08301bf7765fda75644e3ec3900e2149fd8efe7c7d0104",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "multiple-correct-options",
+      "reason": "恒为零同时推出选项 A 和 D，单选题缺少唯一性。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若某一点 \\(f(x_0)>0\\)，由连续性，\\(x_0\\) 附近在区间内有一段正长度子区间，且 \\(f(x)\\ge f(x_0)/2>0\\)。其余部分非负，所以积分严格为正，与题设矛盾。因而 \\(f\\equiv0\\)，D 是完整结论，同时也推出 A 的“无限个零点”。题干未要求选择最强结论。"
+      }
+    },
+    "s-28375703e59c-q0030": {
+      "sourceLabel": "4.2.3 定积分的性质 · 第 30 题",
+      "sourceSha256": "630ebc0788917e59411a45d683812fe41c1b076e1b19611d5d053f9ed57f78c2",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对条件 (1) 关于 \\(a\\) 求导得 \\(f(-a)=f(a)\\)，对 (2) 求导得 \\(f(-a)=-f(a)\\)，反向均由积分对称性成立。对 (3) 的积分求导得 \\(f(a+w)-f(a)\\)，为零恰好给出周期性。若 \\(\\phi\\) 有周期 \\(w\\)，必有 \\(\\int_0^w f=0\\)；反向不成立，例如 \\(f(t)=t-w/2\\)，该积分为零而 \\(\\phi(x)=x(x-w)/2\\) 不具周期性。前三项成立，故选 C。"
+      }
+    },
+    "s-92307195b6c8-q0005": {
+      "sourceLabel": "4.3.2 牛顿-莱布尼兹公式 · 第 5 题",
+      "sourceSha256": "f69411aa9238b0f3af3d933d197d49d44ef4797dad41840a8a65bdf0afaca52a",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在 \\(f'\\) 可积并可应用牛顿–莱布尼兹公式的条件下，\\(f\\) 是 \\(f'\\) 的原函数，因此 \\(\\int_a^b f'(x)\\,dx=f(b)-f(a)\\)，故选 A。固定上下限的积分是常数；若积分的是 \\(f\\)，则需要取 \\(f\\) 的原函数计算端点差。"
+      }
+    },
+    "s-a8e49a9421ff-q0016": {
+      "sourceLabel": "4.6.2 极坐标系下平面图形的面积 · 第 16 题",
+      "sourceSha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "联立 \\(3\\cos\\theta=1+\\cos\\theta\\)，在第一象限得 \\(\\theta=\\pi/3\\)。公共区域在每条射线上的外边界是较小的半径：从 \\(0\\) 到 \\(\\pi/3\\) 为 \\(1+\\cos\\theta\\)，从 \\(\\pi/3\\) 到 \\(\\pi/2\\) 为 \\(3\\cos\\theta\\)。极坐标面积元积分给出每段的 \\(\\frac12\\int r^2\\,d\\theta\\)，再乘 \\(2\\) 计入关于极轴对称的下半部分。故选 A。"
+      }
+    },
+    "s-a8e49a9421ff-q0020": {
+      "sourceLabel": "4.6.2 极坐标系下平面图形的面积 · 第 20 题",
+      "sourceSha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "联立 \\(3\\cos\\theta=1+\\cos\\theta\\)，在第一象限得 \\(\\theta=\\pi/3\\)。公共区域在每条射线上的外边界是较小的半径：从 \\(0\\) 到 \\(\\pi/3\\) 为 \\(1+\\cos\\theta\\)，从 \\(\\pi/3\\) 到 \\(\\pi/2\\) 为 \\(3\\cos\\theta\\)。极坐标面积元积分给出每段的 \\(\\frac12\\int r^2\\,d\\theta\\)，再乘 \\(2\\) 计入关于极轴对称的下半部分。故选 B。"
+      }
+    },
+    "s-7f0c2b8999dd-q0007": {
+      "sourceLabel": "4.7.2 旋转体的体积 · 第 7 题",
+      "sourceSha256": "75e0cef241434ae07f902ad50938aa0fcd8574ea1116b9b05d66b8fe5629fba3",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "固定高度 \\(y\\)，横截面绕 \\(y\\) 轴形成半径为 \\(f(y)\\) 的圆盘，截面积为 \\(\\pi f(y)^2\\)。沿 \\(y\\) 从 \\(a\\) 到 \\(b\\) 积分得 \\(\\pi\\int_a^b f(y)^2\\,dy\\)，故选 A。"
+      }
+    },
+    "s-77d11fee078c-q0031": {
+      "sourceLabel": "7.7 梯度与方向导数 · 第 31 题",
+      "sourceSha256": "12b54a2ef71f4a4ce71c609693bf6cf2be0f8c5adc3e558698feebe1f64baef6",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若外层一元函数 \\(f\\) 可导，链式法则逐分量给出 \\(W_x=f'(u)u_x\\)、\\(W_y=f'(u)u_y\\)，合起来是 \\(\\nabla W=f'(u)\\nabla u\\)，对应 A。这里“可导”按教材题意指外层 \\(f\\) 可导；若只给复合后的 \\(W\\) 可微，则不能推出 \\(f'(u)\\) 存在。"
+      }
+    },
+    "s-8df004948022-q0021": {
+      "sourceLabel": "矩阵及其运算、分块矩阵 · 第 21 题",
+      "sourceSha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+      "referenceAnswer": "B",
+      "assessment": "review-only",
+      "kind": "inconsistent-premise",
+      "reason": "给出的外积具有非零二阶子式，题设不可能成立。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若题设矩阵能够写成两个行向量的外积 \\(A^TB\\)，则 \\(AB^T=\\operatorname{tr}(A^TB)=1+5+9=15\\)。不过这种外积的秩至多为 \\(1\\)，题给矩阵的左上二阶子式 \\(1\\cdot5-2\\cdot4=-3\\ne0\\)，秩至少为 \\(2\\)，不存在满足题设的行向量。原参考 B 只是迹运算的形式结果。"
+      }
+    },
+    "s-8df004948022-q0044": {
+      "sourceLabel": "矩阵及其运算、分块矩阵 · 第 44 题",
+      "sourceSha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "由 \\(A(BC)=I\\)，取行列式有 \\(\\det A\\ne0\\)，故 \\(BC=A^{-1}\\)。因此 \\((BC)A=I\\)，故选 B。这是循环移位得到的结果，未知矩阵之间一般不能任意交换。"
+      }
+    },
+    "s-8df004948022-q0091": {
+      "sourceLabel": "矩阵及其运算、分块矩阵 · 第 91 题",
+      "sourceSha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "incorrect-reference-answer",
+      "reason": "题干缺少各对角块可逆的条件，按现题应选 D。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "分块对角矩阵的行列式是各块行列式之积，转置逐块进行，正整数次幂也逐块进行，所以 (1)、(2)、(4) 成立。式 (3) 需要各块都可逆，题干没有这个假设，例如取 \\(A_1\\) 为零矩阵，\\(A^{-1}\\) 不存在。按无条件成立的命题计数，只有 3 个，选 D；原参考 A 把可逆性视为已知。"
+      }
+    },
+    "s-290e78b42279-q0009": {
+      "sourceLabel": "初等变换和初等矩阵 · 第 9 题",
+      "sourceSha256": "2ccf6c7be4494454a8dc7658bafa0178e9b0c0d5557e2a9cad8cbac34761f02d",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "用第二行减第一行的三倍，第三行减第一行，得到后两行 \\((0,5,-5)\\)、\\((0,-1,-2)\\)。第三行加第二行的五分之一，得到 \\((0,0,-3)\\)。三列都有主元，所以行最简形为 \\(I_3\\)，故选 D。"
+      }
+    },
+    "s-4fd26f36060c-q0001": {
+      "sourceLabel": "向量概念及其性质、内积、正交 · 第 1 题",
+      "sourceSha256": "d8d1d2fdc9bf1db7f18832a269469dfb34537504d211e1ba1ee0616dc7b4fc5b",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "实列向量的内积为 \\(\\alpha^T\\beta=\\sum_{i=1}^3\\alpha_i\\beta_i\\)。正交恰好表示该标量为零，故选 B。外积 \\(\\alpha\\beta^T\\) 是矩阵，不能用它取代内积。"
+      }
+    },
+    "s-3f9ab53c7f4d-q0002": {
+      "sourceLabel": "线性变换、欧几里得空间 · 第 2 题",
+      "sourceSha256": "7155c62711fab9ffd02bd9298a43b3295c2919a8ecb27a53c0b7dd0c66778767",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "内积满足正定性：\\([\\alpha,\\alpha]\\ge0\\)，等号恰在 \\(\\alpha=0\\) 时成立。题干允许任意向量，包含零向量，所以选 D。"
+      }
+    },
+    "s-3f9ab53c7f4d-q0032": {
+      "sourceLabel": "线性变换、欧几里得空间 · 第 32 题",
+      "sourceSha256": "7155c62711fab9ffd02bd9298a43b3295c2919a8ecb27a53c0b7dd0c66778767",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "取一个非零向量 \\(v\\)，则 \\([v,-v]=-[v,v]<0\\)。零向量与任意向量的内积为 \\(0\\)，故 B 错误。C 按教材术语“正交向量组”由两两正交的非零向量组成：把线性组合分别与每个向量取内积即可证明线性无关。"
+      }
+    },
+    "u-linear-853685c758bf9fa2": {
+      "sourceLabel": "初等变换和初等矩阵 · 补充第 19 题",
+      "sourceSha256": "c30c6dc2a025eac644da043839cfc1e3986b147ee2037ac1ab4aa8e4e84371d5",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "用第二行减第一行的三倍，第三行减第一行，得到后两行 \\((0,5,-5)\\)、\\((0,-1,-2)\\)。第三行加第二行的五分之一，得到 \\((0,0,-3)\\)。三列都有主元，所以行最简形为 \\(I_3\\)，故选 D。"
+      }
+    },
+    "u-linear-19e23988dc75e504": {
+      "sourceLabel": "向量概念及其性质、内积、正交 · 补充第 1 题",
+      "sourceSha256": "e5ebb88ffdfd0320fbec153a3de1e3218d97b2212cd727f64e2d6a1923b90f7c",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对应分量成比例只说明两个向量可能相差一个比例系数。例如 \\((1,2)\\) 和 \\((2,4)\\) 的分量成比例，但两个向量不相等，所以 A 不成立。加法交换律、加法结合律和加上相反向量得零向量都可逐分量验证。"
+      }
+    },
+    "u-linear-e6113a19afe39706": {
+      "sourceLabel": "向量的线性表示、向量组的线性相关性 · 补充第 19 题",
+      "sourceSha256": "1f89d124e3853cd724f4c547943c583c748a8c578223c02c2778dba13cf4cbee",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若 \\(\\alpha_j=0\\)，取第 \\(j\\) 个系数为 \\(1\\)、其余系数为 \\(0\\)，就得到一个系数不全为零的线性组合等于零。这直接满足线性相关的定义，故必相关，选 B。"
+      }
+    },
+    "u-linear-3b6c738ad2c4cad7": {
+      "sourceLabel": "向量的线性表示、向量组的线性相关性 · 补充第 20 题",
+      "sourceSha256": "1f89d124e3853cd724f4c547943c583c748a8c578223c02c2778dba13cf4cbee",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "线性无关只限制每组内部。两组可完全相同，也可张成不同的子空间。例如在 \\(\\mathbb R^2\\) 中，单向量组 \\((1,0)\\) 和 \\((0,1)\\) 各自线性无关，但彼此不能线性表示。仅凭所给条件无法断定两组关系，故选 B。"
+      }
+    },
+    "u-linear-8a3836370043c6ba": {
+      "sourceLabel": "矩阵及其运算、分块矩阵 · 补充第 13 题",
+      "sourceSha256": "2d2acd7eb419c6f1ad5fff61a05e9a0016ab6755c3d0d92dee4c0b4c178f41b1",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "共轭按元素取。复数共轭保留和、差及乘积，所以它也逐项保留矩阵和、差及矩阵乘积，例如 \\(\\overline{(AB)_{ij}}=\\sum_k\\overline{A_{ik}}\\,\\overline{B_{kj}}\\)。标量乘法则有 \\(\\overline{\\lambda A}=\\overline{\\lambda}\\,\\overline A\\)。四项都成立，故选 D。"
+      }
+    },
+    "u-linear-6d0f28073a6df01e": {
+      "sourceLabel": "矩阵及其运算、分块矩阵 · 补充第 56 题",
+      "sourceSha256": "2d2acd7eb419c6f1ad5fff61a05e9a0016ab6755c3d0d92dee4c0b4c178f41b1",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "incorrect-reference-answer",
+      "reason": "题干缺少各对角块可逆的条件，按现题应选 D。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "分块对角矩阵的行列式是各块行列式之积，转置逐块进行，正整数次幂也逐块进行，所以 (1)、(2)、(4) 成立。式 (3) 需要各块都可逆，题干没有这个假设，例如取 \\(A_1\\) 为零矩阵，\\(A^{-1}\\) 不存在。按无条件成立的命题计数，只有 3 个，选 D；原参考 A 把可逆性视为已知。"
+      }
+    },
+    "u-calculus-7305ae9a2dc823df": {
+      "sourceLabel": "1.10 连续的运算及应用 · 补充第 27 题",
+      "sourceSha256": "58c72ad02a8088c3323a62ce8555de917658c37bc99985f01cbe975ce79f7997",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "当 \\(x\\to0\\) 时，根号内的多项式 \\(2x^2-5x+6\\to6>0\\)。它在零点附近为正，平方根在 \\(6\\) 处连续，因此可以直接代入得到 \\(\\sqrt6\\)，故选 A。"
+      }
+    },
+    "u-calculus-133ca4dfe6726d2c": {
+      "sourceLabel": "1.10 连续的运算及应用 · 补充第 30 题",
+      "sourceSha256": "58c72ad02a8088c3323a62ce8555de917658c37bc99985f01cbe975ce79f7997",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若 \\(\\varphi/f\\) 在 \\(\\varphi\\) 的间断点连续，则由 \\(f\\) 连续可知 \\(f(\\varphi/f)=\\varphi\\) 也在那里连续，与题设矛盾，故选 B。其余三项可同时用反例排除：取 \\(f(x)=1\\)，令 \\(\\varphi(x)=-1\\)（\\(x<0\\)）、\\(\\varphi(x)=1\\)（\\(x\\ge0\\)）。此时 \\(f\\circ\\varphi\\)、\\(\\varphi^2\\) 和 \\(\\varphi\\circ f\\) 都是常函数。"
+      }
+    },
+    "u-calculus-baa6aeb29f81d9a8": {
+      "sourceLabel": "1.4 极限的运算法则 · 补充第 35 题",
+      "sourceSha256": "87732aaf29690f1c40d701dd2b3b58690cba36ab7ef8457ff716788310c64043",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对固定正整数 \\(t\\)，乘积极限法则可用于 \\(t\\) 个因子，得到 \\(a_n^t\\to A^t\\)，故选 A。B 中 \\(n\\) 随 \\(n\\to\\infty\\) 变化，不能当作常数提出，例如 \\(a_n=1/n\\)。C 的乘积收敛不能保证各因子收敛，例如 \\(a_n=b_n=(-1)^n\\)。D 缺少 \\(B\\ne0\\)。"
+      }
+    },
+    "u-calculus-12e24b1158fc51e5": {
+      "sourceLabel": "1.8.1 函数在某一点的连续性 · 补充第 14 题",
+      "sourceSha256": "342389843e18816183ece2724c7eeeb8fd60bc86b9f9fc16d15ada3ff495cd6f",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对数要求 \\(x>1\\)，分母不为零又要求 \\(x\\ne2\\)。在定义域的两个最大连续区间 \\((1,2)\\)、\\((2,\\infty)\\) 上，所给函数都是连续函数，按题目列举区间的写法选 D。C 写的是同一定义域的并集，在这个集合上函数也连续，但该并集本身不是一个区间。"
+      }
+    },
+    "u-calculus-4b4a95d917707fcc": {
+      "sourceLabel": "1.8.1 函数在某一点的连续性 · 补充第 16 题",
+      "sourceSha256": "342389843e18816183ece2724c7eeeb8fd60bc86b9f9fc16d15ada3ff495cd6f",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对数要求 \\(x^2>0\\)，即 \\(x\\ne0\\)。分母不能为零，故 \\(\\ln(x^2)\\ne1\\)，即 \\(x\\ne\\pm\\sqrt e\\)。这三个排除点把实数轴分成四个最大连续区间，与 A 一致。"
+      }
+    },
+    "u-calculus-3040a371bbcef260": {
+      "sourceLabel": "1.8.1 函数在某一点的连续性 · 补充第 20 题",
+      "sourceSha256": "342389843e18816183ece2724c7eeeb8fd60bc86b9f9fc16d15ada3ff495cd6f",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若 \\(f\\) 在 \\(x_0\\) 连续，则 \\(\\lim_{x\\to x_0}f(x)=f(x_0)\\)，所以极限存在。反过来，令 \\(f(0)=1\\)，且在 \\(x\\ne0\\) 时 \\(f(x)=0\\)。此函数在 \\(0\\) 处的极限为 \\(0\\)，但函数值为 \\(1\\)，因此不连续。连续是极限存在的充分条件，故选 C。"
+      }
+    },
+    "u-calculus-88ec96f5d4f1d443": {
+      "sourceLabel": "1.8.2 函数的左连续与右连续 · 补充第 7 题",
+      "sourceSha256": "208adfdb6c0e955e20549d3b615724e37584d7322ed86176b4ef6ccf91e8d2ae",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对 \\(x\\ne0\\)，有 \\(|x^2\\arctan(1/x^2)|\\le\\frac\\pi2 x^2\\to0\\)。由夹逼定理，极限为 \\(0\\)。零点连续要求函数值 \\(a\\) 等于该极限，因此 \\(a=0\\)，故选 A。"
+      }
+    },
+    "u-calculus-552b2ca604e3de3b": {
+      "sourceLabel": "1.9 函数间断点及其判断 · 补充第 2 题",
+      "sourceSha256": "109b06a65171356d9b2d2e9149b3bc23f36aa41b4cfc6c9bfac4c76872fe36fb",
+      "referenceAnswer": "C",
+      "assessment": "review-only",
+      "kind": "multiple-correct-options",
+      "reason": "按定义域端点的单侧连续定义，B 和 C 同时成立。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "在 \\(x=1\\)，左右极限都是 \\(2\\)，而函数值为 \\(1\\)，所以 C 成立。在定义域 \\([0,\\infty)\\) 的左端点 \\(0\\)，右极限为 \\(0=f(0)\\)，按端点连续的通常定义，B 也成立。"
+      }
+    },
+    "u-calculus-7a465b46861ebd46": {
+      "sourceLabel": "1.9 函数间断点及其判断 · 补充第 3 题",
+      "sourceSha256": "109b06a65171356d9b2d2e9149b3bc23f36aa41b4cfc6c9bfac4c76872fe36fb",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "missing-hypothesis",
+      "reason": "现存题图未给出两个函数连续的假设，原参考 D 不能由题设推出。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "一般有 \\(\\min(f,g)=(f+g-|f-g|)/2\\)、\\(\\max(f,g)=(f+g+|f-g|)/2\\)。若 \\(f,g\\) 都连续，则两者都连续，原参考 D 才必然成立。现存题干没有给出这个条件，例如令 \\(f=g\\) 为阶跃函数，两者都不连续；若令 \\(f=g=0\\)，则两者都连续。"
+      }
+    },
+    "u-calculus-c6086f9c74069c7c": {
+      "sourceLabel": "1.9 函数间断点及其判断 · 补充第 55 题",
+      "sourceSha256": "109b06a65171356d9b2d2e9149b3bc23f36aa41b4cfc6c9bfac4c76872fe36fb",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "原式要求 \\(x\\ne-1,0,1\\)。在原定义域上，通分约去因子后得到 \\(1/(x^2-1)\\)。其中 \\(x=0\\) 的极限为 \\(-1\\)，是可去间断点；在 \\(x=\\pm1\\) 分母趋零，存在无穷间断。故选 B。"
+      }
+    },
+    "u-calculus-9040c506dac2b023": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 1 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "曲线 \\(y=y(x)\\) 在点 \\((x,y)\\) 处的切线斜率是 \\(dy/dx\\)，点的横坐标为 \\(x\\)。题意给出二者关系 \\(y'=x^2\\)，故选 A。"
+      }
+    },
+    "u-calculus-72fdc2565e36d79b": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 3 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "代入常数和 \\(C_1x^3+C_2\\)，分别得到 \\(0\\) 和 \\(x(6C_1x)-2(3C_1x^2)=0\\)。但 \\(y=e^x\\) 时左端为 \\((x-2)e^x\\)，不恒为零，故选 A。"
+      }
+    },
+    "u-calculus-1eef37b2451b2bde": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 7 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "方程可写为 \\((y'+1)^2=0\\)，要求 \\(y'\\equiv-1\\)，故解为 \\(y=-x+C\\)。A、B、C 都满足；D 的导数为 \\(6e^{2x}\\)，故选 D。"
+      }
+    },
+    "u-calculus-0e5ed9642d8324c5": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 8 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "把 \\(y=3\\cos x\\) 代入，并取 \\(x=0\\)，得左端 \\(yy''=-9\\)，右端 \\(2(y')^2-2y'=0\\)，所以选 B。\\(y=x\\) 与常值 \\(y=2\\) 都使两边为零。若 \\(y=\\tan x\\)，则 \\(y'=1+y^2\\)、\\(y''=2y(1+y^2)\\)，两边都等于 \\(2y^2(1+y^2)\\)。"
+      }
+    },
+    "u-calculus-ab48299ffa40c948": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 9 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "\\(\\sin x\\) 与 \\(\\cos x\\) 的二阶导数是各自的相反数，且 \\((\\frac12 e^x)''+\\frac12e^x=e^x\\)，所以 A、C、D 都满足。\\(y=x\\sin x\\) 时 \\(y''+y=2\\cos x\\)，不恒等于 \\(e^x\\)，故选 B。"
+      }
+    },
+    "u-calculus-417dd84447f49250": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 12 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "\\(\\sin x\\)、\\(\\cos x\\) 解齐次方程，\\(\\frac12e^x\\) 解非齐次方程，所以 B、C、D 都满足。若 \\(y=3x\\cos x\\)，则 \\(y''+y=-6\\sin x\\)，不恒等于 \\(e^x\\)，故选 A。"
+      }
+    },
+    "u-calculus-7c07fd89ff52358e": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 15 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对 \\(y=C_1x^3+C_2\\)，有 \\(xy''-2y'=6C_1x^2-6C_1x^2=0\\)，所以 A、B、C 都满足。对 \\(y=3e^{2x}\\)，左端等于 \\(12(x-1)e^{2x}\\)，故选 D。"
+      }
+    },
+    "u-calculus-4d2eee8b88ad4c71": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 16 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对 \\(y=\\sin x\\)，在 \\(x=\\pi/2\\) 有 \\(yy''=-1\\)，而 \\(2(y')^2-2y'=0\\)，所以选 B。代入常数 \\(2\\) 或 \\(x\\)，两端均为 \\(0\\)。对 \\(y=\\tan x\\)，由 \\(y'=1+y^2\\) 得两端均为 \\(2y^2(1+y^2)\\)。"
+      }
+    },
+    "u-calculus-b2bbaa5d03bb3e5b": {
+      "sourceLabel": "10.1 微分方程的基本概念 · 补充第 17 题",
+      "sourceSha256": "1b92300b585863727a0c82003616db451437a63f497c80db7db768005c28d064",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "方程左端是 \\((y'+1)^2\\)，因此必须 \\(y'\\equiv-1\\)。三个形如 \\(y=-x+C\\) 的选项都满足，而 \\(y=e^x+1\\) 的导数为 \\(e^x>0\\)，故选 A。"
+      }
+    },
+    "u-calculus-9ae56f651a8dae09": {
+      "sourceLabel": "2.4.1 微分的概念 · 补充第 18 题",
+      "sourceSha256": "ebd508438cf42f24d2be5ad7dd512caad497bbd1bd8c1d3fc1b317dc284dd024",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "设自变量增量为 \\(\\Delta x\\)。可微要求 \\(\\Delta y=a\\Delta x+o(\\Delta x)\\)，其中 \\(a\\) 与 \\(\\Delta x\\) 无关，且将余项除以 \\(\\Delta x\\) 后趋于零。这个条件给出 \\(\\Delta y/\\Delta x\\to a\\)，并说明 \\(a\\Delta x\\) 是一阶线性部分。故选 B。"
+      }
+    },
+    "u-calculus-48382fa2d8b35e25": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 补充第 3 题",
+      "sourceSha256": "f7cf1e6fb1afed64b93d2d11dc315f51249af358b8384c8174429700c0bdf8e1",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "因为 \\(\\log_2 e=1/\\ln 2\\)，对 \\(\\Phi(x)=2^x/\\ln2\\) 求导得到 \\(\\Phi'=2^x=f\\)，故选 B。\\(\\Phi\\) 是一个原函数，完整的不定积分为 \\(\\Phi+C\\)。"
+      }
+    },
+    "u-calculus-f9585ae14c511c88": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 补充第 6 题",
+      "sourceSha256": "f7cf1e6fb1afed64b93d2d11dc315f51249af358b8384c8174429700c0bdf8e1",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "已知 \\(F'=f\\)，所以 \\(F\\) 是 \\(f\\) 的一个原函数。同一区间上任意两个原函数的差的导数为零，因此都可写成 \\(F+C\\)，故选 A。B 另需 \\(f'\\) 存在，题设只保证 \\(F'\\) 存在。"
+      }
+    },
+    "u-calculus-7c17d28df37c751a": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 补充第 7 题",
+      "sourceSha256": "f7cf1e6fb1afed64b93d2d11dc315f51249af358b8384c8174429700c0bdf8e1",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "表达式 \\(\\log_a e\\) 有定义隐含 \\(a>0\\) 且 \\(a\\ne1\\)。用换底公式得 \\(\\Phi(x)=a^x/\\ln a\\)，求导得 \\(\\Phi'(x)=a^x=f(x)\\)，故选 B。\\(\\Phi\\) 是其中一个原函数，完整的不定积分写作 \\(\\Phi+C\\)。"
+      }
+    },
+    "u-calculus-c3836a90cfda2ba5": {
+      "sourceLabel": "4.1.1 原函数与不定积分的概念 · 补充第 9 题",
+      "sourceSha256": "f7cf1e6fb1afed64b93d2d11dc315f51249af358b8384c8174429700c0bdf8e1",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在所考虑的同一区间上，\\((F-G)'=f-f=0\\)，由中值定理，\\(F-G\\) 为常数。因此 \\(F=G+C\\)，故选 D。"
+      }
+    },
+    "u-calculus-7d75b10a6c9130f8": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 3 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "连续函数在闭区间上可积，所以 (1) 正确。连续不推出可导，例如 \\(|x|\\) 在零点不可导，所以 (2) 错误。黎曼可积必有界，且闭区间上的单调函数可积，所以 (3)、(4) 正确。共有三个正确，故选 C。"
+      }
+    },
+    "u-calculus-c7e71c9377a42929": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 4 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "对可积函数，定积分是黎曼和 \\(\\sum_i f(\\xi_i)\\Delta x_i\\) 在分割的最大子区间长度趋于零时的极限。只要每个 \\(\\xi_i\\) 取自对应子区间，不同取样方式都得到同一极限。因此定积分由 \\(f\\) 和积分区间决定，故选 D。"
+      }
+    },
+    "u-calculus-f9ca020cbd7df4eb": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 19 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在通常的黎曼积分定义下，被积函数必须在闭区间上有界，故选 D。连续或可导都不是必要条件：阶跃函数 \\(f(x)=0\\)（\\(x<0\\)）、\\(f(x)=1\\)（\\(x\\ge0\\)）在 \\([-1,1]\\) 上可积，但在零点间断。"
+      }
+    },
+    "u-calculus-c483af4ef9fbffc6": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 20 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "依据现行题干和选项独立核算，补足原解析的关键步骤。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "(1)、(3)、(4) 分别是黎曼积分的连续函数可积定理、有界性必要条件和单调函数可积定理。(2) 的反例是 \\([-1,1]\\) 上的 \\(f(x)=|x|\\)，它在 \\(0\\) 处不可导。(5) 的反例是 \\([-1,1]\\) 上的阶跃函数 \\(f(x)=0\\)（\\(x<0\\)）、\\(f(x)=1\\)（\\(x\\ge0\\)），它在 \\(0\\) 处间断，但作为有界单调函数仍可积。错误的共有两条，故选 A。"
+      }
+    },
+    "u-calculus-a3484f47dbc1b994": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 22 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "在 \\(\\int_{-a}^{0} f(x)\\,dx\\) 中令 \\(x=-t\\)，得 \\(\\int_0^a f(-t)\\,dt\\)。由偶性 \\(f(-t)=f(t)\\)，左右两半的积分相同，故总积分为 \\(2\\times4=8\\)，选 D。"
+      }
+    },
+    "u-calculus-72946cf079eb9fcb": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 27 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "黎曼可积函数必须有界，故选 B。可积函数可以有间断点，也不一定取得极值，例如 \\(f(x)=x\\)（\\(0\\le x<1\\)）、\\(f(1)=0\\) 在 \\([0,1]\\) 可积但不取得上确界 \\(1\\)。"
+      }
+    },
+    "u-calculus-2dcd8b7210258303": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 31 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "黎曼可积要求被积函数在积分区间上有界，故选 D。例如在 \\([-1,1]\\) 上令 \\(f(0)=1\\)，其余点取零；该函数的黎曼积分为 \\(0\\)，但既不单调，也不连续或可导。"
+      }
+    },
+    "u-calculus-1d194cc850fa0ac2": {
+      "sourceLabel": "4.2.3 定积分的性质 · 补充第 17 题",
+      "sourceSha256": "165518d200914c44580a6b88c65232a9bb9a4638003f829cf82632f09a050d8d",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "定积分对积分区间可加，在 \\(3\\) 处分割有 \\(\\int_2^4f(x)\\,dx=\\int_2^3f(x)\\,dx+\\int_3^4f(x)\\,dx=6\\)。各部分不保证分到相同的积分值，故选 D。"
+      }
+    },
+    "u-calculus-73f12fc7d8392109": {
+      "sourceLabel": "4.2.3 定积分的性质 · 补充第 34 题",
+      "sourceSha256": "165518d200914c44580a6b88c65232a9bb9a4638003f829cf82632f09a050d8d",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "连续函数 \\(f\\) 在闭区间 \\([a,b]\\) 上取得最小值 \\(m\\)，题设保证 \\(m>0\\)。于是 \\(\\int_a^b f(x)\\,dx\\ge m(b-a)>0\\)，故选 A。端点在数轴上的正负不影响结论。"
+      }
+    },
+    "u-calculus-72eb813dd6d5bf71": {
+      "sourceLabel": "7.7 梯度与方向导数 · 补充第 26 题",
+      "sourceSha256": "a73379fa6194d9d34465f33ef0caf7f6d9a2fa739ccf1668a2eeb5651ae7f2d6",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "若外层一元函数 \\(f\\) 可导，链式法则逐分量给出 \\(W_x=f'(u)u_x\\)、\\(W_y=f'(u)u_y\\)，合起来是 \\(\\nabla W=f'(u)\\nabla u\\)，对应 A。这里“可导”按教材题意指外层 \\(f\\) 可导；若只给复合后的 \\(W\\) 可微，则不能推出 \\(f'(u)\\) 存在。"
+      }
+    },
+    "u-calculus-f7c449f2c0c554f1": {
+      "sourceLabel": "8.1.1 二重积分的概念及性质 · 补充第 8 题",
+      "sourceSha256": "783f647d05e05ea9e59c5b76d1d460fbac4efaea37c212c8726757114b9123a7",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "投影区域是单位圆盘 \\(D=\\{x^2+y^2\\le1\\}\\)。每个点上方的柱高为上曲面 \\([f(xy)]^2\\) 减去下平面 \\(0\\)，所以体积为 \\(\\iint_D[f(xy)]^2\\,dx\\,dy\\)，对应 B。A 的额外因子 \\(x^2+y^2\\) 并非直角坐标的面积元。"
+      }
+    },
+    "u-calculus-aea30fc1545e53a6": {
+      "sourceLabel": "8.1.1 二重积分的概念及性质 · 补充第 14 题",
+      "sourceSha256": "783f647d05e05ea9e59c5b76d1d460fbac4efaea37c212c8726757114b9123a7",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "二重积分由分割和 \\(\\sum_i f(\\xi_i,\\eta_i)\\Delta A_i\\) 的极限确定。改变 \\(f\\) 会改变各项函数值，改变区域 \\(D\\) 会改变积分覆盖的范围。例如 \\(f\\equiv c\\) 时积分等于 \\(c\\) 乘 \\(D\\) 的面积，可同时看出两者的影响。故选 D。"
+      }
+    },
+    "u-calculus-3b4c13b62696ee46": {
+      "sourceLabel": "8.1.1 二重积分的概念及性质 · 补充第 23 题",
+      "sourceSha256": "783f647d05e05ea9e59c5b76d1d460fbac4efaea37c212c8726757114b9123a7",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "每个小正方形面积为 \\(1/n^2\\)，取右上角 \\((i/n,j/n)\\) 为样点，则函数 \\(xy\\) 在该处的值为 \\((i/n)(j/n)\\)。将函数值乘面积、对所有小正方形求和并取极限，正是 D。也可直接积分验算其值为 \\(1/4\\)。"
+      }
+    },
+    "u-calculus-1687d3579f68f0e5": {
+      "sourceLabel": "8.1.1 二重积分的概念及性质 · 补充第 25 题",
+      "sourceSha256": "783f647d05e05ea9e59c5b76d1d460fbac4efaea37c212c8726757114b9123a7",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "(1) 在区域 \\(D\\) 上积分常数 \\(1\\) 得区域面积，(2) 由积分线性性可将常数 \\(k\\) 提出，(3) 第三式中用 \\(Y\\) 连接两个区域，结合等式及“无公共内点”，这里表示并集 \\(D=D_1\\cup D_2\\)，于是可分别积分相加。三个等式都成立，故选 C。"
+      }
+    },
+    "u-calculus-7f6ceb219db7ab70": {
+      "sourceLabel": "8.2.1 三重积分的概念及性质 · 补充第 3 题",
+      "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "上半球按 \\(x\\)、\\(y\\) 的符号分为四个相互镜像的部分，反射不改变 \\(z\\) 或体积元，因此对 \\(z\\) 的积分是第一卦限部分的四倍，选 D。对 \\(x\\)、\\(y\\) 或 \\(xyz\\) 则有奇对称，整个上半球上的相应积分为零。"
+      }
+    },
+    "u-calculus-0a4c1db16ceb2644": {
+      "sourceLabel": "8.2.1 三重积分的概念及性质 · 补充第 25 题",
+      "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "对照原图，改写与另一干扰项重复或等价的选项，并验算参考答案。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-D": "\\(\\iiint_{\\Omega_1\\cap\\Omega_2} f(x,y,z)\\,dV\\)",
+        "analysis": "将 \\(\\Omega\\) 写成两个互不相交的部分 \\(\\Omega_1\\) 与 \\(\\Omega\\setminus\\Omega_1\\)，由积分对区域的可加性，空格应填 \\(\\iiint_{\\Omega\\setminus\\Omega_1}f\\,dV\\)，对应 C。仅知 \\(\\Omega=\\Omega_1\\cup\\Omega_2\\) 时，直接使用 \\(\\Omega_2\\) 会把可能的重叠部分重复计算。 原件两个干扰项等价，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-e0183120bd3fe70b": {
+      "sourceLabel": "8.2.1 三重积分的概念及性质 · 补充第 35 题",
+      "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "补足现有解析的步骤，并复核现行参考答案。",
+      "method": "independent-mathematical-check-of-published-question",
+      "parts": {
+        "analysis": "上半球由第一卦限部分关于 \\(xz\\) 平面和 \\(yz\\) 平面反射成四份。被积函数 \\(z\\) 在这些反射下保持不变，所以积分是第一卦限部分的四倍，选 A。其他项涉及对于 \\(x\\) 或 \\(y\\) 的奇对称，积分会相互抵消。"
+      }
+    },
+    "u-calculus-c70ea16f37e1ab9e": {
+      "sourceLabel": "8.2.1 三重积分的概念及性质 · 补充第 48 题",
+      "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "incorrect-reference-answer",
+      "reason": "题图是三个积分连等，反例排除了原参考 A。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "图中的三个积分用等号相连。取单位立方体以及 \\(f_1=f_2=1\\)，则 \\(F=2\\)，三个积分分别为 \\(2,1,1\\)。所以即使 \\(f_1\\) 可积，链式等式也未必成立，按现存题图应选 D。积分的线性公式应为 \\(\\iiint F=\\iiint f_1+\\iiint f_2\\)。"
+      }
+    },
+    "u-calculus-19f4abbf711c98d1": {
+      "sourceLabel": "8.2.1 三重积分的概念及性质 · 补充第 59 题",
+      "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "unclear-source-notation",
+      "reason": "题图右端积分下标缺失或不清，现有读法不能保证参考答案。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "按原参考 A 的思路，用 \\(\\Omega_1\\) 与 \\(\\Omega\\setminus\\Omega_1\\) 分割区域，若等式右端第一个区域确为 \\(\\Omega_1\\)，则空格是 \\(\\iiint_{\\Omega\\setminus\\Omega_1} f\\,dV\\)。本题当前图中该首项下标只见 \\(\\Omega\\)，无法辨认出 \\(1\\)；若按可见的 \\(\\Omega\\) 阅读，空格恒为零，原参考 A 一般不成立。"
+      }
+    },
+    "s-3b18eecdd531-q0051": {
+      "sourceLabel": "1.4 极限的运算法则 · 第 51 题",
+      "sourceSha256": "d59e83eb0be77687b44622acc5cf923366d5b8c7119141e4b209b6ab7303d6a1",
+      "referenceAnswer": "C",
+      "assessment": "review-only",
+      "kind": "damaged-source-formula",
+      "reason": "历史 PDF 题干与解析均没有可恢复的公式。",
+      "method": "visual-historical-pdf-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "原资料缺少可读的极限表达式。原选项保留供查阅。",
+        "analysis": "历史 PDF 第 19 页的题干和解析都只留下公式排版错误，未提供极限表达式。原资料标 C（数值 1），凭选项无法核实它。"
+      }
+    },
+    "s-f566de7e7dcf-q0021": {
+      "sourceLabel": "4.6.1 直角坐标系下平面图形的面积 · 第 21 题",
+      "sourceSha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+      "referenceAnswer": "D",
+      "assessment": "review-only",
+      "kind": "damaged-source-formula",
+      "reason": "历史 PDF 有三个选项缺损，面积可独立求出，无法验证原选项。",
+      "method": "visual-historical-pdf-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-A": "原资料中的选项公式无法辨认。",
+        "option-C": "原资料中的选项公式无法辨认。",
+        "option-D": "原资料中的选项公式无法辨认。",
+        "analysis": "两条指数曲线在 \\(x=0\\) 相交。在 \\(0\\le x\\le e\\)，上边界是 \\(e^{2x}\\)，下边界是 \\(e^{-2x}\\)。所以面积为 \\(\\int_0^e(e^{2x}-e^{-2x})\\,dx=(e^{2e}+e^{-2e})/2-1\\)。历史 PDF 的 A、C、D 均为排版错误，原资料标 D，现已无法核对该选项的内容。"
+      }
+    },
+    "s-447e052c5a79-q0029": {
+      "sourceLabel": "5.1.1 常数项系数的概念 · 第 29 题",
+      "sourceSha256": "d13801e5bf5c0c87fa305fae92938b8cf373d2c4a6fbb9f13472266aaad3d4ad",
+      "referenceAnswer": "A",
+      "assessment": "review-only",
+      "kind": "damaged-source-formula",
+      "reason": "历史 PDF 的 C 项公式缺损，无法核对单选唯一性。",
+      "method": "visual-historical-pdf-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "原资料中的选项公式无法辨认。",
+        "analysis": "按原解析，\\(S_n\\) 是前 \\(n\\) 项之和，余项从 \\(aq^n\\) 开始。对于 \\(|q|<1\\)，有 \\(S-S_n=aq^n/(1-q)\\)，对应原参考 A。历史 PDF 的 C 只有排版错误，无法核对该项是否与 A 等价。"
+      }
+    },
+    "s-84aefb2c6fa0-q0007": {
+      "sourceLabel": "4.9.1 变力沿直线所做的功 · 第 7 题",
+      "sourceSha256": "419d62e274b6957f4f1cca952311145a79bf5141d356f9baf818317d2ef900c8",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "expanded-analysis",
+      "reason": "恢复原解析中缺损的薄层重力表达式，说明密度约定。",
+      "method": "visual-historical-pdf-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "以平底所在平面为 \\(y=0\\)，顶部为 \\(y=R\\)。在高度 \\(y\\) 的水层截面积为 \\(\\pi(R^2-y^2)\\)，厚 \\(dy\\) 的水层重量为 \\(\\rho g\\pi(R^2-y^2)\\,dy\\)，提升至顶部距离为 \\(R-y\\)。所以 \\(W=\\rho g\\pi\\int_0^R(R-y)(R^2-y^2)\\,dy=5\\rho g\\pi R^4/12\\)。原选项省略了密度因子 \\(\\rho\\)，在单位密度约定下对应 A。"
+      }
+    },
+    "s-73cc3a94d49a-q0023": {
+      "sourceLabel": "1.6.2 重要极限Ⅱ · 第 23 题",
+      "sourceSha256": "30fe4651c8ea86dd5a1b81cc5146d392129c042a4ec4b3056dd485413cc2341c",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(e^{-1/2}\\)",
+        "analysis": "零点附近 \\(\\cos x>0\\)，取对数得 \\(\\ln(\\cos x)/x\\to0\\)，因为 \\(\\cos x=1-x^2/2+o(x^2)\\)。所以原极限为 \\(e^0=1\\)，选 B。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-739b263c53d52db5": {
+      "sourceLabel": "1.6.2 重要极限Ⅱ · 补充第 7 题",
+      "sourceSha256": "b74181f9ae60d7eb6ab76355c99878346ce8bf94fb9778af51f9cfd5a8e21f04",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(e^{-1/2}\\)",
+        "analysis": "零点附近 \\(\\cos x>0\\)，取对数得 \\(\\ln(\\cos x)/x\\to0\\)，因为 \\(\\cos x=1-x^2/2+o(x^2)\\)。所以原极限为 \\(e^0=1\\)，选 B。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-97ffb125d370-q0013": {
+      "sourceLabel": "2.1.3 导数的几何意义 · 第 13 题",
+      "sourceSha256": "f0fd391ea30efa21b6aced2b32c4720bdef91160fb72a5270a56a62b100ca59c",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-D": "切线方程是 \\(x+y-1=0\\)，法线方程是 \\(x-y+1=0\\)。",
+        "analysis": "在 \\(x=0\\)，曲线斜率为 \\(e^0=1\\)，法线斜率为 \\(-1\\)。两线都过 \\((0,1)\\)，故切线为 \\(y=x+1\\)，法线为 \\(y=1-x\\)，选 B。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-580934cece060cc9": {
+      "sourceLabel": "2.1.3 导数的几何意义 · 补充第 4 题",
+      "sourceSha256": "0c74ad654cbba8dda04f76308613200789476c3914224a4f21b1c9a39a35cd38",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-D": "切线方程是 \\(x+y-1=0\\)，法线方程是 \\(x-y+1=0\\)。",
+        "analysis": "在 \\(x=0\\)，曲线斜率为 \\(e^0=1\\)，法线斜率为 \\(-1\\)。两线都过 \\((0,1)\\)，故切线为 \\(y=x+1\\)，法线为 \\(y=1-x\\)，选 B。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-748a0b9cef9b-q0015": {
+      "sourceLabel": "2.2.2 复合函数的求导法则 · 第 15 题",
+      "sourceSha256": "db24c29a33a97486530bdce8c0e45154a3516797e735ed6ab3e9b2f579f4e2f1",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-D": "\\(e^{f(x)}[f'(e^x)e^x+f(e^x)]\\)",
+        "analysis": "对两个因子用乘积法则。一阶导数分别为 \\(f'(e^x)e^x\\) 与 \\(e^{f(x)}f'(x)\\)，合并并提出 \\(e^{f(x)}\\)，与 B 相同。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-fab784464155-q0004": {
+      "sourceLabel": "2.4.4 微分在近似计算中的应用 · 第 4 题",
+      "sourceSha256": "1ef83f494d9b11ac9bc16c29bb6095120c5181c224b7c8b1be989ae95799bab6",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(9.950\\)",
+        "analysis": "以 \\(1000\\) 为展开点，\\(f(x)=x^{1/3}\\) 满足 \\(f(1000)=10\\)、\\(f'(1000)=1/300\\)。因此 \\(f(998.5)\\approx10-1.5/300=9.995\\)，选 D。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-4387555145e12b1a": {
+      "sourceLabel": "2.4.4 微分在近似计算中的应用 · 补充第 9 题",
+      "sourceSha256": "ddffac3257b942d838d7009efdf816188bc24868fac095e910a0a6a05358377f",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(9.950\\)",
+        "analysis": "以 \\(1000\\) 为展开点，\\(f(x)=x^{1/3}\\) 满足 \\(f(1000)=10\\)、\\(f'(1000)=1/300\\)。因此 \\(f(998.5)\\approx10-1.5/300=9.995\\)，选 D。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-fab784464155-q0031": {
+      "sourceLabel": "2.4.4 微分在近似计算中的应用 · 第 31 题",
+      "sourceSha256": "1ef83f494d9b11ac9bc16c29bb6095120c5181c224b7c8b1be989ae95799bab6",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(2.0156\\)",
+        "analysis": "以 \\(64=2^6\\) 为展开点，\\(f(x)=x^{1/6}\\) 满足 \\(f(64)=2\\)、\\(f'(64)=1/192\\)。所以 \\(f(65)\\approx2+1/192\\approx2.0052\\)，选 D。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-1a51470c6e05679b": {
+      "sourceLabel": "2.4.4 微分在近似计算中的应用 · 补充第 32 题",
+      "sourceSha256": "ddffac3257b942d838d7009efdf816188bc24868fac095e910a0a6a05358377f",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(2.0156\\)",
+        "stem": "用微分代替增量，求 \\(\\sqrt[6]{65}\\) 的近似值。",
+        "analysis": "以 \\(64=2^6\\) 为展开点，\\(f(x)=x^{1/6}\\) 满足 \\(f(64)=2\\)、\\(f'(64)=1/192\\)。所以 \\(f(65)\\approx2+1/192\\approx2.0052\\)，选 D。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-5cc65edb6428-q0039": {
+      "sourceLabel": "4.3.1 积分上限的函数及其导数 · 第 39 题",
+      "sourceSha256": "ec55d97494dcdf83163cba9cd892ebb4b91aefceb7dd03fd4cf9e8d0be7f6a8f",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "单调递减的凸弧",
+        "analysis": "由变上限积分求导与链式法则，\\(f'(x)=2x\\ln(1+x^2)>0\\)，且 \\(f''(x)=2\\ln(1+x^2)+4x^2/(1+x^2)>0\\)。函数递增，图像开口朝上，按原题术语为“凹弧”，选 B。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-fae4941d497dc2bb": {
+      "sourceLabel": "4.3.1 积分上限的函数及其导数 · 补充第 32 题",
+      "sourceSha256": "8755957b0af9c6573dfd8a3843950e80e02566d226d63d8f07670cfd71fec88f",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "单调递减的凸弧"
+      }
+    },
+    "s-6b7d90a83a1e-q0039": {
+      "sourceLabel": "5.5.2 函数展开成幂级数 · 第 39 题",
+      "sourceSha256": "4892d07ac61b8e5887b782c333232998bda7974c62c4a318cbde51e1391d1acd",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-D": "\\(\\sum_{n=1}^{\\infty}\\frac{n}{2^{n+1}}x^{n-1},\\quad x\\in(-2,2]\\)",
+        "analysis": "由 \\(1/(2-x)=\\sum_{n=0}^{\\infty}x^n/2^{n+1}\\) 在 \\(|x|<2\\) 内逐项求导，得到 \\(\\sum_{n=1}^{\\infty}nx^{n-1}/2^{n+1}\\)。在 \\(x=\\pm2\\)，通项的绝对值为 \\(n/4\\)，均不趋于零。因此收敛域为 \\((-2,2)\\)，选 B。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-6b7d90a83a1e-q0052": {
+      "sourceLabel": "5.5.2 函数展开成幂级数 · 第 52 题",
+      "sourceSha256": "4892d07ac61b8e5887b782c333232998bda7974c62c4a318cbde51e1391d1acd",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-D": "\\(\\sum_{n=1}^{\\infty}\\frac{(-1)^{n+1}n}{3^{n+1}}(x-3)^{n-1},\\quad x\\in[0,6]\\)",
+        "analysis": "令 \\(h=x-3\\)，在 \\(|h|<3\\) 内，对 \\(1/(3+h)=\\sum_{n=0}^{\\infty}(-1)^nh^n/3^{n+1}\\) 逐项求导再取相反数，得到 B 的级数。两端 \\(h=\\pm3\\) 的通项大小为 \\(n/9\\)，均不趋于零，所以收敛域为 \\((0,6)\\)。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-ec2fb00b2cfd-q0012": {
+      "sourceLabel": "6.2.1 数量积 · 第 12 题",
+      "sourceSha256": "0f0ac74c7df16f3984d366991f2f0345ab6974e105a3a9b16cd15d0a0fb063ce",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(8\\vec i+16\\vec j-8\\vec k\\)",
+        "analysis": "先求标量 \\(\\vec a\\cdot\\vec b=2+3-1=4\\)，以及 \\(\\vec b\\cdot\\vec c=0+1+3=4\\)。因此所求向量为 \\(4(\\vec a+\\vec c)=8\\vec i+16\\vec j+8\\vec k\\)，选 B。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-8ffd6b840240-q0029": {
+      "sourceLabel": "7.4.2 复合函数中间变量为多元函数情形 · 第 29 题",
+      "sourceSha256": "dc2f2632ad96311feec1c29931c8910e43691c1fce25faac643c2cc29c6e6f7b",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-D": "\\(-\\frac{2y}{x} f'(y/x)\\)",
+        "analysis": "记 \\(u=y/x\\)。对 \\(f(u)\\)，链式法则给出 \\(x^2\\partial_{xx}f(u)=u^2 f''(u)+2u f'(u)\\) 和 \\(y^2\\partial_{yy}f(u)=u^2 f''(u)\\)。另一项 \\(yf(x/y)\\) 的两项二阶导数乘对应平方后都等于 \\((x^2/y)f''(x/y)\\)，彼此抵消。结果为 \\(2u f'(u)\\)，选 A。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-290e78b42279-q0023": {
+      "sourceLabel": "初等变换和初等矩阵 · 第 23 题",
+      "sourceSha256": "2ccf6c7be4494454a8dc7658bafa0178e9b0c0d5557e2a9cad8cbac34761f02d",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(\\begin{pmatrix}1&3&2\\\\3&2&-1\\end{pmatrix}\\)",
+        "analysis": "右乘三阶交换矩阵 \\(E(1,2)\\) 交换原矩阵的第一、第二列，第三列保持不变。故结果为 \\(\\begin{pmatrix}2&1&3\\\\-1&3&2\\end{pmatrix}\\)，选 D。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "s-290e78b42279-q0051": {
+      "sourceLabel": "初等变换和初等矩阵 · 第 51 题",
+      "sourceSha256": "2ccf6c7be4494454a8dc7658bafa0178e9b0c0d5557e2a9cad8cbac34761f02d",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "原件两个干扰项相同，改写一个并验算原参考选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(P_2^{-1}BP_1^{-1}\\)",
+        "analysis": "左乘 \\(P_1\\) 将三行循环换位，右乘 \\(P_2\\) 将第三列的 \\(k\\) 倍加到第二列，所以 \\(B=P_1AP_2\\)。从左乘 \\(P_1^{-1}\\)、从右乘 \\(P_2^{-1}\\) 可解得 \\(A=P_1^{-1}BP_2^{-1}\\)，选 D。 原件有两个相同的干扰项，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-67154e9abf199a16": {
+      "sourceLabel": "4.2.2 定积分的几何意义 · 补充第 2 题",
+      "sourceSha256": "73e3a378f0bcea60694c35a752b9b4a3e5bd8c390d7836e7d559568cb8066474",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "revised-source-options",
+      "reason": "对照原图与独立推导，修订现行选项，使原参考字母对应唯一正确的选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-A": "\\(\\left(\\int_a^b f(x)\\,dx\\right)^2\\)",
+        "option-C": "\\(\\int_a^b f(x)^2\\,dx\\)"
+      }
+    },
+    "u-calculus-14122fde4a7eb48c": {
+      "sourceLabel": "9.2.2 第一类曲面积分的计算 · 补充第 25 题",
+      "sourceSha256": "a3c2c276a5bea799c7b7fd6ddf0c82d73c54d35cb764dbcd97cbe31daa051a5b",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "revised-source-options",
+      "reason": "对照原图与独立推导，修订现行选项，使原参考字母对应唯一正确的选项。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "设 \\(\\Sigma\\) 为椭球面 \\(x^2/2+y^2/4+z^2/4=1\\) 在 \\((1,1,1)\\) 处的切平面在第一卦限内的部分。求 \\(\\iint_\\Sigma z\\,dS\\)。",
+        "option-C": "\\(\\frac{16\\sqrt6}{3}\\)"
+      }
+    },
+    "s-21cdb8662606-q0023": {
+      "sourceLabel": "3.6.2函数曲线的拐点 · 第 23 题",
+      "sourceSha256": "16efa71e76ede15770611c3ab9cab90d6903f52869582a7e4653a60fe59f7f10",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "对照原图，改写与另一干扰项重复或等价的选项，并验算参考答案。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-B": "在 \\((0,+\\infty)\\) 内曲线为凸。",
+        "analysis": "对 \\(y=x+\\ln(x)/x\\) 求两次导数，得 \\(y^{\\prime\\prime}=(2\\ln x-3)/x^3\\)。在 \\(x=e^{3/2}\\) 左侧为负，右侧为正，因此这里是拐点。代入原函数得到纵坐标 \\(e^{3/2}+\\frac{3}{2} e^{-3/2}\\)，选 C。 原件两个干扰项等价，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-a7b04fd9416c0e10": {
+      "sourceLabel": "5.3.1 交错级数的收敛性 · 补充第 11 题",
+      "sourceSha256": "40aa6df6e066df9f13e000f63b0aef8fdbe3d225e12311f2b5daa56a791be5a7",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "revised-duplicate-distractor",
+      "reason": "对照原图，改写与另一干扰项重复或等价的选项，并验算参考答案。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "option-C": "\\(p>1\\) 时，级数发散。",
+        "analysis": "当 \\(p>0\\) 时，\\(1/n^p\\) 单调递减到零，所以交错级数收敛。取绝对值后得到 \\(p\\) 级数 \\(\\sum 1/n^p\\)，只有 \\(p>1\\) 时收敛。因此 \\(0<p\\le1\\) 时条件收敛，选 A。 原件两个干扰项等价，本站改写了其中一个。"
+      }
+    },
+    "u-calculus-11c9d10a38179dd7": {
+      "sourceLabel": "3.6.2函数曲线的拐点 · 补充第 22 题",
+      "sourceSha256": "51cf583c318d63925c437115dc7131b724c337ba9aea1edaff0854dbe25bfb4a",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "clarified-low-resolution-question",
+      "reason": "对照原图重排低分辨率文字和公式，并用独立推导复核原参考答案。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "设 \\(f\\) 在 \\(x_0\\) 的某邻域内具有连续的三阶导数，且 \\(f'(x_0)=f''(x_0)=0\\)、\\(f'''(x_0)<0\\)。下列结论正确的是哪一项？",
+        "option-A": "函数 \\(y=f(x)\\) 在 \\(x=x_0\\) 处取极大值。",
+        "option-B": "点 \\((x_0,f(x_0))\\) 不是曲线 \\(y=f(x)\\) 的拐点。",
+        "option-C": "函数 \\(y=f(x)\\) 在 \\(x=x_0\\) 处取极小值。",
+        "option-D": "点 \\((x_0,f(x_0))\\) 是曲线 \\(y=f(x)\\) 的拐点。",
+        "analysis": "由三阶导数连续且 \\(f'''(x_0)<0\\)，\\(f''\\) 在 \\(x_0\\) 附近严格递减。又 \\(f''(x_0)=0\\)，故它在左侧为正、右侧为负，曲线在 \\((x_0,f(x_0))\\) 处改变凹凸性。进一步，\\(f'\\) 在左侧递增到零，在右侧从零递减，所以 \\(f\\) 在两侧都递减，\\(x_0\\) 不是极值点。故选 D。"
+      }
+    },
+    "u-calculus-a4e99cbb47829dd1": {
+      "sourceLabel": "10.7 微分方程的应用 · 补充第 5 题",
+      "sourceSha256": "6a092f35682f413359e02c27e8a977c98d243c0bf0c6694d64d9e17e21a14acf",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "clarified-low-resolution-question",
+      "reason": "对照原图重排低分辨率文字和公式，并用独立推导复核原参考答案。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "一根均匀链条悬挂在钉子上。从静止释放时，两侧分别垂下 \\(8\\,\\mathrm m\\) 和 \\(12\\,\\mathrm m\\)。忽略钉子对链条的摩擦，求链条完全滑下所需的时间 \\(t\\)（秒）。",
+        "option-A": "\\(\\sqrt{2g}\\ln(3+2\\sqrt6)\\)",
+        "option-B": "\\(\\sqrt{5/g}\\ln(5+2\\sqrt5)\\)",
+        "option-C": "\\(\\sqrt{10/g}\\ln(5+2\\sqrt6)\\)",
+        "option-D": "\\(\\sqrt{g}\\ln(3+\\sqrt6)\\)",
+        "analysis": "设长侧垂下 \\(y\\) 米，线密度为 \\(\\rho\\)。两侧重力之差为 \\(\\rho g[y-(20-y)]\\)，总质量为 \\(20\\rho\\)，所以 \\(y''=(g/10)(y-10)\\)。由 \\(y(0)=12\\)、\\(y'(0)=0\\)，得 \\(y=10+2\\cosh(\\sqrt{g/10}\\,t)\\)。完全滑下时 \\(y=20\\)，即 \\(\\cosh(\\sqrt{g/10}\\,t)=5\\)。取正根得 \\(t=\\sqrt{10/g}\\ln(5+2\\sqrt6)\\)，故选 C。"
+      }
+    },
+    "u-calculus-e47e128477e3f4b5": {
+      "sourceLabel": "10.7 微分方程的应用 · 补充第 11 题",
+      "sourceSha256": "6a092f35682f413359e02c27e8a977c98d243c0bf0c6694d64d9e17e21a14acf",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "clarified-low-resolution-question",
+      "reason": "对照原图重排低分辨率文字和公式，并用独立推导复核原参考答案。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "碳-14 的衰变速率与现存量成正比。人体死亡后停止补充碳-14。某古墓遗体中的碳-14 现存量为初始量的 \\(80\\%\\)，其死亡时间距今约多少年？已知碳-14 的半衰期为 \\(5730\\) 年，\\(\\ln0.5\\approx-0.69315\\)、\\(\\ln0.8\\approx-0.22314\\)。",
+        "option-A": "1758",
+        "option-B": "1865",
+        "option-C": "1845",
+        "option-D": "1832",
+        "analysis": "设碳-14 现存量 \\(P(t)=P(0)e^{kt}\\)。半衰期给出 \\(e^{5730k}=1/2\\)，所以 \\(k=\\ln(0.5)/5730\\)。由 \\(P(t)/P(0)=0.8\\)，可得 \\(t=5730\\ln(0.8)/\\ln(0.5)\\approx1845\\) 年，故选 C。"
+      }
+    },
+    "u-calculus-242ced811a7f15dc": {
+      "sourceLabel": "10.7 微分方程的应用 · 补充第 33 题",
+      "sourceSha256": "6a092f35682f413359e02c27e8a977c98d243c0bf0c6694d64d9e17e21a14acf",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "clarified-low-resolution-question",
+      "reason": "对照原图重排低分辨率文字和公式，并用独立推导复核原参考答案。",
+      "method": "published-raster-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "某湖泊水量为 \\(V\\)。每年流入含污染物 \\(A\\) 的污水 \\(V/6\\)，另有无污染水 \\(V/6\\) 流入，排出水量为 \\(V/3\\)。2011 年初污染物 \\(A\\) 总量为 \\(5m_0\\)。此后限制流入污水中 \\(A\\) 的浓度不超过 \\(m_0/V\\)。假设湖水充分混合，按允许的最高进水浓度计算，至少经过多少年，湖中的 \\(A\\) 总量会降至 \\(m_0\\)？",
+        "option-A": "\\(3\\ln 2\\)",
+        "option-B": "\\(6\\ln 2\\)",
+        "option-C": "\\(6\\ln 3\\)",
+        "option-D": "\\(2\\ln 3\\)",
+        "analysis": "设 \\(m(t)\\) 为湖中 \\(A\\) 的总量。按最高进水浓度，每年流入 \\(m_0/6\\)，每年流出 \\(m(t)/3\\)，所以 \\(m'=m_0/6-m/3\\)。由于 \\(m(0)=5m_0\\)，解得 \\(m(t)=m_0/2+(9m_0/2)e^{-t/3}\\)。令 \\(m(t)=m_0\\)，则 \\(e^{-t/3}=1/9\\)，所以 \\(t=3\\ln 9=6\\ln 3\\)，选 C。"
+      }
     }
   },
   "duplicateOptionScreening": {

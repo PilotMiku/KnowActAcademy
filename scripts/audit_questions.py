@@ -24,8 +24,9 @@ def scan():
     raw = (ROOT / 'dist/data/bank.json').read_bytes()
     bank = json.loads(raw)
     originals = {q['id']: q for q in read('data/pdf-source-bank.json')['questions']}
-    reviews = records()
-    duplicate_reviews = read('data/question-reviews.json').get('duplicateOptionScreening', {})
+    review_data = read('data/question-reviews.json')
+    reviews = review_data['entries']
+    duplicate_reviews = review_data.get('duplicateOptionScreening', {})
     supplemental = supplemental_entries()
     math = read('artifacts/question-math-screening.json', {})
     if math and math.get('bankRevision') != bank['revision']:
@@ -107,7 +108,7 @@ def scan():
                'scorable': sum(r['scorable'] for r in rows), 'mathematicalEvidence': dict(counts),
                'duplicateOptionCandidatesVisuallyReviewed': len(duplicate_reviews),
                'remainingProseLossCandidates': sum('possible-dropped-source-prose' in r['issues'] for r in rows)}
-    return {'format': 'zhixing.question-audit.v1', 'updated': '2026-11-17', 'revision': bank['revision'],
+    return {'format': 'zhixing.question-audit.v1', 'updated': review_data['updated'], 'revision': bank['revision'],
             'bankSha256': hashlib.sha256(raw).hexdigest(),
             'scope': 'All question IDs scanned for stem/option structure, recorded primary-source answer keys, source prose loss, answer/analysis letter conflicts and draft duplicate options; supported scalar limits/integrals additionally recomputed.',
             'limitations': ['A matching historical key is not proof of mathematical correctness.',
@@ -119,7 +120,7 @@ def scan():
 
 def markdown(report):
     summary = report['summary']; reviews = records()
-    lines = ['# 题库逐题扫描报告', '', '扫描日期：2026-11-17。题库版本：`' + report['revision'] + '`。', '',
+    lines = ['# 题库逐题扫描报告', '', f"审计记录更新于 {report['updated']}。题库版本 `{report['revision']}`。", '',
              f"已扫描全部 **{summary['recordsScanned']:,} 道题**，逐题结果保存在 `data/question-audit.json`。", '',
              '**全量扫描不等于全部数学答案已经独立证明正确。** 历史参考字母匹配、公式可渲染、未触发规则，均不能作为数学正确性的证明。尚未独立复算的题目在逐题记录中明确标为 `not-independently-recomputed`。', '',
              '| 检查 / 处理 | 数量 |', '| --- | ---: |',
@@ -127,6 +128,7 @@ def markdown(report):
              f"| 与原记录的主来源参考字母一致 | {summary['primarySourceKeysMatched']} |",
              f"| 恢复缺失区间 / 所求内容的题干（含最初的 3.5 第 23 题） | {summary['restoredStems']} |",
              '| 按当前选项重新推导并纠正解析字母 | 20 |',
+             f"| 补写简略解析或替换解析中的公式错误信息 | {sum(r['kind'] == 'expanded-analysis' for r in reviews.values())} |",
              f"| 本轮新确认有评分问题，改为仅供查阅 | {summary['newReviewOnly']} |",
              f"| 全站仅供查阅（含此前已标记） | {summary['totalReviewOnly']} |",
              f"| 当前可评分 | {summary['scorable']} |",

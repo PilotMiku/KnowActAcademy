@@ -1,13 +1,13 @@
 {
   "format": "zhixing.question-counts.v1",
-  "revision": "pdf-769450a150ae378c",
+  "revision": "pdf-793e119a71f157ca",
   "definition": "每个题号计一条记录；父章包含全部后代，不与小节重复累加；未确认等价的相似题分别保留。",
   "counts": {
     "total": 8425,
     "pdf": 3716,
     "supplement": 4709,
     "other": 0,
-    "scorable": 8380
+    "scorable": 8369
   },
   "subjects": [
     {
@@ -23,7 +23,7 @@
             "pdf": 504,
             "supplement": 479,
             "other": 0,
-            "scorable": 977
+            "scorable": 973
           },
           "directCount": 0
         },
@@ -36,7 +36,7 @@
             "pdf": 51,
             "supplement": 34,
             "other": 0,
-            "scorable": 85
+            "scorable": 84
           },
           "directCount": 85
         },
@@ -114,7 +114,7 @@
             "pdf": 59,
             "supplement": 55,
             "other": 0,
-            "scorable": 114
+            "scorable": 113
           },
           "directCount": 114
         },
@@ -231,7 +231,7 @@
             "pdf": 74,
             "supplement": 81,
             "other": 0,
-            "scorable": 153
+            "scorable": 151
           },
           "directCount": 155
         },
@@ -751,7 +751,7 @@
             "pdf": 519,
             "supplement": 366,
             "other": 0,
-            "scorable": 876
+            "scorable": 874
           },
           "directCount": 0
         },
@@ -829,7 +829,7 @@
             "pdf": 25,
             "supplement": 27,
             "other": 0,
-            "scorable": 51
+            "scorable": 49
           },
           "directCount": 52
         },
@@ -842,7 +842,7 @@
             "pdf": 11,
             "supplement": 12,
             "other": 0,
-            "scorable": 22
+            "scorable": 23
           },
           "directCount": 23
         },
@@ -959,7 +959,7 @@
             "pdf": 28,
             "supplement": 13,
             "other": 0,
-            "scorable": 41
+            "scorable": 40
           },
           "directCount": 41
         },
@@ -1102,7 +1102,7 @@
             "pdf": 511,
             "supplement": 509,
             "other": 0,
-            "scorable": 1020
+            "scorable": 1019
           },
           "directCount": 0
         },
@@ -1115,7 +1115,7 @@
             "pdf": 30,
             "supplement": 29,
             "other": 0,
-            "scorable": 59
+            "scorable": 58
           },
           "directCount": 59
         },
@@ -1726,7 +1726,7 @@
             "pdf": 0,
             "supplement": 379,
             "other": 0,
-            "scorable": 373
+            "scorable": 371
           },
           "directCount": 0
         },
@@ -1804,7 +1804,7 @@
             "pdf": 0,
             "supplement": 70,
             "other": 0,
-            "scorable": 69
+            "scorable": 67
           },
           "directCount": 70
         },
@@ -1869,7 +1869,7 @@
             "pdf": 0,
             "supplement": 460,
             "other": 0,
-            "scorable": 455
+            "scorable": 456
           },
           "directCount": 0
         },
@@ -1921,7 +1921,7 @@
             "pdf": 0,
             "supplement": 75,
             "other": 0,
-            "scorable": 73
+            "scorable": 74
           },
           "directCount": 75
         },
@@ -2295,7 +2295,7 @@
         "pdf": 3010,
         "supplement": 3975,
         "other": 0,
-        "scorable": 6940
+        "scorable": 6932
       }
     },
     {
@@ -2350,7 +2350,7 @@
             "pdf": 209,
             "supplement": 187,
             "other": 0,
-            "scorable": 396
+            "scorable": 393
           },
           "directCount": 0
         },
@@ -2363,7 +2363,7 @@
             "pdf": 91,
             "supplement": 79,
             "other": 0,
-            "scorable": 170
+            "scorable": 167
           },
           "directCount": 170
         },
@@ -2620,11 +2620,11 @@
         "pdf": 706,
         "supplement": 734,
         "other": 0,
-        "scorable": 1440
+        "scorable": 1437
       }
     }
   ],
-  "bankSha256": "08a87578a3d231a855b400eb4d0120c6d5d38589c01483a7545ae1465fc12804",
+  "bankSha256": "33d6e38e2106c6143dfed5cc3973f3c07cbc3c53d32afbf9b756f2daff560486",
   "sources": {
     "originalPdf": 3716,
     "supplementEntries": 5346,

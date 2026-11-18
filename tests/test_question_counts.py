@@ -11,7 +11,7 @@ class QuestionCountsTests(unittest.TestCase):
         report = check_report()
         self.assertTrue(report['sources']['originalIdsPreserved'])
         self.assertEqual(report['counts']['total'], 8425)
-        self.assertEqual(report['counts']['scorable'], 8380)
+        self.assertEqual(report['counts']['scorable'], 8369)
 
     def test_nested_scopes_direct_questions_and_same_chapter_id_in_other_subject(self):
         bank = dict(revision='test', subjects=[

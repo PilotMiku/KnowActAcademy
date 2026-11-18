@@ -32,12 +32,12 @@ try {
     }
   }
   const attempts = await page.evaluate(async () => (await (await import('./storage.mjs')).readSavedState()).attempts);
-  assert.equal(attempts.length,55);
+  assert.equal(attempts.length,57);
   for (const q of questions.filter(q => !isScorable(q))) assert.ok(!attempts.some(a=>a.questionId===q.id));
   await page.goto(baseURL + '/#/quality?issue=analysis');
   await page.locator('#quality-issue').waitFor();
   assert.equal(await page.locator('.collection-item').count(),3);
-  assert.deepEqual(await page.locator('.big-stat b').allTextContents(),['45','3','0']);
+  assert.deepEqual(await page.locator('.big-stat b').allTextContents(),['56','3','0']);
   await page.locator('#quality-issue').selectOption('supplemented');
   await page.locator('.collection-item').first().waitFor();
   assert.match(await page.locator('.quality-help').innerText(),/57 题已有完整/);
@@ -56,6 +56,6 @@ try {
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   await page.screenshot({path:'artifacts/supplemental-analysis-mobile-dark.png',fullPage:true,animations:'disabled'});
   assert.deepEqual(errors,[]);
-  await writeFile('artifacts/supplemental-analysis-report.json',JSON.stringify({rendered:60,scored:55,reviewOnly:5,completeExplanations:57,partialExplanations:1,unrecoverable:2,printIncludesSupplement:true,pageErrors:errors},null,2));
-  console.log('All 60 supplemental explanations/review notes render; 55 eligible answers, quality filters and printable export passed.');
+  await writeFile('artifacts/supplemental-analysis-report.json',JSON.stringify({rendered:60,scored:57,reviewOnly:3,completeExplanations:57,partialExplanations:1,unrecoverable:2,printIncludesSupplement:true,pageErrors:errors},null,2));
+  console.log('All 60 supplemental explanations/review notes render; 57 eligible answers, quality filters and printable export passed.');
 } finally {await browser.close();}
