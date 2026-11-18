@@ -68,11 +68,20 @@ try {
   await page.locator('.reference-card').first().waitFor();
   assert.equal(await page.locator('.reference-card').count(),17);
 
-  // An empty source subsection still has an independently usable knowledge card.
-  await page.goto(baseURL+'/#/reference?subject=calculus&section=u-section-4f0e014a22fe');
-  await page.locator('.section-card-detail[data-section-id="u-section-4f0e014a22fe"]').waitFor();
-  assert.match(await page.locator('.section-card-detail').innerText(),/本小节暂无题目/);
-  report.emptySectionCovered=true;
+  // A subsection without bank questions offers self-checks on its knowledge card.
+  const selfCheckSection = 'u-section-4f0e014a22fe';
+  assert.equal(raw.questions.some(q=>q.subjectId==='calculus'&&q.chapterId===selfCheckSection),false);
+  await page.goto(baseURL+'/#/reference?subject=calculus&section='+selfCheckSection);
+  const selfCheckCard = page.locator(`.section-card-detail[data-section-id="${selfCheckSection}"]`);
+  const exercises = selfCheckCard.getByRole('region',{name:'本站自编自测'});
+  await exercises.getByRole('heading',{name:'本站自编自测 · 4 题',exact:true}).waitFor();
+  assert.equal(await exercises.getByRole('listitem').count(),4);
+  assert.equal(await selfCheckCard.getByRole('link',{name:/练习本小节/}).count(),0);
+  const solution = exercises.locator('details').first();
+  assert.equal(await solution.locator('.rich').isVisible(),false);
+  await solution.getByText('核对答案与推导',{exact:true}).click();
+  await solution.locator('.rich .katex').first().waitFor();
+  report.selfChecksWithoutBankQuestions=true;
   await page.goto(baseURL+'/#/practice?subject=calculus&chapter=s-6b82188494c1');
   await page.getByRole('link',{name:'本小节知识卡',exact:true}).click();
   await page.locator('.section-card-detail[data-section-id="s-6b82188494c1"]').waitFor();
