@@ -2,7 +2,7 @@ import { dayKey, getBankIndex, isEffectiveAttempt } from './core.mjs';
 
 const indexes = new WeakMap();
 
-// Persisted attempts are append-only. Replacing an imported/restored array rebuilds
+// Attempts normally append. Replacing the array after import, restore or self-assessment rebuilds
 // the index; rendering and ordinary saves reuse the already processed prefix.
 export function getAttemptIndex(state, bank = null) {
   let variants = indexes.get(state);

@@ -99,8 +99,8 @@ export function preparationMastery(bank, state) {
     const confident = a.correct && !a.uncertain;
     const spaced = result.lastSuccessAt !== undefined &&
       (round - result.lastSuccessRound >= 2 || a.at - result.lastSuccessAt >= DAY_MS);
-    const confirmed = confident && (result.mastered || spaced);
-    const stable = confirmed && (result.stableMastered || a.at - result.lastSuccessAt >= DAY_MS);
+    const reviewed = a.correct && (result.reviewed || spaced);
+    const stable = confident && (result.stableMastered || a.at - result.lastSuccessAt >= DAY_MS);
     if (!confident) result.streakStartedAt = null;
     else if (!result.correctStreak) result.streakStartedAt = a.at;
     result.correctStreak = confident ? Math.min(2, result.correctStreak + 1) : 0;
@@ -110,10 +110,10 @@ export function preparationMastery(bank, state) {
     result.uncertain = !!a.uncertain;
     result.lastAt = a.at;
     result.lastRound = round;
-    result.mastered = !!confirmed;
-    result.halfConfirmed = a.correct && !result.mastered;
+    result.mastered = a.correct;
+    result.reviewed = !!reviewed;
     result.stableMastered = !!stable;
-    if (confident) {
+    if (a.correct) {
       result.lastSuccessAt = a.at;
       result.lastSuccessRound = round;
     } else {
@@ -123,12 +123,10 @@ export function preparationMastery(bank, state) {
     questions.set(q.id, result);
   }
   const mastered = [...questions.values()].filter((q) => q.mastered).length;
-  const pendingMistakes = [...questions.values()].filter((q) => q.wrongCount > 0 && (!q.latestCorrect || q.uncertain)).length;
+  const pendingMistakes = [...questions.values()].filter((q) => q.wrongCount > 0 && !q.mastered).length;
   const stableMastered = [...questions.values()].filter((q) => q.stableMastered).length;
-  const halfConfirmed = [...questions.values()].filter((q) => q.halfConfirmed).length;
-  const passed = mastered + halfConfirmed;
-  return { pool, questions, total: pool.length, covered: questions.size, mastered, halfConfirmed, passed, stableMastered, pendingMistakes,
-    progress: pool.length ? Math.round(passed / pool.length * 10000) / 100 : 0,
+  return { pool, questions, total: pool.length, covered: questions.size, mastered, passed: mastered, stableMastered, pendingMistakes,
+    progress: pool.length ? Math.round(mastered / pool.length * 10000) / 100 : 0,
     coverage: pool.length ? Math.round(questions.size / pool.length * 10000) / 100 : 0 };
 }
 
@@ -136,8 +134,32 @@ export function syncPreparationMistakes(bank, state) {
   const mastery = preparationMastery(bank, state);
   for (const [id, q] of mastery.questions)
     if (q.wrongCount && state.mistakes[id] && state.mistakes[id].lastAt <= q.lastAt)
-      state.mistakes[id].resolved = q.latestCorrect && !q.uncertain;
+      state.mistakes[id].resolved = q.mastered;
   return mastery;
+}
+
+// Revise the existing trial so scores, review schedules and restored sessions
+// all treat this self-assessment exactly like a wrong answer, without an extra trial.
+export function markPreparationIncorrect(bank, state, questionId, now = Date.now()) {
+  const practice = state.practice;
+  const q = getBankIndex(bank).questions.get(questionId);
+  if (!q || !isScorable(q) || practice?.preparationId !== state.preparation?.id ||
+      !["prepare-diagnostic", "prepare-training"].includes(practice?.mode) ||
+      !practice.questionIds.includes(questionId) || practice.responses[questionId]?.correct !== true) return false;
+  const attempt = state.attempts.find(a => a.questionId === questionId && a.correct === true &&
+    a.preparationId === state.preparation.id &&
+    (a.id === `practice:${practice.id}:${questionId}` || a.practiceId === practice.id));
+  if (!attempt) return false;
+  // Replace the array to invalidate derived attempt indexes and mastery caches.
+  state.attempts = state.attempts.map(a => a === attempt ? { ...a, correct: false, manual: true } : a);
+  practice.responses[questionId] = { ...practice.responses[questionId], correct: false };
+  if (state.preparation.session?.id === practice.id)
+    state.preparation.session.responses[questionId] = { ...practice.responses[questionId] };
+  const mistake = state.mistakes[questionId];
+  state.mistakes[questionId] = { firstAt: mistake?.firstAt ?? now, lastAt: now,
+    wrongCount: (mistake?.wrongCount ?? 0) + 1, resolved: false };
+  syncPreparationMistakes(bank, state);
+  return true;
 }
 
 export function preparationMetrics(bank, state) {
@@ -151,8 +173,7 @@ export function preparationMetrics(bank, state) {
     group.total++;
     if (result) {
       group.seen++;
-      // One correction of a previous mistake is tentative until confirmed.
-      group.points += result.latestCorrect ? result.uncertain || result.wrongCount && !result.mastered ? 0.5 : 1 : 0;
+      group.points += result.latestCorrect ? result.uncertain ? 0.5 : 1 : 0;
     }
     groups.set(key, group);
   }
@@ -196,7 +217,7 @@ export function preparationProfile(bank, state, now = Date.now()) {
     const associated = names.length ? names.reduce((sum, name) => sum + (conceptNeeds.get(name)?.need ?? 1), 0) / names.length : base;
     const result = mastery.questions.get(q.id);
     const pending = result?.wrongCount > 0 && !result.latestCorrect;
-    const reinforcement = pending ? 6 : result?.uncertain ? 2 : result?.mastered ? 0.5 : result?.halfConfirmed ? 0.75 : 1;
+    const reinforcement = pending ? 6 : result?.uncertain ? 2 : result?.mastered ? 0.5 : 1;
     return [q.id, (0.75 * base + 0.25 * associated) * reviewWeight(schedule.get(q.id), now) *
       reinforcement * (recent.has(q.id) && !pending ? 0.7 : 1)];
   }));
@@ -239,7 +260,7 @@ export function preparationTrainingPool(bank, state, now = Date.now()) {
     const item = mastery.questions.get(q.id);
     if (!item?.latestCorrect) { fresh.push(q); continue; }
     const spaced = round - item.lastRound >= 2 || now - item.lastAt >= DAY_MS;
-    if (spaced && (!item.mastered || (schedule.get(q.id)?.dueAt ?? Infinity) <= now)) checks.push(q);
+    if (spaced && (!item.reviewed || (schedule.get(q.id)?.dueAt ?? Infinity) <= now)) checks.push(q);
   }
   const checkLimit = Math.min(PREPARATION_CHECK_LIMIT, Math.max(1, Math.ceil(size * 0.15)));
   return { mastery, fresh, checks, checkLimit, round,

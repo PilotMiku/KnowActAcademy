@@ -61,7 +61,7 @@ import {
   PREPARATION_COUNT, preparationQuestions, diagnosticProgress,
   preparationProfile, trainingCount, practiceProgress,
   currentPreparationPractice,
-  preparationMetrics, syncPreparationMistakes,
+  preparationMetrics, syncPreparationMistakes, markPreparationIncorrect,
 } from "./preparation.mjs";
 import { getConceptIndex } from "./concepts.mjs";
 import { practicePool } from "./study-planning.mjs";
@@ -333,7 +333,7 @@ function filtersHTML(filters, search = true, mode = "all") {
 }
 function practiceControls() {
   const query = route().query;
-  return `<div class="practice-extra-controls"><div class="field"><label for="practice-status">练习范围</label><select id="practice-status" data-filter="status"><option value="">全部题目</option><option value="unseen" ${query.get("status") === "unseen" ? "selected" : ""}>只练未做题</option><option value="unmastered" ${query.get("status") === "unmastered" ? "selected" : ""}>只练未掌握题</option></select></div><div class="field"><label for="random-distribution">随机抽题方式</label><select id="random-distribution" data-filter="distribution"><option value="random">题目均匀随机</option><option value="balanced" ${query.get("distribution") === "balanced" ? "selected" : ""}>按大章节均衡抽题</option></select></div><div class="field"><label for="practice-difficulty">五星难度</label><select id="practice-difficulty" data-filter="difficulty"><option value="">全部难度</option>${Object.entries(starLabels).map(([id,label])=>`<option value="${id}" ${query.get('difficulty')===id?'selected':''}>${'★'.repeat(Number(id))}${'☆'.repeat(5-Number(id))} · ${label}</option>`).join('')}<option value="unrated" ${query.get('difficulty')==='unrated'?'selected':''}>待标注</option></select></div><div class="field"><label for="practice-concept">逐题知识点</label><input class="input" id="practice-concept" data-filter="concept" value="${attr(query.get('concept') || '')}" placeholder="例如：函数奇偶性"></div><p class="format-note">难度采用 1～5 星建议，个人标注优先于编辑标注与自动初评。自动初评按知识点、题型及可识别解题要点估计，尚未经实测校准，可在学习标注中调整。备考范围的题答对后进入半确认，移出普通重刷队列，后续少量间隔抽查；其他范围按连续两次确定答对筛选。</p></div>`;
+  return `<div class="practice-extra-controls"><div class="field"><label for="practice-status">练习范围</label><select id="practice-status" data-filter="status"><option value="">全部题目</option><option value="unseen" ${query.get("status") === "unseen" ? "selected" : ""}>只练未做题</option><option value="unmastered" ${query.get("status") === "unmastered" ? "selected" : ""}>只练未掌握题</option></select></div><div class="field"><label for="random-distribution">随机抽题方式</label><select id="random-distribution" data-filter="distribution"><option value="random">题目均匀随机</option><option value="balanced" ${query.get("distribution") === "balanced" ? "selected" : ""}>按大章节均衡抽题</option></select></div><div class="field"><label for="practice-difficulty">五星难度</label><select id="practice-difficulty" data-filter="difficulty"><option value="">全部难度</option>${Object.entries(starLabels).map(([id,label])=>`<option value="${id}" ${query.get('difficulty')===id?'selected':''}>${'★'.repeat(Number(id))}${'☆'.repeat(5-Number(id))} · ${label}</option>`).join('')}<option value="unrated" ${query.get('difficulty')==='unrated'?'selected':''}>待标注</option></select></div><div class="field"><label for="practice-concept">逐题知识点</label><input class="input" id="practice-concept" data-filter="concept" value="${attr(query.get('concept') || '')}" placeholder="例如：函数奇偶性"></div><p class="format-note">难度采用 1～5 星建议，个人标注优先于编辑标注与自动初评。自动初评按知识点、题型及可识别解题要点估计，尚未经实测校准，可在学习标注中调整。备考范围的题答对即掌握，可选择“其实不会做”改记错题，后续保留少量间隔抽测；其他范围按连续两次确定答对筛选。</p></div>`;
 }
 function questionToolbar() {
   const q = currentQuestion(), exam = currentExam(), p = state.practice;
@@ -485,9 +485,8 @@ function preparationQuestionStatus(id) {
   if (!isScorable(qById(id))) return '<p class="preparation-question-status">仅供查阅 · 不计掌握度</p>';
   const result = currentPreparationMetrics().questions.get(id);
   const audit = state.practice?.auditQuestionIds?.includes(id);
-  const label = result?.mastered ? "已确认" : result?.halfConfirmed ? "半确认" : result?.wrongCount ? "待巩固" : "尚未通过";
-  const hint = result?.halfConfirmed ? result.uncertain ? "答对但不确定，后续优先抽查" : "先学习其他题，隔场或次日抽查"
-    : result?.mastered ? result.stableMastered ? "已通过隔日复习" : "已通过间隔抽查" : "答对后进入半确认";
+  const label = result?.mastered ? "已掌握" : result?.wrongCount ? "待巩固" : "尚未掌握";
+  const hint = result?.mastered ? result.uncertain ? "后续优先抽测；不会做可改记为错题" : "后续少量间隔抽测；不会做可改记为错题" : "答对即掌握，答错加入错题本";
   return `<p class="preparation-question-status"><span class="pill ${result?.mastered ? "green" : "blue"}" data-preparation-question-status>${audit ? "随机抽查 · " : ""}${label}</span><small>${hint}</small></p>`;
 }
 function preparationRoundSummary() {
@@ -1570,8 +1569,8 @@ async function handleAction(action, el) {
       if (!isScorable(qById(el.dataset.id))) { toast("此题待核实，不计掌握度"); return; }
       if (state.preparation) {
         const metrics = currentPreparationMetrics();
-        if (metrics.pool.some((q) => q.id === el.dataset.id) && (!metrics.questions.get(el.dataset.id)?.latestCorrect || metrics.questions.get(el.dataset.id)?.uncertain)) {
-          toast("请先独立答对这道题；答对后进入半确认，再安排间隔抽查");
+        if (metrics.pool.some((q) => q.id === el.dataset.id) && !metrics.questions.get(el.dataset.id)?.mastered) {
+          toast("请先独立答对这道题；答对即掌握，后续仍会间隔抽测");
           return;
         }
       }
@@ -1580,6 +1579,14 @@ async function handleAction(action, el) {
       await persist();
       render();
       toast("已标记掌握，继续加油");
+      break;
+    }
+    case "mark-preparation-incorrect": {
+      const q = currentQuestion();
+      if (!q || !markPreparationIncorrect(bank, state, q.id)) return;
+      await persist();
+      refreshGradedPractice(state.practice, q);
+      toast("已改记为错题，加入错题本并继续巩固");
       break;
     }
     case "create-exam":

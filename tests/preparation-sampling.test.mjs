@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {normalizeBank,emptyState,recordAttempt,validateBackup,BACKUP_FORMAT} from '../dist/core.mjs';
-import {createPreparation,createTraining,preparationMastery,preparationMetrics,preparationTrainingPool,trainingCount,syncPreparationMistakes} from '../dist/preparation.mjs';
+import {createPreparation,createTraining,preparationProfile,preparationMastery,preparationMetrics,preparationTrainingPool,trainingCount,syncPreparationMistakes,markPreparationIncorrect} from '../dist/preparation.mjs';
 import {DAY_MS} from '../dist/study.mjs';
+import {learningProgress,spacedReview,preparationTrends} from '../dist/study.mjs';
+import {practicePool} from '../dist/study-planning.mjs';
 import {fixture} from './fixture.mjs';
 const seedRandom=(seed=9)=>()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/2**32);
 function setup(count=80){
@@ -18,13 +20,13 @@ function grade(bank,state,id,correct,round,at=1000,uncertain=false,session=`g${r
 }
 function diagnose(bank,state){for(const id of state.preparation.diagnosticIds)grade(bank,state,id,true,0);}
 
-test('first success is tentative, replay and adjacent sessions cannot confirm, delayed checks can',()=>{
+test('first success masters immediately while independent delayed checks retain review evidence',()=>{
  const {bank,state}=setup(1);grade(bank,state,'q0',true,0);
- assert.equal(preparationMastery(bank,state).halfConfirmed,1);
+ assert.equal(preparationMastery(bank,state).mastered,1);
  assert.equal(preparationMetrics(bank,state).progress,100);
  grade(bank,state,'q0',true,0,1001,false,'g0');
  grade(bank,state,'q0',true,1,1002);
- assert.equal(preparationMastery(bank,state).mastered,0);
+ assert.equal(preparationMastery(bank,state).mastered,1);
  grade(bank,state,'q0',true,3,1003);
  assert.equal(preparationMastery(bank,state).mastered,1);
  assert.equal(preparationMastery(bank,state).stableMastered,0);
@@ -74,18 +76,18 @@ test('a one-question scope waits instead of forcing a repeat, then permits a nex
  assert.equal(preparationTrainingPool(bank,state,1000+DAY_MS+1).count,0);
 });
 
-test('an uncertain success stays tentative and a later failure reopens the mistake',()=>{
+test('uncertain successes still master and resolve mistakes while later failures reopen them',()=>{
  const {bank,state}=setup(1);grade(bank,state,'q0',false,0);
  grade(bank,state,'q0',true,1,1100);
- assert.equal(syncPreparationMistakes(bank,state).halfConfirmed,1);
+ assert.equal(syncPreparationMistakes(bank,state).mastered,1);
  assert.equal(state.mistakes.q0.resolved,true);
- assert.equal(preparationMetrics(bank,state).trainingScore,50);
+ assert.equal(preparationMetrics(bank,state).trainingScore,100);
  grade(bank,state,'q0',true,3,1200,true);
- assert.equal(preparationMastery(bank,state).mastered,0);
- assert.equal(syncPreparationMistakes(bank,state).halfConfirmed,1);
- assert.equal(state.mistakes.q0.resolved,false);
+ assert.equal(preparationMastery(bank,state).mastered,1);
+ assert.equal(syncPreparationMistakes(bank,state).mastered,1);
+ assert.equal(state.mistakes.q0.resolved,true);
  grade(bank,state,'q0',true,5,1300);
- assert.equal(preparationMastery(bank,state).mastered,0);
+ assert.equal(preparationMastery(bank,state).mastered,1);
  grade(bank,state,'q0',true,7,1400);
  assert.equal(preparationMastery(bank,state).mastered,1);
  grade(bank,state,'q0',false,8,1500);
@@ -93,14 +95,65 @@ test('an uncertain success stays tentative and a later failure reopens the mista
  assert.equal(state.mistakes.q0.resolved,false);
 });
 
-test('sample metadata, tentative state and delayed confirmation survive backups with source-session deduplication',()=>{
+test('sample metadata, immediate mastery and review evidence survive backups with source-session deduplication',()=>{
  const {bank,state}=setup();diagnose(bank,state);state.preparation.round=1;
  state.practice=createTraining(bank,state,seedRandom(),1200);state.preparation.round=state.practice.round;
  const restored=validateBackup(JSON.parse(JSON.stringify({format:BACKUP_FORMAT,bank,state})));
  assert.deepEqual(restored.state.practice.auditQuestionIds,state.practice.auditQuestionIds);
- assert.equal(preparationMastery(restored.bank,restored.state).halfConfirmed,20);
+ assert.equal(preparationMastery(restored.bank,restored.state).mastered,20);
  const broken=structuredClone(restored.state);broken.practice.auditQuestionIds=['nonexistent'];
  assert.equal(validateBackup({format:BACKUP_FORMAT,bank,state:broken}).state.practice,null);
  const legacy=structuredClone(state);delete legacy.practice.auditQuestionIds;
  assert.ok(validateBackup({format:BACKUP_FORMAT,bank,state:legacy}).state.practice);
+});
+
+test('actually cannot solve revises one trial across mastery, notebook, scores, filters, schedules and backups',()=>{
+ const {bank,state}=setup(1),q=bank.questions[0];
+ state.practice.id='g0';state.practice.responses.q0={answer:'B',correct:true,graded:true};
+ state.preparation.session=structuredClone(state.practice);
+ grade(bank,state,'q0',true,0);
+ // Prime cached indexes before revising the existing result.
+ assert.equal(learningProgress([q],state).correct,1);
+ assert.equal(spacedReview(bank,state).schedule.get(q.id).streak,1);
+ assert.equal(markPreparationIncorrect(bank,state,'q0',1100),true);
+ assert.equal(markPreparationIncorrect(bank,state,'q0',1101),false);
+ assert.equal(state.attempts.length,1);
+ assert.equal(state.attempts[0].correct,false);
+ assert.equal(state.practice.responses.q0.correct,false);
+ assert.equal(state.preparation.session.responses.q0.correct,false);
+ assert.equal(preparationMastery(bank,state).mastered,0);
+ assert.equal(preparationMetrics(bank,state).trainingScore,0);
+ assert.equal(preparationMastery(bank,state).pendingMistakes,1);
+ assert.equal(state.mistakes.q0.wrongCount,1);
+ assert.equal(state.mistakes.q0.resolved,false);
+ assert.equal(learningProgress([q],state).correct,0);
+ assert.equal(spacedReview(bank,state).schedule.get(q.id).streak,0);
+ assert.equal(preparationTrends(bank,state,state.preparation.id)[0].accuracy,0);
+ assert.deepEqual(practicePool(bank,{status:'unmastered'},state).map(q=>q.id),['q0']);
+ assert.equal(preparationTrainingPool(bank,state,1101).fresh.length,1);
+ const restored=validateBackup(JSON.parse(JSON.stringify({format:BACKUP_FORMAT,bank,state})));
+ assert.equal(preparationMastery(restored.bank,restored.state).mastered,0);
+ assert.equal(restored.state.mistakes.q0.resolved,false);
+ const before=preparationProfileWeight(bank,state);
+ grade(bank,state,'q0',true,1,1200);
+ assert.equal(syncPreparationMistakes(bank,state).mastered,1);
+ assert.equal(state.mistakes.q0.resolved,true);
+ assert.ok(preparationProfileWeight(bank,state)<before);
+});
+
+function preparationProfileWeight(bank,state){return preparationProfile(bank,state,1101).weights.get('q0');}
+
+test('actually cannot solve applies to self-graded solutions and never revises an ordinary session',()=>{
+ const raw=structuredClone(fixture);raw.questions=[raw.questions.find(q=>q.type==='solution')];
+ const bank=normalizeBank(raw),state={...emptyState(),...createPreparation(bank,{subjectId:'math',chapterIds:['limits']})};
+ const q=bank.questions[0],p=state.practice;
+ p.responses[q.id]={answer:'',correct:true,graded:true};
+ recordAttempt(state,q,'',true,{id:`practice:${p.id}:${q.id}`,practiceId:p.id,round:0,
+  preparationId:state.preparation.id,mode:p.mode,manual:true,at:1000});
+ assert.equal(markPreparationIncorrect(bank,state,q.id,1100),true);
+ assert.equal(preparationMastery(bank,state).mastered,0);
+ assert.equal(preparationMastery(bank,state).pendingMistakes,1);
+ p.responses[q.id].correct=true;p.mode='sequential';
+ assert.equal(markPreparationIncorrect(bank,state,q.id,1200),false);
+ assert.equal(state.mistakes[q.id].wrongCount,1);
 });

@@ -30,7 +30,7 @@ export function practicePool(bank, filters, state) {
   const mastery = filters.status === "unmastered" ? preparationMastery(bank, state) : null;
   const preparationIds = new Set(mastery?.pool.map((q) => q.id) ?? []);
   return questions.filter((q) => filters.status === "unseen" ? !activity.has(q.id)
-    : preparationIds.has(q.id) ? !mastery.questions.get(q.id)?.latestCorrect || !!mastery.questions.get(q.id)?.uncertain : (activity.get(q.id)?.streak ?? 0) < 2);
+    : preparationIds.has(q.id) ? !mastery.questions.get(q.id)?.mastered : (activity.get(q.id)?.streak ?? 0) < 2);
 }
 
 export function rootChapter(bank, q) {

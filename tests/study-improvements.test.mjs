@@ -43,13 +43,13 @@ test('training reserves a quarter for unseen questions while reinforcing mistake
   assert.ok(p.questionIds.filter(id=>!seen.has(id)).length>=5);
   assert.ok(p.questionIds.filter(id=>seen.has(id)).length>=10);
 });
-test('uncertain success resets confident mastery and review interval; a later-day success confirms retention', () => {
+test('uncertain success retains mastery and resets review interval; a later-day success records retention', () => {
   const {bank,state}=setup(1), q=bank.questions[0];
   attempt(state,q,true,0); attempt(state,q,true,1,{mode:"prepare-training",round:2});
   assert.equal(preparationMastery(bank,state).mastered,1);
   assert.equal(preparationMastery(bank,state).stableMastered,0);
   attempt(state,q,true,2,{uncertain:true});
-  assert.equal(preparationMastery(bank,state).mastered,0);
+  assert.equal(preparationMastery(bank,state).mastered,1);
   assert.equal(spacedReview(bank,state).schedule.get(q.id).intervalDays,1);
   attempt(state,q,true,3);
   attempt(state,q,true,4,{at:DAY_MS+1003});
@@ -80,7 +80,7 @@ test('unseen and unmastered practice filters keep independent meaning', () => {
   attempt(state,bank.questions[1],true,2,{uncertain:true});
   assert.equal(practicePool(bank,{status:'unseen'},state).length,4);
   const pending=practicePool(bank,{status:'unmastered'},state);
-  assert.equal(pending.length,5); assert.ok(pending.some(q=>q.id==='q1'));
+  assert.equal(pending.length,4); assert.ok(!pending.some(q=>q.id==='q1'));
 });
 test('balanced practice samples small chapters and queues reach questions after the first page', () => {
   const {bank,state}=setup(65);
