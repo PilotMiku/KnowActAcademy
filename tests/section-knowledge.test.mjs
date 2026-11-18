@@ -59,9 +59,11 @@ test('every authored subsection formula renders with the deployed math engine', 
   const context={module:{exports:{}}};context.exports=context.module.exports;
   vm.runInNewContext(readFileSync('dist/vendor/katex/katex.min.js','utf8'),context);
   let count=0;
-  for(const row of sectionKnowledge) for(const field of ['formula','condition','example','warning']) {
-    for(const match of row[field].matchAll(/\$([^$]+)\$/g)) {
-      assert.doesNotThrow(()=>context.module.exports.renderToString(match[1],{throwOnError:true,trust:false,strict:'ignore'}),row.title+' '+field);
+  for(const row of sectionKnowledge) {
+    const content = [row.formula, row.condition, row.example, row.warning,
+      ...(row.exercises ?? []).flatMap(({prompt, solution}) => [prompt, solution])];
+    for(const text of content) for(const match of text.matchAll(/\$([^$]+)\$/g)) {
+      assert.doesNotThrow(()=>context.module.exports.renderToString(match[1],{throwOnError:true,trust:false,strict:'ignore'}),row.title);
       count++;
     }
   }

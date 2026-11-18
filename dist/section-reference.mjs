@@ -5,11 +5,25 @@ const pageSize = 12;
 export function referenceViewTabs(bank,active) {
   return `<nav class="reference-view-tabs" aria-label="知识卡片分类"><a href="#/reference" ${active === 'sections' ? 'aria-current="page"' : ''}>小节知识卡 <span>${sectionCardsForBank(bank).length}</span></a><a href="#/reference?view=chapters" ${active === 'chapters' ? 'aria-current="page"' : ''}>大章概览 <span>17</span></a></nav>`;
 }
+function sectionExercises(exercises) {
+  if (!exercises?.length) return '';
+  return `<section class="section-exercises" aria-label="本站自编自测">
+    <h3>本站自编自测 · ${exercises.length} 题</h3>
+    <p class="format-note">先在纸上作答，再展开核对。自测不计入练习成绩。</p>
+    <ol>${exercises.map(({type, prompt, solution}) => `<li><span class="pill">${esc(type)}</span>
+      <div class="rich" data-rich="${attr(prompt)}"></div>
+      <details><summary>核对答案与推导</summary><div class="rich" data-rich="${attr(solution)}"></div></details>
+    </li>`).join('')}</ol>
+  </section>`;
+}
 export function sectionCardContent(row,{questionCount = null, standalone = false} = {}) {
-  const practice = questionCount === 0 ? '<p class="format-note">本小节暂无题目，可先通过知识卡复习。</p>'
-    : `<a class="btn small primary" href="#/practice?subject=${encodeURIComponent(row.subjectId)}&chapter=${encodeURIComponent(row.sectionId)}">练习本小节 ${icon('arrow',13)}</a>`;
+  let practice = '';
+  if (questionCount !== 0)
+    practice = `<a class="btn small primary" href="#/practice?subject=${encodeURIComponent(row.subjectId)}&chapter=${encodeURIComponent(row.sectionId)}">练习本小节 ${icon('arrow',13)}</a>`;
+  else if (!row.exercises?.length)
+    practice = '<p class="format-note">本小节暂无题目，可先通过知识卡复习。</p>';
   const detail = standalone ? '' : `<a class="btn small" href="#/reference?subject=${encodeURIComponent(row.subjectId)}&section=${encodeURIComponent(row.sectionId)}">单独查看卡片</a>`;
-  return `<div class="section-card-body"><h3>知识要点</h3><p>${esc(row.overview)}</p><h3>关键公式</h3><div class="rich" data-rich="${attr(row.formula)}"></div><h3>适用条件</h3><div class="rich" data-rich="${attr(row.condition)}"></div><h3>小例题</h3><div class="rich" data-rich="${attr(row.example)}"></div><h3>易错提醒</h3><div class="rich section-card-warning" data-rich="${attr(row.warning)}"></div><div class="section-card-actions">${practice}${detail}</div></div>`;
+  return `<div class="section-card-body"><h3>知识要点</h3><p>${esc(row.overview)}</p><h3>关键公式</h3><div class="rich" data-rich="${attr(row.formula)}"></div><h3>适用条件</h3><div class="rich" data-rich="${attr(row.condition)}"></div><h3>小例题</h3><div class="rich" data-rich="${attr(row.example)}"></div><h3>易错提醒</h3><div class="rich section-card-warning" data-rich="${attr(row.warning)}"></div>${sectionExercises(row.exercises)}<div class="section-card-actions">${practice}${detail}</div></div>`;
 }
 export function filteredSectionCards(bank,query) {
   const subject = query.get('subject') || '', chapter = query.get('chapter') || '';

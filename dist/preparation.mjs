@@ -56,7 +56,8 @@ export function restoreDiagnostic(state, bank = null) {
   Object.assign(practice, { id: prep.diagnosticPracticeId, preparationId: prep.id, startedAt: prep.startedAt });
   for (const a of state.attempts) {
     if (a.preparationId === prep.id && a.mode === "prepare-diagnostic" && prep.diagnosticIds.includes(a.questionId))
-      practice.responses[a.questionId] = { answer: a.answer, correct: a.correct, uncertain: !!a.uncertain, graded: typeof a.correct === "boolean" };
+      practice.responses[a.questionId] = { answer: a.answer, correct: a.correct, uncertain: !!a.uncertain,
+        graded: typeof a.correct === "boolean", ...(a.selfAssessment ? { selfAssessment: true } : {}) };
   }
   practice.index = Math.max(0, practice.questionIds.findIndex((id) => !practice.responses[id]?.graded));
   return practice;
@@ -140,24 +141,52 @@ export function syncPreparationMistakes(bank, state) {
 
 // Revise the existing trial so scores, review schedules and restored sessions
 // all treat this self-assessment exactly like a wrong answer, without an extra trial.
-export function markPreparationIncorrect(bank, state, questionId, now = Date.now()) {
+function preparationTrial(bank, state, questionId) {
   const practice = state.practice;
   const q = getBankIndex(bank).questions.get(questionId);
-  if (!q || !isScorable(q) || practice?.preparationId !== state.preparation?.id ||
-      !["prepare-diagnostic", "prepare-training"].includes(practice?.mode) ||
-      !practice.questionIds.includes(questionId) || practice.responses[questionId]?.correct !== true) return false;
-  const attempt = state.attempts.find(a => a.questionId === questionId && a.correct === true &&
-    a.preparationId === state.preparation.id &&
+  if (!q || !isScorable(q) || !state.preparation || practice?.preparationId !== state.preparation.id ||
+      !["prepare-diagnostic", "prepare-training"].includes(practice.mode) ||
+      !practice.questionIds.includes(questionId)) return null;
+  return state.attempts.find(a => a.questionId === questionId && a.preparationId === practice.preparationId &&
     (a.id === `practice:${practice.id}:${questionId}` || a.practiceId === practice.id));
-  if (!attempt) return false;
-  // Replace the array to invalidate derived attempt indexes and mastery caches.
-  state.attempts = state.attempts.map(a => a === attempt ? { ...a, correct: false, manual: true } : a);
-  practice.responses[questionId] = { ...practice.responses[questionId], correct: false };
+}
+
+function replacePreparationTrial(state, attempt, updated, response) {
+  const practice = state.practice, questionId = attempt.questionId;
+  // Replacing the array invalidates the indexes and cached progress.
+  state.attempts = state.attempts.map(a => a === attempt ? updated : a);
+  practice.responses[questionId] = response;
   if (state.preparation.session?.id === practice.id)
-    state.preparation.session.responses[questionId] = { ...practice.responses[questionId] };
+    state.preparation.session.responses[questionId] = { ...response };
+}
+
+export function markPreparationIncorrect(bank, state, questionId, now = Date.now()) {
+  const attempt = preparationTrial(bank, state, questionId);
+  const response = state.practice?.responses[questionId];
+  if (attempt?.correct !== true || response?.correct !== true) return false;
   const mistake = state.mistakes[questionId];
+  const selfAssessment = { at: now, manual: !!attempt.manual, previousMistake: mistake ? { ...mistake } : null };
+  replacePreparationTrial(state, attempt, { ...attempt, correct: false, manual: true, selfAssessment },
+    { ...response, correct: false, selfAssessment: true });
   state.mistakes[questionId] = { firstAt: mistake?.firstAt ?? now, lastAt: now,
     wrongCount: (mistake?.wrongCount ?? 0) + 1, resolved: false };
+  return true;
+}
+
+export function undoPreparationIncorrect(bank, state, questionId) {
+  const attempt = preparationTrial(bank, state, questionId);
+  const response = state.practice?.responses[questionId];
+  if (attempt?.correct !== false || !response?.selfAssessment || !attempt.selfAssessment) return false;
+  const { selfAssessment, ...originalAttempt } = attempt;
+  const { selfAssessment: ignored, ...originalResponse } = response;
+  const { at, manual, previousMistake } = selfAssessment;
+  const current = state.mistakes[questionId];
+  if (!current || current.resolved !== false || current.lastAt !== at ||
+      current.wrongCount !== (previousMistake?.wrongCount ?? 0) + 1) return false;
+  replacePreparationTrial(state, attempt, { ...originalAttempt, correct: true, manual: !!manual },
+    { ...originalResponse, correct: true });
+  if (previousMistake) state.mistakes[questionId] = { ...previousMistake };
+  else delete state.mistakes[questionId];
   syncPreparationMistakes(bank, state);
   return true;
 }

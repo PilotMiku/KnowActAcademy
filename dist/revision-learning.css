@@ -177,3 +177,34 @@ dialog:has(.image-zoom-viewport) { width:min(900px,calc(100vw - 32px)); }
   .image-gallery .btn { padding:8px 10px; }
   .image-zoom-controls .btn { padding:8px 10px; }
 }
+.session-preparation {
+  margin: 0 0 14px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.session-preparation > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  font-size: .85rem;
+  cursor: pointer;
+}
+.session-preparation > summary span:last-child { color: var(--blue); }
+.session-preparation > summary span:last-child::after { content: ' ▾'; }
+.session-preparation[open] > summary span:last-child::after { content: ' ▴'; }
+.session-preparation > .preparation-live { margin-bottom: 12px; box-shadow: none; }
+.self-assessment-actions { margin: 10px 0; }
+.section-exercises { margin-top: 20px; }
+.section-exercises ol { display: grid; gap: 12px; margin: 10px 0 0; padding-left: 1.5em; }
+.section-exercises li > .rich { margin: 6px 0; }
+.section-exercises summary { cursor: pointer; color: var(--blue); padding: 5px 0; }
+.section-exercises details > .rich { padding: 8px 12px; border-left: 2px solid var(--line); }
+@media (max-width: 600px) {
+  .question-main .result-label { scroll-margin-block: 80px 105px; }
+  .session-preparation { margin-bottom: 8px; }
+  .question-toolbar .btn svg { display: none; }
+}

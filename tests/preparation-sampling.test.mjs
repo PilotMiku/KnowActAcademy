@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {normalizeBank,emptyState,recordAttempt,validateBackup,BACKUP_FORMAT} from '../dist/core.mjs';
-import {createPreparation,createTraining,preparationProfile,preparationMastery,preparationMetrics,preparationTrainingPool,trainingCount,syncPreparationMistakes,markPreparationIncorrect} from '../dist/preparation.mjs';
+import {createPreparation,createTraining,preparationProfile,preparationMastery,preparationMetrics,preparationTrainingPool,trainingCount,syncPreparationMistakes,markPreparationIncorrect,undoPreparationIncorrect} from '../dist/preparation.mjs';
 import {DAY_MS} from '../dist/study.mjs';
 import {learningProgress,spacedReview,preparationTrends} from '../dist/study.mjs';
 import {practicePool} from '../dist/study-planning.mjs';
@@ -142,6 +142,26 @@ test('actually cannot solve revises one trial across mastery, notebook, scores, 
 });
 
 function preparationProfileWeight(bank,state){return preparationProfile(bank,state,1101).weights.get('q0');}
+
+test('undo preserves earlier mistakes and refuses to overwrite a later mistake', () => {
+ const {bank,state}=setup(1), q=bank.questions[0];
+ recordAttempt(state,q,'A',false,{id:'earlier',at:900});
+ const previous={...state.mistakes.q0};
+ state.practice.id='g0';
+ state.practice.responses.q0={answer:'B',correct:true,graded:true};
+ grade(bank,state,'q0',true,0);
+ const schedule=spacedReview(bank,state).schedule.get(q.id);
+ assert.equal(markPreparationIncorrect(bank,state,'q0',1100),true);
+ assert.equal(undoPreparationIncorrect(bank,state,'q0'),true);
+ assert.deepEqual(state.mistakes.q0,previous);
+ assert.equal(preparationMetrics(bank,state).mastered,1);
+ assert.deepEqual(spacedReview(bank,state).schedule.get(q.id),schedule);
+ assert.equal(markPreparationIncorrect(bank,state,'q0',1200),true);
+ recordAttempt(state,q,'A',false,{id:'later',at:1300});
+ assert.equal(undoPreparationIncorrect(bank,state,'q0'),false);
+ assert.equal(state.mistakes.q0.wrongCount,3);
+ assert.equal(state.mistakes.q0.lastAt,1300);
+});
 
 test('actually cannot solve applies to self-graded solutions and never revises an ordinary session',()=>{
  const raw=structuredClone(fixture);raw.questions=[raw.questions.find(q=>q.type==='solution')];

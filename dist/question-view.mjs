@@ -2,16 +2,22 @@ import { isScorable } from "./core.mjs";
 import { animateFeedback } from './study-motion.mjs';
 import { supplementalAnalysis } from './supplemental-analysis.mjs';
 
-export function feedbackHTML(q, response, { mode = "practice", mastery = null, mistake = null, aids = '' }, { icon, attr, button }) {
+export function feedbackHTML(q, response, { mode = "practice", mistake = null, aids = '' }, { icon, attr, button }) {
   const supplement = supplementalAnalysis(q);
   const analysisTitle = supplement ? supplement.status === 'unresolved' ? '题目核对说明 · 本站整理' : '补充解析 · 本站整理' : '思路与解析';
   const analysis = supplement?.body || q.analysis || '这道题的原 PDF 未附解析，请查看原 PDF 核对。';
   if (!isScorable(q)) return `<section class="result-box"><div class="result-label">仅供查阅 · 本题不计分</div><div class="answer-line">原资料标注答案（待核实）：<span data-rich="${attr(Array.isArray(q.answer) ? q.answer.join("、") : q.answer)}"></span></div><div class="analysis"><b>${analysisTitle}</b><div class="rich" data-rich="${attr(analysis)}"></div></div><div class="result-footer"></div></section>`;
   const preparing = ["prepare-diagnostic", "prepare-training"].includes(mode);
-  const label = response.correct === null ? "对照参考答案，自评本次作答"
+  const label = preparing && response.selfAssessment ? "已按不会做加入错题本"
+    : response.correct === null ? "对照参考答案，自评本次作答"
     : response.correct ? mode === "exam" ? response.uncertain ? "本题答对，但标记为拿不准" : "本题回答正确" : preparing ? response.uncertain ? "本次答对但不确定 · 已掌握，后续优先抽测" : "本次答对 · 已掌握"
       : response.uncertain ? "这次答对但不确定，建议再练一次" : "本次答对了，记得继续巩固" : "本次答错了，把思路再理一遍";
-  return `<section class="result-box ${response.correct === false ? "wrong" : ""}"><div class="result-label">${icon(response.correct === false ? "mistake" : response.correct === null ? "info" : "check", 16)} ${label}</div><div class="answer-line">参考答案：<span class="rich" data-rich="${attr(Array.isArray(q.answer) ? q.answer.join(q.type === "multiple" ? "、" : " / ") : q.answer)}"></span></div><div class="analysis"><b>${analysisTitle}</b><div class="rich" data-rich="${attr(analysis)}"></div></div>${aids}<div class="result-footer">${q.type === "solution" && response.correct === null ? `<div class="flex self-grade-actions" style="margin-top:18px">${button("本次答对", "self-grade", 'data-correct="true"', "btn small")}${button("本次答错", "self-grade", 'data-correct="false"', "btn small soft")}</div>` : ""}${preparing && response.correct === true ? `<div style="margin-top:14px">${button("其实不会做", "mark-preparation-incorrect", 'title="撤销掌握，按错题加入错题本"', "btn small soft")}</div>` : ""}${!preparing && mistake && !mistake.resolved ? `<div style="margin-top:14px">${button(`${icon("check", 12)} 标记已掌握`, "resolve-mistake", `data-id="${attr(q.id)}"`, "text-btn")}</div>` : ""}</div></section>`;
+  let selfActions = "";
+  if (preparing && response.selfAssessment)
+    selfActions = button("撤销自评", "undo-preparation-incorrect", "", "btn small soft");
+  else if (preparing && response.correct === true)
+    selfActions = button("其实不会做", "mark-preparation-incorrect", 'title="撤销掌握，按错题加入错题本"', "btn small soft");
+  return `<section class="result-box ${response.correct === false ? "wrong" : ""}"><div class="result-label">${icon(response.correct === false ? "mistake" : response.correct === null ? "info" : "check", 16)} ${label}</div><div class="self-assessment-actions"${selfActions ? "" : " hidden"}>${selfActions}</div><div class="answer-line">参考答案：<span class="rich" data-rich="${attr(Array.isArray(q.answer) ? q.answer.join(q.type === "multiple" ? "、" : " / ") : q.answer)}"></span></div><div class="analysis"><b>${analysisTitle}</b><div class="rich" data-rich="${attr(analysis)}"></div></div>${aids}<div class="result-footer">${q.type === "solution" && response.correct === null ? `<div class="flex self-grade-actions" style="margin-top:18px">${button("本次答对", "self-grade", 'data-correct="true"', "btn small")}${button("本次答错", "self-grade", 'data-correct="false"', "btn small soft")}</div>` : ""}${!preparing && mistake && !mistake.resolved ? `<div style="margin-top:14px">${button(`${icon("check", 12)} 标记已掌握`, "resolve-mistake", `data-id="${attr(q.id)}"`, "text-btn")}</div>` : ""}</div></section>`;
 }
 
 export function patchPracticeAnswer({ root, question: q, practice, response, feedback, status, questionStatus, progress, renderRich }) {
@@ -34,7 +40,10 @@ export function patchPracticeAnswer({ root, question: q, practice, response, fee
   const existing = main.querySelector(".result-box"), replacement = template.content.firstElementChild;
   if (existing) {
     existing.className = replacement.className;
-    existing.querySelector(".result-label").innerHTML = replacement.querySelector(".result-label").innerHTML;
+    const label = existing.querySelector(".result-label");
+    label.innerHTML = replacement.querySelector(".result-label").innerHTML;
+    animateFeedback(label);
+    existing.querySelector(".self-assessment-actions")?.replaceWith(replacement.querySelector(".self-assessment-actions"));
     existing.querySelector(".result-footer").innerHTML = replacement.querySelector(".result-footer").innerHTML;
   } else {
     (main.querySelector('.question-notes') ?? main.querySelector(".question-actions")).before(replacement);
@@ -57,7 +66,8 @@ export function patchPracticeAnswer({ root, question: q, practice, response, fee
   }
   if (status && root.querySelector(".preparation-live")) {
     template.innerHTML = status;
-    const fresh = template.content.firstElementChild, live = root.querySelector(".preparation-live");
+    const fresh = template.content.firstElementChild;
+    const live = root.querySelector(".session-preparation") ?? root.querySelector(".preparation-live");
     for (const field of fresh.querySelectorAll("[data-live-field]")) {
       const target = [...live.querySelectorAll("[data-live-field]")].find((el) => el.dataset.liveField === field.dataset.liveField);
       if (target) target.textContent = field.textContent;

@@ -99,6 +99,9 @@ export function renderStudyLayout(root, html, scene = null) {
     });
   }
   if (sameSession) {
+    const previousDashboard = root.querySelector('.session-preparation');
+    const nextDashboard = template.content.querySelector('.session-preparation');
+    if (previousDashboard && nextDashboard) nextDashboard.open = previousDashboard.open;
     for (const selector of ['.local-header', '.question-nav', '.save-indicator', '.footer']) {
       const existing = root.querySelector(selector), fresh = template.content.querySelector(selector);
       if (!existing || !fresh) continue;

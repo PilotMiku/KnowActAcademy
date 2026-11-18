@@ -406,6 +406,31 @@ export function getBankIndex(bank) {
   return index;
 }
 const questionSearchText = new WeakMap();
+const questionSearchAliases = [
+  [/函数最值/g, "函数的最值"],
+  [/变上限积分|变限积分|积分上限/g, "积分上限"],
+  [/罗尔定理|rolle(?:定理)?|roll定理/g, "roll定理"],
+];
+const compactQuestionQuery = (value) => value.normalize("NFKC").toLowerCase().replace(/[\s·•、，,：:]+/g, "");
+function normalizeQuestionSearch(value) {
+  return questionSearchAliases.reduce((text, [aliases, canonical]) => text.replace(aliases, canonical), compactQuestionQuery(value));
+}
+function questionSearch(raw) {
+  const query = raw.normalize("NFKC").trim();
+  const numbered = query.match(/^(?:(\d+(?:\.\d+)+)\s*(?:小?节)?[\s·、:]*\s*)?(补充\s*)?第\s*(\d+)\s*题$/);
+  if (numbered) {
+    const [, section, supplement, number] = numbered;
+    return (q) => {
+      const label = q.sourceLabel?.normalize("NFKC") ?? "";
+      const suffix = label.match(/(补充)?\s*第\s*(\d+)\s*题$/);
+      return !!suffix && Number(suffix[2]) === Number(number) &&
+        (!section || label.match(/^\s*(\d+(?:\.\d+)+)/)?.[1] === section) &&
+        (supplement ? !!suffix[1] : !section || !suffix[1]);
+    };
+  }
+  const needle = normalizeQuestionSearch(query);
+  return (q) => !needle || q.id.toLowerCase() === query.toLowerCase() || searchableText(q).includes(needle);
+}
 export function examQuestions(bank, { subjectId = "", chapters = null } = {}) {
   const index = getBankIndex(bank);
   const pool = subjectId ? index.subjectQuestions.get(subjectId) ?? [] : bank.questions;
@@ -420,11 +445,11 @@ export function examQuestions(bank, { subjectId = "", chapters = null } = {}) {
 }
 function searchableText(q) {
   if (!questionSearchText.has(q))
-    questionSearchText.set(q, `${q.searchText ?? ""} ${q.sourceLabel ?? ""} ${textOnly(q.stem)} ${q.tags.join(" ")}`.toLowerCase());
+    questionSearchText.set(q, normalizeQuestionSearch(`${q.searchText ?? ""} ${q.sourceLabel ?? ""} ${textOnly(q.stem)} ${q.tags.join(" ")}`));
   return questionSearchText.get(q);
 }
 export function filterQuestions(bank, filter = {}, state = emptyState()) {
-  const needle = string(filter.search).toLowerCase();
+  const matchesSearch = questionSearch(string(filter.search));
   const chapterIds = new Set(filter.chapterIds ?? []);
   const selected = new Set(filter.chapterId ? [filter.chapterId] : []);
   if (selected.size) {
@@ -444,7 +469,7 @@ export function filterQuestions(bank, filter = {}, state = emptyState()) {
       (!chapterIds.size || chapterIds.has(q.chapterId)) &&
       (!filter.type || q.type === filter.type) &&
       (!filter.difficulty || matchesDifficulty(questionGuidance(q, state.questionAnnotations), filter.difficulty)) &&
-      (!needle || searchableText(q).includes(needle)) &&
+      matchesSearch(q) &&
       (!filter.favorites || state.favorites.includes(q.id)) &&
       (!filter.mistakes ||
         (state.mistakes[q.id] && !state.mistakes[q.id].resolved)),

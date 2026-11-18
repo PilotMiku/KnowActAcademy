@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { filterQuestions, normalizeBank } from '../dist/core.mjs';
 import { questionExcerpt, highlightedText, paginationHTML } from '../dist/question-discovery.mjs';
 
 test('preview preserves a complete formula and removes repeated source metadata', () => {
@@ -15,4 +17,16 @@ test('pagination preserves search and chapter and reaches the last page', () => 
   assert.match(html, /page=3/);
   assert.match(html, /chapter=c/);
   assert.match(html, /aria-current="page">2/);
+});
+
+test('bundled question search resolves compact source numbers, IDs and course terminology', () => {
+  const bank = normalizeBank(JSON.parse(readFileSync(new URL('../dist/data/bank.json', import.meta.url))));
+  const ids = (search) => filterQuestions(bank, { search }).map(q => q.id);
+  assert.deepEqual(ids('３．５：第２３题'), ['s-5213d062494c-q0023']);
+  assert.deepEqual(ids('s-5213d062494c-q0023'), ['s-5213d062494c-q0023']);
+  assert.ok(ids('第23题').length > 30);
+  for (const [alias, name] of [['函数最值', '函数的最值'], ['变上限积分', '积分上限'], ['罗尔定理', 'Roll定理']]) {
+    assert.ok(ids(alias).length > 0, alias);
+    assert.deepEqual(ids(alias), ids(name), alias);
+  }
 });

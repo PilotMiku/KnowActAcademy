@@ -45,6 +45,7 @@ try {
   await page.locator('#dialog [data-action="close-dialog"]').first().click();
   assert.equal(await page.locator('body').getAttribute('data-font-size'),'larger');
   assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
+  await page.locator('.session-preparation > summary').click();
   await page.evaluate(()=>{window.__live=document.querySelector('.preparation-live');window.__bar=document.querySelector('.preparation-live .progress-bar>span')});
   for(const q of raw.questions) {
     // Locate each question from current in-memory navigation via exported state.
@@ -68,6 +69,7 @@ try {
       assert.equal(await page.evaluate(()=>window.__main===document.querySelector('.question-main')&&window.__live===document.querySelector('.preparation-live')&&window.__bar===document.querySelector('.preparation-live .progress-bar>span')),true);
       assert.match(await page.locator('.result-label').innerText(),/不确定/);
       assert.equal(await page.locator('[data-action="toggle-uncertain"]').isDisabled(),true);
+      assert.equal(await page.locator('.session-preparation').evaluate(el=>el.open),true);
       assert.equal(await page.locator('[data-preparation-score]').innerText(),'—');
     }
   }

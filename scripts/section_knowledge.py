@@ -57,6 +57,12 @@ def publish(check=False, root=ROOT):
         for field in ['overview', 'formula', 'condition', 'example', 'warning']:
             if not isinstance(row.get(field), str) or len(row[field].strip()) < 8:
                 raise ValueError('Incomplete section card: ' + str(key) + ' ' + field)
+        for exercise in row.get('exercises', []):
+            if exercise.get('type') not in {'填空', '解答'} or any(
+                not isinstance(exercise.get(field), str) or not exercise[field].strip()
+                for field in ('prompt', 'solution')
+            ):
+                raise ValueError('Incomplete section exercise: ' + str(key))
     if actual != expected:
         raise ValueError('Knowledge cards do not exactly match the current subsection catalog')
     path = root / 'dist/section-knowledge.mjs'

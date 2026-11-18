@@ -61,7 +61,7 @@ import {
   PREPARATION_COUNT, preparationQuestions, diagnosticProgress,
   preparationProfile, trainingCount, practiceProgress,
   currentPreparationPractice,
-  preparationMetrics, syncPreparationMistakes, markPreparationIncorrect,
+  preparationMetrics, syncPreparationMistakes, markPreparationIncorrect, undoPreparationIncorrect,
 } from "./preparation.mjs";
 import { getConceptIndex } from "./concepts.mjs";
 import { practicePool } from "./study-planning.mjs";
@@ -372,7 +372,9 @@ function practicePage() {
     <nav class="practice-view-switch" aria-label="浏览练习内容"><a href="${attr(href("questions"))}" ${view === "questions" ? 'aria-current="page"' : ""}>题目列表</a><a href="${attr(href("chapters"))}" ${view === "chapters" ? 'aria-current="page"' : ""}>章节目录</a><a href="#/prepare" class="practice-prepare-link">${icon("target", 14)} 备考测评</a></nav>
     ${view === "chapters" ? `<div class="section-head"><h2>章节目录 <small>展开查看小节</small></h2></div>${bank.subjects.filter(s => !filters.subjectId || s.id === filters.subjectId).map(s => `<section class="subject-chapters"><h3 class="subject-label">${esc(s.name)}</h3>${chapterCards(true, s.id)}</section>`).join("")}`
       : questions.length ? `<div class="section-head"><h2>题目列表 <small>第 ${offset + 1}–${Math.min(offset + 20, questions.length)} 题 · 共 ${questions.length} 题</small></h2></div><section class="card">${questions.slice(offset, offset + 20).map((q, i) => collectionRow(q, offset + i, "preview")).join("")}${paginationHTML(pageNumber, questions.length, query)}</section>`
-      : empty("没有符合条件的题目", "请调整筛选，或返回全部题目。", '<a class="btn" href="#/practice">清除筛选</a>')}`;
+       : card?.exercises?.length && !advanced
+        ? empty("本小节有自编自测", "可到知识卡练习填空和解答，完成后展开核对推导。", `<a class="btn primary" href="${attr(knowledgeURL)}">打开小节自测</a>`)
+        : empty("没有符合条件的题目", "请调整筛选，或返回全部题目。", '<a class="btn" href="#/practice">清除筛选</a>')}`;
 }
 function preparationSelection() {
   const query = route().query;
@@ -478,8 +480,12 @@ function currentPreparationMetrics() {
       preparation: state.preparation, practice, metrics: preparationMetrics(bank, state) };
   return preparationMetricsCache.metrics;
 }
-function preparationStatus() {
-  return state.preparation ? preparationStatusCard(currentPreparationMetrics()) : "";
+function preparationStatus(inSession = false) {
+  if (!state.preparation) return "";
+  const metrics = currentPreparationMetrics();
+  const card = preparationStatusCard(metrics);
+  if (!inSession) return card;
+  return `<details class="session-preparation"><summary><span>本组进度 <strong data-live-field="session-count">${metrics.round.completed} / ${metrics.round.total}</strong></span><span>备考看板</span></summary>${card}</details>`;
 }
 function preparationQuestionStatus(id) {
   if (!isScorable(qById(id))) return '<p class="preparation-question-status">仅供查阅 · 不计掌握度</p>';
@@ -597,16 +603,16 @@ function sourceInfo(q) {
   return notice + `<div class="source-info"><span>${esc(q.sourceLabel)}</span><a href="${attr(href)}" target="_blank" rel="noopener noreferrer">${label} ${icon("arrow", 12)}</a></div>` + extras;
 }
 function resultBox(q, r, { mode = "practice" } = {}) {
-  const preparing = ["prepare-diagnostic", "prepare-training"].includes(mode);
-  return feedbackHTML(q, r, { mode, mastery: preparing ? currentPreparationMetrics().questions.get(q.id) : null,
+  return feedbackHTML(q, r, { mode,
     mistake: state.mistakes[q.id], aids: learningCardsHTML(q, bank, state) }, { icon, attr, button });
 }
 function refreshGradedPractice(p, q) {
   const response = p.responses[q.id];
   const submittedWithFocus = document.activeElement?.matches('[data-action="submit-answer"],[data-action="self-grade"]');
+  const selfAssessmentFocused = document.activeElement?.matches('[data-action="mark-preparation-incorrect"],[data-action="undo-preparation-incorrect"]');
   if (!patchPracticeAnswer({ root: app, question: q, practice: p, response,
     feedback: resultBox(q, response, { mode: p.mode }),
-    status: isPreparationPractice(p) ? preparationStatus() : "",
+    status: isPreparationPractice(p) ? preparationStatus(true) : "",
     questionStatus: isPreparationPractice(p) ? preparationQuestionStatus(q.id) : "", progress: practiceProgress(p, bank), renderRich })) {
     if (currentQuestion()?.id === q.id && route().query.has("session")) render();
   }
@@ -616,13 +622,14 @@ function refreshGradedPractice(p, q) {
   if (wasHidden && !finishGroup.hidden) animateFeedback(finishGroup);
   requestAnimationFrame(() => {
     if (currentQuestion()?.id !== q.id || !route().query.has("session")) return;
-    const result = app.querySelector('.result-box');
+    const label = app.querySelector('.result-box .result-label');
     const announcement = document.querySelector('#answer-announcement');
     announcement.textContent = '';
-    requestAnimationFrame(() => { if (currentQuestion()?.id === q.id) announcement.textContent = result?.querySelector('.result-label')?.textContent ?? ''; });
+    requestAnimationFrame(() => { if (currentQuestion()?.id === q.id) announcement.textContent = label?.textContent ?? ''; });
     if (submittedWithFocus) (app.querySelector('[data-action="self-grade"]') ?? app.querySelector('[data-action="next-question"]'))?.focus({ preventScroll: true });
+    if (selfAssessmentFocused) (app.querySelector('[data-action="undo-preparation-incorrect"],[data-action="mark-preparation-incorrect"]') ?? app.querySelector('[data-action="next-question"]'))?.focus({ preventScroll: true });
     if (matchMedia('(max-width:600px)').matches)
-      result?.scrollIntoView({ block: 'nearest', behavior: document.documentElement.dataset.motion === 'reduced' ? 'instant' : 'smooth' });
+      label?.scrollIntoView({ block: 'nearest', behavior: reducedMotion() ? 'instant' : 'smooth' });
   });
 }
 function questionNavigation(p, exam = false) {
@@ -670,7 +677,7 @@ function practiceSession() {
     answer: q.type === "multiple" ? [] : "",
     graded: false,
   };
-  return `${head(p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : p.mode === "prepare-training" ? `加权训练 · 第 ${p.round} 组` : p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn"))}${questionToolbar()}${isPreparationPractice(p) ? preparationStatus() : ""}<div class="question-layout"><section class="card question-main" data-source-format="${attr(q.source?.format || 'native')}" data-practice-id="${attr(p.id)}" data-question-id="${attr(q.id)}"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "原题" : difficultyNames[q.difficulty]}</span></div>${favoriteButton(q.id, state.favorites.includes(q.id))}</div>${isPreparationPractice(p) ? preparationQuestionStatus(q.id) : ""}<p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">${q.source.format === "html" ? "补充题已优化文字与公式排版；可调整字号，长公式可左右滑动，原图可放大查看" : "长公式可左右滑动查看"}</p>` : ""}${answerInput(q, r.answer, r.graded || !isScorable(q))}${r.graded ? resultBox(q, r, { mode: p.mode }) : ""}${questionNotesHTML(q.id, state, { esc, attr })}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(!isScorable(q) ? "查看参考（不计分）" : q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
+  return `${head(p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : p.mode === "prepare-training" ? `加权训练 · 第 ${p.round} 组` : p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn"))}${isPreparationPractice(p) ? preparationStatus(true) : ""}${questionToolbar()}<div class="question-layout"><section class="card question-main" data-source-format="${attr(q.source?.format || 'native')}" data-practice-id="${attr(p.id)}" data-question-id="${attr(q.id)}"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "原题" : difficultyNames[q.difficulty]}</span></div>${favoriteButton(q.id, state.favorites.includes(q.id))}</div>${isPreparationPractice(p) ? preparationQuestionStatus(q.id) : ""}<p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">${q.source.format === "html" ? "补充题已优化文字与公式排版；可调整字号，长公式可左右滑动，原图可放大查看" : "长公式可左右滑动查看"}</p>` : ""}${answerInput(q, r.answer, r.graded || !isScorable(q))}${r.graded ? resultBox(q, r, { mode: p.mode }) : ""}${questionNotesHTML(q.id, state, { esc, attr })}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(!isScorable(q) ? "查看参考（不计分）" : q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
 }
 function requireBundledBank() {
   if (bank.managedBundle === false || !bank.revision?.startsWith("pdf-"))
@@ -1583,10 +1590,22 @@ async function handleAction(action, el) {
     }
     case "mark-preparation-incorrect": {
       const q = currentQuestion();
+      const p = state.practice;
       if (!q || !markPreparationIncorrect(bank, state, q.id)) return;
       await persist();
-      refreshGradedPractice(state.practice, q);
+      if (state.practice === p && currentQuestion()?.id === q.id) refreshGradedPractice(p, q);
       toast("已改记为错题，加入错题本并继续巩固");
+      break;
+    }
+    case "undo-preparation-incorrect": {
+      const q = currentQuestion(), p = state.practice;
+      if (!q || !undoPreparationIncorrect(bank, state, q.id)) {
+        toast("这道题已有新的错题记录，无法撤销本次自评");
+        return;
+      }
+      await persist();
+      if (state.practice === p && currentQuestion()?.id === q.id) refreshGradedPractice(p, q);
+      toast("已撤销自评，恢复本次作答结果");
       break;
     }
     case "create-exam":
