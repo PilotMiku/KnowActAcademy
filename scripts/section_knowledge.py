@@ -58,7 +58,7 @@ def publish(check=False, root=ROOT):
             if not isinstance(row.get(field), str) or len(row[field].strip()) < 8:
                 raise ValueError('Incomplete section card: ' + str(key) + ' ' + field)
         for exercise in row.get('exercises', []):
-            if exercise.get('type') not in {'填空', '解答'} or any(
+            if exercise.get('type') not in {'填空', '解答', '判断'} or any(
                 not isinstance(exercise.get(field), str) or not exercise[field].strip()
                 for field in ('prompt', 'solution')
             ):

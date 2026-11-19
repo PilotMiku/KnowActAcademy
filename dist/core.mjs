@@ -84,6 +84,8 @@ export function emptyState() {
     mistakes: {},
     exams: [],
     practice: null,
+    suspendedPractice: null,
+    sectionSelfChecks: {},
     preparation: null,
     preparationHistory: [],
     theme: "system",
@@ -700,6 +702,11 @@ export function validateBackup(input, installedBank = null) {
     record(p.responses) && Object.values(p.responses).every(record) &&
     (p.questionTimes === undefined || record(p.questionTimes) && Object.entries(p.questionTimes).every(([id, ms]) =>
       p.questionIds.includes(id) && Number.isFinite(ms) && ms >= 0));
+  state.sectionSelfChecks = Object.fromEntries(Object.entries(record(data.sectionSelfChecks) ? data.sectionSelfChecks : {}).filter(
+    ([key, row]) => /^(calculus|linear):[\w-]+:\d+$/.test(key) && record(row) &&
+      typeof row.answer === "string" && row.answer.length <= 2000 && ["", "known", "review"].includes(row.result)));
+  state.suspendedPractice = validPractice(data.suspendedPractice) && !data.suspendedPractice.preparationId
+    ? { ...data.suspendedPractice, questionStartedAt: null } : null;
   if (state.practice && !validPractice(state.practice)) state.practice = null;
   if (state.practice) state.practice = { ...state.practice, questionStartedAt: null };
   const prep = state.preparation;

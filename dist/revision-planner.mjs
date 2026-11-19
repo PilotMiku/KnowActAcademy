@@ -20,10 +20,15 @@ export function normalizeRevisionPlan(value, bank) {
       new Set(value.chapterIds).size !== value.chapterIds.length ||
       value.chapterIds.some(id => !subject.chapters.some(c => c.id === id)) ||
       !Number.isInteger(value.minutesPerDay) || value.minutesPerDay < 10 || value.minutesPerDay > 240 ||
+      (value.weekendMinutes !== undefined && (!Number.isInteger(value.weekendMinutes) || value.weekendMinutes < 0 || value.weekendMinutes > 240)) ||
+      (value.skippedDates !== undefined && (!Array.isArray(value.skippedDates) || value.skippedDates.length > 730 ||
+        value.skippedDates.some(date => !Number.isFinite(dateNumber(date))))) ||
       !Number.isFinite(value.createdAt) || !Number.isFinite(value.updatedAt))
     throw new Error('复习日历的日期、章节或每日时间无效');
   return { title: value.title.trim(), examDate: value.examDate, subjectId: subject.id,
     chapterIds: [...value.chapterIds], minutesPerDay: value.minutesPerDay,
+    ...(value.weekendMinutes === undefined ? {} : { weekendMinutes: value.weekendMinutes }),
+    ...(value.skippedDates?.length ? { skippedDates: [...new Set(value.skippedDates)].sort() } : {}),
     createdAt: value.createdAt, updatedAt: value.updatedAt };
 }
 
@@ -42,7 +47,14 @@ export function revisionSchedule(bank, state, now = Date.now()) {
   }
   const recent = durations.slice(-100).sort((a, b) => a - b);
   const secondsPerQuestion = Math.max(30, Math.min(480, (recent[Math.floor(recent.length / 2)] ?? 120000) / 1000));
-  const dailyCapacity = Math.max(1, Math.floor(plan.minutesPerDay * 60 / secondsPerQuestion));
+  const skipped = new Set(plan.skippedDates);
+  const minutesFor = day => {
+    if (skipped.has(dateFromNumber(day))) return 0;
+    const weekday = new Date(day * DAY).getUTCDay();
+    return weekday === 0 || weekday === 6 ? (plan.weekendMinutes ?? plan.minutesPerDay) : plan.minutesPerDay;
+  };
+  const capacity = minutes => minutes ? Math.max(1, Math.floor(minutes * 60 / secondsPerQuestion)) : 0;
+  const dailyCapacity = capacity(minutesFor(first));
   const schedule = spacedReview(bank, state, now).schedule;
   const unseen = [], review = [];
   for (const id of ids) {
@@ -61,13 +73,14 @@ export function revisionSchedule(bank, state, now = Date.now()) {
   // Large imported dates cannot create an unbounded page or allocation loop.
   for (let day = first; day < Math.min(end, first + 730); day++) {
     const completed = day === first ? doneToday.size : 0;
-    let slots = Math.max(0, dailyCapacity - completed);
+    const budget = minutesFor(day);
+    let slots = Math.max(0, capacity(budget) - completed);
     const reviewIds = [], newIds = [];
     while (slots && reviewIndex < review.length && review[reviewIndex].dueDay <= day) {
       reviewIds.push(review[reviewIndex++].id); slots--;
     }
     while (slots && newIndex < unseen.length) { newIds.push(unseen[newIndex++]); slots--; }
-    days.push({ date: dateFromNumber(day), newIds, reviewIds, completed,
+    days.push({ date: dateFromNumber(day), budget, newIds, reviewIds, completed,
       questionIds: [...reviewIds, ...newIds], minutes: Math.ceil((reviewIds.length + newIds.length) * secondsPerQuestion / 60) });
   }
   let nextReviewAt = null;

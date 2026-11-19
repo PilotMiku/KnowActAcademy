@@ -1,4 +1,4 @@
-import { getBankIndex, isScorable } from "./core.mjs";
+import { getBankIndex, hasResponse, isScorable } from "./core.mjs";
 import { rootChapter } from "./study-planning.mjs";
 
 export function examResultSummary(bank, exam) {
@@ -35,4 +35,27 @@ export function examInsights(bank, exam, { esc, attr, button }) {
   }
   const weak=[...groups.values()].filter(row=>row.wrong).sort((a,b)=>b.wrong/b.total-a.wrong/a.total).slice(0,3);
   return `<section class="card exam-next-steps"><h2>下一步怎么练</h2>${wrong.length?`<p>本次 ${wrong.length} 道待巩固题，可直接组成一组练习。</p>${button('练习本次错题','practice-exam-weak',`data-id="${attr(exam.id)}"`,'btn primary')}`:'<p>本次有效评分题全部答对，可结合拿不准标记和耗时继续复盘。</p>'}${weak.map(row=>{const [subjectId,chapterId]=JSON.parse(row.key);return `<article><div><strong>${esc(index.chapters.get(subjectId)?.get(chapterId)?.name || chapterId)}</strong><p>本次 ${row.wrong}/${row.total} 题待巩固</p></div><a class="btn small" href="#/practice?subject=${encodeURIComponent(subjectId)}&chapter=${encodeURIComponent(chapterId)}&status=unmastered">练习薄弱章节</a></article>`;}).join('')}<h3>本次耗时较长的题</h3>${slow.length?slow.map(q=>`<article><span>${esc(q.sourceLabel || q.id)} · ${Math.round(exam.questionTimes[q.id]/1000)} 秒</span>${button('重练','practice-one',`data-id="${attr(q.id)}"`,'btn small')}</article>`).join(''):'<p>这份记录没有逐题有效用时。</p>'}<p class="format-note">耗时排行仅反映本次答题停留时间；章节建议基于本卷作答，不能代表整章掌握程度。</p></section>`;
+}
+
+export const examReviewFilters = [
+  ["all", "全部"], ["wrong", "答错"], ["blank", "未答"], ["uncertain", "答对但拿不准"], ["slow", "耗时较长"],
+];
+
+export function examReviewFilter(query) {
+  const requested = query?.get("review");
+  return examReviewFilters.some(([key]) => key === requested) ? requested : "all";
+}
+
+export function examReviewIds(bank, exam, filter) {
+  if (filter === "all") return exam.questionIds;
+  const questions = getBankIndex(bank).questions;
+  const eligible = exam.questionIds.filter(id => isScorable(questions.get(id)) && questions.get(id).type !== "solution");
+  if (filter === "slow") return eligible.filter(id => exam.questionTimes?.[id] > 0)
+    .sort((a,b) => exam.questionTimes[b] - exam.questionTimes[a]).slice(0,5);
+  return eligible.filter(id => {
+    const answered = hasResponse(questions.get(id), exam.answers[id]);
+    if (filter === "blank") return !answered;
+    if (filter === "wrong") return answered && exam.results[id] === false;
+    return filter === "uncertain" && exam.results[id] === true && exam.uncertainIds?.includes(id);
+  });
 }

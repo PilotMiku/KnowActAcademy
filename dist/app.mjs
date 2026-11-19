@@ -15,10 +15,12 @@ import { revisionCalendarPage, revisionScopeHTML } from './revision-planner-view
 import { learningCardsHTML, questionHintsHTML } from './question-learning.mjs';
 import { renderStudyLayout, reducedMotion, animateFeedback } from './study-motion.mjs';
 import { installQuestionGestures } from './question-gestures.mjs';
-import { sessionNavigationHTML, updateSessionNavigation, pendingQuestionIndices, nextPendingIndex } from './session-navigation.mjs';
+import { sessionNavigationHTML, updateSessionNavigation, pendingQuestionIndices, nextPendingIndex, nextPracticeSection } from './session-navigation.mjs';
 import { imageViewerHTML, updateImageZoom, selectQuestionImage, toggleFormulaOriginal } from './question-images.mjs';
 import { supplementalAnalysis } from './supplemental-analysis.mjs';
 import { sectionKnowledgeCard } from './section-knowledge.mjs';
+import { similarFreshQuestions } from "./study-planning.mjs";
+import { examReviewFilter, examReviewIds } from "./exam-view.mjs";
 import { referencePage } from './math-reference.mjs';
 import { drawExam, normalizeExamTemplates } from './exam-design.mjs';
 import { preparationTreeHTML, syncPreparationTree, changeScope } from "./preparation-scope.mjs";
@@ -156,10 +158,10 @@ const names = {
 const difficultyNames = { easy: "基础", medium: "进阶", hard: "挑战" };
 const DEFAULT_QUESTION_COUNT = 25;
 const sessionTransitions = new Set([
-  "start-practice", "start-collection", "practice-one", "begin-preparation",
+  "start-practice", "next-practice-section", "start-collection", "practice-one", "begin-preparation",
   "next-training", "resume-preparation", "start-spaced", "spaced-one",
   "begin-exam", "navigate-question", "next-pending-question", "next-question", "complete-preparation", "finish-preparation",
-  'practice-selected', 'practice-exam-weak', 'revision-practice',
+  'practice-selected', 'practice-exam-weak', 'revision-practice', 'practice-exam-filter', 'practice-similar', 'resume-suspended-practice',
 ]);
 const routes = {
   welcome: "起始页",
@@ -333,7 +335,7 @@ function filtersHTML(filters, search = true, mode = "all") {
 }
 function practiceControls() {
   const query = route().query;
-  return `<div class="practice-extra-controls"><div class="field"><label for="practice-status">练习范围</label><select id="practice-status" data-filter="status"><option value="">全部题目</option><option value="unseen" ${query.get("status") === "unseen" ? "selected" : ""}>只练未做题</option><option value="unmastered" ${query.get("status") === "unmastered" ? "selected" : ""}>只练未掌握题</option></select></div><div class="field"><label for="random-distribution">随机抽题方式</label><select id="random-distribution" data-filter="distribution"><option value="random">题目均匀随机</option><option value="balanced" ${query.get("distribution") === "balanced" ? "selected" : ""}>按大章节均衡抽题</option></select></div><div class="field"><label for="practice-difficulty">五星难度</label><select id="practice-difficulty" data-filter="difficulty"><option value="">全部难度</option>${Object.entries(starLabels).map(([id,label])=>`<option value="${id}" ${query.get('difficulty')===id?'selected':''}>${'★'.repeat(Number(id))}${'☆'.repeat(5-Number(id))} · ${label}</option>`).join('')}<option value="unrated" ${query.get('difficulty')==='unrated'?'selected':''}>待标注</option></select></div><div class="field"><label for="practice-concept">逐题知识点</label><input class="input" id="practice-concept" data-filter="concept" value="${attr(query.get('concept') || '')}" placeholder="例如：函数奇偶性"></div><p class="format-note">难度采用 1～5 星建议，个人标注优先于编辑标注与自动初评。自动初评按知识点、题型及可识别解题要点估计，尚未经实测校准，可在学习标注中调整。备考范围的题答对即掌握，可选择“其实不会做”改记错题，后续保留少量间隔抽测；其他范围按连续两次确定答对筛选。</p></div>`;
+  return `<div class="practice-extra-controls"><div class="field"><label for="practice-status">练习范围</label><select id="practice-status" data-filter="status"><option value="">全部题目</option><option value="unseen" ${query.get("status") === "unseen" ? "selected" : ""}>只练未做题</option><option value="unmastered" ${query.get("status") === "unmastered" ? "selected" : ""}>只练未掌握题</option></select></div><div class="field"><label for="random-distribution">随机刷题顺序</label><select id="random-distribution" data-filter="distribution"><option value="random">全部题目打乱</option><option value="balanced" ${query.get("distribution") === "balanced" ? "selected" : ""}>按大章节交替刷题</option></select></div><div class="field"><label for="practice-difficulty">五星难度</label><select id="practice-difficulty" data-filter="difficulty"><option value="">全部难度</option>${Object.entries(starLabels).map(([id,label])=>`<option value="${id}" ${query.get('difficulty')===id?'selected':''}>${'★'.repeat(Number(id))}${'☆'.repeat(5-Number(id))} · ${label}</option>`).join('')}<option value="unrated" ${query.get('difficulty')==='unrated'?'selected':''}>待标注</option></select></div><div class="field"><label for="practice-concept">逐题知识点</label><input class="input" id="practice-concept" data-filter="concept" value="${attr(query.get('concept') || '')}" placeholder="例如：函数奇偶性"></div><p class="format-note">难度采用 1～5 星建议，个人标注优先于编辑标注与自动初评。自动初评按知识点、题型及可识别解题要点估计，尚未经实测校准，可在学习标注中调整。备考范围的题答对即掌握，可选择“其实不会做”改记错题，后续保留少量间隔抽测；其他范围按连续两次确定答对筛选。</p></div>`;
 }
 function questionToolbar() {
   const q = currentQuestion(), exam = currentExam(), p = state.practice;
@@ -348,12 +350,11 @@ function practicePage() {
   const filters = getFilters(), query = route().query;
   const questions = practicePool(bank, filters, state);
   const progress = learningProgress(questions, state);
-  const randomCount = query.get("count") === "all" ? "all" : "25";
   const view = query.get("view") === "chapters" ? "chapters" : "questions";
   const pageCount = Math.max(1, Math.ceil(questions.length / 20));
   const pageNumber = Math.max(1, Math.min(pageCount, Number.isSafeInteger(Number(query.get('page'))) ? Number(query.get('page')) : 1));
   const offset = (pageNumber - 1) * 20;
-  const advanced = !!(filters.type || filters.search || filters.status || filters.difficulty || filters.concept || query.get("distribution") || query.get("count"));
+  const advanced = !!(filters.type || filters.search || filters.status || filters.difficulty || filters.concept || query.get("distribution"));
   const href = (view) => { const next = new URLSearchParams(query); next.set("view", view); return "#/practice?" + next; };
   const chapterName = getBankIndex(bank).chapters.get(filters.subjectId)?.get(filters.chapterId)?.name
     ?? bank.subjects.flatMap(s => s.chapters).find(c => c.id === filters.chapterId)?.name;
@@ -361,12 +362,13 @@ function practicePage() {
   const card = sectionKnowledgeCard(scopeSubject, filters.chapterId);
   const knowledgeURL = card ? `#/reference?subject=${encodeURIComponent(scopeSubject)}&section=${encodeURIComponent(card.sectionId)}`
     : '#/reference?' + new URLSearchParams([...(scopeSubject ? [['subject',scopeSubject]] : []),...(filters.chapterId ? [['chapter',filters.chapterId]] : [])]);
-  return `${head("章节练习", "选好科目与章节，就可以开始。", state.practice ? button(`继续上次练习 ${icon("arrow", 14)}`, "resume-practice", "", "btn soft") : "")}
+  return `${head("章节练习", "选好科目与章节，就可以开始。", state.practice ? button(`继续上次练习 ${icon("arrow", 14)}`, "resume-practice", "", "btn soft") + (state.suspendedPractice ? button("返回原练习", "resume-suspended-practice", "", "btn") : "") : "")}
     <section class="card practice-start practice-setup" aria-label="选择练习范围">
       ${filtersHTML(filters, true, "basic")}
       <div class="practice-scope-summary"><strong>${esc(chapterName ?? subject(filters.subjectId)?.name ?? "全部题目")}</strong><span>共 ${questions.length.toLocaleString()} 条 · 可评分 ${questionCounts(questions).scorable.toLocaleString()} 题</span></div>
-      <div class="practice-primary-actions">${button(`${icon("book", 17)} 顺序练习`, "start-practice", `data-mode="sequential" ${questions.length ? "" : "disabled"}`, "btn primary")}${button(`${icon("refresh", 17)} ${randomCount === "all" ? "随机所有题目" : `随机 ${DEFAULT_QUESTION_COUNT} 题`}`, "start-practice", `data-mode="random" ${questions.length ? "" : "disabled"}`, "btn")}<a class="btn practice-knowledge-link" href="${attr(knowledgeURL)}">${icon("book",16)} ${card ? "本小节知识卡" : "查看知识卡"}</a></div>
-      <details class="practice-options" ${advanced || practiceOptionsOpen ? "open" : ""}><summary>筛选与练习设置${advanced ? " · 已启用" : ""}</summary><div class="practice-options-body">${filtersHTML(filters, true, "advanced")}${practiceControls()}<div class="field"><label for="random-count">随机题量</label><select id="random-count" data-filter="count"><option value="25" ${randomCount === "25" ? "selected" : ""}>25 题</option><option value="all" ${randomCount === "all" ? "selected" : ""}>所有题目（${questions.length} 题）</option></select></div><p class="format-note question-count-note">${esc(questionCountDescription(questions))}</p></div></details>
+      <div class="practice-primary-actions">${button(`${icon("book", 17)} 顺序练习`, "start-practice", `data-mode="sequential" ${questions.length ? "" : "disabled"}`, "btn primary")}${button(`${icon("refresh", 17)} 随机刷题`, "start-practice", `data-mode="random" ${questions.length && filters.chapterId ? "" : "disabled"}`, "btn")}<a class="btn practice-knowledge-link" href="${attr(knowledgeURL)}">${icon("book",16)} ${card ? "本小节知识卡" : "查看知识卡"}</a></div>
+      <details class="practice-options" ${advanced || practiceOptionsOpen ? "open" : ""}><summary>筛选与练习设置${advanced ? " · 已启用" : ""}</summary><div class="practice-options-body">${filtersHTML(filters, true, "advanced")}${practiceControls()}<p class="format-note question-count-note">${esc(questionCountDescription(questions))}</p></div></details>
+      ${filters.chapterId ? '' : '<p class="format-note">选定一个大章或小节后可随机刷题。</p>'}
     </section>
     <details class="practice-progress" ${practiceProgressOpen ? "open" : ""}><summary><span>${icon("chevron", 13)} 学习进度</span><span>已完成 ${progress.completed} / ${progress.total} 题 · ${progress.completion}%</span></summary>${learningProgressCard(progress)}</details>
     <nav class="practice-view-switch" aria-label="浏览练习内容"><a href="${attr(href("questions"))}" ${view === "questions" ? 'aria-current="page"' : ""}>题目列表</a><a href="${attr(href("chapters"))}" ${view === "chapters" ? 'aria-current="page"' : ""}>章节目录</a><a href="#/prepare" class="practice-prepare-link">${icon("target", 14)} 备考测评</a></nav>
@@ -383,6 +385,13 @@ function preparationSelection() {
     : state.preparation?.subjectId === subjectId ? state.preparation.chapterIds
     : (subject(subjectId)?.chapters.filter((c) => !c.parentId).map((c) => c.id) ?? []) };
 }
+function revisionAvailability(form) {
+  return {
+    minutesPerDay: Number(form.elements.minutesPerDay.value),
+    weekendMinutes: form.elements.weekendMinutes.value === '' ? undefined : Number(form.elements.weekendMinutes.value),
+    skippedDates: form.elements.skippedDates.value.trim().split(/[\s,，、]+/).filter(Boolean),
+  };
+}
 function updateRevisionScope(input) {
   const form = document.querySelector('#revision-plan-form');
   if (!form) return;
@@ -395,9 +404,9 @@ function updateRevisionScope(input) {
     const now = Date.now();
     const summary = revisionSchedule(bank, { ...state, revisionPlan: {
       title:'预览', subjectId, chapterIds:selected, examDate:form.elements.examDate.value,
-      minutesPerDay:Number(form.elements.minutesPerDay.value), createdAt:now, updatedAt:now,
+      ...revisionAvailability(form), createdAt:now, updatedAt:now,
     } });
-    label.textContent = `已选 ${summary.total} 道可评分题 · 每天约 ${summary.dailyCapacity} 道${summary.unscheduled ? ` · 考前尚有 ${summary.unscheduled} 道未排入` : ' · 当前时间预算可以安排现有待练题'}`;
+    label.textContent = `已选 ${summary.total} 道可评分题 · 今天约 ${summary.dailyCapacity} 道${summary.unscheduled ? ` · 考前尚有 ${summary.unscheduled} 道未排入` : ' · 当前时间预算可以安排现有待练题'}`;
   } catch { label.textContent = selected.length ? '请填写有效日期和每日时间，查看可安排题量。' : '请选择至少一个大章或小节。'; }
 }
 function preparationTopics() {
@@ -604,7 +613,9 @@ function sourceInfo(q) {
 }
 function resultBox(q, r, { mode = "practice" } = {}) {
   return feedbackHTML(q, r, { mode,
-    mistake: state.mistakes[q.id], aids: learningCardsHTML(q, bank, state) }, { icon, attr, button });
+    mistake: state.mistakes[q.id], aids: learningCardsHTML(q, bank, state),
+    followup: (r.correct === false || (r.correct === true && r.uncertain)) && similarFreshQuestions(bank, state, q).length
+      ? button("练同类新题（最多 3 题）", "practice-similar", `data-id="${attr(q.id)}"`, "btn small") : "" }, { icon, attr, button });
 }
 function refreshGradedPractice(p, q) {
   const response = p.responses[q.id];
@@ -677,7 +688,7 @@ function practiceSession() {
     answer: q.type === "multiple" ? [] : "",
     graded: false,
   };
-  return `${head(p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : p.mode === "prepare-training" ? `加权训练 · 第 ${p.round} 组` : p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn"))}${isPreparationPractice(p) ? preparationStatus(true) : ""}${questionToolbar()}<div class="question-layout"><section class="card question-main" data-source-format="${attr(q.source?.format || 'native')}" data-practice-id="${attr(p.id)}" data-question-id="${attr(q.id)}"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "原题" : difficultyNames[q.difficulty]}</span></div>${favoriteButton(q.id, state.favorites.includes(q.id))}</div>${isPreparationPractice(p) ? preparationQuestionStatus(q.id) : ""}<p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">${q.source.format === "html" ? "补充题已优化文字与公式排版；可调整字号，长公式可左右滑动，原图可放大查看" : "长公式可左右滑动查看"}</p>` : ""}${answerInput(q, r.answer, r.graded || !isScorable(q))}${r.graded ? resultBox(q, r, { mode: p.mode }) : ""}${questionNotesHTML(q.id, state, { esc, attr })}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(!isScorable(q) ? "查看参考（不计分）" : q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
+  return `${head(p.mode === "similar" ? "同类新题" : p.mode === "spaced" ? "到期复习" : p.mode === "prepare-diagnostic" ? "备考测评" : p.mode === "prepare-training" ? `加权训练 · 第 ${p.round} 组` : p.mode === "random" ? "随机练习" : p.mode === "review" ? "错题回顾" : p.mode === "favorites" ? "收藏练习" : "章节练习", `${esc(subject(q.subjectId)?.name ?? "")} · ${esc(chapter(q))}`, button(`${icon("back", 13)} 选择练习`, "exit-practice", "", "btn") + (state.suspendedPractice ? button("返回原练习", "resume-suspended-practice", "", "btn") : ""))}${isPreparationPractice(p) ? preparationStatus(true) : ""}${questionToolbar()}<div class="question-layout"><section class="card question-main" data-source-format="${attr(q.source?.format || 'native')}" data-practice-id="${attr(p.id)}" data-question-id="${attr(q.id)}"><div class="question-top"><div class="flex"><span class="pill green">${names[q.type]}</span><span class="pill">${q.source ? "原题" : difficultyNames[q.difficulty]}</span></div>${favoriteButton(q.id, state.favorites.includes(q.id))}</div>${isPreparationPractice(p) ? preparationQuestionStatus(q.id) : ""}<p class="eyebrow">QUESTION ${String(p.index + 1).padStart(2, "0")} <span class="muted">/ ${p.questionIds.length}</span></p>${sourceInfo(q)}<div class="question-title rich" data-rich="${attr(q.stem)}"></div>${q.source ? `<p class="pdf-reading-note">${q.source.format === "html" ? "补充题已优化文字与公式排版；可调整字号，长公式可左右滑动，原图可放大查看" : "长公式可左右滑动查看"}</p>` : ""}${answerInput(q, r.answer, r.graded || !isScorable(q))}${r.graded ? resultBox(q, r, { mode: p.mode }) : ""}${questionNotesHTML(q.id, state, { esc, attr })}<div class="question-actions">${button(`${icon("back", 13)} 上一题`, "navigate-question", `data-index="${p.index - 1}" ${p.index === 0 ? "disabled" : ""}`, "btn")}<span class="grow"></span>${!r.graded ? button(!isScorable(q) ? "查看参考（不计分）" : q.type === "solution" ? "查看参考答案" : "确认答案", "submit-answer", "", "btn primary") : ""}${button(`${p.index === p.questionIds.length - 1 ? "完成本组" : "下一题"} ${icon("arrow", 13)}`, "next-question", "", "btn " + (r.graded ? "primary" : ""))}</div></section>${questionNavigation(p)}</div><p class="shortcut-hint">${q.type === "fill" ? "填空题按题库答案及可接受答案匹配；等价数学表达式请以原题配置为准。" : "先思考，再确认。答题记录只保存在当前浏览器。"}</p>`;
 }
 function requireBundledBank() {
   if (bank.managedBundle === false || !bank.revision?.startsWith("pdf-"))
@@ -707,9 +718,9 @@ const sessionActions = createSessionActions({
     else go("/practice");
   },
   getBank: () => bank, getState: () => state, getFilters, route, subject,
-  startPractice, persist, go, toast, render, isPreparationPractice, preparationSelection,
+  startPractice, suspendCurrentPractice, persist, go, toast, render, isPreparationPractice, preparationSelection,
   updatePreparationSelection, showConceptDetails, currentQuestion, currentExam,
-  updateSelectedOptions, updateExamProgress, tickExam, submitPractice, openDialog, defaultCount: DEFAULT_QUESTION_COUNT,
+  updateSelectedOptions, updateExamProgress, tickExam, submitPractice, openDialog,
 });
 
 let renderPending = false;
@@ -770,7 +781,7 @@ function draw() {
     app.innerHTML = '<main id="main" class="boot"><span class="boot-mark">∑</span><p role="status">正在准备学习空间…</p></main>';
     return;
   }
-  const ids = page === 'exam' && exam ? exam.status === 'submitted' ? exam.questionIds : [exam.questionIds[exam.index]]
+  const ids = page === 'exam' && exam ? exam.status === 'submitted' ? examReviewIds(bank, exam, examReviewFilter(r.query)) : [exam.questionIds[exam.index]]
     : practice ? [practice.questionIds[practice.index]] : [];
   const activeSession = exam?.status === 'active' ? exam : practice;
   let contentNotice = prepareQuestionView(ids);
@@ -794,7 +805,7 @@ function draw() {
   const countWrong = Object.values(state.mistakes).filter(
     (m) => !m.resolved,
   ).length;
-  const markup = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/welcome" aria-label="知行学习 欢迎页">${brandIcon(document.documentElement.dataset.theme)}<strong>知行学习</strong><span>题库</span></a><nav id="primary-navigation" class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="${mobileOpen ? "收起导航" : "打开导航"}" aria-controls="primary-navigation" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}</div></div></header><main id="main" class="local-main" tabindex="-1">${contentNotice || (page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage() : page === "stats" ? statsPage() : page === "offline" ? offlinePage(offline, bank) : page === "calendar" ? revisionCalendarPage(bank, state, r.query) : page === "quality" ? qualityPage() : page === "data" ? dataPage() : page === "reference" ? referencePage(bank, r.query) : libraryPage())}<div class="save-indicator" data-failed="${saveFailed}"><span data-save-message role="status" aria-live="polite">${esc(saveMessage)}</span>${button("重试保存", "retry-save", saveFailed ? "" : "hidden", "btn small")}</div><footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><a href="#/data">数据与备份</a><a href="#/offline">离线题库</a><a href="#/quality">题目质量与纠错</a>${button("学习指南", "open-guide", "", "text-btn")}</footer></main></div>`;
+  const markup = `<div class="local-shell"><header class="local-header"><div class="local-navbar"><a class="local-brand" href="#/welcome" aria-label="知行学习 欢迎页">${brandIcon(document.documentElement.dataset.theme)}<strong>知行学习</strong><span>题库</span></a><nav id="primary-navigation" class="local-nav ${mobileOpen ? "open" : ""}" aria-label="主要导航">${[...navItems, ["library", "folder", "题库管理", "/library"]].map(([key, i, label, path]) => `<a href="#${path}" class="${page === key || (page === "exam" && key === "exams") ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}>${icon(i, 16)}${label}${key === "review" && countWrong ? `<small>${countWrong}</small>` : ""}</a>`).join("")}</nav><div class="local-header-actions">${button(icon("settings", 19), "display-settings", 'aria-label="学习显示设置"', "icon-btn")}${button(icon("search", 19), "search", 'aria-label="搜索题目与知识点"', "icon-btn")}${button(icon(document.body.classList.contains("dark") ? "sun" : "moon", 19), "toggle-theme", 'aria-label="切换明暗主题"', "icon-btn")}${button(icon("menu", 20), "toggle-menu", `aria-label="${mobileOpen ? "收起导航" : "打开导航"}" aria-controls="primary-navigation" aria-expanded="${mobileOpen}"`, "icon-btn local-menu")}</div></div></header><main id="main" class="local-main" tabindex="-1">${contentNotice || (page === "dashboard" ? dashboard() : page === "practice" ? practicePage() : page === "prepare" ? preparationPage() : page === "spaced" ? spacedReviewPage() : page === "knowledge" ? knowledgePage(knowledge, state, r, { esc, attr, icon, button, head }) : page === "review" || page === "favorites" ? collectionPage(page) : page === "exams" ? examsPage() : page === "exam" ? examPage(r.query) : page === "stats" ? statsPage() : page === "offline" ? offlinePage(offline, bank) : page === "calendar" ? revisionCalendarPage(bank, state, r.query) : page === "quality" ? qualityPage() : page === "data" ? dataPage() : page === "reference" ? referencePage(bank, r.query, state.sectionSelfChecks) : libraryPage())}<div class="save-indicator" data-failed="${saveFailed}"><span data-save-message role="status" aria-live="polite">${esc(saveMessage)}</span>${button("重试保存", "retry-save", saveFailed ? "" : "hidden", "btn small")}</div><footer class="footer"><a href="#/welcome" aria-label="查看起始页">知行学习 · 练习与知识复习</a><a href="#/data">数据与备份</a><a href="#/offline">离线题库</a><a href="#/quality">题目质量与纠错</a>${button("学习指南", "open-guide", "", "text-btn")}</footer></main></div>`;
   const restoreQuestionPosition = renderStudyLayout(app, markup, activeSession ? { key: page + ':' + activeSession.id, questionId: contentPending ? null : activeSession.questionIds[activeSession.index], index: activeSession.index } : null);
   updateMenu();
   document.title = `${routes[page]} · 知行学习`;
@@ -875,7 +886,13 @@ function selectFile(mode = "bank") {
   el.click();
 }
 let practiceReturn = null, pendingPracticeScroll = null;
-async function startPractice(ids, mode) {
+function suspendCurrentPractice() {
+  const practice = state.practice;
+  if (!practice || practice.temporary || practice.preparationId || practiceProgress(practice, bank).ready) return;
+  pausePracticeQuestion(practice);
+  state.suspendedPractice = practice;
+}
+async function startPractice(ids, mode, temporary = false) {
   if (route().page === "practice" && !route().query.has("session")) practiceReturn = { hash: location.hash, y: scrollY };
   await deferredSaves.flush();
   if (!ids.length) {
@@ -883,8 +900,11 @@ async function startPractice(ids, mode) {
     if (!bank.questions.length) go("/library");
     return;
   }
-  state.practice = createPractice(ids, mode);
-  await persist();
+  const previous = state.practice, suspended = state.suspendedPractice;
+  suspendCurrentPractice();
+  state.practice = { ...createPractice(ids, mode), temporary };
+  try { await persist(); }
+  catch (error) { state.practice = previous; state.suspendedPractice = suspended; throw error; }
   go("/practice?session=1");
 }
 async function submitPractice(manual) {
@@ -1122,7 +1142,22 @@ async function handleAction(action, el) {
       const day = schedule?.days.find(row => row.date === el.dataset.date);
       if (!day) break;
       openDialog(esc(day.date) + ' · 复习安排', `<p>新题 ${day.newIds.length} 道 · 巩固 ${day.reviewIds.length} 道 · 预计 ${day.minutes} 分钟</p><p class="format-note">安排根据实际作答动态更新。</p><ul>${day.questionIds.slice(0, 100).map(id => `<li>${esc(qById(id)?.sourceLabel || chapter(qById(id)) || id)}</li>`).join('')}</ul>${day.questionIds.length > 100 ? '<p>仅展示前 100 道题。</p>' : ''}${!day.questionIds.length ? '<p>这一天没有待完成的题目。</p>' : ''}`,
-        day.date === schedule.today && day.questionIds.length ? button('开始今日安排', 'revision-practice', '', 'btn primary') : '');
+        (day.date === schedule.today && day.questionIds.length ? button('开始今日安排', 'revision-practice', '', 'btn primary') : '') +
+        button(schedule.plan.skippedDates?.includes(day.date) ? '恢复此日安排' : '跳过这一天', 'revision-skip-date', `data-date="${attr(day.date)}"`));
+      break;
+    }
+    case 'revision-skip-date': {
+      const previous = state.revisionPlan;
+      const schedule = revisionSchedule(bank, state);
+      if (!schedule?.days.some(day => day.date === el.dataset.date)) break;
+      const dates = new Set(previous.skippedDates);
+      if (dates.has(el.dataset.date)) dates.delete(el.dataset.date);
+      else dates.add(el.dataset.date);
+      state.revisionPlan = normalizeRevisionPlan({ ...previous, skippedDates: [...dates], updatedAt: Date.now() }, bank);
+      try { await persist(); }
+      catch (error) { state.revisionPlan = previous; throw error; }
+      dialog.close();
+      render();
       break;
     }
     case 'revision-remove':
@@ -1157,10 +1192,53 @@ async function handleAction(action, el) {
       if (q) openLearningPanel(q, bank, state);
       break;
     }
+    case 'next-practice-section': {
+      const next = nextPracticeSection(state.practice, bank);
+      if (!next || currentExam() || route().page !== 'practice' || !route().query.has('session')) break;
+      const mode = state.practice.mode;
+      await startPractice(mode === 'random' ? shuffle(next.questionIds) : next.questionIds, mode);
+      practiceReturn = { hash: '#/practice?' + new URLSearchParams({ subject: next.subjectId, chapter: next.chapter.id }), y: 0 };
+      break;
+    }
+    case 'section-self-check': {
+      const card = el.closest('[data-self-check]');
+      const field = card.querySelector('textarea');
+      const key = card.dataset.selfCheck;
+      if (!field.value.trim() || !card.querySelector('details').open) break;
+      state.sectionSelfChecks[key] = { answer: field.value, result: el.dataset.result };
+      await persist();
+      for (const choice of card.querySelectorAll('[data-result]'))
+        choice.setAttribute('aria-pressed', String(choice === el));
+      card.querySelector('[role="status"]').textContent = el.dataset.result === 'known' ? '已标记会做' : '已标记待复习';
+      break;
+    }
+    case 'resume-suspended-practice': {
+      const suspended = state.suspendedPractice;
+      if (!suspended) break;
+      await deferredSaves.flush();
+      const previous = state.practice;
+      pausePracticeQuestion(previous);
+      state.practice = suspended;
+      state.suspendedPractice = previous && !previous.temporary && !previous.preparationId && !practiceProgress(previous, bank).ready ? previous : null;
+      try { await persist(); }
+      catch (error) { state.practice = previous; state.suspendedPractice = suspended; throw error; }
+      go("/practice?session=1");
+      break;
+    }
+    case 'practice-similar': {
+      const q = qById(el.dataset.id);
+      if (q) await startPractice(similarFreshQuestions(bank, state, q), 'similar', true);
+      break;
+    }
+    case 'practice-exam-filter': {
+      const exam = state.exams.find(e => e.id === el.dataset.id && e.status === 'submitted');
+      if (exam) await startPractice(examReviewIds(bank, exam, el.dataset.filter).filter(id => isScorable(qById(id))), 'review', true);
+      break;
+    }
     case 'practice-exam-weak': {
       const exam=state.exams.find(e=>e.id===el.dataset.id && e.status==='submitted');
       const ids=exam?.questionIds.filter(id=>exam.results[id]===false && isScorable(qById(id))) || [];
-      if(ids.length) await startPractice(ids,'review');
+      if(ids.length) await startPractice(ids,'review', true);
       break;
     }
     case 'load-exam-template':
@@ -1699,7 +1777,8 @@ document.addEventListener('submit', async event => {
     if (!(difference >= 1 && difference <= 730)) throw new Error('请选择未来 1 至 730 天内的考试日期');
     const plan = normalizeRevisionPlan({ title: String(fields.get('title')), examDate,
       subjectId: String(fields.get('subjectId')), chapterIds: fields.getAll('revision-chapter'),
-      minutesPerDay: Number(fields.get('minutesPerDay')), createdAt: previous?.createdAt ?? now, updatedAt: now }, bank);
+      ...revisionAvailability(form),
+      createdAt: previous?.createdAt ?? now, updatedAt: now }, bank);
     state.revisionPlan = plan;
     if (!revisionSchedule(bank, state).total) throw new Error('所选范围没有可评分题，请调整章节');
     await persist();
@@ -1730,7 +1809,7 @@ document.addEventListener("change", (event) => {
     return;
   }
   if (event.target.matches('[data-revision-chapter]')) { updateRevisionScope(event.target); return; }
-  if (event.target.closest('#revision-plan-form') && ['examDate','minutesPerDay'].includes(event.target.name)) { updateRevisionScope(); return; }
+  if (event.target.closest('#revision-plan-form') && ['examDate','minutesPerDay','weekendMinutes','skippedDates'].includes(event.target.name)) { updateRevisionScope(); return; }
   if (event.target.matches('[data-collection-selected]')) {
     selectCollection(event.target.dataset.mode, event.target.value, event.target.checked);
     updateCollectionSelection(app, event.target.dataset.mode); return;
@@ -1803,6 +1882,18 @@ document.addEventListener("change", (event) => {
   }
 });
 document.addEventListener("input", (event) => {
+  if (event.target.matches('[data-self-check-answer]')) {
+    const card = event.target.closest('[data-self-check]');
+    const key = card.dataset.selfCheck;
+    state.sectionSelfChecks[key] = { answer: event.target.value.slice(0, 2000), result: '' };
+    for (const choice of card.querySelectorAll('[data-result]')) {
+      choice.disabled = !event.target.value.trim();
+      choice.setAttribute('aria-pressed', 'false');
+    }
+    card.querySelector('[role="status"]').textContent = '';
+    scheduleSave();
+    return;
+  }
   if (event.target.id === "image-zoom") {
     updateImageZoom(dialog, Number(event.target.value));
     return;
@@ -1943,7 +2034,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 document.addEventListener("focusout", (event) => {
-  if (event.target.matches("[data-answer-text],[data-recall-text],[data-question-note]")) deferredSaves.flush().catch(() => {});
+  if (event.target.matches("[data-answer-text],[data-recall-text],[data-question-note],[data-self-check-answer]")) deferredSaves.flush().catch(() => {});
 });
 window.addEventListener("pagehide", () => {
   readingController.capture();

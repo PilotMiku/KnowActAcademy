@@ -22,7 +22,19 @@ export const sectionKnowledge = [
     "formula": "$a_n\\to A\\iff \\forall\\varepsilon>0, \\exists N, n>N\\Rightarrow |a_n-A|<\\varepsilon$。",
     "condition": "N 可以依赖 ε，但必须控制之后的所有项。",
     "example": "$a_n=1/n$：取整数 $N>1/\\varepsilon$，则 $n>N$ 时 $|a_n|<\\varepsilon$。",
-    "warning": "无限多个项靠近 A，不能证明整个数列收敛。"
+    "warning": "无限多个项靠近 A，不能证明整个数列收敛。",
+    "exercises": [
+      {
+        "type": "填空",
+        "prompt": "$a_n=3+2/n$ 的极限是多少？对给定 $\\varepsilon>0$，写出可用的 $N$。",
+        "solution": "极限为 3。取 $N=\\lceil2/\\varepsilon\\rceil$，则 $n>N$ 时 $|a_n-3|=2/n<\\varepsilon$。"
+      },
+      {
+        "type": "判断",
+        "prompt": "若数列中有无穷多项等于 0，则该数列一定收敛到 0。",
+        "solution": "错误。取 $a_n=(1+(-1)^n)/2$。奇数项为 0，偶数项为 1，取 $\\varepsilon=1/2$，任何 $N$ 后都还有项与 0 的距离为 1。"
+      }
+    ]
   },
   {
     "subjectId": "calculus",
@@ -286,7 +298,19 @@ export const sectionKnowledge = [
     "formula": "$(f(g(x)))'=f'(g(x))g'(x)$；多层复合依次乘各层导数。",
     "condition": "内外层在相应点可导；先区分乘积和复合结构。",
     "example": "$(e^{\\sin(x^2)})'=e^{\\sin(x^2)}\\cos(x^2)\\cdot2x$。",
-    "warning": "先画变量依赖链，避免遗漏内层导数。"
+    "warning": "先画变量依赖链，避免遗漏内层导数。",
+    "exercises": [
+      {
+        "type": "填空",
+        "prompt": "求 $y=(1+x^2)^4$ 的导数。",
+        "solution": "外层求导得 $4(1+x^2)^3$，再乘内层导数 $2x$，得到 $y\\prime=8x(1+x^2)^3$。"
+      },
+      {
+        "type": "解答",
+        "prompt": "求 $y=\\sin^2(3x)$ 的导数。",
+        "solution": "从外到内依次求导，得 $2\\sin(3x)\\cdot\\cos(3x)\\cdot3=3\\sin(6x)$。"
+      }
+    ]
   },
   {
     "subjectId": "calculus",
@@ -668,7 +692,19 @@ export const sectionKnowledge = [
     "formula": "若 $F'=f$，则 $\\int f(x)dx=F(x)+C$。同一区间内两个原函数之差为常数。",
     "condition": "在一个区间上讨论；不同连通区间的常数可不同。",
     "example": "$\\int 2x,dx=x^2+C$，求导可直接验证。",
-    "warning": "原函数存在和定积分存在不是同一个概念；结果不能漏 C。"
+    "warning": "原函数存在和定积分存在不是同一个概念；结果不能漏 C。",
+    "exercises": [
+      {
+        "type": "填空",
+        "prompt": "求 $\\int(6x^2-4)\\,dx$。",
+        "solution": "$2x^3-4x+C$，逐项求导后可得被积函数。"
+      },
+      {
+        "type": "判断",
+        "prompt": "同一区间上，如果 $F\\prime=G\\prime$，则 $F=G$。",
+        "solution": "错误。$(F-G)\\prime=0$ 只说明 $F-G$ 为常数。若另外知道两函数在区间内某一点的值相同，才能得到 $F=G$。"
+      }
+    ]
   },
   {
     "subjectId": "calculus",
@@ -2080,7 +2116,19 @@ export const sectionKnowledge = [
     "formula": "$A_{m\\times n}B_{n\\times p}=C_{m\\times p}$，$c_{ij}=\\sum_{k=1}^na_{ik}b_{kj}$；$(AB)^T=B^TA^T$。分块乘法遵循同样规则。",
     "condition": "加法要求尺寸相同；矩阵乘法保持因子顺序。",
     "example": "$A=\\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}, B=\\begin{pmatrix}0&0\\\\1&0\\end{pmatrix}$，AB=diag(1,0)，BA=diag(0,1)。",
-    "warning": "AB 与 BA 不仅可能不相等，还可能只有一者有定义。"
+    "warning": "AB 与 BA 不仅可能不相等，还可能只有一者有定义。",
+    "exercises": [
+      {
+        "type": "填空",
+        "prompt": "$A$ 为 $2\\times3$ 矩阵，$B$ 为 $3\\times4$ 矩阵。$AB$ 的尺寸是什么？$BA$ 有定义吗？",
+        "solution": "$AB$ 的尺寸为 $2\\times4$。$B$ 的列数 $4$ 与 $A$ 的行数 $2$ 不等，$BA$ 无定义。"
+      },
+      {
+        "type": "判断",
+        "prompt": "若 $A$、$B$ 都是同阶对称矩阵，则 $AB$ 一定对称。",
+        "solution": "错误。$(AB)^T=B^TA^T=BA$，所以 $AB$ 对称当且仅当 $AB=BA$。例如 $A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}$、$B=\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$ 不可交换。"
+      }
+    ]
   },
   {
     "subjectId": "linear",

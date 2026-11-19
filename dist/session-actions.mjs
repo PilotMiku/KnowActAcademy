@@ -11,19 +11,20 @@ const actions = new Set(["start-practice", "prepare-select-all", "prepare-select
 
 // Own practice/preparation transitions; persistence and navigation stay explicit.
 export function createSessionActions({ getBank, getState, getFilters, route, subject,
-  startPractice, persist, go, toast, render, returnToPractice, isPreparationPractice, preparationSelection,
+  startPractice, suspendCurrentPractice, persist, go, toast, render, returnToPractice, isPreparationPractice, preparationSelection,
   updatePreparationSelection, showConceptDetails, currentQuestion, currentExam,
-  updateSelectedOptions, updateExamProgress, tickExam, submitPractice, openDialog, defaultCount }) {
+  updateSelectedOptions, updateExamProgress, tickExam, submitPractice, openDialog }) {
   return async (action, el) => {
     if (!actions.has(action)) return false;
     const bank = getBank(), state = getState();
     switch (action) {
       case "start-practice": {
-        const list = practicePool(bank, getFilters(), state);
-        const randomCount = route().query.get("count") === "all" ? list.length : defaultCount;
+        const filters = getFilters();
+        if (el.dataset.mode === "random" && !filters.chapterId) return true;
+        const list = practicePool(bank, filters, state);
         const ids = (
           el.dataset.mode === "random"
-            ? (route().query.get("distribution") === "balanced" ? balancedSample(bank, list, randomCount) : shuffle(list).slice(0, randomCount))
+            ? (route().query.get("distribution") === "balanced" ? balancedSample(bank, list, list.length) : shuffle(list))
             : list
         ).map((q) => q.id);
         await startPractice(ids, el.dataset.mode);
@@ -39,6 +40,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
       }
       case "begin-preparation": {
         const created = createPreparation(bank, preparationSelection());
+        suspendCurrentPractice();
         archivePreparation(state);
         state.preparation = created.preparation;
         state.practice = created.practice;
@@ -70,6 +72,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
             go("/prepare");
             return true;
           }
+          suspendCurrentPractice();
           state.practice = saved ? structuredClone(saved) : restoreDiagnostic(state, bank);
           state.practice.questionStartedAt = null;
           await persist();
@@ -93,6 +96,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
           toast("请先完成本组题目，解答题需完成自评");
           return true;
         }
+        suspendCurrentPractice();
         state.practice = createTraining(bank, state);
         state.preparation.round = state.practice.round;
         await persist();
@@ -110,7 +114,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
         break;
       }
       case "practice-one":
-        await startPractice([el.dataset.id], "sequential");
+        await startPractice([el.dataset.id], "sequential", true);
         break;
       case "resume-practice":
         go(isPreparationPractice() ? "/prepare?session=1" : "/practice?session=1");
@@ -192,7 +196,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
           openDialog(
             "又向前，走了一小步。",
             `<p>本组 ${p.questionIds.length} 道题，已完成 ${done} 道。${done < p.questionIds.length ? "你可以返回补完，也可以稍作休息。" : "给自己一点肯定，再开始下一段。"}</p>`,
-            `${button("继续查看", "close-dialog")}${button("回到学习台", "finish-practice", "", "btn primary")}`,
+            `${button("继续查看", "close-dialog")}${state.suspendedPractice && p.temporary ? button("返回原练习", "resume-suspended-practice", "", "btn primary") : button("回到学习台", "finish-practice", "", "btn primary")}`,
           );
         }
         break;

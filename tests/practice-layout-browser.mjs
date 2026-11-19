@@ -29,7 +29,6 @@ try {
   await page.locator('#type-filter').selectOption('single');
   await page.locator('#random-distribution').selectOption('balanced');
   await page.locator('#practice-status').selectOption('unseen');
-  await page.locator('#random-count').selectOption('all');
   const expected = await page.evaluate(() => location.hash);
   await page.locator('.practice-view-switch a').filter({ hasText: '章节目录' }).click();
   await page.locator('.chapter-grid').waitFor();
@@ -39,7 +38,7 @@ try {
   await page.locator('.chapter-grid').waitFor();
   await page.locator('.practice-view-switch a').filter({ hasText: '题目列表' }).click();
   await page.locator('[data-action="practice-one"]').first().waitFor();
-  for (const key of ['subject', 'chapter', 'type', 'distribution', 'status', 'count'])
+  for (const key of ['subject', 'chapter', 'type', 'distribution', 'status'])
     assert.equal(new URLSearchParams((await page.evaluate(() => location.hash)).split('?')[1]).get(key), new URLSearchParams(expected.split('?')[1]).get(key));
   assert.equal(await page.locator('#type-filter').inputValue(), 'single');
   assert.equal(await page.locator('.practice-options').evaluate(el => el.open), true);

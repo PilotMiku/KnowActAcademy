@@ -151,6 +151,7 @@ export function saveStorage(bank, state) {
   snapshot.state._examLog = examSlots.length;
   // Live timers belong to this document. A reopened tab starts a new active span.
   if (snapshot.state.practice) snapshot.state.practice.questionStartedAt = null;
+  if (snapshot.state.suspendedPractice) snapshot.state.suspendedPractice.questionStartedAt = null;
   if (snapshot.state.preparation?.session) snapshot.state.preparation.session.questionStartedAt = null;
   const write = () =>
     new Promise((resolve, reject) => {

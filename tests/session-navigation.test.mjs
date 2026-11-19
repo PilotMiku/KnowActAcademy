@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { normalizeBank } from '../dist/core.mjs';
-import { pendingQuestionIndices, nextPendingIndex } from '../dist/session-navigation.mjs';
+import { pendingQuestionIndices, nextPendingIndex, nextPracticeSection } from '../dist/session-navigation.mjs';
 import { offlineProgressDisplay, formatBytes } from '../dist/offline-view.mjs';
 import { fixture } from './fixture.mjs';
 
@@ -34,4 +34,28 @@ test('offline progress survives rendering from state and exposes readable small 
   assert.equal(offlineProgressDisplay({done:210,total:200}).percent,100);
   assert.equal(offlineProgressDisplay(null).percent,0);
   assert.equal(formatBytes(1048576),'1.0 MB');
+});
+
+test('completed chapter practice advances in syllabus order and skips empty sections', () => {
+  const tree = normalizeBank({
+    subjects: [{ id: 'math', name: '测试科目', chapters: [
+      { id: 'first', name: '第一章', children: [{ id: 'a', name: '第一节' }, { id: 'b', name: '第二节' }] },
+      { id: 'second', name: '第二章', children: [{ id: 'empty', name: '空小节' }, { id: 'c', name: '第三节' }] },
+    ] }],
+    questions: ['a', 'b', 'c'].flatMap(chapterId => [1, 2].map(n => ({
+      ...fixture.questions[0], id: chapterId + n, chapterId,
+    }))),
+  });
+  const finished = (...ids) => ({
+    mode: 'random', questionIds: ids,
+    responses: Object.fromEntries(ids.map(id => [id, { graded: true, correct: false }])),
+  });
+  assert.equal(nextPracticeSection(finished('a1'), tree), null);
+  const pending = finished('a1', 'a2');
+  delete pending.responses.a1;
+  assert.equal(nextPracticeSection(pending, tree), null);
+  assert.equal(nextPracticeSection(finished('a2', 'a1'), tree).chapter.id, 'b');
+  assert.equal(nextPracticeSection(finished('b2', 'a2', 'b1', 'a1'), tree).chapter.id, 'c');
+  assert.equal(nextPracticeSection(finished('c1', 'c2'), tree), null);
+  assert.equal(nextPracticeSection({ ...finished('a1', 'a2'), temporary: true }, tree), null);
 });

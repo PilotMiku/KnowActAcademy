@@ -22,8 +22,8 @@ export const mathReferences = [
   ['linear','linear-chapter-7','线性空间与线性变换',String.raw`对有限维空间上的线性映射 \(T:V\to W\)，\(\dim\ker T+\dim\operatorname{im}T=\dim V\)。`,String.raw`\(T(x,y)=(x,0)\) 的核为 y 轴，像为 x 轴，两者维数均为 1。`,'先验证线性性，再讨论核、像和矩阵表示；表示矩阵依赖于所选的基。'],
 ].map(([subjectId,chapterId,title,formula,example,warning]) => ({subjectId,chapterId,title,formula,example,warning}));
 
-export function referencePage(bank, query) {
-  if (query.get('view') !== 'chapters') return sectionReferencePage(bank, query);
+export function referencePage(bank, query, selfChecks) {
+  if (query.get('view') !== 'chapters') return sectionReferencePage(bank, query, selfChecks);
   const subject = query.get('subject') || '', chapter = query.get('chapter') || '';
   const rows = mathReferences.filter(r => (!subject || r.subjectId===subject) && (!chapter || r.chapterId===chapter));
   return `${head('数学章节速查', '编辑整理的公式、例题与易错提醒，作为原资料之外的学习补充。', '<a class="btn" href="#/knowledge">学习资料</a>')}${referenceViewTabs(bank,'chapters')}<nav class="reference-tabs"><a class="btn" href="#/reference?view=chapters">全部章节</a>${bank.subjects.map(s=>`<a class="btn" href="#/reference?view=chapters&subject=${encodeURIComponent(s.id)}">${esc(s.name)}</a>`).join('')}</nav><p class="format-note">覆盖高等数学与线性代数 17 个大章。每张卡片选取一个代表性主题，不能替代该章全部知识；使用公式前请核对适用条件。</p><div class="reference-grid">${rows.map(row=>`<section class="card reference-card"><h2>${esc(row.title)}</h2><h3>关键公式与条件</h3><div class="rich" data-rich="${attr('<p>'+esc(row.formula)+'</p>')}"></div><h3>小例题</h3><div class="rich" data-rich="${attr('<p>'+esc(row.example)+'</p>')}"></div><h3>易错提醒</h3><p>${esc(row.warning)}</p><a class="btn small" href="#/practice?subject=${row.subjectId}&chapter=${row.chapterId}">练习本章题目</a><a class="text-btn" href="#/reference?subject=${encodeURIComponent(row.subjectId)}&chapter=${encodeURIComponent(row.chapterId)}">查看本章小节知识卡 →</a></section>`).join('')}</div>${rows.length?'':'<section class="card study-empty">没有找到对应的速查卡片。</section>'}`;

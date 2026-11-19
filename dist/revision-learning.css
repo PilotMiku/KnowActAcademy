@@ -208,3 +208,7 @@ dialog:has(.image-zoom-viewport) { width:min(900px,calc(100vw - 32px)); }
   .session-preparation { margin-bottom: 8px; }
   .question-toolbar .btn svg { display: none; }
 }
+
+[data-chapter-continuation]:empty { display: none; }
+.chapter-continuation { flex-wrap: wrap; width: 100%; white-space: normal; }
+.chapter-continuation small { font-size: 0.9em; }

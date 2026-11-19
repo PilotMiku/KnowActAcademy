@@ -53,12 +53,18 @@ try {
   await page.goto(baseURL+'/#/favorites');await page.locator('.collection-item .favorite-button').waitFor();
   assert.equal(await page.locator('.collection-item .favorite-button').getAttribute('aria-pressed'),'true');
   await page.locator('.collection-item .favorite-button').click();await page.locator('.collection-item .favorite-button').waitFor({state:'detached'});
-  await page.goto(baseURL+'/#/practice?difficulty=5');await page.locator('.practice-start').waitFor();await revealPracticeOptions(page);
+  const sourceLabel = await page.evaluate(async id => {
+    const { bank } = await (await import('./storage.mjs')).readSavedData();
+    return bank.questions.find(q => q.id === id).sourceLabel;
+  }, ids[1]);
+  const filters = new URLSearchParams({ difficulty: '5', q: sourceLabel });
+  await page.goto(baseURL+'/#/practice?'+filters);await page.locator('.practice-start').waitFor();await revealPracticeOptions(page);
   assert.equal(await page.locator('#practice-difficulty').inputValue(),'5');
-  assert.equal(await page.locator('[data-action="practice-one"]').first().getAttribute('data-id'),ids[1]);
+  const personallyRated = page.locator(`[data-action="practice-one"][data-id="${ids[1]}"]`);
+  await personallyRated.waitFor();
   // Reduced-motion users still get the filled state, without a celebration.
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.locator('[data-action="practice-one"]').first().click();await page.locator('.question-main').waitFor();
+  await personallyRated.click();await page.locator('.question-main').waitFor();
   await favorite.click();await page.locator('.favorite-button.is-favorite').waitFor();
   assert.equal(await page.locator('.favorite-added').count(),0);
   assert.deepEqual(errors,[]);

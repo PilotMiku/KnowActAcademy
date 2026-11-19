@@ -14,6 +14,7 @@ test('every bundled question has a source-bound star estimate before and after h
   const before=JSON.stringify(raw);
   assert.equal(estimatedDifficulty({id:'toString'}),null);
   assert.equal(questionGuidance({id:'toString',difficulty:'medium'}).stars,3);
+  const distribution = new Map();
   for(const q of raw.questions){
     const value=estimatedDifficulty(q);
     assert.ok(value && value.stars>=1 && value.stars<=5 && Number.isInteger(value.stars),q.id);
@@ -22,8 +23,11 @@ test('every bundled question has a source-bound star estimate before and after h
     assert.equal(estimatedDifficulty({...q,source:{format:q.source.format}}),null);
     const guide=questionGuidance(q);
     assert.ok(guide.stars>=1 && guide.stars<=5);
+    distribution.set(guide.stars, (distribution.get(guide.stars) ?? 0) + 1);
     assert.match(difficultyBadge(q),/aria-label="[1-5]\/5 星/);
   }
+  assert.equal(distribution.size, 5);
+  assert.ok((distribution.get(2) ?? 0) < raw.questions.length / 2);
   assert.equal(JSON.stringify(raw),before);
 });
 

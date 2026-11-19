@@ -5,25 +5,34 @@ const pageSize = 12;
 export function referenceViewTabs(bank,active) {
   return `<nav class="reference-view-tabs" aria-label="知识卡片分类"><a href="#/reference" ${active === 'sections' ? 'aria-current="page"' : ''}>小节知识卡 <span>${sectionCardsForBank(bank).length}</span></a><a href="#/reference?view=chapters" ${active === 'chapters' ? 'aria-current="page"' : ''}>大章概览 <span>17</span></a></nav>`;
 }
-function sectionExercises(exercises) {
+function sectionExercises(row, selfChecks, editable) {
+  const exercises = row.exercises;
   if (!exercises?.length) return '';
   return `<section class="section-exercises" aria-label="本站自编自测">
     <h3>本站自编自测 · ${exercises.length} 题</h3>
-    <p class="format-note">先在纸上作答，再展开核对。自测不计入练习成绩。</p>
-    <ol>${exercises.map(({type, prompt, solution}) => `<li><span class="pill">${esc(type)}</span>
-      <div class="rich" data-rich="${attr(prompt)}"></div>
-      <details><summary>核对答案与推导</summary><div class="rich" data-rich="${attr(solution)}"></div></details>
-    </li>`).join('')}</ol>
+    <p class="format-note">先作答，再展开核对。自测不计入练习成绩。</p>
+    <ol>${exercises.map(({type, prompt, solution}, index) => {
+      const key = `${row.subjectId}:${row.sectionId}:${index}`;
+      const { answer = '', result = '' } = selfChecks[key] ?? {};
+      const controls = editable ? `<div class="flex">${[['known','会做'],['review','待复习']].map(([value,label]) =>
+        `<button type="button" class="btn small" data-action="section-self-check" data-result="${value}" aria-pressed="${result === value}" ${answer.trim() ? '' : 'disabled'}>${label}</button>`).join('')}</div>` : '';
+      return `<li data-self-check="${attr(key)}"><span class="pill">${esc(type)}</span>
+        <div class="rich" data-rich="${attr(prompt)}"></div>
+        ${editable ? `<label class="field">第 ${index + 1} 题的答案或思路<textarea class="input" data-self-check-answer maxlength="2000" rows="2">${esc(answer)}</textarea></label>` : ''}
+        <details><summary>核对答案与推导</summary><div class="rich" data-rich="${attr(solution)}"></div>${controls}</details>
+        ${editable ? `<p class="format-note" role="status">${result === 'known' ? '已标记会做' : result === 'review' ? '已标记待复习' : ''}</p>` : ''}
+      </li>`;
+    }).join('')}</ol>
   </section>`;
 }
-export function sectionCardContent(row,{questionCount = null, standalone = false} = {}) {
+export function sectionCardContent(row,{questionCount = null, standalone = false, selfChecks = {}} = {}) {
   let practice = '';
   if (questionCount !== 0)
     practice = `<a class="btn small primary" href="#/practice?subject=${encodeURIComponent(row.subjectId)}&chapter=${encodeURIComponent(row.sectionId)}">练习本小节 ${icon('arrow',13)}</a>`;
   else if (!row.exercises?.length)
     practice = '<p class="format-note">本小节暂无题目，可先通过知识卡复习。</p>';
-  const detail = standalone ? '' : `<a class="btn small" href="#/reference?subject=${encodeURIComponent(row.subjectId)}&section=${encodeURIComponent(row.sectionId)}">单独查看卡片</a>`;
-  return `<div class="section-card-body"><h3>知识要点</h3><p>${esc(row.overview)}</p><h3>关键公式</h3><div class="rich" data-rich="${attr(row.formula)}"></div><h3>适用条件</h3><div class="rich" data-rich="${attr(row.condition)}"></div><h3>小例题</h3><div class="rich" data-rich="${attr(row.example)}"></div><h3>易错提醒</h3><div class="rich section-card-warning" data-rich="${attr(row.warning)}"></div>${sectionExercises(row.exercises)}<div class="section-card-actions">${practice}${detail}</div></div>`;
+  const detail = standalone ? '' : `<a class="btn small" href="#/reference?subject=${encodeURIComponent(row.subjectId)}&section=${encodeURIComponent(row.sectionId)}">${row.exercises?.length ? "开始或继续自测" : "单独查看卡片"}</a>`;
+  return `<div class="section-card-body"><h3>知识要点</h3><p>${esc(row.overview)}</p><h3>关键公式</h3><div class="rich" data-rich="${attr(row.formula)}"></div><h3>适用条件</h3><div class="rich" data-rich="${attr(row.condition)}"></div><h3>小例题</h3><div class="rich" data-rich="${attr(row.example)}"></div><h3>易错提醒</h3><div class="rich section-card-warning" data-rich="${attr(row.warning)}"></div>${sectionExercises(row, selfChecks, standalone)}<div class="section-card-actions">${practice}${detail}</div></div>`;
 }
 export function filteredSectionCards(bank,query) {
   const subject = query.get('subject') || '', chapter = query.get('chapter') || '';
@@ -31,7 +40,7 @@ export function filteredSectionCards(bank,query) {
   return sectionCardsForBank(bank).filter(row => (!subject || row.subjectId === subject) &&
     (!chapter || row.chapterId === chapter) && (!text || [row.title,row.sourceTitle,row.overview,row.formula,row.condition,row.example,row.warning].join(' ').toLocaleLowerCase().includes(text)));
 }
-export function sectionReferencePage(bank,query) {
+export function sectionReferencePage(bank,query,selfChecks) {
   const available = sectionCardsForBank(bank);
   const selected = query.get('section');
   const title = head('数学小节知识卡','按小节整理知识要点、公式条件、例题与易错提醒。','<a class="btn" href="#/knowledge">学习资料</a>');
@@ -41,7 +50,7 @@ export function sectionReferencePage(bank,query) {
     const key = question.subjectId + ':' + question.chapterId;
     counts.set(key,(counts.get(key) || 0) + 1);
   }
-  const content = (row,standalone = false) => sectionCardContent(row,{questionCount:counts.get(row.subjectId + ':' + row.sectionId) || 0,standalone});
+  const content = (row,standalone = false) => sectionCardContent(row,{questionCount:counts.get(row.subjectId + ':' + row.sectionId) || 0,standalone,selfChecks});
   const subjectName = id => bank.subjects.find(s => s.id === id)?.name || id;
   const chapterName = row => bank.subjects.find(s => s.id === row.subjectId)?.chapters.find(c => c.id === row.chapterId)?.name || '';
   const meta = row => `<span class="section-card-meta"><span class="pill blue">${esc(subjectName(row.subjectId))}</span><span>${esc(chapterName(row))}</span></span>`;

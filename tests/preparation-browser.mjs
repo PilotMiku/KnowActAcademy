@@ -1,4 +1,4 @@
-import { chromium, browserOptions, baseURL, revealPracticeOptions, revealPreparationOptions } from "./browser-helpers.mjs";
+import { chromium, browserOptions, baseURL, revealPreparationOptions } from "./browser-helpers.mjs";
 import { readFile, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { normalizeBank, filterQuestions } from "../dist/core.mjs";
@@ -40,16 +40,10 @@ try {
   page.on("pageerror", (e) => errors.push(e.message));
   const randomURL = `${baseURL}/#/practice?subject=linear&chapter=linear-chapter-1`;
   await page.goto(randomURL);
-  await page.getByRole("button", { name: /随机 25 题/ }).click();
-  await page.locator(".question-main").waitFor();
-  assert.equal((await stateOf(page)).practice.questionIds.length, 25);
-  assert.equal(await page.locator('[data-action="finish-preparation"]').count(), 0);
-  await page.goto(randomURL);
-  await revealPracticeOptions(page);
-  await page.locator("#random-count").selectOption("all");
-  await page.getByRole("button", { name: /随机所有题目/ }).click();
+  await page.getByRole("button", { name: "随机刷题" }).click();
   await page.locator(".question-main").waitFor();
   const all = (await stateOf(page)).practice;
+  assert.equal(await page.locator('[data-action="finish-preparation"]').count(), 0);
   const expected = filterQuestions(bank, { subjectId: "linear", chapterId: "linear-chapter-1" }).map((q) => q.id);
   assert.equal(all.questionIds.length, expected.length);
   assert.deepEqual([...all.questionIds].sort(), [...expected].sort());
@@ -124,7 +118,7 @@ try {
   trained = await stateOf(page);
   // Starting an ordinary practice must keep the unfinished preparation session.
   await page.goto(randomURL);
-  await page.getByRole("button", { name: /随机 25 题/ }).click();
+  await page.getByRole("button", { name: "随机刷题" }).click();
   await page.locator(".question-main").waitFor();
   assert.equal((await stateOf(page)).practice.mode, "random");
   await page.goto(`${baseURL}/#/prepare`);
@@ -166,7 +160,11 @@ try {
   await page.getByRole("button", { name: "确认导入", exact: true }).click();
   await page.locator(".local-hero").waitFor();
   await page.goto(`${baseURL}/#/practice`);
-  await page.getByRole("button", { name: /随机 25 题/ }).click();
+  const random = page.getByRole("button", { name: "随机刷题" });
+  await random.waitFor();
+  assert.equal(await random.isDisabled(), true);
+  await page.locator("#chapter-filter").selectOption("limits");
+  await random.click();
   await page.locator(".question-main").waitFor();
   assert.equal((await stateOf(page)).practice.questionIds.length, 6);
   await page.goto(`${baseURL}/#/prepare`);
@@ -213,5 +211,5 @@ try {
     "small custom banks, all question types and manual self-assessment", "390px mobile layout and dark theme",
     "sidebar finish after out-of-order completion, self-assessment and reload in diagnosis and training",
   ] }, null, 2));
-  console.log("Random question counts and adaptive preparation browser checks passed.");
+  console.log("Chapter-scoped random practice and adaptive preparation browser checks passed.");
 } finally { await browser.close(); }

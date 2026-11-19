@@ -1,4 +1,4 @@
-import { filterQuestions, getBankIndex, isEffectiveAttempt, shuffle } from "./core.mjs";
+import { filterQuestions, getBankIndex, isEffectiveAttempt, isScorable, shuffle } from "./core.mjs";
 import { preparationMastery } from "./preparation.mjs";
 import { spacedReview } from "./study.mjs";
 import { questionGuidance, matchesDifficulty } from './question-guidance.mjs';
@@ -85,4 +85,22 @@ export function reviewBatchSize(state, minutes = 0) {
   const times = state.attempts.filter((a) => isEffectiveAttempt(a) && Number.isFinite(a.durationMs) && a.durationMs > 0).slice(-100).map((a) => a.durationMs).sort((a, b) => a - b);
   const typical = Math.max(30000, Math.min(300000, times[Math.floor(times.length / 2)] ?? 60000));
   return Math.max(1, Math.min(20, Math.floor(Number(minutes) * 60000 / typical)));
+}
+
+export function similarFreshQuestions(bank, state, question) {
+  const tags = q => new Set([
+    ...questionGuidance(q, state.questionAnnotations).concepts,
+    ...(q.tags ?? []).filter(tag => /^知识点[:：]/.test(tag)).map(tag => tag.slice(4)),
+  ]);
+  const concepts = tags(question);
+  const seen = new Set(state.attempts.map(attempt => attempt.questionId));
+  const candidates = [];
+  for (const q of bank.questions) {
+    if (q.subjectId !== question.subjectId || q.id === question.id || !isScorable(q) || seen.has(q.id)) continue;
+    const sameSection = q.chapterId === question.chapterId;
+    const shared = concepts.size ? [...tags(q)].filter(tag => concepts.has(tag)).length : 0;
+    if (shared || sameSection) candidates.push({ id: q.id, shared, sameSection });
+  }
+  return candidates.sort((a, b) => b.shared - a.shared || Number(b.sameSection) - Number(a.sameSection))
+    .slice(0, 3).map(q => q.id);
 }
