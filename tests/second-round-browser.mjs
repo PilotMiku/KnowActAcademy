@@ -16,7 +16,9 @@ try {
   await page.locator('[name="minutesPerDay"]').fill('10');
   await page.locator('#revision-plan-form [type="submit"]').click();
   await page.locator('.revision-overview').waitFor();
-  assert.match(await page.locator('.revision-overview').innerText(),/每天 10 分钟 · 约 5 题/);
+  const overview = await page.locator('.revision-overview').innerText();
+  assert.match(overview,/每天 10 分钟/);
+  assert.match(overview,/今天约 5 题/);
   await page.goto(baseURL+'/#/');
   await page.locator('.daily-tasks').waitFor();
   assert.match(await page.locator('.daily-task-head').innerText(),/还差 5 题/);
