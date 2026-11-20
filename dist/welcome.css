@@ -49,19 +49,30 @@
   margin-top:48px;
   padding:16px 29px;
   min-height:54px;
-  border:1px solid #006fee;
+  border:1px solid var(--primary-fill);
   border-radius:999px;
-  background:#006fee;
+  background:var(--primary-fill);
   color:#fff;
   font-size:15px;
   font-weight:500;
   letter-spacing:.08em;
   box-shadow:0 8px 28px #006fee1c;
 }
-.welcome-enter:hover { background:#005ed0; border-color:#005ed0; color:#fff; }
-.welcome-footer { display:flex; justify-content:center; align-items:center; gap:22px; padding:28px 24px 36px; color:var(--muted); font-size:12px; letter-spacing:.08em; }
-.welcome-footer>span { opacity:.5; }
-.welcome-footer a:hover { color:var(--blue); }
+.welcome-enter:hover { background:var(--primary-hover); border-color:var(--primary-hover); color:#fff; }
+.welcome-footer {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  width:max-content;
+  max-width:calc(100% - 32px);
+  margin:0 auto max(26px,env(safe-area-inset-bottom));
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:13px;
+}
+.welcome-footer>span { color:var(--muted); }
+.welcome-footer a { display:grid; place-items:center; min-height:44px; padding-inline:13px; border-radius:999px; }
 .welcome-sky { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
 .welcome-nebula { position:absolute; width:60%; height:70%; border-radius:50%; opacity:.65; }
 .welcome-nebula--blue { left:-20%; bottom:-30%; background:radial-gradient(ellipse,rgba(92,176,255,.16),transparent 68%); }
@@ -128,7 +139,8 @@ html[data-theme="dark"] .welcome-nebula--violet { background:radial-gradient(ell
   .welcome-quote h1 { font-size:clamp(32px,9.6vw,52px); letter-spacing:.07em; text-indent:.07em; line-height:1.65; }
   .welcome-quote footer { font-size:13px; margin-top:20px; }
   .welcome-enter { margin-top:40px; font-size:14px; padding:14px 26px; min-height:50px; }
-  .welcome-footer { gap:16px; font-size:11px; padding-bottom:30px; }
+  .welcome-footer { margin-bottom:max(20px,env(safe-area-inset-bottom)); }
+  .welcome-footer a { padding-inline:10px; }
   .welcome-constellation { --float-x:7px; --float-y:-10px; width:83px; }
   .welcome-constellation--sum { left:3%; top:19%; }
   .welcome-constellation--infinity { right:3%; top:21%; }

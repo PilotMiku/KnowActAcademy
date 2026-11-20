@@ -30,7 +30,7 @@
 #revision-scope-summary { line-height:1.8; color:var(--blue); font-size:13px; }
 .daily-complete { color:var(--green); line-height:1.8; }
 .daily-complete > span { display:inline-grid; place-items:center; width:24px; height:24px; border:1px solid currentColor; border-radius:50%; margin-right:6px; }
-.learning-panel { position:fixed; top:90px; right:20px; width:380px; max-height:calc(100dvh - 115px); overflow:auto; z-index:45; background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:20px; box-shadow:0 12px 50px #0002; overscroll-behavior:contain; }
+.learning-panel { position:fixed; top:90px; right:20px; width:380px; max-height:calc(100dvh - 115px); overflow:auto; z-index:45; background:var(--surface); border:1px solid var(--overlay-edge); border-radius:var(--radius); padding:20px; box-shadow:var(--overlay-shadow); overscroll-behavior:contain; }
 .learning-panel[hidden] { display:none; }
 .learning-panel > header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .learning-panel h2 { font-size:18px; }

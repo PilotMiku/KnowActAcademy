@@ -1,16 +1,69 @@
 :root {
-  --bg: #f8f9fc; --surface: #fff; --side: #f5f7fc; --ink: #181c2a;
-  --muted: #707789; --line: #e9ebf2; --accent: #006fee; --accent-light: #eaf3ff;
-  --green: #15966a; --green-light: #e8f9f1; --blue: #006fee; --blue-light: #edf5ff;
-  --shadow: 0 4px 24px #1c407207; --radius: 18px;
+  --bg: #f3f6fc; --surface: #fff; --side: #f0f4fa; --ink: #181c2a;
+  --muted: #576277; --line: #dfe6f0; --accent: #005fcf; --accent-light: #e5efff;
+  --green: #08714f; --green-light: #e8f9f1; --blue: var(--accent); --blue-light: #eaf2ff;
+  --primary-fill: #0064d9; --primary-hover: #0057bf;
+  --shadow: 0 4px 24px #1c407207; --radius: 22px;
   --serif: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  --ambient-blue: #d4e5fb; --ambient-violet: #e7e3fb;
+  --field-edge: #808b9e;
+  --overlay-edge: #cdd7e6;
+  --overlay-shadow: 0 14px 38px #1b2b502b, 0 2px 8px #1b2b5012;
+  --overlay-scrim: #17243b63;
+  --glass-opaque: #f7faff;
+  --glass-rest: rgba(244,249,255,.38);
+  --glass-scrolled: rgba(248,251,255,.72);
+  --glass-clear: rgba(238,246,255,.34);
+  --glass-icon: #0055b8;
+  --glass-outline: rgba(40,58,88,.22);
+  --glass-rim-dark: rgba(28,47,78,.32);
+  --glass-rim-tint: rgba(181,207,249,.82);
+  --glass-glint: rgba(255,255,255,.99);
+  --glass-glint-soft: rgba(255,255,255,.54);
+  --glass-shadow: 0 12px 30px -5px #1f34582b, 0 2px 6px #1f345821;
+  --glass-diffusion: blur(22px) saturate(155%);
+  --glass-clear-diffusion: blur(18px) saturate(150%);
+  --glass-timing: 180ms cubic-bezier(.2,.7,.25,1);
+  --glass-press: 140ms cubic-bezier(.22,.8,.3,1);
+  --toolbar-offset: max(10px, env(safe-area-inset-top));
+  --toolbar-height: 64px;
+  --toolbar-edge: max(clamp(12px, 2.8vw, 36px), env(safe-area-inset-left), env(safe-area-inset-right));
+  --question-dock-end: max(8px, env(safe-area-inset-bottom));
 }
-body { background: radial-gradient(ellipse at 96% 0%,#e3e6ff88,transparent 36%),radial-gradient(ellipse at 0% 22%,#d9f4ff66,transparent 30%),var(--bg); font-size:14px; }
-body.dark { --bg:#10121b; --surface:#1a1d2a; --side:#212537; --ink:#f3f4fc; --muted:#a2a8bc; --line:#2c3145; --accent:#55a0ff; --accent-light:#203859; --green:#55d5a7; --green-light:#173e35; --blue:#55a0ff; --blue-light:#203859; --shadow:none; background:radial-gradient(ellipse at 95% 0%,#32205c55,transparent 40%),var(--bg); }
 
-:root { --focus-ring:#006fee66; --question-font-size:16px; --reading-font-size:15px; --study-line-height:1.9; color-scheme:light; }
-html[data-theme="dark"] { --bg:#10121b; --surface:#1a1d2a; --side:#212537; --ink:#f3f4fc; --muted:#a2a8bc; --line:#2c3145; --accent:#55a0ff; --accent-light:#203859; --green:#55d5a7; --green-light:#173e35; --blue:#55a0ff; --blue-light:#203859; --shadow:none; color-scheme:dark; background:#10121b; }
-html[data-theme="dark"] body { background:radial-gradient(ellipse at 95% 0%,#32205c55,transparent 40%),var(--bg); }
+:root { --focus-ring:#005dc8; --question-font-size:16px; --reading-font-size:15px; --study-line-height:1.9; color-scheme:light; background:var(--bg); }
+html[data-theme="dark"], body.dark {
+  --bg:#101420; --surface:#1a1f2e; --side:#222a3c; --ink:#f3f5fc;
+  --muted:#adb8ce; --line:#343f54; --accent:#85baff; --accent-light:#263d5f;
+  --green:#68dfb6; --green-light:#173e35; --blue-light:#243b5d;
+  --shadow:none; --focus-ring:#a2caff;
+  --ambient-blue:#1c2e49; --ambient-violet:#29233c;
+  --field-edge:#77859e;
+  --overlay-edge:#46546e;
+  --overlay-shadow:0 16px 46px #0008, 0 2px 12px #0005;
+  --overlay-scrim:#080b147a;
+  --glass-opaque:#242d41;
+  --glass-rest:rgba(28,36,55,.40);
+  --glass-scrolled:rgba(30,38,56,.74);
+  --glass-clear:rgba(24,34,54,.36);
+  --glass-icon:#a3cbff;
+  --glass-outline:rgba(113,136,177,.27);
+  --glass-rim-dark:rgba(2,6,15,.86);
+  --glass-rim-tint:rgba(105,142,199,.49);
+  --glass-glint:rgba(207,223,255,.57);
+  --glass-glint-soft:rgba(175,198,240,.29);
+  --glass-shadow:0 9px 26px #0006, 0 2px 6px #0005;
+  color-scheme:dark;
+}
+@media (max-width:600px) {
+  :root { --toolbar-height:56px; --toolbar-offset:max(8px,env(safe-area-inset-top)); }
+}
+body {
+  background:
+    radial-gradient(ellipse at 12% 0%,var(--ambient-blue),transparent 68%) top left / 64% 460px no-repeat,
+    radial-gradient(ellipse at 93% 0%,var(--ambient-violet),transparent 68%) top right / 70% 520px no-repeat,
+    var(--bg);
+}
 body[data-font-size="large"] { --question-font-size:19px; --reading-font-size:18px; }
 body[data-font-size="larger"] { --question-font-size:22px; --reading-font-size:21px; }
 body[data-line-spacing="relaxed"] { --study-line-height:2.3; }
@@ -65,7 +118,6 @@ html[data-theme="dark"] .rich img.native-formula-image {
 .legend-correct { color:var(--green); background:var(--green-light); }
 .legend-wrong { color:var(--wrong); background:var(--wrong-light); }
 .legend-pending { background:var(--side); border:1px solid var(--line); }
-.question-actions { border-top-color:var(--line); }
 
 @media(hover:hover) and (pointer:fine) {
   .chapter-card:hover,.guide-options > a:hover { border-color:var(--blue); box-shadow:0 10px 28px #006fee0d; }

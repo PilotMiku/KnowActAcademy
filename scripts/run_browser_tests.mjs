@@ -13,6 +13,7 @@ suites.unshift('mobile-navigation-browser');
 suites.push('usability-review-browser');
 suites.push('collection-navigation-browser');
 suites.push('visual-polish-browser');
+suites.push('liquid-glass-browser');
 suites.push('supplemental-analysis-browser');
 suites.push('section-knowledge-browser');
 suites.push('difficulty-favorite-browser');

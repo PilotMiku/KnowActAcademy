@@ -68,7 +68,7 @@ export function welcomePage() {
       </blockquote>
       <a class="welcome-enter" href="#/">进入学习<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
     </main>
-    <footer class="welcome-footer" aria-label="学习方式"><a href="#/practice">题库练习</a><span aria-hidden="true">·</span><a href="#/prepare">加权备考</a><span aria-hidden="true">·</span><a href="#/knowledge">知识复习</a></footer>
+    <footer class="welcome-footer glass-surface glass-clear" aria-label="学习方式"><a class="glass-control" href="#/practice">题库练习</a><span aria-hidden="true">·</span><a class="glass-control" href="#/prepare">加权备考</a><span aria-hidden="true">·</span><a class="glass-control" href="#/knowledge">知识复习</a></footer>
   </div>`;
 }
 
