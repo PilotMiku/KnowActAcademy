@@ -2011,14 +2011,18 @@ h2 { font-size:19px; }
 .glass-surface {
   background-color:var(--glass-opaque);
   border:1px solid var(--glass-outline);
-  box-shadow:inset 0 1px var(--glass-glint-soft), inset 0 -1px var(--glass-rim-dark), var(--glass-shadow);
+  box-shadow:inset 0 1px var(--glass-glint-soft), inset 0 -1px var(--glass-rim-dark),
+    inset 0 -9px 11px -11px var(--glass-inner-shadow), var(--glass-shadow);
 }
 @supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)) {
   .glass-surface {
     background-color:var(--glass-fill,var(--glass-rest));
-    background-image:radial-gradient(ellipse at 18% 0%,var(--glass-glint-soft),transparent 76%);
+    background-image:
+      radial-gradient(ellipse at 18% 0%,var(--glass-glint-soft),transparent 72%),
+      radial-gradient(ellipse at 89% 100%,var(--glass-rim-tint),transparent 70%);
     background-repeat:no-repeat;
-    background-size:56% 6px;
+    background-position:left top,right bottom;
+    background-size:59% 9px,32% 4px;
     -webkit-backdrop-filter:var(--glass-filter,var(--glass-diffusion));
     backdrop-filter:var(--glass-filter,var(--glass-diffusion));
     transition:background-color var(--glass-timing);
@@ -2039,9 +2043,9 @@ h2 { font-size:19px; }
     border-radius:inherit;
     pointer-events:none;
     background:
-      radial-gradient(54% 195% at 16% -59%,var(--glass-glint) 14%,transparent 73%),
-      radial-gradient(24% 125% at 92% 116%,var(--glass-glint) 7%,var(--glass-rim-tint) 36%,transparent 76%),
-      linear-gradient(115deg,var(--glass-rim-tint),transparent 24%,var(--glass-glint-soft) 51%,var(--glass-rim-dark) 74%,var(--glass-rim-tint));
+      radial-gradient(46% 150% at 12% -36%,var(--glass-glint) 18%,transparent 74%),
+      radial-gradient(26% 125% at 94% 119%,var(--glass-glint) 14%,var(--glass-rim-tint) 36%,transparent 76%),
+      linear-gradient(115deg,var(--glass-rim-tint),transparent 24%,var(--glass-glint-soft) 49%,var(--glass-rim-dark) 73%,var(--glass-rim-tint));
     -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite:xor;

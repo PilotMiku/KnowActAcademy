@@ -11,16 +11,17 @@
   --overlay-shadow: 0 14px 38px #1b2b502b, 0 2px 8px #1b2b5012;
   --overlay-scrim: #17243b63;
   --glass-opaque: #f7faff;
-  --glass-rest: rgba(244,249,255,.38);
-  --glass-scrolled: rgba(248,251,255,.72);
-  --glass-clear: rgba(238,246,255,.34);
-  --glass-icon: #0055b8;
-  --glass-outline: rgba(40,58,88,.22);
-  --glass-rim-dark: rgba(28,47,78,.32);
+  --glass-rest: rgba(244,249,255,.22);
+  --glass-scrolled: rgba(248,251,255,.64);
+  --glass-clear: rgba(238,246,255,.19);
+  --glass-icon: #00458f;
+  --glass-outline: rgba(40,58,88,.24);
+  --glass-rim-dark: rgba(28,47,78,.42);
+  --glass-inner-shadow: rgba(48,77,119,.16);
   --glass-rim-tint: rgba(181,207,249,.82);
   --glass-glint: rgba(255,255,255,.99);
   --glass-glint-soft: rgba(255,255,255,.54);
-  --glass-shadow: 0 12px 30px -5px #1f34582b, 0 2px 6px #1f345821;
+  --glass-shadow: 0 15px 34px -8px #1f345838, 0 4px 8px -3px #1f345840, 0 1px 2px #1f345823;
   --glass-diffusion: blur(22px) saturate(155%);
   --glass-clear-diffusion: blur(18px) saturate(150%);
   --glass-timing: 180ms cubic-bezier(.2,.7,.25,1);
@@ -43,16 +44,17 @@ html[data-theme="dark"], body.dark {
   --overlay-shadow:0 16px 46px #0008, 0 2px 12px #0005;
   --overlay-scrim:#080b147a;
   --glass-opaque:#242d41;
-  --glass-rest:rgba(28,36,55,.40);
-  --glass-scrolled:rgba(30,38,56,.74);
-  --glass-clear:rgba(24,34,54,.36);
+  --glass-rest:rgba(28,36,55,.25);
+  --glass-scrolled:rgba(30,38,56,.68);
+  --glass-clear:rgba(24,34,54,.21);
   --glass-icon:#a3cbff;
   --glass-outline:rgba(113,136,177,.27);
   --glass-rim-dark:rgba(2,6,15,.86);
-  --glass-rim-tint:rgba(105,142,199,.49);
-  --glass-glint:rgba(207,223,255,.57);
+  --glass-inner-shadow:rgba(2,6,15,.46);
+  --glass-rim-tint:rgba(105,142,199,.64);
+  --glass-glint:rgba(207,223,255,.76);
   --glass-glint-soft:rgba(175,198,240,.29);
-  --glass-shadow:0 9px 26px #0006, 0 2px 6px #0005;
+  --glass-shadow:0 15px 32px -7px #0009, 0 4px 8px -2px #000b, 0 1px 2px #0008;
   color-scheme:dark;
 }
 @media (max-width:600px) {
