@@ -37,7 +37,10 @@ try {
     await b.locator("#storage-conflict:not([hidden])").waitFor();
     assert.equal(await b.locator("#app").evaluate(el => el.inert), true);
     if (notifications) {
-      assert.equal(await b.locator("#storage-conflict").evaluate(el => getComputedStyle(el).backgroundColor), "rgb(26, 29, 42)");
+      assert.equal(await b.locator("html").getAttribute("data-theme"), "dark");
+      const practiceSurface = await b.locator(".practice-start").evaluate(el => getComputedStyle(el).backgroundColor);
+      assert.equal(await b.locator("#storage-conflict").evaluate(el => getComputedStyle(el).backgroundColor),
+        practiceSurface, "the conflict banner uses the same dark surface as the practice card");
       await b.screenshot({ path: "artifacts/storage-conflict-dark.png", animations: "disabled" });
     }
     assert.equal((await stored(b)).attempts.length, 1);
