@@ -1,6 +1,6 @@
 {
   "format": "zhixing.question-counts.v1",
-  "revision": "pdf-793e119a71f157ca",
+  "revision": "pdf-eac92e4713e56430",
   "definition": "每个题号计一条记录；父章包含全部后代，不与小节重复累加；未确认等价的相似题分别保留。",
   "counts": {
     "total": 8425,
@@ -2624,7 +2624,7 @@
       }
     }
   ],
-  "bankSha256": "33d6e38e2106c6143dfed5cc3973f3c07cbc3c53d32afbf9b756f2daff560486",
+  "bankSha256": "596f045de32e8103d34e3062724f9a1de49271a72e1a4deddf178455a515783b",
   "sources": {
     "originalPdf": 3716,
     "supplementEntries": 5346,
