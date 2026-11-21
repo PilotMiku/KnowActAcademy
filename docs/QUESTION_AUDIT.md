@@ -1,6 +1,6 @@
 # 题库逐题扫描报告
 
-审计记录更新于 2026-11-18。题库版本 `pdf-793e119a71f157ca`。
+审计记录更新于 2026-11-21。题库版本 `pdf-eac92e4713e56430`。
 
 已扫描全部 **8,425 道题**，逐题结果保存在 `data/question-audit.json`。
 
@@ -9,7 +9,8 @@
 | 检查 / 处理 | 数量 |
 | --- | ---: |
 | 逐条扫描的题号 | 8425 |
-| 与原记录的主来源参考字母一致 | 8425 |
+| 与原记录的主来源参考字母一致 | 8424 |
+| 人工复算后更正评分答案 | 1 |
 | 恢复缺失区间 / 所求内容的题干（含最初的 3.5 第 23 题） | 7 |
 | 按当前选项重新推导并纠正解析字母 | 20 |
 | 补写简略解析或替换解析中的公式错误信息 | 80 |
@@ -67,8 +68,8 @@
 
 | 证据状态 | 题量 |
 | --- | ---: |
-| `not-independently-recomputed` | 8140 |
-| `independently-reviewed-derivation` | 125 |
+| `not-independently-recomputed` | 8139 |
+| `independently-reviewed-derivation` | 126 |
 | `confirmed-source-defect` | 37 |
 | `previous-authored-derivation` | 57 |
 | `symbolic-result-matches-draft` | 47 |

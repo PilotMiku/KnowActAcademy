@@ -55,8 +55,11 @@ def scan():
         else:
             index = q['source'].get('answerEvidence', {}).get('greenOption')
             expected = option_ids[index] if isinstance(index, int) and 0 <= index < len(option_ids) else None
+        editorial = reviews.get(q['id'], {})
         key_status = 'matches-primary-source' if expected == q['answer'] else 'source-key-unavailable' if expected is None else 'source-key-mismatch'
-        if key_status != 'matches-primary-source': issues.append(key_status)
+        if expected == editorial.get('referenceAnswer') and q['answer'] == editorial.get('correctedAnswer'):
+            key_status = 'corrected-primary-source-key'
+        if key_status in ('source-key-unavailable', 'source-key-mismatch'): issues.append(key_status)
         source = draft_review.get(q['id'], {})
         stem_review = source.get('parts', {}).get('stem', {})
         segment = source_segments.get(stem_review.get('sourceImageId'))
@@ -76,7 +79,6 @@ def scan():
             prose = 'pdf-native-prose-or-reviewed-correction'
         excluded = bool(q.get('sourceIncomplete') or q.get('answerVerified') is False or review_required(q, supplemental))
         if q.get('sourceIncomplete'): issues.append('known-source-incomplete')
-        editorial = reviews.get(q['id'])
         math_status = 'not-independently-recomputed'
         if editorial and editorial['assessment'] == 'review-only':
             math_status = 'confirmed-source-defect'; issues.append(editorial['kind'])
@@ -89,9 +91,10 @@ def scan():
         elif excluded:
             math_status = 'prior-review-only'
         row = {'questionId': q['id'], 'label': q['sourceLabel'], 'scanned': True,
-               'referenceAnswer': q['answer'], 'sourceKey': key_status, 'stemProse': prose,
+               'referenceAnswer': editorial.get('referenceAnswer', q['answer']), 'sourceKey': key_status, 'stemProse': prose,
                'sourceTranscription': source.get('status', 'review-evidence-unavailable'),
                'mathematics': math_status, 'scorable': not excluded, 'issues': issues}
+        if key_status == 'corrected-primary-source-key': row['correctedAnswer'] = q['answer']
         if q['id'] in duplicate_reviews: row['duplicateOptionScreening'] = duplicate_reviews[q['id']]['status']
         if math_rows.get(q['id'], {}).get('status') not in (None, 'unsupported', 'abstained'):
             row['symbolicScreening'] = math_rows[q['id']]
@@ -126,6 +129,7 @@ def markdown(report):
              '| 检查 / 处理 | 数量 |', '| --- | ---: |',
              f"| 逐条扫描的题号 | {summary['recordsScanned']} |",
              f"| 与原记录的主来源参考字母一致 | {summary['primarySourceKeysMatched']} |",
+             f"| 人工复算后更正评分答案 | {sum('correctedAnswer' in r for r in reviews.values())} |",
              f"| 恢复缺失区间 / 所求内容的题干（含最初的 3.5 第 23 题） | {summary['restoredStems']} |",
              '| 按当前选项重新推导并纠正解析字母 | 20 |',
              f"| 补写简略解析或替换解析中的公式错误信息 | {sum(r['kind'] == 'expanded-analysis' for r in reviews.values())} |",

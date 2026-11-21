@@ -20,7 +20,7 @@ try{
   await page.waitForFunction(id=>document.querySelector('.question-main')?.dataset.questionId===id,id);
   const row=reviews[id];
   if(row.assessment==='review-only') assert.equal(await page.locator('.question-main .notice').count(),1,id);
-  else await page.locator(`.option[data-value="${row.referenceAnswer}"]`).click();
+  else await page.locator(`.option[data-value="${row.correctedAnswer ?? row.referenceAnswer}"]`).click();
   await page.locator('[data-action="submit-answer"]').click();await page.locator('.analysis').waitFor();
   assert.equal(await page.locator('.question-main .katex-error').count(),0,id);
   if(row.parts.stem) {

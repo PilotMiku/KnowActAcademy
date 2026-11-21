@@ -1,7 +1,20 @@
 {
   "format": "zhixing.question-reviews.v1",
-  "updated": "2026-11-18",
+  "updated": "2026-11-21",
   "entries": {
+    "u-calculus-7fc229bd80e20a14": {
+      "sourceLabel": "1.10 连续的运算及应用 · 补充第 4 题",
+      "sourceSha256": "58c72ad02a8088c3323a62ce8555de917658c37bc99985f01cbe975ce79f7997",
+      "referenceAnswer": "B",
+      "correctedAnswer": "A",
+      "assessment": "verified",
+      "kind": "corrected-reference-answer",
+      "reason": "原题标为 B。连续函数与不连续函数之和、差一定不连续，因此 A 正确。",
+      "method": "independent-mathematical-check",
+      "parts": {
+        "analysis": "A 正确。若 \\(f+g\\) 在 \\(x_0\\) 处连续，则 \\(g=(f+g)-f\\) 也连续。若 \\(f-g\\) 连续，则 \\(g=f-(f-g)\\) 也连续。两者都与题设矛盾。\n令 \\(h(x_0)=1\\)，且在 \\(x\\ne x_0\\) 时 \\(h(x)=0\\)。B 中可取 \\(f=g=h\\)，此时 \\(f-g=0\\)。也可取 \\(f=h\\)、\\(g=-h\\)，此时 \\(f+g=0\\)。C 中可取 \\(f=h\\)、\\(g=1-h\\)，此时 \\(fg=0\\)。D 中可取 \\(f=0\\)、\\(g=h\\)，此时 \\(fg=0\\)。这些零函数在 \\(x_0\\) 处都连续。"
+      }
+    },
     "u-calculus-388c410778ef21fd": {
       "sourceLabel": "3.1.1 Roll定理 · 补充第 22 题",
       "sourceSha256": "d535ed3a8c814cbc6c10bbdd96124f69e39fa3fab2b1c105eb8d39b7285cd508",

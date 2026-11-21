@@ -2028,6 +2028,8 @@ h2 { font-size:19px; }
     transition:background-color var(--glass-timing);
   }
   :where(:root[data-toolbar-scrolled]) .glass-surface { --glass-fill:var(--glass-scrolled); }
+  .local-header.glass-surface { --glass-fill:var(--toolbar-glass-rest); }
+  :where(:root[data-toolbar-scrolled]) .local-header.glass-surface { --glass-fill:var(--toolbar-glass-scrolled); }
   .glass-surface.glass-clear {
     --glass-fill:var(--glass-clear);
     --glass-filter:var(--glass-clear-diffusion);
@@ -2074,7 +2076,11 @@ h2 { font-size:19px; }
   .glass-surface { background:var(--glass-opaque); -webkit-backdrop-filter:none; backdrop-filter:none; }
   .glass-surface::before { display:none; }
 }
+@media (prefers-reduced-transparency:reduce) or (forced-colors:active) {
+  .local-header { backdrop-filter:none !important; }
+}
 .toolbar-scroll-marker { position:absolute; inset:0 auto auto 0; width:1px; height:24px; pointer-events:none; }
+.toolbar-filter { position:absolute; pointer-events:none; }
 .local-shell { padding-top:var(--toolbar-offset); }
 html:has(.local-header) { scroll-padding-top:calc(var(--toolbar-offset) + var(--toolbar-height) + 8px); }
 .local-header {

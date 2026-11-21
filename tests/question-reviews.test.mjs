@@ -6,12 +6,16 @@ const raw=JSON.parse(readFileSync('dist/data/bank.json','utf8'));
 const reviews=JSON.parse(readFileSync('data/question-reviews.json','utf8')).entries;
 const bank=normalizeBank(raw), byId=new Map(bank.questions.map(q=>[q.id,q]));
 
-test('source-bound reviews preserve reference keys and exclude every defective question from grading',()=>{
+test('source-bound reviews apply corrected keys and honor grading eligibility',()=>{
   const state=emptyState(), exams=new Set(examQuestions(bank).map(q=>q.id));
   for(const [id,row] of Object.entries(reviews)){
     const q=byId.get(id);
-    assert.equal(q.answer,row.referenceAnswer,id);
+    assert.equal(q.answer,row.correctedAnswer ?? row.referenceAnswer,id);
     assert.equal(q.source.sha256,row.sourceSha256,id);
+    if(row.correctedAnswer){
+      assert.equal(judge(q,row.correctedAnswer),true,id);
+      assert.equal(judge(q,row.referenceAnswer),false,id);
+    }
     if(row.assessment==='review-only'){
       assert.equal(isScorable(q),false,id);
       assert.equal(exams.has(id),false,id);

@@ -18,12 +18,22 @@ def native(text):
     return '<p>' + html.escape(text).replace('\n', '<br>') + '</p>'
 
 
+def apply_answer_review(question, row):
+    reference = row['referenceAnswer']
+    corrected = row.get('correctedAnswer', reference)
+    if (question['source']['sha256'] != row['sourceSha256']
+            or question['answer'] not in (reference, corrected)):
+        raise ValueError('Editorial review no longer matches its source: ' + question['id'])
+    if 'correctedAnswer' in row and not any(o['id'] == corrected for o in question['options']):
+        raise ValueError('Corrected answer is not an option: ' + question['id'])
+    question['answer'] = corrected
+
+
 def apply_reviews(bank, reviews=None):
     questions = {q['id']: q for q in bank['questions']}
     for qid, row in (records() if reviews is None else reviews).items():
         q = questions[qid]
-        if q['source']['sha256'] != row['sourceSha256'] or q['answer'] != row['referenceAnswer']:
-            raise ValueError('Editorial review no longer matches its source: ' + qid)
+        apply_answer_review(q, row)
         for part, text in row.get('parts', {}).items():
             if part.startswith('option-'):
                 next(o for o in q['options'] if o['id'] == part[7:])['text'] = native(text)
@@ -41,8 +51,7 @@ def apply_draft_reviews(bank, review, reviews=None):
     questions = {q['id']: q for q in bank['questions']}
     for qid, row in (records() if reviews is None else reviews).items():
         q = questions[qid]
-        if q['source']['sha256'] != row['sourceSha256'] or q['answer'] != row['referenceAnswer']:
-            raise ValueError('Draft review no longer matches its source: ' + qid)
+        apply_answer_review(q, row)
         record = review[qid]
         for name, text in row.get('parts', {}).items():
             record['parts'][name] = {'text': text, 'status': 'source-checked', 'evidence': [],

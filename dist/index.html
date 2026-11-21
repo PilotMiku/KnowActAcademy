@@ -38,6 +38,25 @@
     <script type="module" src="./app.mjs"></script>
   </head>
   <body>
+    <svg class="toolbar-filter" width="0" height="0" aria-hidden="true" focusable="false">
+      <filter id="toolbar-refraction" x="0%" y="0%" width="100%" height="100%" primitiveUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+        <!-- Opposing vertical shifts taper into the blurred center. -->
+        <feFlood flood-color="#808000" result="neutral" />
+        <feFlood x="0" y="0" width="1" height=".14" flood-color="#80e6d6" result="upper-edge" />
+        <feFlood x="0" y=".86" width="1" height=".14" flood-color="#801ad6" result="lower-edge" />
+        <feMerge>
+          <feMergeNode in="neutral" />
+          <feMergeNode in="upper-edge" />
+          <feMergeNode in="lower-edge" />
+        </feMerge>
+        <feGaussianBlur stdDeviation="0 .04" edgeMode="duplicate" result="edge-map" />
+        <feDisplacementMap in="SourceGraphic" in2="edge-map" scale=".27" xChannelSelector="R" yChannelSelector="G" result="refracted" />
+        <feColorMatrix in="edge-map" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 1 0 0" result="edge-mask" />
+        <feComposite in="refracted" in2="edge-mask" operator="in" result="clear-edges" />
+        <feGaussianBlur in="SourceGraphic" stdDeviation=".018 .34" edgeMode="duplicate" result="blurred" />
+        <feComposite in="clear-edges" in2="blurred" operator="over" />
+      </filter>
+    </svg>
     <a class="skip" href="#main">跳到主要内容</a>
     <aside id="storage-conflict" class="storage-conflict" role="alert" hidden>
       <strong>其他页面已更新学习记录</strong>

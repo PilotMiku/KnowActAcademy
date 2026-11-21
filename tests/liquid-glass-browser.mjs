@@ -71,6 +71,8 @@ for (const [engine, options] of engines) {
       await page.waitForFunction(() => document.documentElement.hasAttribute('data-toolbar-scrolled'));
       await finishTransitions(toolbar);
       const scrolled = await toolbarState(toolbar);
+      if (engine === chromium) assert.match(scrolled.filter, /url\("#toolbar-refraction"\)/);
+      else assert.match(scrolled.filter, /blur\(22px\)/);
       const [r,g,b,alpha] = channels(scrolled.fill);
       assert.ok(alpha > channels(resting.fill)[3] && alpha < .8);
       assert.deepEqual(await toolbar.boundingBox(), bounds);
@@ -83,6 +85,7 @@ for (const [engine, options] of engines) {
       await page.waitForFunction(() => !document.documentElement.hasAttribute('data-toolbar-scrolled'));
       await finishTransitions(toolbar);
       assert.equal((await toolbarState(toolbar)).fill, resting.fill);
+      assert.equal((await toolbarState(toolbar)).filter, resting.filter);
     }
 
     const press = await search.boundingBox();

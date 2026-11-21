@@ -13,6 +13,8 @@
   --glass-opaque: #f7faff;
   --glass-rest: rgba(244,249,255,.22);
   --glass-scrolled: rgba(248,251,255,.64);
+  --toolbar-glass-rest: rgba(244,249,255,.15);
+  --toolbar-glass-scrolled: rgba(248,251,255,.60);
   --glass-clear: rgba(238,246,255,.19);
   --glass-icon: #00458f;
   --glass-outline: rgba(40,58,88,.24);
@@ -46,6 +48,8 @@ html[data-theme="dark"], body.dark {
   --glass-opaque:#242d41;
   --glass-rest:rgba(28,36,55,.25);
   --glass-scrolled:rgba(30,38,56,.68);
+  --toolbar-glass-rest:rgba(28,36,55,.17);
+  --toolbar-glass-scrolled:rgba(19,26,43,.65);
   --glass-clear:rgba(24,34,54,.21);
   --glass-icon:#a3cbff;
   --glass-outline:rgba(113,136,177,.27);
