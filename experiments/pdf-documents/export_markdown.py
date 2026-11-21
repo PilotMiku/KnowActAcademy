@@ -76,6 +76,8 @@ def main():
             for index,q in enumerate(questions,1):
                 record=review[q['id']];parts=record['parts'];stats=Counter()
                 status='已通过当前来源检查' if record['status']=='source-checked' else '含待对照原件核验的转写'
+                if record.get('editorialRevision'):
+                    status='已修订并验算。'+record['editorialRevision']
                 content=['# '+q['sourceLabel'],'',f'题目 ID：`{q["id"]}`','',f'转写状态：{status}','',
                          f'[查看原始资料]({sources[q["id"]]})','', '## 题干','',text_part(parts['stem'],stats),'','## 选项','']
                 for option in q['options']:

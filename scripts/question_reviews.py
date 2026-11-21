@@ -27,6 +27,16 @@ def apply_answer_review(question, row):
     if 'correctedAnswer' in row and not any(o['id'] == corrected for o in question['options']):
         raise ValueError('Corrected answer is not an option: ' + question['id'])
     question['answer'] = corrected
+    if row.get('restoreScoring'):
+        if row['assessment'] != 'verified' or not row.get('parts', {}).get('analysis'):
+            raise ValueError('Restored scoring requires a verified derivation: ' + question['id'])
+        if question.get('sourceIncomplete'):
+            required = ['stem', 'analysis', *('option-' + o['id'] for o in question['options'])]
+            if not all(row['parts'].get(part) for part in required):
+                raise ValueError('Incomplete source requires a full replacement: ' + question['id'])
+        question.pop('sourceIncomplete', None)
+        question['analysisMissing'] = False
+        question['answerVerified'] = True
 
 
 def apply_reviews(bank, reviews=None):
@@ -53,6 +63,8 @@ def apply_draft_reviews(bank, review, reviews=None):
         q = questions[qid]
         apply_answer_review(q, row)
         record = review[qid]
+        if row.get('restoreScoring'):
+            record['editorialRevision'] = row['reason']
         for name, text in row.get('parts', {}).items():
             record['parts'][name] = {'text': text, 'status': 'source-checked', 'evidence': [],
                 'manualReview': {'editorial': True, 'reviewMethod': row['method']}}

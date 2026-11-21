@@ -60,18 +60,6 @@ export const supplementalAnalyses = {
     "status": "verified",
     "body": "<p>把原式拆成两个标准极限：\\[\\frac{x\\ln(1+3x)}{\\arctan(x^2)}=\\frac{\\ln(1+3x)}{3x}\\cdot\\frac{x^2}{\\arctan(x^2)}\\cdot3.\\]当 \\(x\\to0\\) 时，前两项都趋于 1，故极限为 3，选 B。等价地，分子为 \\(3x^2+o(x^2)\\)，分母为 \\(x^2+o(x^2)\\)。</p>"
   },
-  "u-calculus-50d94c428ff143b4": {
-    "referenceAnswer": "A",
-    "sourceSha256": "b74181f9ae60d7eb6ab76355c99878346ce8bf94fb9778af51f9cfd5a8e21f04",
-    "status": "partial",
-    "body": "<p>据现存题干，\\[\\left(\\frac{x+2a}{x-a}\\right)^x=\\left(1+\\frac{3a}{x-a}\\right)^x.\\]取对数，其极限为 \\(\\lim_{x\\to\\infty}x\\ln(1+3a/(x-a))=3a\\)，所以原极限等于 \\(e^{3a}\\)。由 \\(e^{3a}=8\\) 得 \\(a=\\ln2\\)。</p><p>本题四个选项均已损坏，只能核实数值结论，不能确认原参考字母 A 对应什么内容；仍仅供查阅。</p>"
-  },
-  "u-calculus-0281fd8ed135fb67": {
-    "referenceAnswer": "A",
-    "sourceSha256": "3c9488efdd3a4efe3158ed7896aabc789f71816f31d5a96c450172f9372cdc88",
-    "status": "unresolved",
-    "body": "<p>已核对历史原始 HTML：题干及四个选项的“图片”实际都是被错误保存为图片的 HTML 错误响应，不含可恢复的数学题内容。现有信息不足以确定微分方程或条件，不能可靠补写解答。本题继续仅供查阅，待取得完整原题后再补。</p>"
-  },
   "u-calculus-e5b4a66c0e76d476": {
     "referenceAnswer": "D",
     "sourceSha256": "bb4bfcbd81cee613c3e049405eb98ddd035768dc77adbcf8141c6d0b52cbad19",
@@ -101,12 +89,6 @@ export const supplementalAnalyses = {
     "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
     "status": "verified",
     "body": "<p>令 \\(\\Delta t=1/n\\)、\\(t_k=k/n\\)。原和为函数 \\(\\sin(\\pi t)\\) 在 \\([0,1]\\) 上的黎曼和，缺少的末项 \\(\\sin\\pi=0\\) 不影响结果。因此\\[\\lim_{n\\to\\infty}\\frac1n\\sum_{k=1}^{n-1}\\sin\\frac{k\\pi}{n}=\\int_0^1\\sin(\\pi t)\\,dt=\\frac2\\pi.\\]故选 A。</p>"
-  },
-  "u-calculus-c1fdcc2f0c601e01": {
-    "referenceAnswer": "A",
-    "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
-    "status": "unresolved",
-    "body": "<p>现存题干只有“\\(f(x)\\) 在 \\([a,b]\\) 上连续”，四个选项均为损坏的图片；历史原始 HTML 中对应位置也是 HTML 错误响应，无法恢复选项。连续性确实可推出有界、取得最大最小值及黎曼可积，但不知道原选项的具体陈述，不能把这些一般结论冒充本题的确定答案。本题仍仅供查阅。</p>"
   },
   "u-calculus-4d7f20bf71e27d61": {
     "referenceAnswer": "B",

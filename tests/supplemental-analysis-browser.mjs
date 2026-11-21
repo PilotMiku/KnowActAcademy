@@ -27,7 +27,7 @@ try {
     assert.match(await page.locator('.analysis > b').innerText(),/本站整理/,q.id);
     assert.equal(await page.locator('.analysis .katex-error').count(),0,q.id);
     assert.doesNotMatch(await page.locator('.question-main').innerText(),/\$\{analysisNote\}/);
-    if ([0,23,49,58].includes(index)) {
+    if ([0,23,49,56].includes(index)) {
       await page.screenshot({path:`artifacts/supplemental-analysis-${index+1}.png`,fullPage:true,animations:'disabled'});
     }
   }
@@ -36,8 +36,8 @@ try {
   for (const q of questions.filter(q => !isScorable(q))) assert.ok(!attempts.some(a=>a.questionId===q.id));
   await page.goto(baseURL + '/#/quality?issue=analysis');
   await page.locator('#quality-issue').waitFor();
-  assert.equal(await page.locator('.collection-item').count(),3);
-  assert.deepEqual(await page.locator('.big-stat b').allTextContents(),['56','3','0']);
+  assert.equal(await page.locator('.collection-item').count(),0);
+  assert.deepEqual(await page.locator('.big-stat b').allTextContents(),['45','0','0']);
   await page.locator('#quality-issue').selectOption('supplemented');
   await page.locator('.collection-item').first().waitFor();
   assert.match(await page.locator('.quality-help').innerText(),/57 题已有完整/);

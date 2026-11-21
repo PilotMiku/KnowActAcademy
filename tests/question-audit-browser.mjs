@@ -39,7 +39,7 @@ try{
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
  await page.screenshot({path:'artifacts/question-audit-mobile.png',fullPage:true,animations:'disabled'});
  await page.goto(baseURL+'/#/quality?issue=answer');await page.locator('#quality-issue').waitFor();
- assert.equal((await page.locator('.big-stat b').allTextContents())[0],'56');
+ assert.equal((await page.locator('.big-stat b').allTextContents())[0],'45');
  assert.deepEqual(errors,[]);
  await writeFile('artifacts/question-audit-browser-report.json',JSON.stringify({rendered:ids.length,eligible:eligible.length,excluded:ids.length-eligible.length,pageErrors:errors},null,2));
  console.log(`All ${ids.length} editorial reviews render; ${eligible.length} eligible and ${ids.length-eligible.length} excluded answers verified.`);

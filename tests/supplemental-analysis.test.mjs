@@ -12,7 +12,7 @@ const records = JSON.parse(readFileSync('data/supplemental-analysis.json','utf8'
 test('all source-missing explanations are accounted for, with unresolved material distinguished', () => {
   assert.deepEqual(supplementalAnalyses,records);
   const missing = bank.questions.filter(q => q.analysisMissing);
-  assert.equal(missing.length,60);
+  assert.equal(missing.length,57);
   const statuses = {};
   for (const question of missing) {
     const row = supplementalAnalysis(question);
@@ -23,7 +23,7 @@ test('all source-missing explanations are accounted for, with unresolved materia
     // Authoring does not rewrite any source explanation or answer.
     assert.equal(question.analysis,raw.questions.find(q => q.id === question.id).analysis);
   }
-  assert.deepEqual(statuses,{verified:57,partial:1,unresolved:2});
+  assert.deepEqual(statuses,{verified:57});
 });
 test('revised explanations follow the exact source through catalog hydration', () => {
   const review = bank.questions.find(q => q.id === 'u-calculus-14122fde4a7eb48c');

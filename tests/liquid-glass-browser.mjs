@@ -58,8 +58,8 @@ for (const [engine, options] of engines) {
       await page.waitForFunction(expected => document.documentElement.dataset.theme === expected, theme);
       await finishTransitions(toolbar);
       const resting = await toolbarState(toolbar);
-      assert.ok(channels(resting.fill)[3] <= .45, 'the resting toolbar stays highly transparent');
-      assert.match(resting.filter, /blur\(22px\).*saturate/);
+      assert.ok(channels(resting.fill)[3] <= .15, 'the resting toolbar stays highly transparent');
+      assert.match(resting.filter, /blur\(15px\).*saturate/);
       assert.notEqual(resting.mask, 'none');
       const selected = await toolbar.locator('[aria-current="page"]').evaluate(el => {
         const { color, backgroundColor } = getComputedStyle(el);
@@ -72,9 +72,9 @@ for (const [engine, options] of engines) {
       await finishTransitions(toolbar);
       const scrolled = await toolbarState(toolbar);
       if (engine === chromium) assert.match(scrolled.filter, /url\("#toolbar-refraction"\)/);
-      else assert.match(scrolled.filter, /blur\(22px\)/);
+      else assert.match(scrolled.filter, /blur\(15px\)/);
       const [r,g,b,alpha] = channels(scrolled.fill);
-      assert.ok(alpha > channels(resting.fill)[3] && alpha < .8);
+      assert.ok(alpha > channels(resting.fill)[3] && alpha <= .63);
       assert.deepEqual(await toolbar.boundingBox(), bounds);
       // Bound the composited contrast with a completely black or white backdrop.
       const backdrop = theme === 'light' ? 0 : 255;

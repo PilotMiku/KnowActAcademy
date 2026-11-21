@@ -1,8 +1,8 @@
 {
   "format": "zhixing.question-audit.v1",
   "updated": "2026-11-21",
-  "revision": "pdf-eac92e4713e56430",
-  "bankSha256": "596f045de32e8103d34e3062724f9a1de49271a72e1a4deddf178455a515783b",
+  "revision": "pdf-8b725f83ff6497f2",
+  "bankSha256": "fb89c0b0b90949b7cc758fc663836d475bc18f7be907bf9bea75ad0c9a722b2d",
   "scope": "All question IDs scanned for stem/option structure, recorded primary-source answer keys, source prose loss, answer/analysis letter conflicts and draft duplicate options; supported scalar limits/integrals additionally recomputed.",
   "limitations": [
     "A matching historical key is not proof of mathematical correctness.",
@@ -15,18 +15,18 @@
     "primarySourceKeysMatched": 8424,
     "emptyStems": 0,
     "emptyOptions": 0,
-    "newEditorialReviews": 171,
-    "restoredStems": 7,
-    "newReviewOnly": 37,
-    "totalReviewOnly": 56,
-    "scorable": 8369,
+    "newEditorialReviews": 184,
+    "restoredStems": 8,
+    "newReviewOnly": 30,
+    "totalReviewOnly": 45,
+    "scorable": 8380,
     "mathematicalEvidence": {
-      "not-independently-recomputed": 8139,
-      "independently-reviewed-derivation": 126,
-      "confirmed-source-defect": 37,
+      "independently-reviewed-derivation": 146,
+      "not-independently-recomputed": 8130,
+      "confirmed-source-defect": 30,
       "previous-authored-derivation": 57,
       "symbolic-result-matches-draft": 47,
-      "prior-review-only": 19
+      "prior-review-only": 15
     },
     "duplicateOptionCandidatesVisuallyReviewed": 87,
     "remainingProseLossCandidates": 0
@@ -40,7 +40,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -52,7 +52,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -62,9 +62,9 @@
       "scanned": true,
       "referenceAnswer": "B",
       "sourceKey": "matches-primary-source",
-      "stemProse": "pdf-native-prose-or-reviewed-correction",
+      "stemProse": "visually-restored",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -76,7 +76,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -88,7 +88,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -100,7 +100,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -112,7 +112,7 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -122,9 +122,9 @@
       "scanned": true,
       "referenceAnswer": "B",
       "sourceKey": "matches-primary-source",
-      "stemProse": "pdf-native-prose-or-reviewed-correction",
+      "stemProse": "visually-restored",
       "sourceTranscription": "source-checked",
-      "mathematics": "not-independently-recomputed",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -4144,7 +4144,17 @@
       "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": [],
-      "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
+      "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates",
+      "symbolicScreening": {
+        "questionId": "s-73cc3a94d49a-q0023",
+        "status": "incomplete-option-parse",
+        "expression": "\\lim  _{x \\to  0} ( \\cos  x ) ^{\\frac{1}{x}}",
+        "result": "1",
+        "parsedOptions": [
+          "B",
+          "D"
+        ]
+      }
     },
     {
       "questionId": "s-73cc3a94d49a-q0024",
@@ -14315,11 +14325,9 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "confirmed-source-defect",
-      "scorable": false,
-      "issues": [
-        "multiple-correct-options"
-      ],
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": [],
       "duplicateOptionScreening": "confirmed-source-defect"
     },
     {
@@ -15360,13 +15368,11 @@
       "scanned": true,
       "referenceAnswer": "B",
       "sourceKey": "matches-primary-source",
-      "stemProse": "pdf-native-prose-or-reviewed-correction",
+      "stemProse": "visually-restored",
       "sourceTranscription": "source-checked",
-      "mathematics": "confirmed-source-defect",
-      "scorable": false,
-      "issues": [
-        "multiple-correct-options"
-      ],
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": [],
       "duplicateOptionScreening": "confirmed-source-defect"
     },
     {
@@ -16590,11 +16596,9 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "confirmed-source-defect",
-      "scorable": false,
-      "issues": [
-        "duplicate-correct-options"
-      ],
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": [],
       "duplicateOptionScreening": "confirmed-source-defect"
     },
     {
@@ -16857,11 +16861,9 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "confirmed-source-defect",
-      "scorable": false,
-      "issues": [
-        "duplicate-correct-options"
-      ],
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": [],
       "duplicateOptionScreening": "confirmed-source-defect"
     },
     {
@@ -16872,11 +16874,9 @@
       "sourceKey": "matches-primary-source",
       "stemProse": "pdf-native-prose-or-reviewed-correction",
       "sourceTranscription": "source-checked",
-      "mathematics": "confirmed-source-defect",
-      "scorable": false,
-      "issues": [
-        "duplicate-correct-options"
-      ],
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": [],
       "duplicateOptionScreening": "confirmed-source-defect"
     },
     {
@@ -21025,13 +21025,11 @@
       "scanned": true,
       "referenceAnswer": "D",
       "sourceKey": "matches-primary-source",
-      "stemProse": "pdf-native-prose-or-reviewed-correction",
+      "stemProse": "visually-restored",
       "sourceTranscription": "source-checked",
-      "mathematics": "confirmed-source-defect",
-      "scorable": false,
-      "issues": [
-        "damaged-source-formula"
-      ],
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": [],
       "duplicateOptionScreening": "reviewed-no-key-ambiguity-from-detected-duplicates"
     },
     {
@@ -58101,13 +58099,11 @@
       "scanned": true,
       "referenceAnswer": "A",
       "sourceKey": "matches-primary-source",
-      "stemProse": "original-whole-part-image-retained",
-      "sourceTranscription": "review-required",
-      "mathematics": "prior-review-only",
-      "scorable": false,
-      "issues": [
-        "known-source-incomplete"
-      ]
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": []
     },
     {
       "questionId": "u-calculus-01765b929c54b7e4",
@@ -63234,13 +63230,11 @@
       "scanned": true,
       "referenceAnswer": "A",
       "sourceKey": "matches-primary-source",
-      "stemProse": "not-applicable-or-not-available",
-      "sourceTranscription": "review-required",
-      "mathematics": "prior-review-only",
-      "scorable": false,
-      "issues": [
-        "known-source-incomplete"
-      ]
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": []
     },
     {
       "questionId": "u-calculus-fecee7e7572ba25a",
@@ -72255,9 +72249,9 @@
       "scanned": true,
       "referenceAnswer": "D",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
-      "sourceTranscription": "review-required",
-      "mathematics": "not-independently-recomputed",
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
       "scorable": true,
       "issues": []
     },
@@ -75238,13 +75232,11 @@
       "scanned": true,
       "referenceAnswer": "A",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
-      "sourceTranscription": "review-required",
-      "mathematics": "prior-review-only",
-      "scorable": false,
-      "issues": [
-        "known-source-incomplete"
-      ]
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": []
     },
     {
       "questionId": "u-calculus-f19741723181230d",
@@ -76034,13 +76026,11 @@
       "scanned": true,
       "referenceAnswer": "A",
       "sourceKey": "matches-primary-source",
-      "stemProse": "original-whole-part-image-retained",
-      "sourceTranscription": "review-required",
-      "mathematics": "prior-review-only",
-      "scorable": false,
-      "issues": [
-        "known-source-incomplete"
-      ]
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": []
     },
     {
       "questionId": "u-calculus-6226c28f3b5a31f4",
@@ -94764,13 +94754,11 @@
       "scanned": true,
       "referenceAnswer": "A",
       "sourceKey": "matches-primary-source",
-      "stemProse": "no-dropped-chinese-prose-detected",
-      "sourceTranscription": "review-required",
-      "mathematics": "confirmed-source-defect",
-      "scorable": false,
-      "issues": [
-        "incorrect-reference-answer"
-      ],
+      "stemProse": "visually-restored",
+      "sourceTranscription": "source-checked",
+      "mathematics": "independently-reviewed-derivation",
+      "scorable": true,
+      "issues": [],
       "duplicateOptionScreening": "confirmed-source-defect"
     },
     {

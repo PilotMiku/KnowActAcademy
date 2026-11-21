@@ -2028,7 +2028,19 @@ h2 { font-size:19px; }
     transition:background-color var(--glass-timing);
   }
   :where(:root[data-toolbar-scrolled]) .glass-surface { --glass-fill:var(--glass-scrolled); }
-  .local-header.glass-surface { --glass-fill:var(--toolbar-glass-rest); }
+  .glass-surface:where(.local-header) {
+    --glass-fill:var(--toolbar-glass-rest);
+    --glass-filter:var(--toolbar-glass-diffusion);
+    border-color:var(--toolbar-glass-edge);
+    background-image:
+      radial-gradient(ellipse at 22% 0%,var(--toolbar-glass-sheen),transparent 70%),
+      radial-gradient(ellipse at 82% 100%,var(--toolbar-glass-lower),transparent 75%);
+    background-size:80% 12px,84% 10px;
+    box-shadow:
+      inset 0 1px 1px var(--toolbar-glass-sheen),
+      inset 0 -2px 4px var(--toolbar-glass-lower),
+      var(--toolbar-glass-shadow);
+  }
   :where(:root[data-toolbar-scrolled]) .local-header.glass-surface { --glass-fill:var(--toolbar-glass-scrolled); }
   .glass-surface.glass-clear {
     --glass-fill:var(--glass-clear);
@@ -2052,6 +2064,13 @@ h2 { font-size:19px; }
     mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite:xor;
     mask-composite:exclude;
+  }
+  .glass-surface:where(.local-header)::before {
+    padding:1.5px;
+    background:
+      radial-gradient(35% 130% at 9% -25%,var(--glass-glint),transparent 78%),
+      radial-gradient(32% 135% at 91% 125%,var(--glass-glint),transparent 75%),
+      linear-gradient(155deg,var(--toolbar-glass-sheen),transparent 35%,var(--toolbar-glass-lower) 68%,transparent 90%);
   }
 }
 .glass-control {

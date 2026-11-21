@@ -12,7 +12,7 @@ try {
   await section.locator('xpath=ancestor::details[1]/summary').click();
   await section.check();
   assert.equal(await page.locator('#revision-scope .preparation-root input').first().evaluate(el=>el.indeterminate),true);
-  assert.match(await page.locator('#revision-scope-summary').innerText(),/56/);
+  assert.match(await page.locator('#revision-scope-summary').innerText(),/45/);
   await page.locator('[name="minutesPerDay"]').fill('10');
   await page.locator('#revision-plan-form [type="submit"]').click();
   await page.locator('.revision-overview').waitFor();

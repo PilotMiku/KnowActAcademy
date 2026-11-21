@@ -2,6 +2,23 @@
   "format": "zhixing.question-reviews.v1",
   "updated": "2026-11-21",
   "entries": {
+    "u-calculus-01ac2ef4b751bf33": {
+      "sourceLabel": "3.3.2 无穷比无穷型其它未定式 · 补充第 15 题",
+      "sourceSha256": "3a2448998e7d561660784ff7857314eb60637afaee87897352751c68f4dab994",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "restored-stem",
+      "reason": "对照原图恢复趋近 0 的右极限和乘积表达式，并确认 A 为 −1。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "stem": "\\(\\displaystyle\\lim_{x\\to0^+} x\\ln x\\) 的值等于（　）。",
+        "option-A": "\\(-1\\)",
+        "option-B": "\\(\\frac{1}{2}\\)",
+        "option-C": "\\(1\\)",
+        "option-D": "\\(0\\)",
+        "analysis": "将乘积改写为商。由于 \\(\\ln x\\to-\\infty\\)，且 \\(1/x\\to+\\infty\\)，可用洛必达法则。\n\\(\\displaystyle\\lim_{x\\to0^+}x\\ln x=\\lim_{x\\to0^+}\\frac{\\ln x}{1/x}=\\lim_{x\\to0^+}\\frac{1/x}{-1/x^2}=\\lim_{x\\to0^+}(-x)=0\\)。"
+      }
+    },
     "u-calculus-7fc229bd80e20a14": {
       "sourceLabel": "1.10 连续的运算及应用 · 补充第 4 题",
       "sourceSha256": "58c72ad02a8088c3323a62ce8555de917658c37bc99985f01cbe975ce79f7997",
@@ -333,37 +350,44 @@
       "sourceLabel": "4.1.1 原函数与不定积分的概念 · 第 7 题",
       "sourceSha256": "a642edb47bb0550f80282c51be8e7f1cc1270a39ac5c6517d4ceed165a23580f",
       "referenceAnswer": "C",
-      "assessment": "review-only",
-      "kind": "duplicate-correct-options",
-      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
-      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原 A、C 完全相同，改写 A，C 为唯一正确选项。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
       "parts": {
-        "analysis": "对 \\(F(x)=xf(x)+x^2\\) 求导并用 \\(F^{\\prime}=f\\)，得 \\(xf^{\\prime}(x)+2x=0\\)，结合 \\(f(0)=1\\) 可得 \\(f(x)=-2x+1\\)。原图的 A、C 都是这个表达式，单选题没有唯一答案。"
-      }
+        "option-A": "\\(2x+1\\)",
+        "analysis": "对 \\(F(x)=xf(x)+x^2\\) 求导并代入 \\(F^{\\prime}=f\\)，得 \\(x(f^{\\prime}(x)+2)=0\\)。故 \\(f(x)+2x\\) 在零点两侧分别为常数，由连续性和 \\(f(0)=1\\)，两侧常数均为 1，所以 \\(f(x)=1-2x\\)。"
+      },
+      "restoreScoring": true
     },
     "s-6dbdf44fd58a-q0022": {
       "sourceLabel": "4.1.2 第一类换元法（凑微分） · 第 22 题",
       "sourceSha256": "578f2ed7b9502b9fe1351f855c6e3e146b6f0ed9bcf2e944af0441fbed03dc49",
       "referenceAnswer": "B",
-      "assessment": "review-only",
-      "kind": "duplicate-correct-options",
-      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
-      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原 B、C 完全相同，改写 C。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
       "parts": {
-        "analysis": "令 \\(u=2x+3\\)，得 \\(\\int(2x+3)^5dx=\\frac1{12}(2x+3)^6+C\\)。原图的 B、C 完全相同，均正确，不能按单选题评分。"
-      }
+        "option-B": "\\(\\frac{(2x+3)^6}{12}+C\\)",
+        "option-C": "\\(\\frac{(2x+3)^7}{14}+C\\)",
+        "analysis": "令 \\(u=2x+3\\)，则 \\(dx=du/2\\)，所以 \\(\\int (2x+3)^5\\,dx=\\frac12\\int u^5\\,du=\\frac{(2x+3)^6}{12}+C\\)。"
+      },
+      "restoreScoring": true
     },
     "s-6dbdf44fd58a-q0023": {
       "sourceLabel": "4.1.2 第一类换元法（凑微分） · 第 23 题",
       "sourceSha256": "578f2ed7b9502b9fe1351f855c6e3e146b6f0ed9bcf2e944af0441fbed03dc49",
       "referenceAnswer": "B",
-      "assessment": "review-only",
-      "kind": "duplicate-correct-options",
-      "reason": "原图和独立复算确认现有单选题有错误或不唯一；保留来源及原参考字母，退出评分。",
-      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原 B、C 完全相同，改写 C。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
       "parts": {
-        "analysis": "令 \\(u=x^2\\)，得 \\(\\int xe^{x^2}dx=\\frac12e^{x^2}+C\\)。原图的 B、C 完全相同，均正确，不能按单选题评分。"
-      }
+        "option-C": "\\(2e^{x^2}+C\\)",
+        "analysis": "令 \\(u=x^2\\)，则 \\(du=2x\\,dx\\)，所以 \\(\\int xe^{x^2}\\,dx=\\frac12\\int e^u\\,du=\\frac12e^{x^2}+C\\)。"
+      },
+      "restoreScoring": true
     },
     "u-calculus-a43245867d0f68fe": {
       "sourceLabel": "10.5.1  y”=f(x)型 · 补充第 12 题",
@@ -574,13 +598,18 @@
       "sourceLabel": "3.4.1 函数的单调性 · 第 18 题",
       "sourceSha256": "a960181532b946f5a48955d23b75af6f4aaf56b39a1c9636bfb8a98d30aea05a",
       "referenceAnswer": "A",
-      "assessment": "review-only",
-      "kind": "multiple-correct-options",
-      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
-      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原 B、C、D 都可取端点 1。改写选项为四种单调性结论。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
       "parts": {
-        "analysis": "令 \\(h(x)=xf^{\\prime}(x)-f(x)\\)，则 \\(h^{\\prime}(x)=xf^{\\prime\\prime}(x)<0\\)，且 \\(h(1)=0\\)，所以 \\(g^{\\prime}(x)=h(x)/x^2<0\\)（\\(x>1\\)），A 成立。但原选项 B、D 要求 \\(f^{\\prime}(\\xi)=0\\)、C 要求 \\(f(\\xi)=0\\)，其区间都包含端点 \\(1\\)，而题设已给出 \\(f^{\\prime}(1)=f(1)=0\\)，取 \\(\\xi=1\\) 即全部成立。因此原单选题不唯一，暂不评分。"
-      }
+        "analysis": "令 \\(h(x)=xf^{\\prime}(x)-f(x)\\)。当 \\(x>1\\) 时，\\(h^{\\prime}(x)=xf^{\\prime\\prime}(x)<0\\)，而 \\(h(1)=0\\)，故 \\(g^{\\prime}(x)=h(x)/x^2<0\\)。由中值定理，\\(g\\) 在整个区间严格单调递减。",
+        "option-A": "严格单调递减",
+        "option-B": "严格单调递增",
+        "option-C": "恒为常数",
+        "option-D": "先严格递增，后严格递减"
+      },
+      "restoreScoring": true
     },
     "u-calculus-330c4845cd3ffaa5": {
       "sourceLabel": "3.4.1 函数的单调性 · 补充第 18 题",
@@ -598,13 +627,19 @@
       "sourceLabel": "3.6.1函数曲线的凹凸性 · 第 17 题",
       "sourceSha256": "e4704cfd8fac6ea8233b8b29351c1feee64bb9cbf0dbc0cf5c4e4109fea5be6f",
       "referenceAnswer": "B",
-      "assessment": "review-only",
-      "kind": "multiple-correct-options",
-      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
-      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "改为比较二阶导数符号，消除重复选项及凹凸术语歧义。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
       "parts": {
-        "analysis": "对 \\(y=x^3\\)，有 \\(y^{\\prime\\prime}=6x\\)。按本题使用的凹凸命名，\\(x<0\\) 时为凸，\\(x>0\\) 时为凹，所以原选项 B、D 都成立。原参考仅指定 B，单选题不唯一，暂不评分。"
-      }
+        "analysis": "由 \\(y=x^3\\) 得 \\(y^{\\prime\\prime}=6x\\)，所以左半轴二阶导数为负，右半轴为正。按本章用语，左半轴曲线为凸，右半轴为凹。",
+        "stem": "对于曲线 \\(y=x^3\\)，其二阶导数在 \\((-\\infty,0)\\) 和 \\((0,+\\infty)\\) 上的符号依次是什么？",
+        "option-A": "均为正",
+        "option-B": "先负后正",
+        "option-C": "均为负",
+        "option-D": "先正后负"
+      },
+      "restoreScoring": true
     },
     "u-calculus-641a207ea997f60e": {
       "sourceLabel": "3.6.1函数曲线的凹凸性 · 补充第 3 题",
@@ -622,13 +657,19 @@
       "sourceLabel": "8.2.1 三重积分的概念及性质 · 补充第 23 题",
       "sourceSha256": "71c003170729f7a3b9fd6b06eea20c40cdbe649aeff450682a36e2fc256d2045",
       "referenceAnswer": "A",
-      "assessment": "review-only",
-      "kind": "incorrect-reference-answer",
-      "reason": "原图和独立复算确认单选题的参考答案错误或正确选项不唯一；保留原记录，退出评分。",
-      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原公式连等导致参考答案有误。改为考查三重积分线性，改写重复选项。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
       "parts": {
-        "analysis": "原图实际写成 \\(\\iiint_\\Omega F\\,dV=\\iiint_\\Omega f_1\\,dV=\\iiint_\\Omega f_2\\,dV\\)，三个积分连等。即使 \\(f_1\\) 也可积，该等式也未必成立：例如在单位立方体内令 \\(f_1=f_2=1\\)，则 \\(F=2\\)，三个积分分别为 \\(2,1,1\\)。所以按现存题干应选 D，原参考 A 不正确。通常的线性公式应是两个积分相加，但不能把原图的等号默默当成加号。保留原题及原字母，仅供查阅。"
-      }
+        "analysis": "可积函数之和可积，且积分对求和满足线性性质。取单位立方体上的 \\(f_1=f_2=1\\)，两项积分均为 1，和的积分为 2，可排除相减及相乘。线性性质允许加项取负值。",
+        "stem": "设 \\(f_1,f_2\\) 在同一个有界闭区域 \\(\\Omega\\) 上可积，\\(F=f_1+f_2\\)。以下哪项一定成立？",
+        "option-A": "\\(\\iiint_\\Omega F\\,dV=\\iiint_\\Omega f_1\\,dV+\\iiint_\\Omega f_2\\,dV\\)",
+        "option-B": "\\(\\iiint_\\Omega F\\,dV=\\iiint_\\Omega f_1\\,dV-\\iiint_\\Omega f_2\\,dV\\)",
+        "option-C": "\\(\\iiint_\\Omega F\\,dV=(\\iiint_\\Omega f_1\\,dV)(\\iiint_\\Omega f_2\\,dV)\\)",
+        "option-D": "\\(F\\) 只有在 \\(f_1,f_2\\) 均非负时才可积"
+      },
+      "restoreScoring": true
     },
     "u-calculus-881a59e0264d7bc9": {
       "assessment": "verified",
@@ -1730,16 +1771,19 @@
       "sourceLabel": "4.6.1 直角坐标系下平面图形的面积 · 第 21 题",
       "sourceSha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
       "referenceAnswer": "D",
-      "assessment": "review-only",
-      "kind": "damaged-source-formula",
-      "reason": "历史 PDF 有三个选项缺损，面积可独立求出，无法验证原选项。",
-      "method": "visual-historical-pdf-comparison-and-independent-mathematical-check",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原选项缺损，根据可辨认的边界条件重新编写四个选项。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
       "parts": {
-        "option-A": "原资料中的选项公式无法辨认。",
-        "option-C": "原资料中的选项公式无法辨认。",
-        "option-D": "原资料中的选项公式无法辨认。",
-        "analysis": "两条指数曲线在 \\(x=0\\) 相交。在 \\(0\\le x\\le e\\)，上边界是 \\(e^{2x}\\)，下边界是 \\(e^{-2x}\\)。所以面积为 \\(\\int_0^e(e^{2x}-e^{-2x})\\,dx=(e^{2e}+e^{-2e})/2-1\\)。历史 PDF 的 A、C、D 均为排版错误，原资料标 D，现已无法核对该选项的内容。"
-      }
+        "analysis": "两条曲线在 \\(x=0\\) 相交。区间 \\(0\\le x\\le e\\) 上，上边界是 \\(e^{2x}\\)，下边界是 \\(e^{-2x}\\)。相减积分得 \\(\\int_0^e(e^{2x}-e^{-2x})\\,dx=\\frac{e^{2e}+e^{-2e}}2-1\\)。",
+        "stem": "由曲线 \\(y=e^{2x}\\)、\\(y=e^{-2x}\\) 和直线 \\(x=e\\) 围成的图形面积是多少？",
+        "option-A": "\\(\\frac{e^{2e}-e^{-2e}}2\\)",
+        "option-B": "\\(\\frac{e^{2e}+e^{-2e}}2\\)",
+        "option-C": "\\(e^{2e}+e^{-2e}-2\\)",
+        "option-D": "\\(\\frac{e^{2e}+e^{-2e}}2-1\\)"
+      },
+      "restoreScoring": true
     },
     "s-447e052c5a79-q0029": {
       "sourceLabel": "5.1.1 常数项系数的概念 · 第 29 题",
@@ -2105,6 +2149,176 @@
         "option-C": "\\(6\\ln 3\\)",
         "option-D": "\\(2\\ln 3\\)",
         "analysis": "设 \\(m(t)\\) 为湖中 \\(A\\) 的总量。按最高进水浓度，每年流入 \\(m_0/6\\)，每年流出 \\(m(t)/3\\)，所以 \\(m'=m_0/6-m/3\\)。由于 \\(m(0)=5m_0\\)，解得 \\(m(t)=m_0/2+(9m_0/2)e^{-t/3}\\)。令 \\(m(t)=m_0\\)，则 \\(e^{-t/3}=1/9\\)，所以 \\(t=3\\ln 9=6\\ln 3\\)，选 C。"
+      }
+    },
+    "u-calculus-50d94c428ff143b4": {
+      "sourceLabel": "1.6.2 重要极限Ⅱ · 补充第 5 题",
+      "sourceSha256": "b74181f9ae60d7eb6ab76355c99878346ce8bf94fb9778af51f9cfd5a8e21f04",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原选项图片缺损，根据可辨认的参数极限补编选项。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
+      "restoreScoring": true,
+      "parts": {
+        "analysis": "底数等于 \\(1+\\frac{3a}{x-a}\\)。取对数后，\\(x\\ln(1+\\frac{3a}{x-a})\\to3a\\)，因此原极限为 \\(e^{3a}=8\\)，得 \\(a=\\ln2\\)。",
+        "stem": "已知 \\(\\displaystyle\\lim_{x\\to+\\infty}\\left(\\frac{x+2a}{x-a}\\right)^x=8\\)，求实数 \\(a\\)。",
+        "option-A": "\\(\\ln2\\)",
+        "option-B": "\\(3\\ln2\\)",
+        "option-C": "\\(-\\ln2\\)",
+        "option-D": "\\(\\frac{\\ln2}{3}\\)"
+      }
+    },
+    "u-calculus-0281fd8ed135fb67": {
+      "sourceLabel": "10.5.2  y”= f (x，y’)型 · 补充第 15 题",
+      "sourceSha256": "3c9488efdd3a4efe3158ed7896aabc789f71816f31d5a96c450172f9372cdc88",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原题干和选项图片均缺损，按本节可降阶方程补编替代题。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
+      "restoreScoring": true,
+      "parts": {
+        "analysis": "设 \\(p=y^{\\prime}\\)，则 \\(p^{\\prime}=2x\\)，所以 \\(p=x^2+C_1\\)。由 \\(y^{\\prime}(0)=1\\) 得 \\(C_1=1\\)。再次积分并代入 \\(y(0)=0\\)，得 \\(y=x+\\frac{x^3}{3}\\)。",
+        "stem": "（补编题）已知 \\(y^{\\prime\\prime}=2x\\)，且 \\(y(0)=0,\\ y^{\\prime}(0)=1\\)，求 \\(y(x)\\)。",
+        "option-A": "\\(x+\\frac{x^3}{3}\\)",
+        "option-B": "\\(x^2\\)",
+        "option-C": "\\(1+\\frac{x^3}{3}\\)",
+        "option-D": "\\(x+x^3\\)"
+      }
+    },
+    "u-calculus-c1fdcc2f0c601e01": {
+      "sourceLabel": "4.2.1 定积分的概念 · 补充第 16 题",
+      "sourceSha256": "64d93cb57a08a8fc63eedcfd1cd44efdf586c871d7da95dd2621a985e70a1f0b",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原选项图片缺损，根据闭区间连续的原题条件补编选项。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
+      "restoreScoring": true,
+      "parts": {
+        "analysis": "闭区间上的连续函数一定黎曼可积。\\(f(x)=0\\) 可否定积分必为正和必为严格增函数的说法，\\(f(x)=1\\) 可否定积分必为零的说法。",
+        "stem": "（补编题）设 \\(a<b\\)，且 \\(f\\) 在 \\([a,b]\\) 上连续。下列哪项一定成立？",
+        "option-A": "\\(f\\) 在 \\([a,b]\\) 上黎曼可积",
+        "option-B": "\\(\\int_a^b f(x)\\,dx>0\\)",
+        "option-C": "\\(f\\) 在 \\([a,b]\\) 上严格递增",
+        "option-D": "\\(\\int_a^b f(x)\\,dx=0\\)"
+      }
+    },
+    "u-calculus-f3df54612c067658": {
+      "sourceLabel": "4.2.3 定积分的性质 · 补充第 48 题",
+      "sourceSha256": "165518d200914c44580a6b88c65232a9bb9a4638003f829cf82632f09a050d8d",
+      "referenceAnswer": "A",
+      "assessment": "verified",
+      "kind": "revised-duplicate-options",
+      "reason": "原选项缺损，补编选项并补充 f 在闭区间严格为正的条件，以保证 n 次根一致收敛。",
+      "method": "editorial-reconstruction-and-independent-mathematical-check",
+      "restoreScoring": true,
+      "parts": {
+        "analysis": "由于 \\(f\\) 连续且严格为正，\\(\\ln f\\) 在 \\([a,b]\\) 上有界，所以 \\(f(x)^{1/n}=\\exp((\\ln f(x))/n)\\) 一致收敛到 1。\\(g\\) 连续有界，故取极限后积分为 \\(\\int_a^b g(x)\\,dx\\)。取 \\(f\\equiv2,\\ g\\equiv3\\) 可排除其余三个表达式作为通式。",
+        "stem": "（补编题）设 \\(a<b\\)，\\(f,g\\) 在 \\([a,b]\\) 上连续且均严格为正。求 \\(\\displaystyle\\lim_{n\\to\\infty}\\int_a^b g(x)\\sqrt[n]{f(x)}\\,dx\\) 的通式。",
+        "option-A": "\\(\\int_a^b g(x)\\,dx\\)",
+        "option-B": "\\(0\\)",
+        "option-C": "\\(\\int_a^b f(x)g(x)\\,dx\\)",
+        "option-D": "\\(b-a\\)"
+      }
+    },
+    "s-6b82188494c1-q0001": {
+      "sourceLabel": "1.1 函数 · 第 1 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "逐题对照历史 PDF 的题干、四个选项和参考字母，并独立推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "把 \\(2x+1\\) 代入，展开 \\((2x+1)^2-5(2x+1)+8=4x^2-6x+4\\)，选 B。"
+      }
+    },
+    "s-6b82188494c1-q0002": {
+      "sourceLabel": "1.1 函数 · 第 2 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "逐题对照历史 PDF 的题干、四个选项和参考字母，并独立推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "任取值域中的 \\(y=f(x)\\)。奇性给出 \\(-y=f(-x)\\)，所以值域关于原点对称，且 \\(f^{-1}(-y)=-x=-f^{-1}(y)\\)，选 B。"
+      }
+    },
+    "s-6b82188494c1-q0003": {
+      "sourceLabel": "1.1 函数 · 第 3 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "按原解析明确函数定义域为实数集，并独立验证奇性。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "设 \\(g(x)=f(-x)\\)，解 \\(y=f(-x)\\) 得 \\(g^{-1}(y)=-f^{-1}(y)\\)。由题设得 \\(f^{-1}(-y)=-f^{-1}(y)\\)。因此对 \\(y=f(x)\\) 有 \\(f(-x)=-y=-f(x)\\)，选 B。",
+        "stem": "设 \\(f\\) 在 \\(\\mathbb R\\) 上有反函数 \\(f^{-1}\\)。若 \\(y=f^{-1}(-x)\\) 是 \\(y=f(-x)\\) 的反函数，则 \\(f\\) 是哪一类函数？"
+      }
+    },
+    "s-6b82188494c1-q0004": {
+      "sourceLabel": "1.1 函数 · 第 4 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "逐题对照历史 PDF 的题干、四个选项和参考字母，并独立推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "\\((-x)\\sin(-x)+\\cos(-x)=x\\sin x+\\cos x\\)，故函数为偶函数，选 B。"
+      }
+    },
+    "s-6b82188494c1-q0005": {
+      "sourceLabel": "1.1 函数 · 第 5 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "逐题对照历史 PDF 的题干、四个选项和参考字母，并独立推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "平移 \\(\\pi/2\\) 后正弦和余弦的绝对值互换，故 \\(\\pi/2\\) 是周期。若 \\(T>0\\) 是周期，则 \\(f(T)=f(0)=1\\)，平方得 \\(2|\\sin T\\cos T|=0\\)，故 \\(T\\) 必为 \\(\\pi/2\\) 的整数倍，选 C。"
+      }
+    },
+    "s-6b82188494c1-q0006": {
+      "sourceLabel": "1.1 函数 · 第 6 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "C",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "逐题对照历史 PDF 的题干、四个选项和参考字母，并独立推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "复合要求 \\(x\\ne1\\) 且 \\(1/(1-x)\\ne1\\)，即 \\(x\\ne0,1\\)。在此定义域内，\\(f(f(x))=1/(1-1/(1-x))=(x-1)/x\\)，选 C。"
+      }
+    },
+    "s-6b82188494c1-q0007": {
+      "sourceLabel": "1.1 函数 · 第 7 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "D",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "逐题对照历史 PDF 的题干、四个选项和参考字母，并独立推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "根号内的对数必须非负，等价于 \\((5x-x^2)/4\\ge1\\)。即 \\((x-1)(x-4)\\le0\\)，得定义域 \\([1,4]\\)，选 D。"
+      }
+    },
+    "s-6b82188494c1-q0008": {
+      "sourceLabel": "1.1 函数 · 第 8 题",
+      "sourceSha256": "c0dd0894bcd89f5d2ca436786cf58928a1c6f38620235b97e2732ba48a058521",
+      "referenceAnswer": "B",
+      "assessment": "verified",
+      "kind": "independent-recheck",
+      "reason": "逐题对照历史 PDF 的题干、四个选项和参考字母，并独立推导。",
+      "method": "visual-original-source-comparison-and-independent-mathematical-check",
+      "parts": {
+        "analysis": "由于 \\(\\sin2x\\le1\\)，只需 \\(\\sin2x\\ge0\\)，即 \\(2k\\pi\\le2x\\le2k\\pi+\\pi\\)，其中 \\(k\\in\\mathbb Z\\)。除以 2 得选项 B。",
+        "stem": "设 \\(f\\) 的定义域为 \\([0,1]\\)，求 \\(f(\\sin 2x)\\) 的定义域。"
       }
     }
   },
