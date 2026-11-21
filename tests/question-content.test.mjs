@@ -61,6 +61,32 @@ test('prefetch cannot evict the displayed body when a long question history fill
   assert.equal(loadedQuestion(bank,'q0').stem,raw.questions[0].stem);
 });
 
+test('prefetch loads both upcoming questions and their figures, and retries failures', async () => {
+  const { raw, chunk } = setup();
+  const version = '1122334455667788', first = 'a'.repeat(24), second = 'b'.repeat(24);
+  raw.questions = Array.from({length:4}, (_, index) => ({
+    ...structuredClone(raw.questions[0]), id:'next-' + index,
+    stem: index === 1 ? '<img src="/api/question-figure/' + version + '/' + first + '">' : '题干',
+  }));
+  raw.questions[2].options[0].text = '<img src="/api/question-figure/' + version + '/' + second + '">';
+  const bank = normalizeBank({...raw, contentCatalog:{format:'zhixing.question-catalog.v1',revision:raw.revision},
+    questions:raw.questions.map(q=>({...q,stem:'placeholder',contentChunk:chunk}))},{allowCatalog:true});
+  const request = async () => ({format:'zhixing.question-chunk.v1',revision:raw.revision,questions:raw.questions});
+  const session = {index:0,questionIds:raw.questions.map(q=>q.id)};
+  const figures = [];
+  let fail = true;
+  const loadFigure = async (id, base, transport, figureVersion) => {
+    figures.push([id,figureVersion]);
+    if (id === second && fail) { fail = false; throw new Error('temporary failure'); }
+  };
+  await prefetchNextQuestions(bank, session, request, {}, loadFigure);
+  assert.ok(loadedQuestion(bank,'next-1'));
+  assert.ok(loadedQuestion(bank,'next-2'));
+  assert.equal(loadedQuestion(bank,'next-3'),undefined);
+  await prefetchNextQuestions(bank, session, request, {}, loadFigure);
+  assert.deepEqual(figures,[[first,version],[second,version],[first,version],[second,version]]);
+});
+
 test('failed, mismatched and cancelled content loads cannot install partial or wrong answers', async () => {
   const { raw, bank } = setup(), id = raw.questions[0].id;
   const wrong = structuredClone(raw.questions); wrong[0].answer = 'A';

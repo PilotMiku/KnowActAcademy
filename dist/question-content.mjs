@@ -1,5 +1,6 @@
 import { normalizeBank, getBankIndex } from './core.mjs';
 import { fetchJSON } from './resources.mjs';
+import { loadNativeFigure, nativeFigureID, nativeFigureChunk } from './assets.mjs';
 
 const caches = new WeakMap(), fullLoads = new WeakMap();
 const prefetches = new WeakMap();
@@ -50,7 +51,7 @@ export async function loadQuestionContent(bank, ids, request = fetchJSON, { sign
 }
 
 // Speculation never changes the displayed question or writes learning progress.
-export function prefetchNextQuestions(bank, session, request = fetchJSON, connection = globalThis.navigator?.connection) {
+export function prefetchNextQuestions(bank, session, request = fetchJSON, connection = globalThis.navigator?.connection, loadFigure = loadNativeFigure) {
   const previous = prefetches.get(bank);
   const ids = session?.questionIds.slice(session.index + 1, session.index + 3) ?? [];
   const current = session?.questionIds[session.index];
@@ -59,7 +60,22 @@ export function prefetchNextQuestions(bank, session, request = fetchJSON, connec
   previous?.controller.abort();
   if (!bank.contentCatalog || !ids.length || connection?.saveData || ['slow-2g','2g'].includes(connection?.effectiveType)) return Promise.resolve();
   const controller = new AbortController();
-  const promise = loadQuestionContent(bank, ids, request, { signal:controller.signal, keepIds:current?[current]:[] }).catch(() => {});
+  const promise = loadQuestionContent(bank, ids, request, { signal:controller.signal, keepIds:current?[current]:[] }).then(async () => {
+    const figures = new Set();
+    for (const id of ids) {
+      const question = loadedQuestion(bank, id);
+      if (!question) continue;
+      for (const html of [question.stem, ...question.options.map(option => option.text)]) {
+        for (const match of html.matchAll(/\/api\/question-figure\/(?:[a-f0-9]{16}\/)?[a-f0-9]{24}/g)) figures.add(match[0]);
+      }
+    }
+    for (const source of figures) {
+      if (controller.signal.aborted) break;
+      await loadFigure(nativeFigureID(source), undefined, undefined, nativeFigureChunk(source));
+    }
+  }).catch(() => {
+    if (prefetches.get(bank)?.controller === controller) prefetches.delete(bank);
+  });
   prefetches.set(bank, { key, controller, promise });
   return promise;
 }
