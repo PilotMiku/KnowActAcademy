@@ -726,6 +726,7 @@ const sessionActions = createSessionActions({
 let renderPending = false;
 let lastView = "";
 let contentLoad = null;
+let prefetchBank = null;
 function prepareQuestionView(ids) {
   const key = JSON.stringify(ids), currentBank = bank;
   if (contentLoad && (contentLoad.bank !== bank || contentLoad.key !== key)) {
@@ -767,6 +768,11 @@ function draw() {
   displayedPractice = practice;
   if (practice && !document.hidden && !storageConflicted()) resumePracticeQuestion(practice);
   const exam = currentExam();
+  const activeSession = exam?.status === 'active' ? exam : practice;
+  if (prefetchBank && (prefetchBank !== bank || !activeSession)) {
+    prefetchNextQuestions(prefetchBank, null);
+    prefetchBank = null;
+  }
   if (displayedExam && displayedExam !== exam) { pauseExamQuestion(displayedExam); persist(); }
   displayedExam = exam?.status === "active" ? exam : null;
   if (displayedExam && !document.hidden && !storageConflicted()) resumeExamQuestion(displayedExam);
@@ -783,7 +789,6 @@ function draw() {
   }
   const ids = page === 'exam' && exam ? exam.status === 'submitted' ? examReviewIds(bank, exam, examReviewFilter(r.query)) : [exam.questionIds[exam.index]]
     : practice ? [practice.questionIds[practice.index]] : [];
-  const activeSession = exam?.status === 'active' ? exam : practice;
   let contentNotice = prepareQuestionView(ids);
   const contentPending = !!contentNotice;
   if (contentNotice && activeSession) contentNotice = `<div class="question-layout">${contentNotice}${questionNavigation(activeSession, !!exam)}</div>`;
@@ -812,7 +817,10 @@ function draw() {
   document.title = `${routes[page]} · 知行学习`;
   document.querySelector("#main").toggleAttribute("data-enter", entering);
   renderRich(app, page === "exam" && exam?.status === "submitted");
-  if (activeSession && !contentPending) prefetchNextQuestions(bank, activeSession);
+  if (activeSession && !contentPending) {
+    prefetchBank = bank;
+    prefetchNextQuestions(bank, activeSession);
+  }
   syncLearningPanel(activeSession && !contentPending ? currentQuestion() : null, bank, state, !!practice);
   restoreQuestionPosition?.();
   readingController.mount(app);

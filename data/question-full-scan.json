@@ -1,0 +1,2661 @@
+{
+  "revision": "pdf-8b725f83ff6497f2",
+  "bankSha256": "fb89c0b0b90949b7cc758fc663836d475bc18f7be907bf9bea75ad0c9a722b2d",
+  "questionsScanned": 8425,
+  "method": "HTML 标签和空白归一化，保留公式、图片引用；按题干和正确选项内容相同分组",
+  "limitations": [
+    "图片内容和数学等价式未经视觉或语义比对",
+    "同一题干及正确选项仍可能有不同干扰项，需人工确认",
+    "扫描不构成原件逐题对照或独立数学复算"
+  ],
+  "issueCounts": {
+    "multiple-correct-options": 5,
+    "analysis-marked-missing": 57,
+    "identical-option-content": 34,
+    "damaged-source-formula": 2,
+    "inconsistent-premise": 1,
+    "incorrect-reference-answer": 4,
+    "known-source-incomplete": 15,
+    "missing-hypothesis": 1,
+    "duplicate-correct-options": 11,
+    "no-correct-option": 4,
+    "unclear-source-notation": 1,
+    "duplicate-reference-options": 1
+  },
+  "findings": [
+    {
+      "id": "s-6b82188494c1-q0016",
+      "label": "1.1 函数 · 第 16 题",
+      "issues": [
+        "multiple-correct-options"
+      ]
+    },
+    {
+      "id": "s-6b82188494c1-q0027",
+      "label": "1.1 函数 · 第 27 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "s-6b82188494c1-q0040",
+      "label": "1.1 函数 · 第 40 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-3b18eecdd531-q0051",
+      "label": "1.4 极限的运算法则 · 第 51 题",
+      "issues": [
+        "damaged-source-formula"
+      ]
+    },
+    {
+      "id": "s-c7705bea6524-q0005",
+      "label": "1.5.2 单调有界准则 · 第 5 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "s-b08a6d73f6a6-q0025",
+      "label": "2.1.1 导数的定义 · 第 25 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-d85d9256d2a1-q0007",
+      "label": "3.4.1 函数的单调性 · 第 7 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-d85d9256d2a1-q0009",
+      "label": "3.4.1 函数的单调性 · 第 9 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-d85d9256d2a1-q0021",
+      "label": "3.4.1 函数的单调性 · 第 21 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-3ccdff3355c4-q0023",
+      "label": "4.2.1 定积分的概念 · 第 23 题",
+      "issues": [
+        "multiple-correct-options"
+      ]
+    },
+    {
+      "id": "s-3ccdff3355c4-q0025",
+      "label": "4.2.1 定积分的概念 · 第 25 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "s-28375703e59c-q0025",
+      "label": "4.2.3 定积分的性质 · 第 25 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-28375703e59c-q0046",
+      "label": "4.2.3 定积分的性质 · 第 46 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "s-5cc65edb6428-q0007",
+      "label": "4.3.1 积分上限的函数及其导数 · 第 7 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "s-5cc65edb6428-q0024",
+      "label": "4.3.1 积分上限的函数及其导数 · 第 24 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "s-5cc65edb6428-q0034",
+      "label": "4.3.1 积分上限的函数及其导数 · 第 34 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-35914e93a3d7-q0002",
+      "label": "4.4.1 第一类换元积分法 · 第 2 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "s-35914e93a3d7-q0004",
+      "label": "4.4.1 第一类换元积分法 · 第 4 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-7f5535efc30a-q0003",
+      "label": "4.4.2 第二类换元积分法 · 第 3 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-447e052c5a79-q0029",
+      "label": "5.1.1 常数项系数的概念 · 第 29 题",
+      "issues": [
+        "damaged-source-formula"
+      ]
+    },
+    {
+      "id": "s-75adf2f29de2-q0003",
+      "label": "5.2.1 比较判别法 · 第 3 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-75adf2f29de2-q0035",
+      "label": "5.2.1 比较判别法 · 第 35 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-75adf2f29de2-q0038",
+      "label": "5.2.1 比较判别法 · 第 38 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-f50301da5c36-q0021",
+      "label": "5.2.2 比值判别法 · 第 21 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-f50301da5c36-q0022",
+      "label": "5.2.2 比值判别法 · 第 22 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-0d086626c4b8-q0001",
+      "label": "5.2.3 根植判别法 · 第 1 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-0d086626c4b8-q0007",
+      "label": "5.2.3 根植判别法 · 第 7 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-0d086626c4b8-q0013",
+      "label": "5.2.3 根植判别法 · 第 13 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-0d086626c4b8-q0022",
+      "label": "5.2.3 根植判别法 · 第 22 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-0d086626c4b8-q0030",
+      "label": "5.2.3 根植判别法 · 第 30 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-0d086626c4b8-q0044",
+      "label": "5.2.3 根植判别法 · 第 44 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-67dfdf376ff7-q0005",
+      "label": "5.3.1 交错级数的收敛性 · 第 5 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-ec108dd15714-q0013",
+      "label": "5.3.2 绝对收敛与条件收敛 · 第 13 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-ec108dd15714-q0034",
+      "label": "5.3.2 绝对收敛与条件收敛 · 第 34 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-ec108dd15714-q0036",
+      "label": "5.3.2 绝对收敛与条件收敛 · 第 36 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-e4ae0a44a89e-q0006",
+      "label": "5.4.1 幂级数及收敛域 · 第 6 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-e4ae0a44a89e-q0039",
+      "label": "5.4.1 幂级数及收敛域 · 第 39 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-879efc8fc465-q0006",
+      "label": "5.6.1 狄利克雷收敛定理 · 第 6 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-8df004948022-q0021",
+      "label": "矩阵及其运算、分块矩阵 · 第 21 题",
+      "issues": [
+        "inconsistent-premise"
+      ]
+    },
+    {
+      "id": "s-8df004948022-q0091",
+      "label": "矩阵及其运算、分块矩阵 · 第 91 题",
+      "issues": [
+        "incorrect-reference-answer"
+      ]
+    },
+    {
+      "id": "s-84552c1954bb-q0009",
+      "label": "二次型概念、惯性定理、正定二次型 · 第 9 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-84552c1954bb-q0010",
+      "label": "二次型概念、惯性定理、正定二次型 · 第 10 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-84552c1954bb-q0011",
+      "label": "二次型概念、惯性定理、正定二次型 · 第 11 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-84552c1954bb-q0024",
+      "label": "二次型概念、惯性定理、正定二次型 · 第 24 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-84552c1954bb-q0031",
+      "label": "二次型概念、惯性定理、正定二次型 · 第 31 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-84552c1954bb-q0036",
+      "label": "二次型概念、惯性定理、正定二次型 · 第 36 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "s-0364a819e85d-q0013",
+      "label": "矩阵合同，化二次型为标准形 · 第 13 题",
+      "issues": [
+        "identical-option-content"
+      ]
+    },
+    {
+      "id": "u-linear-6d0f28073a6df01e",
+      "label": "矩阵及其运算、分块矩阵 · 补充第 56 题",
+      "issues": [
+        "incorrect-reference-answer"
+      ]
+    },
+    {
+      "id": "u-calculus-14b42cea942f9746",
+      "label": "1.1 函数 · 补充第 43 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-3114f055c4bea93e",
+      "label": "1.4 极限的运算法则 · 补充第 3 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-165d2471f4479b0c",
+      "label": "1.5.2 单调有界准则 · 补充第 9 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-96a60d800a864eaf",
+      "label": "1.5.2 单调有界准则 · 补充第 11 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-007e43f6e85bb158",
+      "label": "1.5.2 单调有界准则 · 补充第 22 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-9ac5bec0e358a010",
+      "label": "1.8.1 函数在某一点的连续性 · 补充第 17 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-552b2ca604e3de3b",
+      "label": "1.9 函数间断点及其判断 · 补充第 2 题",
+      "issues": [
+        "multiple-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-7a465b46861ebd46",
+      "label": "1.9 函数间断点及其判断 · 补充第 3 题",
+      "issues": [
+        "missing-hypothesis"
+      ]
+    },
+    {
+      "id": "u-calculus-fc88c39af898dd5c",
+      "label": "1.9 函数间断点及其判断 · 补充第 4 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-cd8f14a7f1449f8c",
+      "label": "1.9 函数间断点及其判断 · 补充第 35 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-a43245867d0f68fe",
+      "label": "10.5.1  y”=f(x)型 · 补充第 12 题",
+      "issues": [
+        "incorrect-reference-answer"
+      ]
+    },
+    {
+      "id": "u-calculus-387c017398d761cf",
+      "label": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 10 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-e8566906ec7c7f85",
+      "label": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 13 题",
+      "issues": [
+        "no-correct-option"
+      ]
+    },
+    {
+      "id": "u-calculus-f6bf6a9019e65ba6",
+      "label": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 41 题",
+      "issues": [
+        "no-correct-option"
+      ]
+    },
+    {
+      "id": "u-calculus-ba5ac59c37862738",
+      "label": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 51 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-685e1fcc2f709f01",
+      "label": "10.6.2 二阶常系数齐次线性微分方程 · 补充第 53 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-7be7d2e5a0499546",
+      "label": "10.6.3 二阶常系数线性非齐次微分方程 · 补充第 19 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-e5b4a66c0e76d476",
+      "label": "2.1.4 函数的可导性与连续性的关系 · 补充第 4 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-91e6264201437794",
+      "label": "2.3.1 二阶导数 · 补充第 19 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-92eb0b5a6f168acc",
+      "label": "2.3.2 三阶及三阶以上的导数 · 补充第 22 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-b0c7333968b5d48a",
+      "label": "2.4.3 微分的运算 · 补充第 2 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-52afedb15c189778",
+      "label": "2.5.1 隐函数的求导与微分 · 补充第 8 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-e38281c5a377d8ca",
+      "label": "2.5.2 对数求导与微分 · 补充第 9 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-5a49a1db01f3dfc6",
+      "label": "2.6 参数方程确定的函数导数 · 补充第 6 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-bf676f790dafe7f2",
+      "label": "2.7 相关变化率 · 补充第 6 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-330c4845cd3ffaa5",
+      "label": "3.4.1 函数的单调性 · 补充第 18 题",
+      "issues": [
+        "multiple-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-69af564ed6112339",
+      "label": "3.5 函数的最值 · 补充第 1 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-641a207ea997f60e",
+      "label": "3.6.1函数曲线的凹凸性 · 补充第 3 题",
+      "issues": [
+        "multiple-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-5b0df02a0f88a9f6",
+      "label": "4.1.1 原函数与不定积分的概念 · 补充第 8 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-085ff2a74a608059",
+      "label": "4.1.2 第一类换元法（凑微分） · 补充第 3 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-9aaa093c69a9ed94",
+      "label": "4.1.2 第一类换元法（凑微分） · 补充第 10 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-5321a23892789bfe",
+      "label": "4.2.1 定积分的概念 · 补充第 5 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-cc39afb1bd9314fe",
+      "label": "4.2.1 定积分的概念 · 补充第 9 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-9c3ccfbff7485278",
+      "label": "4.2.1 定积分的概念 · 补充第 12 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-076601839f3b4be5",
+      "label": "4.2.1 定积分的概念 · 补充第 23 题",
+      "issues": [
+        "no-correct-option"
+      ]
+    },
+    {
+      "id": "u-calculus-4d7f20bf71e27d61",
+      "label": "4.2.2 定积分的几何意义 · 补充第 1 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-67154e9abf199a16",
+      "label": "4.2.2 定积分的几何意义 · 补充第 2 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-f299b852bd5366db",
+      "label": "4.2.2 定积分的几何意义 · 补充第 3 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-e2fd6c9aad1f26d2",
+      "label": "4.2.2 定积分的几何意义 · 补充第 8 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-cc90fde42981c883",
+      "label": "4.2.3 定积分的性质 · 补充第 10 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-1910cf36c58b3989",
+      "label": "4.2.3 定积分的性质 · 补充第 12 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-4d65575ed13047d3",
+      "label": "4.2.3 定积分的性质 · 补充第 44 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-aef848d177bedda6",
+      "label": "4.2.3 定积分的性质 · 补充第 45 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-5bdefd74f6eda6fd",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 3 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-fc8e98197b66e820",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 4 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-8f55841d36a73959",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 5 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-16ab778060948af5",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 9 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-5350666ca2a63387",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 14 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-024c803aa503b0e2",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 18 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-71a254b59db45ff0",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 19 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-b2568c8924190d51",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 21 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-ffa138898c3f9610",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 23 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-387c1830f2e677cd",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 31 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-fae4941d497dc2bb",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 32 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-5fca796adcd5dca5",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 33 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-ecf55fc4804b5134",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 34 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-5a842bf0f96b2a7f",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 35 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-0ed67ce0a085a03e",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 37 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-3198187eb546a65c",
+      "label": "4.3.1 积分上限的函数及其导数 · 补充第 47 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-dab854da28567d45",
+      "label": "4.3.2 牛顿-莱布尼兹公式 · 补充第 3 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-a5d2b2236d867621",
+      "label": "4.3.2 牛顿-莱布尼兹公式 · 补充第 5 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-7c2cbf7dbcf0ed1d",
+      "label": "4.3.2 牛顿-莱布尼兹公式 · 补充第 6 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-fc4e1aa4e368be2f",
+      "label": "4.3.2 牛顿-莱布尼兹公式 · 补充第 7 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-9fad1d1022bf16e4",
+      "label": "4.4.1 第一类换元积分法 · 补充第 1 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-a8bf7298f697cbb9",
+      "label": "4.4.1 第一类换元积分法 · 补充第 4 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-9093cfcf26cedd4e",
+      "label": "4.4.2 第二类换元积分法 · 补充第 5 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-3b180a81dec3ef45",
+      "label": "4.4.2 第二类换元积分法 · 补充第 6 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-369000057d3a7f92",
+      "label": "4.4.2 第二类换元积分法 · 补充第 9 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-e7f0f7dc65fe9b9f",
+      "label": "4.4.2 第二类换元积分法 · 补充第 10 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-efaf62aa738071a5",
+      "label": "4.4.2 第二类换元积分法 · 补充第 16 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-fef69ce72b265268",
+      "label": "4.4.2 第二类换元积分法 · 补充第 19 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-2152c792af981fab",
+      "label": "4.4.3 分部积分法 · 补充第 22 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-c1a48afa5135d9e2",
+      "label": "4.5.2 无界函数的反常积分-瑕积分 · 补充第 1 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-fe1d68d834f9b2a4",
+      "label": "5.4.1 幂级数及收敛域 · 补充第 59 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-ddbc7a4c3866ff56",
+      "label": "8.1.5 二重积分的应用 · 补充第 8 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-c70ea16f37e1ab9e",
+      "label": "8.2.1 三重积分的概念及性质 · 补充第 48 题",
+      "issues": [
+        "incorrect-reference-answer"
+      ]
+    },
+    {
+      "id": "u-calculus-19f4abbf711c98d1",
+      "label": "8.2.1 三重积分的概念及性质 · 补充第 59 题",
+      "issues": [
+        "unclear-source-notation"
+      ]
+    },
+    {
+      "id": "u-calculus-f6e3fed8ed718b3a",
+      "label": "8.2.2 三重积分在直角坐标系下的计算 · 补充第 15 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-86a89b8aa0c46593",
+      "label": "8.2.2 三重积分在直角坐标系下的计算 · 补充第 24 题",
+      "issues": [
+        "no-correct-option"
+      ]
+    },
+    {
+      "id": "u-calculus-016dd25a7679a467",
+      "label": "8.2.3 利用柱面坐标计算三重积分 · 补充第 11 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-e90498d275d7bce8",
+      "label": "8.2.3 利用柱面坐标计算三重积分 · 补充第 25 题",
+      "issues": [
+        "duplicate-reference-options"
+      ]
+    },
+    {
+      "id": "u-calculus-962522b40c8852b1",
+      "label": "9.1.2 第一类曲线积分的计算 · 补充第 5 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-41b4f55a8916b6e7",
+      "label": "9.2.2 第一类曲面积分的计算 · 补充第 12 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-14122fde4a7eb48c",
+      "label": "9.2.2 第一类曲面积分的计算 · 补充第 25 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-add949aae77719ff",
+      "label": "9.2.2 第一类曲面积分的计算 · 补充第 46 题",
+      "issues": [
+        "analysis-marked-missing"
+      ]
+    },
+    {
+      "id": "u-calculus-37b44a80b8a0cdc3",
+      "label": "9.3.2 第二类曲线的计算 · 补充第 27 题",
+      "issues": [
+        "duplicate-correct-options"
+      ]
+    },
+    {
+      "id": "u-calculus-cfda13bcb44e068e",
+      "label": "9.7.1 高斯公式 · 补充第 3 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    },
+    {
+      "id": "u-calculus-15813b6e1aee4ca6",
+      "label": "9.8.2 环流量与旋度 · 补充第 12 题",
+      "issues": [
+        "known-source-incomplete"
+      ]
+    }
+  ],
+  "duplicateGroups": [
+    {
+      "questions": [
+        {
+          "id": "s-f3c2285366b2-q0022",
+          "label": "1.6.1 重要极限Ⅰ · 第 22 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-f3c2285366b2",
+            "file": "question-bank/高等数学/第一章/1.6.1 重要极限Ⅰ.pdf",
+            "page": 8,
+            "questionNumber": 22,
+            "sha256": "59300e98a368f6d1b6282ad13fa29f1dc8f6af1376964908943d678e60329d08",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.6.1%20%E9%87%8D%E8%A6%81%E6%9E%81%E9%99%90%E2%85%A0.pdf#page=8"
+          }
+        },
+        {
+          "id": "s-73cc3a94d49a-q0020",
+          "label": "1.6.2 重要极限Ⅱ · 第 20 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-73cc3a94d49a",
+            "file": "question-bank/高等数学/第一章/1.6.2 重要极限Ⅱ.pdf",
+            "page": 7,
+            "questionNumber": 20,
+            "sha256": "30fe4651c8ea86dd5a1b81cc5146d392129c042a4ec4b3056dd485413cc2341c",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.6.2%20%E9%87%8D%E8%A6%81%E6%9E%81%E9%99%90%E2%85%A1.pdf#page=7"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-73cc3a94d49a-q0003",
+          "label": "1.6.2 重要极限Ⅱ · 第 3 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-73cc3a94d49a",
+            "file": "question-bank/高等数学/第一章/1.6.2 重要极限Ⅱ.pdf",
+            "page": 2,
+            "questionNumber": 3,
+            "sha256": "30fe4651c8ea86dd5a1b81cc5146d392129c042a4ec4b3056dd485413cc2341c",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.6.2%20%E9%87%8D%E8%A6%81%E6%9E%81%E9%99%90%E2%85%A1.pdf#page=2"
+          }
+        },
+        {
+          "id": "s-73cc3a94d49a-q0007",
+          "label": "1.6.2 重要极限Ⅱ · 第 7 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-73cc3a94d49a",
+            "file": "question-bank/高等数学/第一章/1.6.2 重要极限Ⅱ.pdf",
+            "page": 3,
+            "questionNumber": 7,
+            "sha256": "30fe4651c8ea86dd5a1b81cc5146d392129c042a4ec4b3056dd485413cc2341c",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.6.2%20%E9%87%8D%E8%A6%81%E6%9E%81%E9%99%90%E2%85%A1.pdf#page=3"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-cb71d4d9fbf8-q0024",
+          "label": "1.7 无穷小的比较 · 第 24 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-cb71d4d9fbf8",
+            "file": "question-bank/高等数学/第一章/1.7 无穷小的比较.pdf",
+            "page": 10,
+            "questionNumber": 24,
+            "sha256": "159f10316216d7c9fda16cff328c3a468234ceaac3261ede27fff479dfc09fae",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.7%20%E6%97%A0%E7%A9%B7%E5%B0%8F%E7%9A%84%E6%AF%94%E8%BE%83.pdf#page=10"
+          }
+        },
+        {
+          "id": "s-d59696bc112d-q0001",
+          "label": "1.8.1 函数在某一点的连续性 · 第 1 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-d59696bc112d",
+            "file": "question-bank/高等数学/第一章/1.8.1 函数在某一点的连续性.pdf",
+            "page": 1,
+            "questionNumber": 1,
+            "sha256": "d8b689d2cdab5baeb31da548e2b1e4fdcbbce9159997f142a8be78068fc933eb",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.8.1%20%E5%87%BD%E6%95%B0%E5%9C%A8%E6%9F%90%E4%B8%80%E7%82%B9%E7%9A%84%E8%BF%9E%E7%BB%AD%E6%80%A7.pdf#page=1"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-00ec8d743d0b-q0001",
+          "label": "1.8.3 函数在区间上连续 · 第 1 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-00ec8d743d0b",
+            "file": "question-bank/高等数学/第一章/1.8.3 函数在区间上连续.pdf",
+            "page": 1,
+            "questionNumber": 1,
+            "sha256": "750b005a3752e2be8e80865b8b41a519efb04da04455a8929ddd61f3fc194755",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.8.3%20%E5%87%BD%E6%95%B0%E5%9C%A8%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-5510ec9ef5b5-q0001",
+          "label": "1.11 闭区间上连续函数的性质 · 第 1 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-5510ec9ef5b5",
+            "file": "question-bank/高等数学/第一章/1.11 闭区间上连续函数的性质.pdf",
+            "page": 1,
+            "questionNumber": 1,
+            "sha256": "4de659a5cf22fbc4029392a9162352116452a4fa1737fe9fba83f6fe972502ea",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.11%20%E9%97%AD%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8.pdf#page=1"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-00ec8d743d0b-q0002",
+          "label": "1.8.3 函数在区间上连续 · 第 2 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-00ec8d743d0b",
+            "file": "question-bank/高等数学/第一章/1.8.3 函数在区间上连续.pdf",
+            "page": 1,
+            "questionNumber": 2,
+            "sha256": "750b005a3752e2be8e80865b8b41a519efb04da04455a8929ddd61f3fc194755",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.8.3%20%E5%87%BD%E6%95%B0%E5%9C%A8%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-5510ec9ef5b5-q0003",
+          "label": "1.11 闭区间上连续函数的性质 · 第 3 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-5510ec9ef5b5",
+            "file": "question-bank/高等数学/第一章/1.11 闭区间上连续函数的性质.pdf",
+            "page": 2,
+            "questionNumber": 3,
+            "sha256": "4de659a5cf22fbc4029392a9162352116452a4fa1737fe9fba83f6fe972502ea",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.11%20%E9%97%AD%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8.pdf#page=2"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-00ec8d743d0b-q0004",
+          "label": "1.8.3 函数在区间上连续 · 第 4 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-00ec8d743d0b",
+            "file": "question-bank/高等数学/第一章/1.8.3 函数在区间上连续.pdf",
+            "page": 2,
+            "questionNumber": 4,
+            "sha256": "750b005a3752e2be8e80865b8b41a519efb04da04455a8929ddd61f3fc194755",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.8.3%20%E5%87%BD%E6%95%B0%E5%9C%A8%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD.pdf#page=2"
+          }
+        },
+        {
+          "id": "s-5510ec9ef5b5-q0002",
+          "label": "1.11 闭区间上连续函数的性质 · 第 2 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-5510ec9ef5b5",
+            "file": "question-bank/高等数学/第一章/1.11 闭区间上连续函数的性质.pdf",
+            "page": 1,
+            "questionNumber": 2,
+            "sha256": "4de659a5cf22fbc4029392a9162352116452a4fa1737fe9fba83f6fe972502ea",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.11%20%E9%97%AD%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8.pdf#page=1"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-00ec8d743d0b-q0006",
+          "label": "1.8.3 函数在区间上连续 · 第 6 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-00ec8d743d0b",
+            "file": "question-bank/高等数学/第一章/1.8.3 函数在区间上连续.pdf",
+            "page": 3,
+            "questionNumber": 6,
+            "sha256": "750b005a3752e2be8e80865b8b41a519efb04da04455a8929ddd61f3fc194755",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.8.3%20%E5%87%BD%E6%95%B0%E5%9C%A8%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD.pdf#page=3"
+          }
+        },
+        {
+          "id": "s-5510ec9ef5b5-q0007",
+          "label": "1.11 闭区间上连续函数的性质 · 第 7 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-5510ec9ef5b5",
+            "file": "question-bank/高等数学/第一章/1.11 闭区间上连续函数的性质.pdf",
+            "page": 3,
+            "questionNumber": 7,
+            "sha256": "4de659a5cf22fbc4029392a9162352116452a4fa1737fe9fba83f6fe972502ea",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.11%20%E9%97%AD%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8.pdf#page=3"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-00ec8d743d0b-q0007",
+          "label": "1.8.3 函数在区间上连续 · 第 7 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-00ec8d743d0b",
+            "file": "question-bank/高等数学/第一章/1.8.3 函数在区间上连续.pdf",
+            "page": 3,
+            "questionNumber": 7,
+            "sha256": "750b005a3752e2be8e80865b8b41a519efb04da04455a8929ddd61f3fc194755",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.8.3%20%E5%87%BD%E6%95%B0%E5%9C%A8%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD.pdf#page=3"
+          }
+        },
+        {
+          "id": "s-5510ec9ef5b5-q0005",
+          "label": "1.11 闭区间上连续函数的性质 · 第 5 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-5510ec9ef5b5",
+            "file": "question-bank/高等数学/第一章/1.11 闭区间上连续函数的性质.pdf",
+            "page": 2,
+            "questionNumber": 5,
+            "sha256": "4de659a5cf22fbc4029392a9162352116452a4fa1737fe9fba83f6fe972502ea",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%B8%80%E7%AB%A0/1.11%20%E9%97%AD%E5%8C%BA%E9%97%B4%E4%B8%8A%E8%BF%9E%E7%BB%AD%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8.pdf#page=2"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-4dad1292a888-q0002",
+          "label": "2.4.2 微分形式的不变性 · 第 2 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-4dad1292a888",
+            "file": "question-bank/高等数学/第二章/2.4.2 微分形式的不变性.pdf",
+            "page": 1,
+            "questionNumber": 2,
+            "sha256": "0a40e61e054d9567a99da42ac8dfea6ef20ae1a7e7546aa55766a5d455a3a070",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4.2%20%E5%BE%AE%E5%88%86%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%8F%98%E6%80%A7.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-4dad1292a888-q0009",
+          "label": "2.4.2 微分形式的不变性 · 第 9 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-4dad1292a888",
+            "file": "question-bank/高等数学/第二章/2.4.2 微分形式的不变性.pdf",
+            "page": 4,
+            "questionNumber": 9,
+            "sha256": "0a40e61e054d9567a99da42ac8dfea6ef20ae1a7e7546aa55766a5d455a3a070",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4.2%20%E5%BE%AE%E5%88%86%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%8F%98%E6%80%A7.pdf#page=4"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a6e01a165c34-q0018",
+          "label": "4.4.3 分部积分法 · 第 18 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-a6e01a165c34",
+            "file": "question-bank/高等数学/第四章/4.4.3 分部积分法.pdf",
+            "page": 8,
+            "questionNumber": 18,
+            "sha256": "58b17da6fc5497e72b6206948f9270eb1c6acea31e893da26442953f7567b80b",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.4.3%20%E5%88%86%E9%83%A8%E7%A7%AF%E5%88%86%E6%B3%95.pdf#page=8"
+          }
+        },
+        {
+          "id": "s-a6e01a165c34-q0026",
+          "label": "4.4.3 分部积分法 · 第 26 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-a6e01a165c34",
+            "file": "question-bank/高等数学/第四章/4.4.3 分部积分法.pdf",
+            "page": 12,
+            "questionNumber": 26,
+            "sha256": "58b17da6fc5497e72b6206948f9270eb1c6acea31e893da26442953f7567b80b",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.4.3%20%E5%88%86%E9%83%A8%E7%A7%AF%E5%88%86%E6%B3%95.pdf#page=12"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-f566de7e7dcf-q0001",
+          "label": "4.6.1 直角坐标系下平面图形的面积 · 第 1 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-f566de7e7dcf",
+            "file": "question-bank/高等数学/第四章/4.6.1 直角坐标系下平面图形的面积.pdf",
+            "page": 1,
+            "questionNumber": 1,
+            "sha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.1%20%E7%9B%B4%E8%A7%92%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-f566de7e7dcf-q0011",
+          "label": "4.6.1 直角坐标系下平面图形的面积 · 第 11 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-f566de7e7dcf",
+            "file": "question-bank/高等数学/第四章/4.6.1 直角坐标系下平面图形的面积.pdf",
+            "page": 5,
+            "questionNumber": 11,
+            "sha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.1%20%E7%9B%B4%E8%A7%92%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=5"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-f566de7e7dcf-q0002",
+          "label": "4.6.1 直角坐标系下平面图形的面积 · 第 2 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-f566de7e7dcf",
+            "file": "question-bank/高等数学/第四章/4.6.1 直角坐标系下平面图形的面积.pdf",
+            "page": 1,
+            "questionNumber": 2,
+            "sha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.1%20%E7%9B%B4%E8%A7%92%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-f566de7e7dcf-q0013",
+          "label": "4.6.1 直角坐标系下平面图形的面积 · 第 13 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-f566de7e7dcf",
+            "file": "question-bank/高等数学/第四章/4.6.1 直角坐标系下平面图形的面积.pdf",
+            "page": 6,
+            "questionNumber": 13,
+            "sha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.1%20%E7%9B%B4%E8%A7%92%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=6"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-f566de7e7dcf-q0004",
+          "label": "4.6.1 直角坐标系下平面图形的面积 · 第 4 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-f566de7e7dcf",
+            "file": "question-bank/高等数学/第四章/4.6.1 直角坐标系下平面图形的面积.pdf",
+            "page": 2,
+            "questionNumber": 4,
+            "sha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.1%20%E7%9B%B4%E8%A7%92%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=2"
+          }
+        },
+        {
+          "id": "s-f566de7e7dcf-q0005",
+          "label": "4.6.1 直角坐标系下平面图形的面积 · 第 5 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-f566de7e7dcf",
+            "file": "question-bank/高等数学/第四章/4.6.1 直角坐标系下平面图形的面积.pdf",
+            "page": 2,
+            "questionNumber": 5,
+            "sha256": "266b23a0c097ce7e2abd720923e524c559a9ac0a72bc834fc3569b0a6387ad77",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.1%20%E7%9B%B4%E8%A7%92%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=2"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0001",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 1 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 1,
+            "questionNumber": 1,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0009",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 9 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 4,
+            "questionNumber": 9,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=4"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0002",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 2 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 1,
+            "questionNumber": 2,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0012",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 12 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 6,
+            "questionNumber": 12,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=6"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0003",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 3 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 2,
+            "questionNumber": 3,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=2"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0008",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 8 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 4,
+            "questionNumber": 8,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=4"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0004",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 4 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 2,
+            "questionNumber": 4,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=2"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0018",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 18 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 8,
+            "questionNumber": 18,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=8"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0005",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 5 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 3,
+            "questionNumber": 5,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=3"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0010",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 10 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 5,
+            "questionNumber": 10,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=5"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0016",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 16 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 7,
+            "questionNumber": 16,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=7"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0020",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 20 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 9,
+            "questionNumber": 20,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=9"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0019",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 19 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 8,
+            "questionNumber": 19,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=8"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0023",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 23 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 10,
+            "questionNumber": 23,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=10"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0021",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 21 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 9,
+            "questionNumber": 21,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=9"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0022",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 22 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 9,
+            "questionNumber": 22,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=9"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0025",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 25 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 11,
+            "questionNumber": 25,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=11"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0030",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 30 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 14,
+            "questionNumber": 30,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=14"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-a8e49a9421ff-q0026",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 26 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 11,
+            "questionNumber": 26,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=11"
+          }
+        },
+        {
+          "id": "s-a8e49a9421ff-q0027",
+          "label": "4.6.2 极坐标系下平面图形的面积 · 第 27 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-a8e49a9421ff",
+            "file": "question-bank/高等数学/第四章/4.6.2 极坐标系下平面图形的面积.pdf",
+            "page": 12,
+            "questionNumber": 27,
+            "sha256": "d9c3363a087c470e36b222c554cf20f7c43a98af5d5a298d7678f5458a438dc8",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.6.2%20%E6%9E%81%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%B9%B3%E9%9D%A2%E5%9B%BE%E5%BD%A2%E7%9A%84%E9%9D%A2%E7%A7%AF.pdf#page=12"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0001",
+          "label": "矩阵及其运算、分块矩阵 · 第 1 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 1,
+            "questionNumber": 1,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=1"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0002",
+          "label": "矩阵及其运算、分块矩阵 · 第 2 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 1,
+            "questionNumber": 2,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=1"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0003",
+          "label": "矩阵及其运算、分块矩阵 · 第 3 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 2,
+            "questionNumber": 3,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=2"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0023",
+          "label": "矩阵及其运算、分块矩阵 · 第 23 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 11,
+            "questionNumber": 23,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=11"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0004",
+          "label": "矩阵及其运算、分块矩阵 · 第 4 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 2,
+            "questionNumber": 4,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=2"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0015",
+          "label": "矩阵及其运算、分块矩阵 · 第 15 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 8,
+            "questionNumber": 15,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=8"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0016",
+          "label": "矩阵及其运算、分块矩阵 · 第 16 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 8,
+            "questionNumber": 16,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=8"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0045",
+          "label": "矩阵及其运算、分块矩阵 · 第 45 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 21,
+            "questionNumber": 45,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=21"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0022",
+          "label": "矩阵及其运算、分块矩阵 · 第 22 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 11,
+            "questionNumber": 22,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=11"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0073",
+          "label": "矩阵及其运算、分块矩阵 · 第 73 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 33,
+            "questionNumber": 73,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=33"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0034",
+          "label": "矩阵及其运算、分块矩阵 · 第 34 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 16,
+            "questionNumber": 34,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=16"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0072",
+          "label": "矩阵及其运算、分块矩阵 · 第 72 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 33,
+            "questionNumber": 72,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=33"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0041",
+          "label": "矩阵及其运算、分块矩阵 · 第 41 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 19,
+            "questionNumber": 41,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=19"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0066",
+          "label": "矩阵及其运算、分块矩阵 · 第 66 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 30,
+            "questionNumber": 66,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=30"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0049",
+          "label": "矩阵及其运算、分块矩阵 · 第 49 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 22,
+            "questionNumber": 49,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=22"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0054",
+          "label": "矩阵及其运算、分块矩阵 · 第 54 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 25,
+            "questionNumber": 54,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=25"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0051",
+          "label": "矩阵及其运算、分块矩阵 · 第 51 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 23,
+            "questionNumber": 51,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=23"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0060",
+          "label": "矩阵及其运算、分块矩阵 · 第 60 题",
+          "answer": "C",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 28,
+            "questionNumber": 60,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "C"
+              ],
+              "boldRings": [
+                "C"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=28"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0057",
+          "label": "矩阵及其运算、分块矩阵 · 第 57 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 26,
+            "questionNumber": 57,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=26"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0078",
+          "label": "矩阵及其运算、分块矩阵 · 第 78 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 35,
+            "questionNumber": 78,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=35"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0077",
+          "label": "矩阵及其运算、分块矩阵 · 第 77 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 35,
+            "questionNumber": 77,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=35"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0085",
+          "label": "矩阵及其运算、分块矩阵 · 第 85 题",
+          "answer": "D",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 38,
+            "questionNumber": 85,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "D"
+              ],
+              "boldRings": [
+                "D"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=38"
+          }
+        }
+      ]
+    },
+    {
+      "questions": [
+        {
+          "id": "s-8df004948022-q0089",
+          "label": "矩阵及其运算、分块矩阵 · 第 89 题",
+          "answer": "A",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 40,
+            "questionNumber": 89,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "A"
+              ],
+              "boldRings": [
+                "A"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=40"
+          }
+        },
+        {
+          "id": "s-8df004948022-q0090",
+          "label": "矩阵及其运算、分块矩阵 · 第 90 题",
+          "answer": "B",
+          "source": {
+            "documentId": "s-8df004948022",
+            "file": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
+            "page": 40,
+            "questionNumber": 90,
+            "sha256": "451fd3908b02ffd5ea56b2b62ead3e5fcea82912dddf9ebf368b58d4a4aad183",
+            "answerEvidence": {
+              "labels": [
+                "B"
+              ],
+              "boldRings": [
+                "B"
+              ]
+            },
+            "format": "pdf",
+            "url": "https://github.com/PilotMiku/KnowActAcademy/blob/276c33298d98f896b31daf7d73607977bffd666a/question-bank/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E8%BF%90%E7%AE%97%E3%80%81%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5.pdf#page=40"
+          }
+        }
+      ]
+    }
+  ]
+}

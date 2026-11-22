@@ -50,6 +50,20 @@ test('next-question speculation reuses chunks, leaves source records intact and 
   assert.equal(JSON.stringify(bank),before);
 });
 
+test('leaving a session stops pending speculation while preserving the shared chunk', async () => {
+  const { raw, bank } = setup();
+  const ids = raw.questions.map(q => q.id);
+  let resolveChunk;
+  const chunk = new Promise(resolve => { resolveChunk = resolve; });
+  const prefetch = prefetchNextQuestions(bank, { index: 0, questionIds: ids }, () => chunk, {});
+  await prefetchNextQuestions(bank, null);
+  resolveChunk({ format: 'zhixing.question-chunk.v1', revision: raw.revision, questions: raw.questions });
+  await prefetch;
+  assert.equal(loadedQuestion(bank, ids[1]), undefined);
+  await loadQuestionContent(bank, [ids[1]], () => assert.fail('the shared chunk should be reused'));
+  assert.equal(loadedQuestion(bank, ids[1]).stem, raw.questions[1].stem);
+});
+
 test('prefetch cannot evict the displayed body when a long question history fills the cache', async () => {
   const { raw, chunk } = setup();
   raw.questions = Array.from({length:260},(_,i)=>({...raw.questions[0],id:'q'+i}));
@@ -64,11 +78,13 @@ test('prefetch cannot evict the displayed body when a long question history fill
 test('prefetch loads both upcoming questions and their figures, and retries failures', async () => {
   const { raw, chunk } = setup();
   const version = '1122334455667788', first = 'a'.repeat(24), second = 'b'.repeat(24);
+  const figure = id => `<img src="/api/question-figure/${version}/${id}">`;
   raw.questions = Array.from({length:4}, (_, index) => ({
     ...structuredClone(raw.questions[0]), id:'next-' + index,
-    stem: index === 1 ? '<img src="/api/question-figure/' + version + '/' + first + '">' : '题干',
+    stem: index === 1 ? figure(first) + figure(second) : '题干',
   }));
-  raw.questions[2].options[0].text = '<img src="/api/question-figure/' + version + '/' + second + '">';
+  const option = 'c'.repeat(24);
+  raw.questions[2].options[0].text = figure(option);
   const bank = normalizeBank({...raw, contentCatalog:{format:'zhixing.question-catalog.v1',revision:raw.revision},
     questions:raw.questions.map(q=>({...q,stem:'placeholder',contentChunk:chunk}))},{allowCatalog:true});
   const request = async () => ({format:'zhixing.question-chunk.v1',revision:raw.revision,questions:raw.questions});
@@ -77,14 +93,16 @@ test('prefetch loads both upcoming questions and their figures, and retries fail
   let fail = true;
   const loadFigure = async (id, base, transport, figureVersion) => {
     figures.push([id,figureVersion]);
-    if (id === second && fail) { fail = false; throw new Error('temporary failure'); }
+    if (id === first && fail) { fail = false; throw new Error('temporary failure'); }
   };
   await prefetchNextQuestions(bank, session, request, {}, loadFigure);
   assert.ok(loadedQuestion(bank,'next-1'));
   assert.ok(loadedQuestion(bank,'next-2'));
   assert.equal(loadedQuestion(bank,'next-3'),undefined);
+  const expected = [[first,version],[second,version],[option,version]];
+  assert.deepEqual(figures.splice(0).sort(), expected);
   await prefetchNextQuestions(bank, session, request, {}, loadFigure);
-  assert.deepEqual(figures,[[first,version],[second,version],[first,version],[second,version]]);
+  assert.deepEqual(figures.sort(), expected);
 });
 
 test('failed, mismatched and cancelled content loads cannot install partial or wrong answers', async () => {

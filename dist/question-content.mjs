@@ -55,26 +55,38 @@ export function prefetchNextQuestions(bank, session, request = fetchJSON, connec
   const previous = prefetches.get(bank);
   const ids = session?.questionIds.slice(session.index + 1, session.index + 3) ?? [];
   const current = session?.questionIds[session.index];
+  if (!bank.contentCatalog || !ids.length || connection?.saveData || ['slow-2g','2g'].includes(connection?.effectiveType)) {
+    previous?.controller.abort();
+    prefetches.delete(bank);
+    return Promise.resolve();
+  }
   const key = JSON.stringify([current, ids]);
   if (previous?.key === key) return previous.promise;
   previous?.controller.abort();
-  if (!bank.contentCatalog || !ids.length || connection?.saveData || ['slow-2g','2g'].includes(connection?.effectiveType)) return Promise.resolve();
   const controller = new AbortController();
-  const promise = loadQuestionContent(bank, ids, request, { signal:controller.signal, keepIds:current?[current]:[] }).then(async () => {
-    const figures = new Set();
-    for (const id of ids) {
-      const question = loadedQuestion(bank, id);
-      if (!question) continue;
-      for (const html of [question.stem, ...question.options.map(option => option.text)]) {
-        for (const match of html.matchAll(/\/api\/question-figure\/(?:[a-f0-9]{16}\/)?[a-f0-9]{24}/g)) figures.add(match[0]);
+  const keepIds = [current, ...ids];
+  const figures = new Set();
+  let figureFailed = false;
+  const promise = Promise.allSettled(ids.map(async id => {
+    await loadQuestionContent(bank, [id], request, { signal: controller.signal, keepIds });
+    const question = loadedQuestion(bank, id);
+    if (!question) return;
+    for (const html of [question.stem, ...question.options.map(option => option.text)]) {
+      for (const [source] of html.matchAll(/\/api\/question-figure\/(?:[a-f0-9]{16}\/)?[a-f0-9]{24}/g)) {
+        if (controller.signal.aborted) return;
+        if (figures.has(source)) continue;
+        figures.add(source);
+        try {
+          await loadFigure(nativeFigureID(source), undefined, undefined, nativeFigureChunk(source));
+        } catch {
+          figureFailed = true;
+        }
       }
     }
-    for (const source of figures) {
-      if (controller.signal.aborted) break;
-      await loadFigure(nativeFigureID(source), undefined, undefined, nativeFigureChunk(source));
+  })).then(results => {
+    if ((figureFailed || results.some(result => result.status === 'rejected')) && prefetches.get(bank)?.controller === controller) {
+      prefetches.delete(bank);
     }
-  }).catch(() => {
-    if (prefetches.get(bank)?.controller === controller) prefetches.delete(bank);
   });
   prefetches.set(bank, { key, controller, promise });
   return promise;

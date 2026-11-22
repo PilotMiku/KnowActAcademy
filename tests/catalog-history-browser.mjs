@@ -127,6 +127,41 @@ try {
   assert.equal(report.historicalClones, 0);
   await context.close();
 
+  const raw = JSON.parse(await readFile('dist/data/bank.json', 'utf8'));
+  const prefetchContext = await browser.newContext({ serviceWorkers: 'block' });
+  const prefetchPage = await prefetchContext.newPage();
+  const ids = ['s-6b82188494c1-q0001', 's-18e7b6afee96-q0003', 's-c5dfb069c99d-q0002'];
+  const chunks = ids.map(id => data.bank.questions.find(q => q.id === id).contentChunk);
+  assert.equal(new Set(chunks).size, ids.length);
+  const [, version, figure] = raw.questions.find(q => q.id === ids[2]).stem.match(/\/api\/question-figure\/([a-f0-9]{16})\/([a-f0-9]{24})/);
+  const index = JSON.parse(await readFile(`_site/figure-index/${figure.slice(0, 2)}-${version}.json`, 'utf8'));
+  const packPath = `/figure-packs/${index.packs[figure]}.json`;
+  let packRequests = 0;
+  prefetchPage.on('pageerror', error => errors.push(error.message));
+  prefetchPage.on('request', request => { if (request.url().endsWith(packPath)) packRequests++; });
+  await prefetchPage.goto(baseURL + '/#/practice');
+  await prefetchPage.locator('.practice-start').waitFor();
+  await prefetchPage.evaluate(async ids => {
+    const storage = await import('./storage.mjs'), { createPractice } = await import('./core.mjs');
+    const { bank, state } = await storage.readSavedData();
+    state.practice = createPractice(ids);
+    await storage.saveStorage(bank, state);
+  }, ids);
+  await prefetchPage.route(`**/question-content/${chunks[1]}.json`, route => route.fulfill({ status: 503, body: '{}' }));
+  const packLoaded = prefetchPage.waitForResponse(response => response.ok() && response.url().endsWith(packPath));
+  await prefetchPage.goto(baseURL + '/?prefetch=1#/practice?session=1');
+  await (await packLoaded).finished();
+  assert.equal(await prefetchPage.locator('.question-main').getAttribute('data-question-id'), ids[0]);
+  await prefetchPage.locator('.index-btn[data-index="2"]').click();
+  await prefetchPage.waitForFunction(id => {
+    const question = document.querySelector('.question-main');
+    const image = question?.querySelector('.question-title img');
+    return question?.dataset.questionId === id && image?.complete && image.naturalWidth > 0;
+  }, ids[2]);
+  assert.equal(packRequests, 1);
+  report.prefetchSurvivesFailedChunk = true;
+  await prefetchContext.close();
+
   const exports = await browser.newContext({ acceptDownloads: true });
   const exportPage = await exports.newPage();
   await exportPage.goto(baseURL + '/#/library');
@@ -134,7 +169,6 @@ try {
   const fullDownload = exportPage.waitForEvent('download');
   await exportPage.locator('[data-action="export-bank"]').click();
   const full = JSON.parse(await readFile(await (await fullDownload).path(), 'utf8'));
-  const raw = JSON.parse(await readFile('dist/data/bank.json', 'utf8'));
   assert.deepEqual(full.questions.map(q => q.original), raw.questions);
   assert.equal(full.contentCatalog, undefined);
   await exportPage.route('**/data/bank.json', route => route.fulfill({ status: 503, body: '{}' }));
