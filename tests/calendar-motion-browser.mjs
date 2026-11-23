@@ -32,9 +32,12 @@ try {
 
   await page.evaluate(() => { window.oldCalendarBar = document.querySelector('[data-progress-key="revision-coverage"]'); });
   await page.locator('.revision-editor > summary').click();
-  await page.locator('[name="minutesPerDay"]').fill('40');
+  const dailyMinutes = page.locator('[name="minutesPerDay"]');
+  await dailyMinutes.fill('40');
+  // Let the change event update the scope preview before targeting Save.
+  await dailyMinutes.blur();
   await page.locator('#revision-plan-form [type="submit"]').click();
-  await page.waitForFunction(() => document.querySelector('.revision-overview').textContent.includes('每天 40 分钟'));
+  await page.locator('.revision-overview').filter({ hasText: '每天 40 分钟' }).waitFor();
   assert.equal(await page.evaluate(() => window.oldCalendarBar === document.querySelector('[data-progress-key="revision-coverage"]')), true);
   await page.waitForFunction(() => !document.querySelector('#toast').classList.contains('show'));
   await page.evaluate(() => { document.activeElement?.blur(); window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); });
