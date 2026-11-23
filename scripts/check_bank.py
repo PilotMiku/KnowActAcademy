@@ -18,7 +18,7 @@ def suggested_chapter(path):
     if '线性代数' not in path.parts:
         return None
     name = path.stem
-    if re.search('线性方程组|基础解系', name):
+    if re.search('线性方程组|基础解系|向量空间', name):
         return 'linear-chapter-6'
     if re.search('线性空间|线性变换|欧几里得', name):
         return 'linear-chapter-7'

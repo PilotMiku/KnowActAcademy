@@ -17,6 +17,7 @@ from urllib.parse import quote
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from assemble import ROOT, read
+from catalog import apply_linear_layout, linear_catalog
 from latex_normalization import normalize
 from question_reviews import apply_draft_reviews
 
@@ -31,6 +32,7 @@ def clean_markdown(text):
 
 def main():
     bank=read(ROOT/'artifacts/pdf-transcription/unified-native-draft.json')
+    apply_linear_layout(bank, linear_catalog(ROOT))
     review=read(ROOT/'artifacts/pdf-transcription/unified-review.json')['questions']
     apply_draft_reviews(bank, review)
     site=read(ROOT/'dist/data/bank.json');sources={q['id']:q['source']['url'] for q in site['questions']}

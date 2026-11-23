@@ -1,6 +1,6 @@
 {
   "format": "zhixing.question-counts.v1",
-  "revision": "pdf-8b725f83ff6497f2",
+  "revision": "pdf-210ba6a0e9f763a0",
   "definition": "每个题号计一条记录；父章包含全部后代，不与小节重复累加；未确认等价的相似题分别保留。",
   "counts": {
     "total": 8425,
@@ -2304,7 +2304,7 @@
       "chapters": [
         {
           "id": "linear-chapter-1",
-          "name": "第1章 行列式",
+          "name": "第一章 行列式",
           "parentId": null,
           "counts": {
             "total": 169,
@@ -2343,7 +2343,7 @@
         },
         {
           "id": "linear-chapter-2",
-          "name": "第2章 矩阵及其运算",
+          "name": "第二章 矩阵",
           "parentId": null,
           "counts": {
             "total": 396,
@@ -2368,19 +2368,6 @@
           "directCount": 170
         },
         {
-          "id": "s-290e78b42279",
-          "name": "初等变换和初等矩阵",
-          "parentId": "linear-chapter-2",
-          "counts": {
-            "total": 113,
-            "pdf": 59,
-            "supplement": 54,
-            "other": 0,
-            "scorable": 113
-          },
-          "directCount": 113
-        },
-        {
           "id": "s-c24640ce8c58",
           "name": "逆矩阵、矩阵方程",
           "parentId": "linear-chapter-2",
@@ -2394,8 +2381,21 @@
           "directCount": 113
         },
         {
+          "id": "s-290e78b42279",
+          "name": "初等变换和初等矩阵",
+          "parentId": "linear-chapter-2",
+          "counts": {
+            "total": 113,
+            "pdf": 59,
+            "supplement": 54,
+            "other": 0,
+            "scorable": 113
+          },
+          "directCount": 113
+        },
+        {
           "id": "linear-chapter-3",
-          "name": "第3章 向量组与矩阵的秩",
+          "name": "第三章 向量组的线性相关性",
           "parentId": null,
           "counts": {
             "total": 145,
@@ -2405,19 +2405,6 @@
             "scorable": 145
           },
           "directCount": 0
-        },
-        {
-          "id": "s-fbe6ec6fb0eb",
-          "name": "极大无关组、向量和矩阵的秩",
-          "parentId": "linear-chapter-3",
-          "counts": {
-            "total": 53,
-            "pdf": 24,
-            "supplement": 29,
-            "other": 0,
-            "scorable": 53
-          },
-          "directCount": 53
         },
         {
           "id": "s-4fd26f36060c",
@@ -2446,8 +2433,73 @@
           "directCount": 31
         },
         {
+          "id": "s-fbe6ec6fb0eb",
+          "name": "极大无关组、向量和矩阵的秩",
+          "parentId": "linear-chapter-3",
+          "counts": {
+            "total": 53,
+            "pdf": 24,
+            "supplement": 29,
+            "other": 0,
+            "scorable": 53
+          },
+          "directCount": 53
+        },
+        {
+          "id": "linear-chapter-6",
+          "name": "第四章 线性方程组",
+          "parentId": null,
+          "counts": {
+            "total": 234,
+            "pdf": 84,
+            "supplement": 150,
+            "other": 0,
+            "scorable": 234
+          },
+          "directCount": 0
+        },
+        {
+          "id": "s-7b6cbc76dc54",
+          "name": "线性方程组解判定及其求解",
+          "parentId": "linear-chapter-6",
+          "counts": {
+            "total": 65,
+            "pdf": 32,
+            "supplement": 33,
+            "other": 0,
+            "scorable": 65
+          },
+          "directCount": 65
+        },
+        {
+          "id": "s-87ec18daf39a",
+          "name": "基础解系和解的结构",
+          "parentId": "linear-chapter-6",
+          "counts": {
+            "total": 103,
+            "pdf": 52,
+            "supplement": 51,
+            "other": 0,
+            "scorable": 103
+          },
+          "directCount": 103
+        },
+        {
+          "id": "u-section-723bdb60cd23",
+          "name": "向量空间",
+          "parentId": "linear-chapter-6",
+          "counts": {
+            "total": 66,
+            "pdf": 0,
+            "supplement": 66,
+            "other": 0,
+            "scorable": 66
+          },
+          "directCount": 66
+        },
+        {
           "id": "linear-chapter-4",
-          "name": "第4章 特征值与相似对角化",
+          "name": "第五章 矩阵相似对角化",
           "parentId": null,
           "counts": {
             "total": 118,
@@ -2486,7 +2538,7 @@
         },
         {
           "id": "linear-chapter-5",
-          "name": "第5章 二次型",
+          "name": "第六章 二次型",
           "parentId": null,
           "counts": {
             "total": 183,
@@ -2524,54 +2576,15 @@
           "directCount": 93
         },
         {
-          "id": "linear-chapter-6",
-          "name": "第6章 线性方程组",
-          "parentId": null,
-          "counts": {
-            "total": 168,
-            "pdf": 84,
-            "supplement": 84,
-            "other": 0,
-            "scorable": 168
-          },
-          "directCount": 0
-        },
-        {
-          "id": "s-7b6cbc76dc54",
-          "name": "线性方程组解判定及其求解",
-          "parentId": "linear-chapter-6",
-          "counts": {
-            "total": 65,
-            "pdf": 32,
-            "supplement": 33,
-            "other": 0,
-            "scorable": 65
-          },
-          "directCount": 65
-        },
-        {
-          "id": "s-87ec18daf39a",
-          "name": "基础解系和解的结构",
-          "parentId": "linear-chapter-6",
-          "counts": {
-            "total": 103,
-            "pdf": 52,
-            "supplement": 51,
-            "other": 0,
-            "scorable": 103
-          },
-          "directCount": 103
-        },
-        {
           "id": "linear-chapter-7",
-          "name": "第7章 线性空间与线性变换",
+          "name": "第七章 线性空间与线性变换",
           "parentId": null,
           "counts": {
-            "total": 261,
+            "total": 195,
             "pdf": 99,
-            "supplement": 162,
+            "supplement": 96,
             "other": 0,
-            "scorable": 261
+            "scorable": 195
           },
           "directCount": 0
         },
@@ -2600,19 +2613,6 @@
             "scorable": 119
           },
           "directCount": 119
-        },
-        {
-          "id": "u-section-723bdb60cd23",
-          "name": "向量空间",
-          "parentId": "linear-chapter-7",
-          "counts": {
-            "total": 66,
-            "pdf": 0,
-            "supplement": 66,
-            "other": 0,
-            "scorable": 66
-          },
-          "directCount": 66
         }
       ],
       "counts": {
@@ -2624,7 +2624,7 @@
       }
     }
   ],
-  "bankSha256": "fb89c0b0b90949b7cc758fc663836d475bc18f7be907bf9bea75ad0c9a722b2d",
+  "bankSha256": "6998e8c09bfaa98a55f6aab623bffa6ae1aa357649c78c576d9dcf2594679c6c",
   "sources": {
     "originalPdf": 3716,
     "supplementEntries": 5346,

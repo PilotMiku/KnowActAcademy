@@ -40,26 +40,27 @@ def load_inventory(root):
                 if document_id in document_ids:
                     raise ValueError('Duplicate document ID: ' + document_id)
                 document_ids.add(document_id)
+                exported_number = re.match(r'^\d+(?:\.\d+)*', item['name'])
+                metadata = {
+                    'name': item['name'], 'subjectName': subject['name'],
+                    'parentId': chapter['id'], 'chapterNo': chapter_number,
+                    'number': exported_number[0] if exported_number else f'{chapter_number}.{section_number}',
+                }
                 archived = archives.get(relative.as_posix())
                 if archived and not path.exists():
                     record = saved.get(relative.as_posix())
                     if (not record or record['id'] != document_id or record['sha256'] != archived['sha256']
-                            or record['bytes'] != archived['bytes'] or record['subjectId'] != subject['id']
-                            or record['parentId'] != chapter['id']):
+                            or record['bytes'] != archived['bytes'] or record['subjectId'] != subject['id']):
                         raise ValueError('Archived PDF metadata does not match catalog: ' + str(relative))
-                    inventory.append({k:v for k,v in record.items() if k!='revision'})
+                    inventory.append({**{k: v for k, v in record.items() if k != 'revision'}, **metadata})
                     continue
                 with fitz.open(path) as document:
                     match = re.search(r'共\s*(\d+)\s*道题', document[0].get_text())
                     if not match:
                         raise ValueError('Missing exported question count: ' + str(relative))
                     pages = len(document)
-                exported_number = re.match(r'^\d+(?:\.\d+)*', item['name'])
                 inventory.append({
-                    'id': document_id, 'path': str(relative), 'name': item['name'],
-                    'subjectId': subject['id'], 'subjectName': subject['name'],
-                    'parentId': chapter['id'], 'chapterNo': chapter_number,
-                    'number': exported_number[0] if exported_number else f'{chapter_number}.{section_number}',
+                    'id': document_id, 'path': str(relative), 'subjectId': subject['id'], **metadata,
                     'bytes': path.stat().st_size, 'pages': pages,
                     'expectedQuestions': int(match[1]),
                     'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
@@ -79,6 +80,46 @@ def load_inventory(root):
             raise ValueError('New study PDFs were found. Run scripts/index_knowledge.py before indexing the math bank.')
         raise ValueError('Add these PDFs to data/catalog.json before rebuilding: ' + ', '.join(sorted(unknown)))
     return catalog, inventory
+
+
+def linear_catalog(root):
+    catalog = json.loads((root / 'data/catalog.json').read_text())
+    return next(subject for subject in catalog['subjects'] if subject['id'] == 'linear')
+
+
+def apply_linear_layout(bank, catalog):
+    """Apply the syllabus to a merged bank while retaining all existing IDs."""
+    subject = next(subject for subject in bank['subjects'] if subject['id'] == 'linear')
+    parents = {chapter['id']: chapter for chapter in subject['chapters']}
+    children = {child['name']: child for chapter in parents.values() for child in chapter['children']}
+    sections = {section['id']: section for section in bank['sections'] if section['subjectId'] == 'linear'}
+    ordered_sections = []
+    subject['description'] = catalog['description']
+    subject['chapters'] = []
+    for chapter_no, chapter in enumerate(catalog['chapters'], 1):
+        parent = parents[chapter['id']]
+        parent['name'] = chapter['name']
+        names = [document['name'] for document in chapter['documents']]
+        for supplemental in chapter.get('supplementalSections', []):
+            anchor = next(document['name'] for document in chapter['documents']
+                          if document['id'] == supplemental['after'])
+            names.insert(names.index(anchor) + 1, supplemental['name'])
+        parent['children'] = [children.pop(name) for name in names]
+        parent['questionCount'] = sum(child['questionCount'] for child in parent['children'])
+        for section_no, child in enumerate(parent['children'], 1):
+            section = sections[child['id']]
+            section.update(parentId=parent['id'], chapterNo=chapter_no, number=f'{chapter_no}.{section_no}')
+            ordered_sections.append(section)
+        subject['chapters'].append(parent)
+    if children or set(sections) != {section['id'] for section in ordered_sections}:
+        raise ValueError('Linear algebra syllabus does not cover every section')
+    order = {section['id']: index for index, section in enumerate(ordered_sections)}
+    questions = sorted((q for q in bank['questions'] if q['subjectId'] == 'linear'),
+                       key=lambda q: order[q['chapterId']])
+    # Keep other subjects in their existing positions and preserve order within each section.
+    for key, ordered in [('sections', ordered_sections), ('questions', questions)]:
+        rows = iter(ordered)
+        bank[key][:] = [next(rows) if row['subjectId'] == 'linear' else row for row in bank[key]]
 
 
 def write_json(path, value, pretty=False):

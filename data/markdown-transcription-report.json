@@ -1,5 +1,5 @@
 {
-  "revision": "pdf-8b725f83ff6497f2",
+  "revision": "pdf-210ba6a0e9f763a0",
   "formulaOccurrences": 90478,
   "truncatedFormulas": 105,
   "sourceCheckedFormulas": 40871,
@@ -73,45 +73,45 @@
     },
     {
       "subject": "线性代数",
-      "chapter": "第1章 行列式",
+      "chapter": "第一章 行列式",
       "questions": 169,
-      "file": "线性代数/第1章 行列式.md"
+      "file": "线性代数/第一章 行列式.md"
     },
     {
       "subject": "线性代数",
-      "chapter": "第2章 矩阵及其运算",
+      "chapter": "第二章 矩阵",
       "questions": 396,
-      "file": "线性代数/第2章 矩阵及其运算.md"
+      "file": "线性代数/第二章 矩阵.md"
     },
     {
       "subject": "线性代数",
-      "chapter": "第3章 向量组与矩阵的秩",
+      "chapter": "第三章 向量组的线性相关性",
       "questions": 145,
-      "file": "线性代数/第3章 向量组与矩阵的秩.md"
+      "file": "线性代数/第三章 向量组的线性相关性.md"
     },
     {
       "subject": "线性代数",
-      "chapter": "第4章 特征值与相似对角化",
+      "chapter": "第四章 线性方程组",
+      "questions": 234,
+      "file": "线性代数/第四章 线性方程组.md"
+    },
+    {
+      "subject": "线性代数",
+      "chapter": "第五章 矩阵相似对角化",
       "questions": 118,
-      "file": "线性代数/第4章 特征值与相似对角化.md"
+      "file": "线性代数/第五章 矩阵相似对角化.md"
     },
     {
       "subject": "线性代数",
-      "chapter": "第5章 二次型",
+      "chapter": "第六章 二次型",
       "questions": 183,
-      "file": "线性代数/第5章 二次型.md"
+      "file": "线性代数/第六章 二次型.md"
     },
     {
       "subject": "线性代数",
-      "chapter": "第6章 线性方程组",
-      "questions": 168,
-      "file": "线性代数/第6章 线性方程组.md"
-    },
-    {
-      "subject": "线性代数",
-      "chapter": "第7章 线性空间与线性变换",
-      "questions": 261,
-      "file": "线性代数/第7章 线性空间与线性变换.md"
+      "chapter": "第七章 线性空间与线性变换",
+      "questions": 195,
+      "file": "线性代数/第七章 线性空间与线性变换.md"
     }
   ],
   "syntaxErrorKinds": {

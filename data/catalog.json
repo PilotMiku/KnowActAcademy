@@ -662,11 +662,11 @@
     {
       "id": "linear",
       "name": "线性代数",
-      "description": "行列式、矩阵、向量组、特征值、二次型、线性方程组与线性空间",
+      "description": "行列式、矩阵、向量组、线性方程组、特征值、二次型与线性空间",
       "chapters": [
         {
           "id": "linear-chapter-1",
-          "name": "第1章 行列式",
+          "name": "第一章 行列式",
           "documents": [
             {
               "path": "question-bank/线性代数/行列式概念、性质及其计算.pdf",
@@ -682,7 +682,7 @@
         },
         {
           "id": "linear-chapter-2",
-          "name": "第2章 矩阵及其运算",
+          "name": "第二章 矩阵",
           "documents": [
             {
               "path": "question-bank/线性代数/矩阵及其运算、分块矩阵.pdf",
@@ -690,36 +690,64 @@
               "id": "s-8df004948022"
             },
             {
-              "path": "question-bank/线性代数/初等变换和初等矩阵.pdf",
-              "name": "初等变换和初等矩阵",
-              "id": "s-290e78b42279"
-            },
-            {
               "path": "question-bank/线性代数/逆矩阵、矩阵方程.pdf",
               "name": "逆矩阵、矩阵方程",
               "id": "s-c24640ce8c58"
+            },
+            {
+              "path": "question-bank/线性代数/初等变换和初等矩阵.pdf",
+              "name": "初等变换和初等矩阵",
+              "id": "s-290e78b42279"
             }
           ]
         },
         {
           "id": "linear-chapter-3",
-          "name": "第3章 向量组与矩阵的秩",
+          "name": "第三章 向量组的线性相关性",
           "documents": [
-            {
-              "path": "question-bank/线性代数/极大无关组、向量和矩阵的秩.pdf",
-              "name": "极大无关组、向量和矩阵的秩",
-              "id": "s-fbe6ec6fb0eb"
-            },
             {
               "path": "question-bank/线性代数/向量概念及其性质、内积、正交.pdf",
               "name": "向量概念及其性质、内积、正交",
               "id": "s-4fd26f36060c"
+            },
+            {
+              "path": "question-bank/线性代数/极大无关组、向量和矩阵的秩.pdf",
+              "name": "极大无关组、向量和矩阵的秩",
+              "id": "s-fbe6ec6fb0eb"
+            }
+          ],
+          "supplementalSections": [
+            {
+              "name": "向量的线性表示、向量组的线性相关性",
+              "after": "s-4fd26f36060c"
+            }
+          ]
+        },
+        {
+          "id": "linear-chapter-6",
+          "name": "第四章 线性方程组",
+          "documents": [
+            {
+              "path": "question-bank/线性代数/线性方程组解判定及其求解.pdf",
+              "name": "线性方程组解判定及其求解",
+              "id": "s-7b6cbc76dc54"
+            },
+            {
+              "path": "question-bank/线性代数/基础解系和解的结构.pdf",
+              "name": "基础解系和解的结构",
+              "id": "s-87ec18daf39a"
+            }
+          ],
+          "supplementalSections": [
+            {
+              "name": "向量空间",
+              "after": "s-87ec18daf39a"
             }
           ]
         },
         {
           "id": "linear-chapter-4",
-          "name": "第4章 特征值与相似对角化",
+          "name": "第五章 矩阵相似对角化",
           "documents": [
             {
               "path": "question-bank/线性代数/矩阵特征值和特征向量.pdf",
@@ -735,7 +763,7 @@
         },
         {
           "id": "linear-chapter-5",
-          "name": "第5章 二次型",
+          "name": "第六章 二次型",
           "documents": [
             {
               "path": "question-bank/线性代数/二次型概念、惯性定理、正定二次型.pdf",
@@ -750,24 +778,8 @@
           ]
         },
         {
-          "id": "linear-chapter-6",
-          "name": "第6章 线性方程组",
-          "documents": [
-            {
-              "path": "question-bank/线性代数/线性方程组解判定及其求解.pdf",
-              "name": "线性方程组解判定及其求解",
-              "id": "s-7b6cbc76dc54"
-            },
-            {
-              "path": "question-bank/线性代数/基础解系和解的结构.pdf",
-              "name": "基础解系和解的结构",
-              "id": "s-87ec18daf39a"
-            }
-          ]
-        },
-        {
           "id": "linear-chapter-7",
-          "name": "第7章 线性空间与线性变换",
+          "name": "第七章 线性空间与线性变换",
           "documents": [
             {
               "path": "question-bank/线性代数/线性空间.pdf",

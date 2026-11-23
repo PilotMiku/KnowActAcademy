@@ -8,11 +8,12 @@ from collections import Counter,defaultdict
 from copy import deepcopy
 import hashlib
 import json
-from pathlib import Path
 import re
 import unicodedata
 
-ROOT=Path(__file__).resolve().parents[2]
+from assemble import ROOT
+from catalog import apply_linear_layout, linear_catalog
+
 OUT=ROOT/'artifacts/pdf-transcription'
 SUP=ROOT/'.cache/supplement-transcription'
 
@@ -35,6 +36,12 @@ def analysis_version(q):
 
 
 def unify():
+    linear = linear_catalog(ROOT)
+    linear_parents = {
+        section['name']: (chapter_no, chapter['id'])
+        for chapter_no, chapter in enumerate(linear['chapters'], 1)
+        for section in chapter.get('supplementalSections', [])
+    }
     original=json.loads((OUT/'original-native-draft.json').read_text())
     supplement=json.loads((OUT/'supplement-native-draft.json').read_text())['questions']
     comparison=json.loads((OUT/'semantic-comparison.json').read_text())
@@ -61,9 +68,9 @@ def unify():
         section=section or section_by_name.get((file['subjectId'],normalized_name(file['sectionName'])))
         if not section:
             if file['subjectId']=='linear':
-                linear_parents={'向量的线性表示、向量组的线性相关性':3,'向量空间':7}
                 if file['sectionName'] not in linear_parents:raise ValueError('Unknown supplementary classification '+file['sectionName'])
-                chapter_no=linear_parents[file['sectionName']];section_number='linear-'+file['sectionName'];parent_id='linear-chapter-'+str(chapter_no)
+                chapter_no,parent_id=linear_parents[file['sectionName']]
+                section_number='linear-'+file['sectionName']
             else:
                 if not number:raise ValueError('Unknown supplementary classification '+file['sectionName'])
                 chapter_no=int(number[0].split('.')[0]);section_number=number[0];parent_id='chapter-'+str(chapter_no)
@@ -128,6 +135,7 @@ def unify():
             for child in parent.get('children',[]):child['questionCount']=counts[child['id']]
             parent['questionCount']=sum(child['questionCount'] for child in parent.get('children',[]))
         if subject['id']=='calculus':subject['chapters'].sort(key=lambda c:int(c['id'].split('-')[-1]))
+    apply_linear_layout(merged, linear)
     review={};fully_checked=0
     for q in questions:
         transcription=q.pop('transcription');parts=transcription['parts'];statuses=Counter(p['status'] for p in parts.values())
