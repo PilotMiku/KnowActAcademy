@@ -72,16 +72,16 @@ try {
   assert.deepEqual(validateBackup({ format: PROGRESS_BACKUP_FORMAT, bankRevision: stored.bank.revision, state: stored.state }, stored.bank).state.exams.at(-1).chapters, selected);
   await page.reload();
   await page.locator("[data-timer]").waitFor();
-  assert.match(await page.locator(".page-head .subtitle").innerText(), /第1章 行列式/);
-  assert.match(await page.locator(".page-head .subtitle").innerText(), /第2章 矩阵及其运算/);
+  assert.match(await page.locator(".page-head .subtitle").innerText(), /第一章 行列式/);
+  assert.match(await page.locator(".page-head .subtitle").innerText(), /第二章 矩阵/);
   assert.match(await page.locator(".page-head .subtitle").innerText(), /第1章 函数与极限/);
   await page.getByRole("button", { name: "提交试卷", exact: true }).first().click();
   await page.locator('#dialog [data-action="confirm-dialog"]').click();
   await page.locator(".score").waitFor();
-  assert.match(await page.locator(".score-hero").innerText(), /第1章 行列式/);
+  assert.match(await page.locator(".score-hero").innerText(), /第一章 行列式/);
   await page.goto(`${baseURL}/#/exams`);
   await page.locator(".exam-card").waitFor();
-  assert.match(await page.locator(".exam-card").innerText(), /第1章 行列式/);
+  assert.match(await page.locator(".exam-card").innerText(), /第一章 行列式/);
   await context.close();
 
   // Small imported banks cover limited pools, manual-only chapters, nested
