@@ -2,6 +2,12 @@
 [hidden] { display:none !important; }
 .practice-setup.practice-start { display:block; margin-top:0; padding:24px; }
 .practice-filters { padding:0; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.practice-chapter-caption { display:flex; align-items:baseline; justify-content:space-between; gap:6px; }
+.practice-chapter-caption .text-btn { min-height:26px; padding:4px 0; font-size:12px; white-space:nowrap; }
+.practice-scope-controls { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; }
+[data-practice-subject] + [data-practice-subject] { border-top:1px solid var(--line); margin-top:8px; }
+[data-practice-subject] h3 { margin:10px 8px 4px; font-size:14px; }
+dialog:has([data-practice-subject], [data-action="choose-practice-again"]) .dialog-actions { flex-wrap:wrap; }
 .practice-scope-summary { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:18px 0 14px; }
 .practice-scope-summary strong { font-size:15px; }
 .practice-scope-summary span { font-size:13px; color:var(--muted); }
@@ -13,6 +19,12 @@
 .practice-advanced-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
 .practice-options .practice-extra-controls { margin:18px 0; }
 .practice-options .question-count-note { margin-top:14px; }
+.method-mix-entry { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 16px; padding:16px clamp(18px, 3vw, 24px); margin-top:16px; }
+.method-mix-entry { align-items:flex-end; }
+.method-mix-entry .field { min-width:0; }
+.method-mix-prompt { color:var(--muted); font-size:13px; }
+.method-mix-prompt { margin-bottom:12px; }
+.method-mix-feedback { margin-bottom:14px; }
 .practice-progress { margin:16px 0; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
 .practice-progress > summary { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; padding:16px 20px; cursor:pointer; font-size:13px; }
 .practice-progress > summary > span:last-child { color:var(--muted); }
@@ -73,7 +85,7 @@
 .chapter-title > span,.eyebrow,.local-stat-strip small,.collection-meta,
 .shortcut-hint,.navigator-note,.footer,.page-head .eyebrow { font-size:12px; line-height:1.7; }
 .practice-start p { font-size:13px; }
-.page-head .subtitle,.field > label,.field > span { font-size:14px; }
+.page-head .subtitle,.field > label,.field > span,.practice-chapter-caption > label { font-size:14px; }
 .btn,.btn.small,.icon-btn,.text-btn { min-height:44px; }
 .btn.small { font-size:13px; }
 .icon-btn { min-width:44px; }

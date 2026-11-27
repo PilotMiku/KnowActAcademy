@@ -2,6 +2,7 @@ import { filterQuestions, getBankIndex, isEffectiveAttempt, isScorable, shuffle 
 import { preparationMastery } from "./preparation.mjs";
 import { spacedReview } from "./study.mjs";
 import { questionGuidance, matchesDifficulty } from './question-guidance.mjs';
+import { questionSkill, questionStemText } from './question-skills.mjs';
 
 export function questionActivity(questions, state) {
   const scope = new Map(questions.map((q) => [q.id, q])), activity = new Map();
@@ -88,19 +89,38 @@ export function reviewBatchSize(state, minutes = 0) {
 }
 
 export function similarFreshQuestions(bank, state, question) {
-  const tags = q => new Set([
-    ...questionGuidance(q, state.questionAnnotations).concepts,
-    ...(q.tags ?? []).filter(tag => /^知识点[:：]/.test(tag)).map(tag => tag.slice(4)),
+  const annotations = state.questionAnnotations;
+  const skill = questionSkill(question, annotations);
+  const stem = questionStemText(question).replace(/\s+/g, '');
+  const template = text => text.replace(/(\^\{?-?\d+)|\d+(?:\.\d+)?/g, (_, power) => power ?? '#');
+  const shape = stem.length >= 24 && /\\(?:frac|int|lim|sum|sqrt|begin)\b/.test(stem) ? template(stem) : '';
+  const seen = new Set([
+    ...state.attempts.map(attempt => attempt.questionId),
+    ...Object.keys(state.practice?.responses ?? {}),
+    ...Object.keys(state.suspendedPractice?.responses ?? {}),
   ]);
-  const concepts = tags(question);
-  const seen = new Set(state.attempts.map(attempt => attempt.questionId));
+  const root = rootChapter(bank, question);
+  const stars = questionGuidance(question, annotations).stars;
   const candidates = [];
-  for (const q of bank.questions) {
-    if (q.subjectId !== question.subjectId || q.id === question.id || !isScorable(q) || seen.has(q.id)) continue;
+  for (const q of getBankIndex(bank).subjectQuestions.get(question.subjectId) ?? []) {
+    if (q.type !== question.type || q.id === question.id || !isScorable(q) || seen.has(q.id) || rootChapter(bank, q) !== root) continue;
     const sameSection = q.chapterId === question.chapterId;
-    const shared = concepts.size ? [...tags(q)].filter(tag => concepts.has(tag)).length : 0;
-    if (shared || sameSection) candidates.push({ id: q.id, shared, sameSection });
+    const otherStem = questionStemText(q).replace(/\s+/g, '');
+    if (stem && stem === otherStem) continue;
+    const otherSkill = questionSkill(q, annotations);
+    const sharedSkill = !!skill && skill === otherSkill;
+    const variant = !!shape && sameSection && !(skill && otherSkill && !sharedSkill) && template(otherStem) === shape;
+    if (sharedSkill || variant) {
+      const otherStars = questionGuidance(q, annotations).stars;
+      candidates.push({ id: q.id, stem: otherStem, variant, sameSection, difference: stars && otherStars ? Math.abs(stars - otherStars) : 0 });
+    }
   }
-  return candidates.sort((a, b) => b.shared - a.shared || Number(b.sameSection) - Number(a.sameSection))
-    .slice(0, 3).map(q => q.id);
+  candidates.sort((a, b) => Number(b.variant) - Number(a.variant) || Number(b.sameSection) - Number(a.sameSection) || a.difference - b.difference);
+  const distinct = new Map();
+  for (const q of candidates) {
+    const key = q.stem || q.id;
+    if (!distinct.has(key)) distinct.set(key, q.id);
+    if (distinct.size === 3) break;
+  }
+  return [...distinct.values()];
 }

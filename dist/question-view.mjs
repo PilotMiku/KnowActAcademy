@@ -2,7 +2,7 @@ import { isScorable } from "./core.mjs";
 import { animateFeedback } from './study-motion.mjs';
 import { supplementalAnalysis } from './supplemental-analysis.mjs';
 
-export function feedbackHTML(q, response, { mode = "practice", mistake = null, aids = '', followup = '' }, { icon, attr, button }) {
+export function feedbackHTML(q, response, { mode = "practice", mistake = null, aids = '', followup = '', methodFeedback = '' }, { icon, attr, button }) {
   const supplement = supplementalAnalysis(q);
   const analysisTitle = supplement ? supplement.status === 'unresolved' ? '题目核对说明 · 本站整理' : '补充解析 · 本站整理' : '思路与解析';
   const analysis = supplement?.body || q.analysis || '这道题的原 PDF 未附解析，请查看原 PDF 核对。';
@@ -17,7 +17,7 @@ export function feedbackHTML(q, response, { mode = "practice", mistake = null, a
     selfActions = button("撤销自评", "undo-preparation-incorrect", "", "btn small soft");
   else if (preparing && response.correct === true)
     selfActions = button("其实不会做", "mark-preparation-incorrect", 'title="撤销掌握，按错题加入错题本"', "btn small soft");
-  return `<section class="result-box ${response.correct === false ? "wrong" : ""}"><div class="result-label">${icon(response.correct === false ? "mistake" : response.correct === null ? "info" : "check", 16)} ${label}</div><div class="self-assessment-actions"${selfActions ? "" : " hidden"}>${selfActions}</div><div class="answer-line">参考答案：<span class="rich" data-rich="${attr(Array.isArray(q.answer) ? q.answer.join(q.type === "multiple" ? "、" : " / ") : q.answer)}"></span></div><div class="analysis"><b>${analysisTitle}</b><div class="rich" data-rich="${attr(analysis)}"></div></div>${aids}<div class="result-footer">${followup}${q.type === "solution" && response.correct === null ? `<div class="flex self-grade-actions" style="margin-top:18px">${button("本次答对", "self-grade", 'data-correct="true"', "btn small")}${button("本次答错", "self-grade", 'data-correct="false"', "btn small soft")}</div>` : ""}${!preparing && mistake && !mistake.resolved ? `<div style="margin-top:14px">${button(`${icon("check", 12)} 标记已掌握`, "resolve-mistake", `data-id="${attr(q.id)}"`, "text-btn")}</div>` : ""}</div></section>`;
+  return `<section class="result-box ${response.correct === false ? "wrong" : ""}"><div class="result-label">${icon(response.correct === false ? "mistake" : response.correct === null ? "info" : "check", 16)} ${label}</div><div class="self-assessment-actions"${selfActions ? "" : " hidden"}>${selfActions}</div><div class="answer-line">参考答案：<span class="rich" data-rich="${attr(Array.isArray(q.answer) ? q.answer.join(q.type === "multiple" ? "、" : " / ") : q.answer)}"></span></div>${methodFeedback}<div class="analysis"><b>${analysisTitle}</b><div class="rich" data-rich="${attr(analysis)}"></div></div>${aids}<div class="result-footer">${followup}${q.type === "solution" && response.correct === null ? `<div class="flex self-grade-actions" style="margin-top:18px">${button("本次答对", "self-grade", 'data-correct="true"', "btn small")}${button("本次答错", "self-grade", 'data-correct="false"', "btn small soft")}</div>` : ""}${!preparing && mistake && !mistake.resolved ? `<div style="margin-top:14px">${button(`${icon("check", 12)} 标记已掌握`, "resolve-mistake", `data-id="${attr(q.id)}"`, "text-btn")}</div>` : ""}</div></section>`;
 }
 
 export function patchPracticeAnswer({ root, question: q, practice, response, feedback, status, questionStatus, progress, renderRich }) {

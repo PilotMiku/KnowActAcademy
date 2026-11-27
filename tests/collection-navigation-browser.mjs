@@ -1,26 +1,49 @@
 import assert from 'node:assert/strict';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { chromium, browserOptions, baseURL } from './browser-helpers.mjs';
 
 const browser = await chromium.launch(browserOptions), errors = [], report = {};
 try {
-  const page = await browser.newPage({ viewport:{ width:1440, height:1000 }, reducedMotion:'reduce' });
+  const page = await browser.newPage({ viewport:{ width:1440, height:1000 }, reducedMotion:'reduce', acceptDownloads:true });
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(baseURL + '/#/favorites');
   await page.locator('.local-main').waitFor();
-  await page.evaluate(async () => {
+  const seeded = await page.evaluate(async () => {
     const storage = await import('./storage.mjs');
+    const { getBankIndex } = await import('./core.mjs');
     const { bank, state } = await storage.readSavedData();
-    const questions = bank.questions.filter(q => q.subjectId === 'calculus').slice(0,35);
+    const index = getBankIndex(bank);
+    const groups = ['chapter-1', 'chapter-2'].map((id, i) => {
+      const pool = index.chapterQuestions.get('calculus').get(id);
+      return { name: index.chapters.get('calculus').get(id).name, questions: [...pool.slice(0, 17 - i), pool.at(-1)] };
+    });
+    const questions = groups.flatMap(group => group.questions);
     state.favorites = questions.map(q => q.id);
-    state.mistakes = Object.fromEntries(questions.map(q => [q.id,{ wrongCount:1, resolved:false }]));
+    state.mistakes = Object.fromEntries(questions.map((q, i) => [q.id,{ wrongCount:1 + i % 3, resolved:false }]));
     await storage.saveStorage(bank,state);
+    return groups.map(group => ({
+      name: group.name,
+      questions: group.questions.map(q => ({ id:q.id, label:q.sourceLabel }))
+        .sort((a, b) => state.mistakes[b.id].wrongCount - state.mistakes[a.id].wrongCount),
+    }));
   });
   await page.reload();
   for (const mode of ['favorites','review']) {
     await page.goto(baseURL + '/#/' + mode);
     const first = page.locator('[data-collection-selected]').first();
     await first.waitFor();
+    const chapterCards = page.locator('.review-chapter');
+    if (mode === 'review') {
+      await page.locator('#collection-sort').selectOption('wrong');
+      await page.locator('#collection-sort option[value="wrong"][selected]').waitFor({state:'attached'});
+      assert.deepEqual(await chapterCards.locator('h2').allTextContents(), seeded.map(group => group.name));
+      for (const [i, count] of [18, 12].entries()) {
+        const card = chapterCards.nth(i);
+        assert.match(await card.locator('header').innerText(), new RegExp(`高等数学.*${seeded[i].questions.length} 道错题`, 's'));
+        assert.deepEqual(await card.locator('[data-collection-selected]').evaluateAll(inputs => inputs.map(input => input.value)),
+          seeded[i].questions.slice(0, count).map(q => q.id));
+      }
+    } else assert.equal(await chapterCards.count(), 0);
     await first.evaluate(el => { window.originalSelection = el; window.originalExcerpt = document.querySelector('.question-excerpt'); });
     await first.focus();
     await first.press('Space');
@@ -35,6 +58,12 @@ try {
     assert.equal(await page.locator('[data-collection-selected]:checked').count(),30);
     await page.getByRole('link',{ name:'下一页', exact:true }).click();
     await page.waitForFunction(() => document.querySelectorAll('[data-collection-selected]').length === 5);
+    if (mode === 'review') {
+      assert.deepEqual(await chapterCards.locator('h2').allTextContents(), [seeded[1].name]);
+      const current = page.locator('[data-collection-selected]');
+      assert.deepEqual(await current.evaluateAll(inputs => inputs.map(input => input.value)), seeded[1].questions.slice(12).map(q => q.id));
+      assert.match(await chapterCards.locator('header').innerText(), /17 道错题/);
+    }
     await page.locator('[data-collection-selection-count]').filter({ hasText:'30' }).waitFor();
     await page.locator('[data-collection-selected]').first().check();
     assert.match(await page.locator('[data-collection-selection-count]').innerText(),/31 题/);
@@ -51,6 +80,21 @@ try {
     const state = await page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
     assert.equal(state.practice.questionIds.length,1);
   }
+  await page.goto(baseURL + '/#/review?sort=wrong&page=2');
+  await page.locator('[data-action="clear-collection-selection"]').click();
+  await page.setViewportSize({ width:390, height:844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  const expectedPage = seeded[1].questions.slice(12);
+  const printed = page.waitForEvent('download');
+  await page.locator('[data-action="print-collection"]').click();
+  const html = await readFile(await (await printed).path(), 'utf8');
+  assert.deepEqual(await page.evaluate(markup => [...new DOMParser().parseFromString(markup, 'text/html').querySelectorAll('main h2')].map(el => el.textContent), html),
+    expectedPage.map((q, i) => `${i + 1}. ${q.label || q.id}`));
+  await page.getByRole('button', { name:'开始复习', exact:true }).click();
+  await page.locator('.question-main').waitFor();
+  const review = await page.evaluate(async () => (await import('./storage.mjs')).readSavedState());
+  assert.deepEqual(review.practice.questionIds, expectedPage.map(q => q.id));
+  report.reviewGroupedByChapter = true;
   report.selectionKeepsFocusAndContent = true;
   report.crossPageAndFilteredSelections = true;
 

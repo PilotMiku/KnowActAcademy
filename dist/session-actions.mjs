@@ -1,16 +1,17 @@
 import { shuffle, filterQuestions, isScorable, getBankIndex } from "./core.mjs";
 import { preparationQuestions, createPreparation, diagnosticProgress, restoreDiagnostic,
   createTraining, practiceProgress, currentPreparationPractice } from "./preparation.mjs";
-import { practicePool, balancedSample, collectionQueue, collectionPageSlice, reviewBatchSize } from "./study-planning.mjs";
+import { practicePool, balancedSample, reviewBatchSize } from "./study-planning.mjs";
 import { spacedReview, archivePreparation } from "./study.mjs";
 import { pauseExamQuestion, resumeExamQuestion } from "./exam-timing.mjs";
 import { pausePracticeQuestion } from "./practice-timing.mjs";
 import { button } from "./ui.mjs";
+import { METHOD_MIX_MODE } from "./method-mix.mjs";
 
-const actions = new Set(["start-practice", "prepare-select-all", "prepare-select-none", "begin-preparation", "concept-details", "start-spaced", "spaced-one", "resume-preparation", "complete-preparation", "finish-preparation", "next-training", "start-collection", "practice-one", "resume-practice", "exit-practice", "answer-option", "submit-answer", "self-grade", "navigate-question", "next-question", "finish-practice"]);
+const actions = new Set(["start-practice", "prepare-select-all", "prepare-select-none", "begin-preparation", "concept-details", "start-spaced", "spaced-one", "resume-preparation", "complete-preparation", "finish-preparation", "next-training", "start-collection", "practice-one", "resume-practice", "exit-practice", "choose-practice-again", "answer-option", "submit-answer", "self-grade", "navigate-question", "next-question", "finish-practice"]);
 
 // Own practice/preparation transitions; persistence and navigation stay explicit.
-export function createSessionActions({ getBank, getState, getFilters, route, subject,
+export function createSessionActions({ getBank, getState, getFilters, route, subject, collectionPageQuestions,
   startPractice, suspendCurrentPractice, persist, go, toast, render, returnToPractice, isPreparationPractice, preparationSelection,
   updatePreparationSelection, showConceptDetails, currentQuestion, currentExam,
   updateSelectedOptions, updateExamProgress, tickExam, submitPractice, openDialog }) {
@@ -20,7 +21,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
     switch (action) {
       case "start-practice": {
         const filters = getFilters();
-        if (el.dataset.mode === "random" && !filters.chapterId) return true;
+        if (el.dataset.mode === "random" && !filters.chapterId && !filters.chapters?.length) return true;
         const list = practicePool(bank, filters, state);
         const ids = (
           el.dataset.mode === "random"
@@ -105,12 +106,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
       }
       case "start-collection": {
         const mode = el.dataset.mode;
-        const list = collectionQueue(bank, getFilters(), state, mode, route().query.get("sort") ?? "priority");
-        const current = collectionPageSlice(list, route().query.get("page") ?? 1);
-        await startPractice(
-          current.items.map((q) => q.id),
-          mode,
-        );
+        await startPractice(collectionPageQuestions(mode).map(q => q.id), mode);
         break;
       }
       case "practice-one":
@@ -120,6 +116,7 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
         go(isPreparationPractice() ? "/prepare?session=1" : "/practice?session=1");
         break;
       case "exit-practice":
+      case "choose-practice-again":
         if (!isPreparationPractice() && state.practice?.mode !== "spaced" && returnToPractice) returnToPractice();
         else go(isPreparationPractice() ? "/prepare" : state.practice?.mode === "spaced" ? "/spaced" : "/practice");
         break;
@@ -193,10 +190,11 @@ export function createSessionActions({ getBank, getState, getFilters, route, sub
           const done = Object.values(p.responses).filter(
             (r) => r.graded && r.correct !== null,
           ).length;
+          const chooseAgain = ["random", METHOD_MIX_MODE].includes(p.mode) ? button("返回章节选择", "choose-practice-again") : "";
           openDialog(
             "又向前，走了一小步。",
             `<p>本组 ${p.questionIds.length} 道题，已完成 ${done} 道。${done < p.questionIds.length ? "你可以返回补完，也可以稍作休息。" : "给自己一点肯定，再开始下一段。"}</p>`,
-            `${button("继续查看", "close-dialog")}${state.suspendedPractice && p.temporary ? button("返回原练习", "resume-suspended-practice", "", "btn primary") : button("回到学习台", "finish-practice", "", "btn primary")}`,
+            `${button("继续查看", "close-dialog")}${chooseAgain}${state.suspendedPractice && p.temporary ? button("返回原练习", "resume-suspended-practice", "", "btn primary") : button("回到学习台", "finish-practice", "", "btn primary")}`,
           );
         }
         break;

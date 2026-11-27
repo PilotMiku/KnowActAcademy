@@ -436,14 +436,17 @@ function questionSearch(raw) {
 export function examQuestions(bank, { subjectId = "", chapters = null } = {}) {
   const index = getBankIndex(bank);
   const pool = subjectId ? index.subjectQuestions.get(subjectId) ?? [] : bank.questions;
-  if (chapters === null) return pool.filter((q) => isScorable(q) && q.type !== "solution");
+  const ids = chapters === null ? null : chapterQuestionIds(index, subjectId, chapters);
+  return pool.filter((q) => (!ids || ids.has(q.id)) && isScorable(q) && q.type !== "solution");
+}
+function chapterQuestionIds(index, subjectId, chapters) {
   const ids = new Set();
   for (const selected of chapters) {
     if (subjectId && selected.subjectId !== subjectId) continue;
     for (const q of index.chapterQuestions.get(selected.subjectId)?.get(selected.chapterId) ?? [])
       ids.add(q.id);
   }
-  return pool.filter((q) => ids.has(q.id) && isScorable(q) && q.type !== "solution");
+  return ids;
 }
 function searchableText(q) {
   if (!questionSearchText.has(q))
@@ -453,6 +456,7 @@ function searchableText(q) {
 export function filterQuestions(bank, filter = {}, state = emptyState()) {
   const matchesSearch = questionSearch(string(filter.search));
   const chapterIds = new Set(filter.chapterIds ?? []);
+  const scopedIds = filter.chapters ? chapterQuestionIds(getBankIndex(bank), filter.subjectId, filter.chapters) : null;
   const selected = new Set(filter.chapterId ? [filter.chapterId] : []);
   if (selected.size) {
     const chapters = bank.subjects
@@ -469,6 +473,7 @@ export function filterQuestions(bank, filter = {}, state = emptyState()) {
       (!filter.subjectId || q.subjectId === filter.subjectId) &&
       (!selected.size || selected.has(q.chapterId)) &&
       (!chapterIds.size || chapterIds.has(q.chapterId)) &&
+      (!scopedIds || scopedIds.has(q.id)) &&
       (!filter.type || q.type === filter.type) &&
       (!filter.difficulty || matchesDifficulty(questionGuidance(q, state.questionAnnotations), filter.difficulty)) &&
       matchesSearch(q) &&

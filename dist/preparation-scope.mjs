@@ -18,12 +18,14 @@ export function changeScope(chapters, current, id, checked) {
   if (checked) next.add(id);
   return [...next];
 }
-export function preparationTreeHTML(bank, subjectId, selected) {
+export function preparationTreeHTML(bank, subjectId, selected, {
+  attribute = 'data-prepare-chapter', includeQuestion = isScorable,
+} = {}) {
   const subject = getBankIndex(bank).subjects.get(subjectId);
   if (!subject) return '';
   const chapters = subject.chapters, chosen = new Set(selected);
   const counts = getBankIndex(bank).chapterQuestions.get(subjectId);
-  const row = (c, root = false) => `<label class="${root ? 'preparation-root' : 'preparation-subchapter'}"><input type="checkbox" data-prepare-chapter value="${attr(c.id)}" ${chosen.has(c.id) ? 'checked' : ''}><span>${esc(c.name)}</span><small>${counts.get(c.id).filter(isScorable).length} 题</small>${root ? `<span class="scope-selection" data-scope-selection="${attr(c.id)}"></span>` : ''}</label>`;
+  const row = (c, root = false) => `<label class="${root ? 'preparation-root' : 'preparation-subchapter'}"><input type="checkbox" ${attribute} value="${attr(c.id)}" ${chosen.has(c.id) ? 'checked' : ''}><span>${esc(c.name)}</span><small>${counts.get(c.id).filter(includeQuestion).length} 题</small>${root ? `<span class="scope-selection" data-scope-selection="${attr(c.id)}"></span>` : ''}</label>`;
   return chapters.filter(c => !c.parentId).map(c => {
     const ids = descendants(chapters, c.id);
     const children = chapters.filter(ch => ids.has(ch.id));

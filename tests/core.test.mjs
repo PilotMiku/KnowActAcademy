@@ -190,6 +190,12 @@ test("exam chapter combinations include descendants, deduplicate and respect sub
   assert.deepEqual(examQuestions(bank, { chapters: [extra, other] }).map((q) => q.id), ["extra-q", "other-q"]);
   assert.deepEqual(examQuestions(bank, { subjectId: "math", chapters: [extra, other] }).map((q) => q.id), ["extra-q"]);
   assert.ok(examQuestions(bank).every((q) => q.type !== "solution"));
+  const subsection = { subjectId: "math", chapterId: "limits" };
+  assert.deepEqual(filterQuestions(bank, { chapters: [root, subsection, extra] }).map(q => q.id),
+    [...fixture.questions.map(q => q.id), "extra-q"]);
+  assert.deepEqual(filterQuestions(bank, { chapters: [root, other], type: "single" }).map(q => q.id),
+    ["qa-single", "qa-html", "other-q"]);
+  assert.deepEqual(filterQuestions(bank, { chapters: [] }), []);
   const state = emptyState();
   state.exams = [createExam([bank.questions[0].id], 30, "math")];
   for (const chapters of [null, [root, extra]]) {

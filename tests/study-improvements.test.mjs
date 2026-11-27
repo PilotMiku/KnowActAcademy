@@ -1,8 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { emptyState, normalizeBank, recordAttempt, createExam, finishExam, BACKUP_FORMAT, validateBackup } from '../dist/core.mjs';
+import { readFile } from 'node:fs/promises';
+import vm from 'node:vm';
+import { emptyState, normalizeBank, recordAttempt, createExam, finishExam, BACKUP_FORMAT, validateBackup, getBankIndex } from '../dist/core.mjs';
 import { createPreparation, createTraining, preparationMastery, preparationMetrics, trainingCount } from '../dist/preparation.mjs';
-import { practicePool, balancedSample, collectionQueue, collectionPageSlice, reviewBatchSize } from '../dist/study-planning.mjs';
+import { practicePool, balancedSample, collectionQueue, collectionPageSlice, reviewBatchSize, similarFreshQuestions, rootChapter } from '../dist/study-planning.mjs';
+import { methodMixCount, methodMixRound, methodMixFeedback, chapterMethodMixes, chapterMethodMixRound } from '../dist/method-mix.mjs';
+import { questionSkill } from '../dist/question-skills.mjs';
 import { spacedReview, DAY_MS } from '../dist/study.mjs';
 import { pauseExamQuestion, resumeExamQuestion } from '../dist/exam-timing.mjs';
 import { resolvedTheme } from '../dist/preferences.mjs';
@@ -96,6 +100,58 @@ test('balanced practice samples small chapters and queues reach questions after 
   assert.equal(reviewBatchSize(state,5),5);
   state.attempts[0].durationMs=120000;
   assert.equal(reviewBatchSize(state,5),2);
+});
+test('integral method practice balances methods and prioritizes unseen questions with worked clues', async () => {
+  const bank = normalizeBank(JSON.parse(await readFile(new URL('../dist/data/bank.json', import.meta.url), 'utf8')));
+  const state = emptyState(), index = getBankIndex(bank);
+  assert.equal(methodMixCount(bank), 8);
+  const first = methodMixRound(bank, state, () => 0.5);
+  assert.equal(new Set(first).size, 8);
+  for (let i = 0; i < first.length; i += 2) {
+    const pair = first.slice(i, i + 2).map(id => index.questions.get(id));
+    assert.notEqual(pair[0].chapterId, pair[1].chapterId);
+    for (const q of pair) recordAttempt(state, q, q.answer, true, { at: 1000 + i });
+  }
+  const second = methodMixRound(bank, state, () => 0.5);
+  assert.equal(new Set([...first, ...second]).size, 16);
+  const renderer = {};
+  vm.runInNewContext(await readFile(new URL('../dist/vendor/katex/katex.min.js', import.meta.url), 'utf8'), renderer);
+  for (const id of [...first, ...second]) {
+    const q = index.questions.get(id);
+    const method = q.chapterId === 's-6dbdf44fd58a' ? '换元积分' : '分部积分';
+    const feedback = methodMixFeedback(q);
+    assert.ok(feedback.includes(`选法依据 · ${method}`));
+    const formulas = [...feedback.matchAll(/\\\((.+?)\\\)/g)];
+    assert.ok(formulas.length);
+    for (const [, formula] of formulas) renderer.katex.renderToString(formula);
+  }
+  assert.equal(methodMixCount({ ...bank, managedBundle: false }), 0);
+  assert.deepEqual(methodMixRound(normalizeBank(fixture), state), []);
+  const chapters = chapterMethodMixes(bank, bank.questions, state.questionAnnotations);
+  const roots = bank.subjects.flatMap(s => s.chapters.filter(c => !c.parentId).map(c => JSON.stringify([s.id, c.id])));
+  assert.deepEqual(chapters.map(chapter => chapter.id), roots);
+  for (const chapter of chapters) {
+    const ids = chapterMethodMixRound(chapter, state, () => 0.5);
+    assert.ok(ids.length >= 2 && ids.length <= 8);
+    assert.equal(new Set(ids).size, ids.length);
+    assert.ok(ids.every(id => rootChapter(bank, index.questions.get(id)) === chapter.id));
+    const groups = [...chapter.groups.values()];
+    assert.notEqual(groups.findIndex(group => group.some(q => q.id === ids[0])), groups.findIndex(group => group.some(q => q.id === ids[1])));
+  }
+  const example = index.questions.get('s-6b82188494c1-q0001');
+  const related = similarFreshQuestions(bank, state, example);
+  assert.ok(related.includes('s-6b82188494c1-q0006'));
+  assert.ok(related.every(id => questionSkill(index.questions.get(id)) === '复合函数求值'));
+});
+test('same section and broad tags do not substitute for a matching skill', () => {
+  const raw = structuredClone(fixture);
+  raw.questions = ['求函数的定义域', '求函数的最小正周期', '确定函数的定义域'].map((stem, i) => ({
+    ...raw.questions[0], id: 'skill-' + i, stem, concepts: ['函数'],
+  }));
+  const bank = normalizeBank(raw), state = emptyState();
+  assert.deepEqual(similarFreshQuestions(bank, state, bank.questions[0]), ['skill-2']);
+  recordAttempt(state, bank.questions[2], bank.questions[2].answer, true);
+  assert.deepEqual(similarFreshQuestions(bank, state, bank.questions[0]), []);
 });
 test('exam timing excludes inactive periods, caps at deadline, and exports uncertainty', () => {
   const {bank,state}=setup(2);
